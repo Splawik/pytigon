@@ -1,4 +1,4 @@
-var BASE_PATH, TAG, TEMPLATE, comp, css_tab, height, init, js_tab, stub1_context, stub2_err, width;
+var BASE_PATH, BASE_PATH0, TAG, TEMPLATE, comp, css_tab, height, init, js_tab, stub1_context, stub2_err, width;
 TAG = "ptig-event-calendar";
 TEMPLATE = '        <div class=\"ajax-frame ajax-link ajax-region\" data-region=\"table\" data-bind=\"onloadeddata:on_loaded_data\" style=\"position:absolute;top:5px;bottom:5px;left:5px;right:5px;\">\n' +
     '                <div name=\"calendar\"></div>\n' +
@@ -6,8 +6,9 @@ TEMPLATE = '        <div class=\"ajax-frame ajax-link ajax-region\" data-region=
     '\n' +
     '';
 BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins/event-calendar";
+BASE_PATH0 = window.BASE_PATH + "static/vanillajs_plugins";
 js_tab = [BASE_PATH + "/event-calendar.min.js"];
-css_tab = [BASE_PATH + "/event-calendar.min.css"];
+css_tab = [BASE_PATH + "/event-calendar.min.css", BASE_PATH0 + "/event-calendar-extra-styles.css"];
 stub1_context = (new DefineWebComponent(TAG, false, js_tab, css_tab));
 comp = stub1_context.__enter__();
 try {
@@ -24,7 +25,7 @@ try {
     comp.options["attributes"] = ({width: width, height: height});
     comp.options["template"] = TEMPLATE;
     init = function flx_init (component) {
-        var btn, button_text, calendar, click1, div, event_change, event_click, get_events, item, l, on_loaded_data, options, resources, rid, select, state, stub5_seq, stub6_itr, stub7_, stub8_seq, stub9_itr, views;
+        var button_text, calendar, click1, div, event_change, event_click, get_events, item, l, on_loaded_data, options, resources, rid, select, state, stub5_seq, stub6_itr, stub7_, stub8_seq, stub9_itr, views;
         div = component.root.querySelector("div");
         get_events = (function flx_get_events (info, successCallback, failureCallback) {
             var _callback;
@@ -140,14 +141,20 @@ try {
         }).bind(this);
 
         button_text = (function flx_button_text (texts) {
-            texts.resourceTimeGridWeek = "resources - week";
-            texts.resourceTimeGridDay = "resources - day";
-            texts.listWeek = "delete mode";
-            texts.listMonth = "list - month";
+            texts.today = gettext("today");
+            texts.dayGridMonth = gettext("month");
+            texts.listDay = gettext("list");
+            texts.listWeek = gettext("delete mode");
+            texts.listMonth = gettext("list");
+            texts.listYear = gettext("list");
+            texts.resourceTimeGridDay = gettext("resources - day");
+            texts.resourceTimeGridWeek = gettext("resources - week");
+            texts.timeGridDay = gettext("day");
+            texts.timeGridWeek = gettext("week");
             return texts;
         }).bind(this);
 
-        options = ({view: "resourceTimeGridWeek", height: "100%", eventSources: [({events: get_events})], allDaySlot: false, eventClick: event_click, selectable: true, select: select, dateClick: select, editable: true, eventDrop: event_change, eventResize: event_change, headerToolbar: ({start: "prev,next today", center: "title", end: "dayGridMonth, timeGridWeek, timeGridDay, listMonth, resourceTimeGridDay, resourceTimeGridWeek, listWeek"}), buttonText: button_text});
+        options = ({view: "resourceTimeGridWeek", height: "100%", eventSources: [({events: get_events})], allDaySlot: false, nowIndicator: true, eventClick: event_click, selectable: true, select: select, dateClick: select, editable: true, eventDrop: event_change, eventResize: event_change, headerToolbar: ({start: "prev,next today", center: "title", end: "dayGridMonth, timeGridWeek, timeGridDay, listMonth, resourceTimeGridDay, resourceTimeGridWeek, listWeek"}), buttonText: button_text});
         if (_pyfunc_truthy(component.hasAttribute("view"))) {
             options["view"] = component.getAttribute("view");
         }
@@ -165,6 +172,9 @@ try {
         }
         if (_pyfunc_truthy(component.hasAttribute("alldayslot"))) {
             options["allDaySlot"] = true;
+        }
+        if (_pyfunc_truthy(component.hasAttribute("toolbar-buttons"))) {
+            options["headerToolbar"]["end"] = component.getAttribute("toolbar-buttons");
         }
         if (_pyfunc_truthy(component.hasAttribute("noselectable"))) {
             options["selectable"] = false;
@@ -197,11 +207,6 @@ try {
             options["slotDuration"] = component.getAttribute("duration");
         }
         calendar = new EventCalendar(div, options);
-        btn = div.querySelector(".ec-button.ec-listWeek");
-        if (_pyfunc_truthy(btn)) {
-            btn.style.backgroundColor = "red";
-            btn.style.color = "white";
-        }
         on_loaded_data = (function flx_on_loaded_data (event) {
             calendar.refetchEvents();
             return null;

@@ -216,6 +216,14 @@ CHANNELS_URL_TAB += [
         "schcommander.consumers.ShellConsumer",
     ),
     (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
         URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
         "schtasks.consumers.TaskEventsConsumer",
     ),
@@ -271,7 +279,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.05.06 15:28:53"
+GEN_TIME = "2023.05.08 18:25:01"
 OFFLINE_SUPPORT = True
 
 

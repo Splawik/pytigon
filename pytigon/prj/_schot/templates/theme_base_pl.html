@@ -31,12 +31,11 @@
                 {{block.super}}
                 {% component '_schcomponents/components/ptig-codeeditor.js' %}
                 {% component '_schcomponents/components/ptig-wysiwygedit.js' %}
-                {% component '_schcomponents/components/ptig-xterm.js' %}
         {% endblock %}
         {% block component_init %}
                         var initial_state={};
                         GLOBAL_BUS.set_state(initial_state);
-                        var component_init = [ "ptig-codeeditor.js", "ptig-wysiwygedit.js", "ptig-xterm.js",  ];
+                        var component_init = [ "ptig-codeeditor.js", "ptig-wysiwygedit.js",  ];
         {% endblock %}
 {% endif %}
 

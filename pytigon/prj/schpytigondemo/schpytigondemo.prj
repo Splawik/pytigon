@@ -6,7 +6,7 @@
         "autor_name": null,
         "autor_www": null,
         "components_initial_state": null,
-        "custom_tags": "_schcomponents/components/ptig-webrtc.js\n_schcomponents/components/ptig-codeeditor.js\n_schcomponents/components/ptig-d3.js\n_schcomponents/components/ptig-leaflet.js\n_schcomponents/components/ptig-video.js\n_schcomponents/components/ptig-pivottable.js\n_schcomponents/components/ptig-plotly.js\n_schcomponents/components/ptig-xterm.js\n_schcomponents/components/ptig-spreadsheet.js\n_schcomponents/components/ptig-calendar.js\n_schcomponents/components/ptig-mask.js\n_schcomponents/components/ptig-scroll-action.js\n_schcomponents/components/ptig-margin-left.js\n_schcomponents/components/ptig-wysiwygedit.js\n_schcomponents/components/ptig-svg.js\n_schcomponents/components/ptig-task.js\n_schcomponents/components/ptig-select2.js\n_schcomponents/components/ptig-form.js\n_schcomponents/components/ptig-codemirror.js\n_schcomponents/components/ptig-time.js\n_schwiki/components/insert_object.js",
+        "custom_tags": "_schcomponents/components/ptig-webrtc.js\n_schcomponents/components/ptig-codeeditor.js\n_schcomponents/components/ptig-d3.js\n_schcomponents/components/ptig-leaflet.js\n_schcomponents/components/ptig-video.js\n_schcomponents/components/ptig-pivottable.js\n_schcomponents/components/ptig-plotly.js\n_schcomponents/components/ptig-xterm.js\n_schcomponents/components/ptig-spreadsheet.js\n_schcomponents/components/ptig-calendar.js\n_schcomponents/components/ptig-mask.js\n_schcomponents/components/ptig-scroll-action.js\n_schcomponents/components/ptig-margin-left.js\n_schcomponents/components/ptig-wysiwygedit.js\n_schcomponents/components/ptig-svg.js\n_schcomponents/components/ptig-task.js\n_schcomponents/components/ptig-select2.js\n_schcomponents/components/ptig-form.js\n_schcomponents/components/ptig-codemirror.js\n_schcomponents/components/ptig-time.js\n_schcomponents/components/ptig-event-calendar.js\n_schwiki/components/insert_object.js",
         "desktop_gui_type": "tablet_modern",
         "doc": null,
         "encoded_zip": null,
@@ -317,7 +317,7 @@
                     "direct_to_template": true,
                     "name": "Calendar",
                     "tags_mount": null,
-                    "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% content\n    div class=flexible_size\n        ptig-calendar\n",
+                    "template_code": "% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% content\n    div class=flexible_size\n        ptig-calendar\n",
                     "url": "calendar",
                     "url_parm": null
                 },
@@ -400,6 +400,15 @@
                     "tags_mount": null,
                     "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% content\n    ptig-form src={{base_path}}schcomponents_demo/form/\n        form\n            div class=form-group\n                label...F1:\n                input name=f1,,,type=text,,,class=form-control\n            div class=form-group\n                label...F2:\n                input name=f2,,,type=number,,,class=form-control\n            div class=form-group\n                textarea name=f3,,,class=form-control\n            div class=form-group\n                select name=f4,,,class=form-control\n                    option value=x1...X1\n                    option value=x2...X2\n                    option value=x3...X3\n            div class=form-group\n                label...R1:\n                input name=r1,,,type=text,,,class=form-control r1\n            div class=form-group\n                h1 class=result\n            \n            \n",
                     "url": "form",
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": true,
+                    "name": "Event-calendar",
+                    "tags_mount": null,
+                    "template_code": "% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% content\n    div class=row\n        div class=col-12\n            ptig-event-calendar\n",
+                    "url": "event-calendar",
                     "url_parm": null
                 }
             ],
@@ -600,6 +609,15 @@
                     "name": "users",
                     "perms": null,
                     "url": "../static/schcomponents_demo/views/users.fview",
+                    "url_type": "-"
+                },
+                {
+                    "icon": "png://mimetypes/x-office-calendar.png",
+                    "icon_code": null,
+                    "icon_size": "1",
+                    "name": "Event calendar",
+                    "perms": null,
+                    "url": "event-calendar",
                     "url_type": "-"
                 }
             ],

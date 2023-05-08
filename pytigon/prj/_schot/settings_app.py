@@ -238,6 +238,10 @@ CHANNELS_URL_TAB += [
         URL_ROOT_PREFIX + "schcommander/shell/channel/",
         "schcommander.consumers.ShellConsumer",
     ),
+    (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
 ]
 
 
@@ -246,7 +250,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.04.24 15:11:47"
+GEN_TIME = "2023.05.08 18:25:48"
 
 
 for key, value in os.environ.items():

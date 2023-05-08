@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-07 22:37+0100\n"
+"POT-Creation-Date: 2023-05-08 18:30+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,9 +16,43 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && (n"
-"%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && n"
-"%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: prj/_schcomponents/static/_schcomponents/components/ptig-event-calendar.js:144
+msgid "today"
+msgstr "Dzisiaj"
+
+#: prj/_schcomponents/static/_schcomponents/components/ptig-event-calendar.js:145
+msgid "month"
+msgstr "Miesiąc"
+
+#: prj/_schcomponents/static/_schcomponents/components/ptig-event-calendar.js:146
+#: prj/_schcomponents/static/_schcomponents/components/ptig-event-calendar.js:148
+#: prj/_schcomponents/static/_schcomponents/components/ptig-event-calendar.js:149
+msgid "list"
+msgstr "Lista"
+
+#: prj/_schcomponents/static/_schcomponents/components/ptig-event-calendar.js:147
+msgid "delete mode"
+msgstr "Tryb kasowania"
+
+#: prj/_schcomponents/static/_schcomponents/components/ptig-event-calendar.js:150
+msgid "resources - day"
+msgstr "Zasoby - dzień"
+
+#: prj/_schcomponents/static/_schcomponents/components/ptig-event-calendar.js:151
+msgid "resources - week"
+msgstr "Zasoby - tydzień"
+
+#: prj/_schcomponents/static/_schcomponents/components/ptig-event-calendar.js:152
+msgid "day"
+msgstr "Dzień"
+
+#: prj/_schcomponents/static/_schcomponents/components/ptig-event-calendar.js:153
+msgid "week"
+msgstr "Tydzień"
 
 #: static_src/pytigon_js/pytigon.js:4 static_src/pytigon_js/pytigon.min.js:1
 msgid "Cancel"

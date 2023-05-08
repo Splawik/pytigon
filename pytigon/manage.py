@@ -23,7 +23,8 @@ sys.path.insert(
 )
 sys.path.insert(0, base_path)
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings")
+os.environ.setdefault("SECRET_KEY", "anawa")
 
 from pytigon_lib import init_paths
 

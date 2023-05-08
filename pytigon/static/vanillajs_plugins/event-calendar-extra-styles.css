@@ -1,0 +1,8 @@
+.ec-button.ec-listWeek {
+    background-color: var(--bs-warning);
+    color: white;
+}
+
+.ec-button.ec-listWeek.ec-active {
+    background-color: var(--bs-danger);
+}
