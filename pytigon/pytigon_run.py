@@ -30,6 +30,8 @@ from os import environ
 environ["START_PATH"] = os.path.abspath(os.getcwd())
 environ["XKB_CONFIG_ROOT"] = "/usr/share/X11/xkb"
 
+if not ("SECRET_KEY" in environ or "PYTIGON_SECRET_KEY" in environ):
+    environ["SECRET_KEY"] = "anawa"
 
 if "--dev" in sys.argv or "ptig.py" in sys.argv:
     if "--dev" in sys.argv:
