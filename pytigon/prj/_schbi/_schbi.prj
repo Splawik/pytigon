@@ -51,7 +51,7 @@
                 "jsondata": null,
                 "model_code": "from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct\nfrom django.conf import settings\nimport datetime\nimport polars\nimport numpy\nimport os\nimport os.path as os_path\n\nPROJECTS_DATA = {}\nPROJECTS_DATA_VERSION = {}\n\n$$$def refresh_data(refresh_type):\n    \"\"\"\n        refresh_type:\n            begin - on the start\n            before - before every request\n            after - after every request\n\n            bi_sheduler_1 - defined by user, handled by django-q sheduler\n            ...\n            bi_sheduler_9 - defined by user, handled by django-q sheduler\n    \"\"\"\n    \n    for prj in Project.objects.all():\n        run_code_from_db_field(\n            \"bi_prj_{prj.name}_refresh_data.py\", \n            prj, \n            \"refresh_data\", \n            \"refresh_data\", \n            locals_dict=locals(), \n            globals_dict=globals(), \n            module=ModuleStruct(globals(),locals()), \n            prj=prj,\n            refresh_type=refresh_type\n        )\n",
                 "module_title": "bi",
-                "name": "bi",
+                "name": "schbi",
                 "perms": true,
                 "tasks_code": "",
                 "title": "BI",

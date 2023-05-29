@@ -15,6 +15,23 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
+from standard_components.models import *
+
+from schcommander.models import *
+
+from schtools.models import *
+
+from schtasks.models import *
+
+from schsimplescripts.models import *
+
+from schelements.models import *
+
+from schadmin.models import *
+
+from schwiki.models import *
+
+
 import os.path
 from pytigon_lib.schhtml.htmltools import superstrip
 import inspect
