@@ -1,0 +1,56 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New project"
+
+%% id_extra
+    % row_actions:
+        .field_list/page_set,Pages,target=_parent,icon_name=fa fa-lg fa-level-up
+
+%% list_row_header
+    th..._(Name)
+    th..._(Refresh data)
+    th..._(Form)
+    th..._(View)
+    th..._(Template)
+
+%% list_row
+    td...{{ object.name }}
+    td
+        % if  object.refresh_data:
+            i class=fa fa-check
+    td
+        % if object.form:
+            i class=fa fa-check
+    td
+        % if object.view:
+            i class=fa fa-check
+    td
+        % if object.template:
+            i class=fa fa-check
+    
+%% list_row_actions
+    % row_actions:
+        .show_prj,Show prj,url={{base_path}}bi/project_view/{{object.name}}/,target=_parent
+    % row_actions:
+        .edit
+        .field_edit/refresh_data,refresh data
+        .field_edit/form,form
+        .field_edit/view,view
+        .field_edit/template,template
+        .delete
+
+%% row_edit
+    % form:
+        .base_prj_name,name,description,parquet_files,rights_group,menu,menu_position,menu_icon,menu_icon_size
+        

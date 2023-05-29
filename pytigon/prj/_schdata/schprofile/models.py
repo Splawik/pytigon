@@ -14,8 +14,7 @@ import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
-
-from schtools.models import *
+import schelements.models
 
 
 from django.contrib.auth import get_user_model
@@ -75,7 +74,7 @@ class Profile(models.Model):
         ]
 
     owner = ext_models.PtigForeignKey(
-        Element,
+        schelements.models.Element,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
@@ -85,7 +84,7 @@ class Profile(models.Model):
         limit_choices_to=LIMIT_OWNER,
     )
     config = ext_models.PtigForeignKey(
-        Element,
+        schelements.models.Element,
         on_delete=models.CASCADE,
         null=True,
         blank=True,

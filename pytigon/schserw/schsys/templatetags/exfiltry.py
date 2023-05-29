@@ -668,6 +668,14 @@ def model_has_children(value):
         return False
 
 
+@register.filter(name="model_can_have_children")
+def model_can_have_children(value):
+    if hasattr(value, "can_have_children"):
+        if value.can_have_children == False:
+            return False
+    return True
+
+
 @register.filter(name="choices_from_field")
 def choices_from_field(obj, field):
     return obj._meta.get_field(field).choices

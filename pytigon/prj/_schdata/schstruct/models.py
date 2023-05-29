@@ -14,8 +14,7 @@ import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
-
-from schtools.models import *
+import schelements.models
 
 
 from pytigon_lib.schtools.schjson import json_dumps, json_loads
@@ -24,7 +23,7 @@ from django.db.models import Max, Min
 from schelements.models import *
 
 
-class CommonGroupDef(BaseObject):
+class CommonGroupDef(schelements.models.BaseObject):
     class Meta:
         verbose_name = _("Common group definition")
         verbose_name_plural = _("Common groups definition")

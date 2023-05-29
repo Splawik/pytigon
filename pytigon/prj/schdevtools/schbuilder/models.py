@@ -15,23 +15,6 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
-from standard_components.models import *
-
-from schcommander.models import *
-
-from schtools.models import *
-
-from schtasks.models import *
-
-from schsimplescripts.models import *
-
-from schelements.models import *
-
-from schadmin.models import *
-
-from schwiki.models import *
-
-
 import os.path
 from pytigon_lib.schhtml.htmltools import superstrip
 import inspect
@@ -628,11 +611,11 @@ class SChAppSet(JSONModel):
     def table_action(cls, list_view, request, data):
         return standard_table_action(cls, list_view, request, data, ["copy", "paste"])
 
-    @staticmethod
-    def filter(f):
-        if f == "main_view":
+    @classmethod
+    def filter(cls, value, view=None, request=None):
+        if value == "main_view":
             return SChAppSet.objects.filter(main_view=True)
-        elif f == "not_main_view":
+        elif value == "not_main_view":
             return SChAppSet.objects.filter(main_view=False)
         else:
             return SChAppSet.objects.all()
@@ -768,7 +751,7 @@ class SChApp(JSONModel):
                 else:
                     ret.append(app.name + "." + tab.name)
         if self.parent.ext_apps:
-            ext_apps = self.parent.ext_apps.split(",")
+            ext_apps = self.parent.ext_apps.replace("\n", ",").split(",")
         else:
             ext_apps = []
         if len(ext_apps) > 0:
@@ -867,6 +850,22 @@ class SChApp(JSONModel):
             return "data:image/svg+xml;utf8," + self.icon_code
         else:
             return self.icon
+
+    def get_models_to_import(self):
+        tab = []
+        for table in self.schtable_set.all():
+            if table.base_table and "." in table.base_table:
+                x = table.base_table.split(".")
+                if x[-2] != "models":
+                    if not x[-2] in tab:
+                        tab.append(x[-2])
+            for field in table.schfield_set.all():
+                if field.is_rel():
+                    if field.rel_to and "." in field.rel_to:
+                        x = field.rel_to.split(".")
+                        if not x[-2] in tab:
+                            tab.append(x[-2])
+        return tab
 
     def __str__(self):
         return self.name
@@ -1012,7 +1011,7 @@ class SChTable(models.Model):
     def get_base_table(self):
         l = self.base_table.split(".")
         if len(l) > 1 and l[-2] != "models":
-            return l[-1]
+            return l[-2] + ".models." + l[-1]
         else:
             return self.base_table
 
@@ -1175,7 +1174,12 @@ class SChField(models.Model):
         else:
             module = "models."
         if self.is_rel():
-            rel_model = self.rel_to.split(".")[-1]
+            # rel_model =self.rel_to.split('.')[-1]
+            x = self.rel_to.split(".")
+            if len(x) > 1:
+                rel_model = x[-2] + ".models." + x[-1]
+            else:
+                rel_model = self.rel_to
             # if self.type.startswith('Ptig'):
             #    if 'ForeignKey' in self.type:
             #        ret = "%s = %s%s(%s, on_delete=models.CASCADE, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \

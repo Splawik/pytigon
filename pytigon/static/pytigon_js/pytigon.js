@@ -2157,13 +2157,20 @@ register_global_event = function flx_register_global_event (event_type, fun, sel
 
 window.register_global_event = register_global_event;
 _get_value = function flx__get_value (elem, name) {
-    var x, x2;
+    var stub3_seq, stub4_itr, x, x1, x2, x3, xx;
     if ((elem.length > 0)) {
-        x = elem.closest(".ajax-region");
-        if ((x.length > 0)) {
-            x2 = _pymeth_find.call(x, sprintf("[name='%s']", name));
-            if ((x2.length > 0)) {
-                return x2.val();
+        x1 = elem.closest(".ajax-region");
+        x2 = elem.closest(".page");
+        x3 = jQuery(document);
+        stub3_seq = [x1, x2, x3];
+        if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
+        for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
+            x = stub3_seq[stub4_itr];
+            if ((x.length > 0)) {
+                xx = _pymeth_find.call(x, sprintf("[name='%s']", name));
+                if ((xx.length > 0)) {
+                    return xx.val();
+                }
             }
         }
     }
@@ -2171,15 +2178,15 @@ _get_value = function flx__get_value (elem, name) {
 };
 
 process_href = function flx_process_href (href, elem) {
-    var pos, process, ret, stub3_seq, stub4_itr, value, x1, x2;
+    var pos, process, ret, stub5_seq, stub6_itr, value, x1, x2;
     ret = [];
     if ((_pyfunc_op_contains("[[", href) && _pyfunc_op_contains("]]", href))) {
         x1 = _pymeth_split.call(href, "[[");
         process = false;
-        stub3_seq = x1;
-        if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
-        for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
-            pos = stub3_seq[stub4_itr];
+        stub5_seq = x1;
+        if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}
+        for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
+            pos = stub5_seq[stub6_itr];
             if (_pyfunc_truthy(process)) {
                 if (_pyfunc_op_contains("]]", pos)) {
                     x2 = _pymeth_split.call(pos, "]]", 1);
@@ -2207,11 +2214,11 @@ process_href = function flx_process_href (href, elem) {
 
 window.process_href = process_href;
 _get_click_event_from_tab = function flx__get_click_event_from_tab (target_element, target, href) {
-    var pos, stub5_seq, stub6_itr, url;
-    stub5_seq = EVENT_CLICK_TAB;
-    if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}
-    for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
-        pos = stub5_seq[stub6_itr];
+    var pos, stub7_seq, stub8_itr, url;
+    stub7_seq = EVENT_CLICK_TAB;
+    if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
+    for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
+        pos = stub7_seq[stub8_itr];
         if ((_pyfunc_op_equals(pos[0], "*") || _pyfunc_op_equals(pos[0], target))) {
             if ((_pyfunc_op_equals(pos[1], "*") || target_element.classList.contains(pos[1]))) {
                 url = correct_href(href, [target_element]);
@@ -2223,7 +2230,7 @@ _get_click_event_from_tab = function flx__get_click_event_from_tab (target_eleme
 };
 
 on_click_default_action = function flx_on_click_default_action (event, target_element) {
-    var _callback2, _get_or_post, callback, href, param, src_obj, stub8_, target, url;
+    var _callback2, _get_or_post, callback, href, param, src_obj, stub10_, target, url;
     target = target_element.getAttribute("target");
     src_obj = jQuery(target_element);
     href = target_element.getAttribute("xlink:href");
@@ -2282,7 +2289,7 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
         loading.create();
         loading.start();
         _callback = (function flx__callback (data) {
-            var data_element, new_callback, new_target, new_target_elem, new_url, stub7_;
+            var data_element, new_callback, new_target, new_target_elem, new_url, stub9_;
             loading.stop();
             loading.remove();
             data_element = get_elem_from_string(data);
@@ -2293,8 +2300,8 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
                 new_target = null;
             }
             if ((_pyfunc_truthy(new_target) && ((!_pyfunc_op_equals(new_target, target))))) {
-                stub7_ = _get_click_event_from_tab(target_element, new_target, url);
-                new_callback = stub7_[0];new_url = stub7_[1];
+                stub9_ = _get_click_event_from_tab(target_element, new_target, url);
+                new_callback = stub9_[0];new_url = stub9_[1];
                 new_callback(target_element, data_element, new_url, param, event);
             } else {
                 callback(target_element, data_element, url, param, event);
@@ -2314,8 +2321,8 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
         return null;
     }).bind(this);
 
-    stub8_ = _get_click_event_from_tab(target_element, target, href);
-    url = stub8_[0];callback = stub8_[1];
+    stub10_ = _get_click_event_from_tab(target_element, target, href);
+    url = stub10_[0];callback = stub10_[1];
     if (_pyfunc_truthy(callback)) {
         if (_pyfunc_op_equals(param, "file")) {
             _callback2 = (function flx__callback2 (data2) {
@@ -2583,9 +2590,9 @@ on_popup_error = function flx_on_popup_error (target_element, data_element, new_
 
 window.on_popup_error = on_popup_error;
 on_new_tab = function flx_on_new_tab (target_element, data_element, new_url, param, event) {
-    var data_element2, stub9_, title, title_alt;
-    stub9_ = _get_title(target_element, data_element, new_url);
-    title = stub9_[0];title_alt = stub9_[1];
+    var data_element2, stub11_, title, title_alt;
+    stub11_ = _get_title(target_element, data_element, new_url);
+    title = stub11_[0];title_alt = stub11_[1];
     data_element2 = data_element.querySelector("section.body-body");
     if ((!_pyfunc_truthy(data_element2))) {
         data_element2 = data_element;

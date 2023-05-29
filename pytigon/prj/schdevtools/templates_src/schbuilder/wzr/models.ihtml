@@ -15,10 +15,8 @@ import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
-{% for app_item in prj.get_ext_apps_without_pack %}
-from {{app_item}}.models import *
+{% for app_item in app.get_models_to_import %}import {{app_item}}.models
 {% endfor %}
-
 
 {{app.model_code|first_section|safe}}
 

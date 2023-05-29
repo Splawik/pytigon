@@ -15,33 +15,6 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
-from schwiki.models import *
-
-from schsimplescripts.models import *
-
-from schlog.models import *
-
-from schcommander.models import *
-
-from schtools.models import *
-
-from schattachements.models import *
-
-from schworkflow.models import *
-
-from schreports.models import *
-
-from schelements.models import *
-
-from standard_components.models import *
-
-from schprofile.models import *
-
-from schadmin.models import *
-
-from schtasks.models import *
-
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -175,7 +148,7 @@ class Example3Tag(models.Model):
             return {"app": "default", "table": "default", "parent_id": 0}
 
     @classmethod
-    def filter(cls, value):
+    def filter(cls, value, view=None, request=None):
         if value:
             app, tbl, id = value.split("__")
             return cls.objects.filter(app=app, table=tbl, parent_id=id)

@@ -13,30 +13,3 @@ from django.contrib import admin
 import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
-
-
-from schwiki.models import *
-
-from schsimplescripts.models import *
-
-from schlog.models import *
-
-from schcommander.models import *
-
-from schtools.models import *
-
-from schattachements.models import *
-
-from schworkflow.models import *
-
-from schreports.models import *
-
-from schelements.models import *
-
-from standard_components.models import *
-
-from schprofile.models import *
-
-from schadmin.models import *
-
-from schtasks.models import *

@@ -15,9 +15,6 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
-from schelements.models import *
-
-
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -100,7 +97,7 @@ class Comment(JSONModel):
     )
 
     @classmethod
-    def filter(cls, value):
+    def filter(cls, value, view=None, request=None):
         if value:
             app, tbl, id, grp = value.split("__")
             return cls.objects.filter(

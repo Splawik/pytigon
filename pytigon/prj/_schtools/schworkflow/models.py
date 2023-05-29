@@ -15,9 +15,6 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
-from schelements.models import *
-
-
 from pytigon_lib.schtools.tools import get_request
 
 
@@ -253,7 +250,7 @@ class WorkflowItem(JSONModel):
     )
 
     @classmethod
-    def filter(cls, value):
+    def filter(cls, value, view=None, request=None):
         if value:
             app, tbl, id, grp = value.split("__")
             if grp and grp.startswith("-"):

@@ -141,7 +141,6 @@ def page_view(request, page_id):
 
         if request.method == "POST":
             json_data = json.loads(request.body)
-            print("A1: ", json_data)
             modified = False
             for key, value in json_data.items():
                 if key in ("name", "new_value"):

@@ -1,0 +1,48 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New chart"
+
+%% list_row_header
+    th..._(Parent)
+    th..._(Name)
+    th..._(Title)
+    th..._(Form)
+    th..._(View)
+    th..._(Template)
+    
+
+%% list_row
+    td...{{ object.parent.name }}
+    td...{{ object.name }}
+    td...{{ object.title }}
+    td
+        % if object.form:
+            i class=fa fa-check
+    td
+        % if object.view:
+            i class=fa fa-check
+    td
+        % if object.template:
+            i class=fa fa-check
+    
+%% list_row_actions
+    % row_actions:
+        .edit
+        .field_edit/form,form
+        .field_edit/view,view
+        .field_edit/template,template
+        .delete
+
+%% row_edit
+    % form:
+        .parent:!,name,title

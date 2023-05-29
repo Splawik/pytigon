@@ -81,11 +81,14 @@ window.register_global_event = register_global_event
 
 def _get_value(elem, name):
     if elem.length > 0:
-        x = elem.closest(".ajax-region")
-        if x.length > 0:
-            x2 = x.find(sprintf("[name='%s']", name))
-            if x2.length > 0:
-                return x2.val()
+        x1 = elem.closest(".ajax-region")
+        x2 = elem.closest(".page")
+        x3 = jQuery(document)
+        for x in (x1, x2, x3):
+            if x.length > 0:
+                xx = x.find(sprintf("[name='%s']", name))
+                if xx.length > 0:
+                    return xx.val()
     return "[[ERROR]]"
 
 

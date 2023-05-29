@@ -14,32 +14,7 @@ import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
-
-from schwiki.models import *
-
-from schsimplescripts.models import *
-
-from schlog.models import *
-
-from schcommander.models import *
-
-from schtools.models import *
-
-from schattachements.models import *
-
-from schworkflow.models import *
-
-from schreports.models import *
-
-from schelements.models import *
-
-from standard_components.models import *
-
-from schprofile.models import *
-
-from schadmin.models import *
-
-from schtasks.models import *
+import schelements.models
 
 
 from schelements import models as schelements_models
@@ -94,11 +69,11 @@ class DemoElement:
                 )
         return queryset_or_obj
 
-    @staticmethod
-    def filter(f):
-        if f and f != "-":
+    @classmethod
+    def filter(cls, value, view=None, request=None):
+        if value and value != "-":
             try:
-                i = int(f)
+                i = int(value)
                 if i >= 0:
                     if i == 0:
                         return schelements_models.Element.objects.filter(parent=None)
@@ -107,7 +82,7 @@ class DemoElement:
                 else:
                     return schelements_models.Element.objects.filter(parent__id=i * -1)
             except:
-                return schelements_models.Element.objects.filter(type=f)
+                return schelements_models.Element.objects.filter(type=value)
         else:
             return schelements_models.Element.objects.all()
 
@@ -178,7 +153,7 @@ priority_CHOICE = [
 ]
 
 
-class DemoDocHead(DocHead):
+class DemoDocHead(schelements.models.DocHead):
     class Meta:
         verbose_name = _("Demo document head")
         verbose_name_plural = _("Demo document heads")
@@ -204,7 +179,7 @@ class DemoDocHead(DocHead):
 admin.site.register(DemoDocHead)
 
 
-class DemoDocItem(DocItem):
+class DemoDocItem(schelements.models.DocItem):
     class Meta:
         verbose_name = _("Demo document item")
         verbose_name_plural = _("Demo document items")

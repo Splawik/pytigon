@@ -1,0 +1,19 @@
+% extends "only_content.html"|translate:lang
+
+% load exfiltry
+% load exsyntax
+% load static
+
+%% content
+    div class=container-fluid mt-1
+        div class=row
+            % if form:
+                div class={% block page_form_col %}col-2{% endblock %}
+                    ptig-form src={{base_path}}bi/page_view/{{page.id}}/
+                        %% bi_page_form
+                            % inline_form:
+            %% bi_page_content
+                div class={% block page_chart_col %}{% if form %}col-9{% else %}col-10{% endif %}{% endblock %}
+                    % for chart in page.chart_set.all:
+                        div class={% block bi_page_item_class %}col{% endblock %}
+                            div class=bi_prj_{{chart.parent.parent.name}} bi_page_{{chart.parent.name}} bi_chart_{{chart.name}} auto-frame ajax-region ajax-frame ajax-link,,,href={{base_path}}bi/chart_view/{{chart.id}}/,,,target=refresh_frame

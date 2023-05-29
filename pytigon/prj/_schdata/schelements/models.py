@@ -15,9 +15,6 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
-from schtools.models import *
-
-
 import copy
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from django.template.loader import select_template
@@ -122,15 +119,6 @@ class Element(TreeModel):
         editable=True,
         verbose_name="Parent",
     )
-    first_ancestor = models.ForeignKey(
-        "self",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        editable=True,
-        verbose_name="First ancestor",
-        related_name="first_ancestors",
-    )
     type = models.CharField(
         "Element type",
         null=False,
@@ -147,6 +135,34 @@ class Element(TreeModel):
     )
     name = models.CharField(
         "Name", null=False, blank=False, editable=True, max_length=64
+    )
+    description = models.CharField(
+        "Description", null=True, blank=True, editable=True, max_length=256
+    )
+    quantity = models.IntegerField(
+        "Quantity",
+        null=True,
+        blank=True,
+        editable=True,
+        default=1,
+    )
+    key = models.ForeignKey(
+        "auth.Group",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    key_path = models.CharField(
+        "Key path", null=True, blank=True, editable=False, db_index=True, max_length=256
+    )
+    first_ancestor = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        editable=True,
+        verbose_name="First ancestor",
+        related_name="first_ancestors",
     )
     grand_parent1 = models.ForeignKey(
         "self",
@@ -184,17 +200,12 @@ class Element(TreeModel):
         verbose_name="Grand parent 4",
         related_name="grandparent4",
     )
-    key = models.ForeignKey(
-        "auth.Group",
-        on_delete=models.CASCADE,
+    can_have_children = models.BooleanField(
+        "Can have children",
         null=True,
         blank=True,
-    )
-    key_path = models.CharField(
-        "Key path", null=True, blank=True, editable=False, db_index=True, max_length=256
-    )
-    description = models.CharField(
-        "Description", null=True, blank=True, editable=True, max_length=256
+        editable=False,
+        default=True,
     )
 
     def init_new(self, request, view, param=None):
@@ -400,6 +411,11 @@ class Element(TreeModel):
             id = -1
         return "/schsys/treedialog/schelements/Element/%s/" % id
 
+    @staticmethod
+    def add_type(type_code, type_name):
+        global element_type_choice
+        element_type_choice.append((type_code, type_name))
+
     def get_derived_object(self, param=None):
         t = None
         if type(self) == Element:
@@ -411,9 +427,7 @@ class Element(TreeModel):
                         return self
                     if t in s:
                         model = apps.get_model(s[t]["app"], s[t]["table"])
-                        obj2 = copy.copy(self)
-                        obj2.__class__ = model
-                        return obj2
+                        return model.objects.get(pk=self.id)
                 else:
                     t = self.type
                     if t in s:
@@ -421,9 +435,7 @@ class Element(TreeModel):
                             return getattr(self, s[t]["table"].lower())
                         else:
                             model = apps.get_model(s[t]["app"], s[t]["table"])
-                            obj2 = copy.copy(self)
-                            obj2.__class__ = model
-                            return obj2
+                            return model.objects.get(pk=self.id)
         return self
 
     def template_for_object(self, view, context, doc_type):
@@ -830,7 +842,7 @@ class DocHead(JSONModel):
         return ret
 
     @classmethod
-    def filter(cls, value):
+    def filter(cls, value, view=None, request=None):
         if value and value.startswith("_code_"):
             code = value.replace("_code_", "")
             return cls.objects.filter(parent_element__code=code)

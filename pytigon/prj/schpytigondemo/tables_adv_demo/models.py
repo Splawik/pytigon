@@ -14,32 +14,7 @@ import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
-
-from schwiki.models import *
-
-from schsimplescripts.models import *
-
-from schlog.models import *
-
-from schcommander.models import *
-
-from schtools.models import *
-
-from schattachements.models import *
-
-from schworkflow.models import *
-
-from schreports.models import *
-
-from schelements.models import *
-
-from standard_components.models import *
-
-from schprofile.models import *
-
-from schadmin.models import *
-
-from schtasks.models import *
+import tables_demo.models
 
 
 from tables_demo.models import *
@@ -88,7 +63,7 @@ class Album(models.Model):
     )
 
     @classmethod
-    def filter(cls, value):
+    def filter(cls, value, view=None, request=None):
         if value:
             return cls.objects.filter(genre=value)
         else:
@@ -174,7 +149,7 @@ class Track(models.Model):
         "Name", null=False, blank=False, editable=True, max_length=64
     )
     param = ext_models.PtigForeignKey(
-        Example4Parameter,
+        tables_demo.models.Example4Parameter,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
@@ -186,7 +161,7 @@ class Track(models.Model):
         can_add=False,
     )
     params = ext_models.PtigManyToManyField(
-        Example4Parameter,
+        tables_demo.models.Example4Parameter,
         null=False,
         blank=False,
         editable=True,

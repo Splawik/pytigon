@@ -1,5 +1,5 @@
 APPS = [
-    "bi",
+    "schbi",
 ]
 APPS_EXT = []
 PUBLIC = False

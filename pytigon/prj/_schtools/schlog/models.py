@@ -15,9 +15,6 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
-from schelements.models import *
-
-
 from datetime import datetime
 
 
@@ -88,7 +85,7 @@ class Log(models.Model):
     )
 
     @classmethod
-    def filter(cls, value):
+    def filter(cls, value, view=None, request=None):
         if value:
             app, tbl, id, grp = value.split("__")
             return cls.objects.filter(

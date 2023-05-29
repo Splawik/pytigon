@@ -14,8 +14,7 @@ import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
-
-from schelements.models import *
+import schelements.models
 
 
 from django.core.mail import send_mail
@@ -118,7 +117,7 @@ class Attachement(JSONModel):
         "Select file", null=False, blank=False, editable=True, upload_to=upload_path_fun
     )
     folder = ext_models.PtigForeignKey(
-        Element,
+        schelements.models.Element,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
@@ -131,7 +130,7 @@ class Attachement(JSONModel):
     )
 
     @classmethod
-    def filter(cls, value):
+    def filter(cls, value, view=None, request=None):
         if value:
             app, tbl, id, grp = value.split("__")
             return cls.objects.filter(
