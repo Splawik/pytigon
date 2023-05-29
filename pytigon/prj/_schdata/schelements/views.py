@@ -361,12 +361,7 @@ def discard(request, pk):
     return change_status(request, pk, action="undo")
 
 
-def view_elements(request, code):
-
-    # if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
-    #    url_base = '/' + settings.URL_ROOT_FOLDER + '/'
-    # else:
-    #    url_base = '/'
+def view_elements(request, code, filter, template):
 
     id = 0
 
@@ -375,8 +370,17 @@ def view_elements(request, code):
         if len(objs) > 0:
             id = objs[0].pk
 
+    if not (filter and filter != "-"):
+        filter = str(id)
+
+    if template and template != "-":
+        target = "form__" + template
+    else:
+        target = "form"
+
     href2 = make_href(
-        "/schelements/table/Element/%d/%d/form/treelist/?only_content" % (id, id),
+        "/schelements/table/Element/%d/%s/%s/treelist/?only_content"
+        % (id, filter, target),
         request.get_full_path(),
     )
     return HttpResponseRedirect(href2)
@@ -396,7 +400,7 @@ def view_elements_as_tree(request, code, filter, template):
         if len(objs) > 0:
             id = objs[0].pk
 
-    if template:
+    if template and template != "-":
         target = "form__" + template
     else:
         target = "form"

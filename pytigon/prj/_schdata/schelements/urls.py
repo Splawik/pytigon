@@ -32,7 +32,7 @@ urlpatterns = [
     gen_row_action("DocHead", "approve", views.approve),
     gen_row_action("DocHead", "discard", views.discard),
     path(
-        "view_elements/<slug:code>/",
+        "view_elements/<slug:code>/<slug:filter>/<slug:template>/",
         views.view_elements,
         {},
         name="schelements_view_elements",
