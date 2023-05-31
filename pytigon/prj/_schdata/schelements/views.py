@@ -424,4 +424,9 @@ def view_elements_of_type(request, type, template):
         )
         return HttpResponseRedirect(href)
     else:
-        raise Http404
+        href = make_href(
+            "/schelements/table/Element/type/form__%s/list/?view_in=desktop"
+            % (template if template != "-" else ""),
+            request.get_full_path(),
+        )
+    return HttpResponseRedirect(href)

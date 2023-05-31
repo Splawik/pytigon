@@ -523,6 +523,14 @@ class Element(TreeModel):
         else:
             return self._get_new_buttons(self.type)
 
+    @classmethod
+    def filter(cls, value, view=None, request=None):
+        print("X1: ", value)
+        if value and value != "-":
+            return cls.objects.filter(type=value)
+        else:
+            return cls.objects.all()
+
     objects = ElementManager()
 
 
