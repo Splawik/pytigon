@@ -36,6 +36,7 @@ from django.conf import settings
 from django.db import transaction
 from django_select2.forms import HeavySelect2Widget, ModelSelect2Widget
 from django.core.validators import int_list_validator
+from django.http import Http404
 
 from pytigon_lib.schtools.tools import content_to_function
 from pytigon_lib.schdjangoext.fastform import form_from_str
@@ -410,3 +411,17 @@ def view_elements_as_tree(request, code, filter, template):
         request.get_full_path(),
     )
     return HttpResponseRedirect(href2)
+
+
+def view_elements_of_type(request, type, template):
+
+    s = models.Element.get_structure()
+    if type in s:
+        x = s[type]
+        href = make_href(
+            "/%s/table/%s/-/form__%s/list/?view_in=desktop"
+            % (x["app"], x["table"], template if template != "-" else "")
+        )
+        return HttpResponseRedirect(href)
+    else:
+        raise Http404

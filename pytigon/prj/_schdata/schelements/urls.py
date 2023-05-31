@@ -43,6 +43,12 @@ urlpatterns = [
         {},
         name="schelements_view_elements_as_tree",
     ),
+    path(
+        "view_elements_of_type/<slug:type>/<slug:template>/",
+        views.view_elements_of_type,
+        {},
+        name="schelements_view_elements_of_type",
+    ),
 ]
 
 gen = generic_table_start(urlpatterns, "schelements", views)

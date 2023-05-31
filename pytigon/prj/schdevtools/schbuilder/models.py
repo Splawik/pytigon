@@ -15,23 +15,6 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
-from standard_components.models import *
-
-from schcommander.models import *
-
-from schtools.models import *
-
-from schtasks.models import *
-
-from schsimplescripts.models import *
-
-from schelements.models import *
-
-from schadmin.models import *
-
-from schwiki.models import *
-
-
 import os.path
 from pytigon_lib.schhtml.htmltools import superstrip
 import inspect
@@ -761,16 +744,18 @@ class SChApp(JSONModel):
         ret = [
             "'self'",
         ]
+        tmp = set()
         for app in self.parent.schapp_set.all():
             for tab in app.schtable_set.all():
                 if app.name == self.name:
                     ret.append(tab.name)
                 else:
-                    ret.append(app.name + "." + tab.name)
+                    tmp.add(app.name + "." + tab.name)
         if self.parent.ext_apps:
             ext_apps = self.parent.ext_apps.replace("\n", ",").split(",")
         else:
             ext_apps = []
+
         if len(ext_apps) > 0:
             for ext_app in ext_apps:
                 if "schserw." in ext_app:
@@ -781,27 +766,45 @@ class SChApp(JSONModel):
                         for name in dir(models):
                             obj = getattr(models, name)
                             if inspect.isclass(obj):
-                                ret.append(ext_app + "." + name)
+                                tmp.add(ext_app + "." + name)
                     except:
                         pass
             for ext_app in ext_apps:
                 if not "schserw." in ext_app:
                     try:
-                        appset = ext_app.split(".")[0]
-                        appname = ext_app.split(".")[1]
-                        appsetpath = norm_path(
-                            os.path.dirname(__file__) + "/../../" + appset
-                        )
-                        if not appsetpath in sys.path:
-                            sys.path.append(appsetpath)
-                        module = __import__(appname + ".models")
-                        models = getattr(module, "models")
-                        for name in dir(models):
-                            obj = getattr(models, name)
-                            if inspect.isclass(obj):
-                                ret.append(appname + "." + name)
+                        appset = ext_app.split(".")[0].strip()
+                        appname = ext_app.split(".")[1].strip()
+                        prj_path = os.path.join(settings.PRJ_PATH, appset)
+                        if not os.path.exists(prj_path):
+                            prj_path = os.path.join(settings.PRJ_PATH_ALT, appset)
+                            if not os.path.exists(prj_path):
+                                continue
+                        model_path = os.path.join(prj_path, appname, "models.py")
+                        if os.path.exists(model_path):
+                            line1 = ""
+                            line2 = ""
+                            line3 = ""
+                            with open(model_path, "rt") as f:
+                                txt = f.read()
+                                for line in txt.split("\n"):
+                                    if "class Meta:" in line:
+                                        x = None
+                                        if line1.startswith("class "):
+                                            x = line1
+                                        elif line2.startswith("class "):
+                                            x = line2
+                                        elif line3.startswith("class "):
+                                            x = line3
+                                        if x:
+                                            name = x[6:].split("(")[0].strip()
+                                            tmp.add(appname + "." + name)
+                                    line3 = line2
+                                    line2 = line1
+                                    line1 = line
                     except:
-                        pass
+                        traceback.print_exception(*sys.exc_info())
+            if tmp:
+                ret += sorted(tmp)
         return ret
 
     def get_urls(self, main=False):
