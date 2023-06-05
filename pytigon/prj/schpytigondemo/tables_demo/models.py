@@ -17,6 +17,7 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from schattachements.models import Attachement
 
 
 @receiver(post_save, sender=Attachement)

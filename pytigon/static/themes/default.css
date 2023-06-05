@@ -10,6 +10,9 @@ div.content-wrapper {
   width: 100%;
   height: 100%; }
 
+div.page-content {
+  height: 100%; }
+
 .app_chose_title {
   color: gold !important;
   text-align: center;

@@ -1,0 +1,6 @@
+_("User name")
+_("Email")
+_("Serial number")
+_("Description")
+_("IP")
+_("Active")

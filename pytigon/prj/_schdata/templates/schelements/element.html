@@ -97,6 +97,18 @@
         {{object.name}}
         </td>
 {% endblock %}
+{% block list_row_actions %}
+        {% if object.call__can_change|proxy_call:user %}
+                {% row_actions %}
+                        edit
+                {% endrow_actions %}
+        {% endif %}
+        {% if object.call__can_delete|proxy_call:user %}
+                {% row_actions %}
+                        delete
+                {% endrow_actions %}
+        {% endif %}
+{% endblock %}
 {% block row_edit %}
         {% if form_add %}
                 {% form %}

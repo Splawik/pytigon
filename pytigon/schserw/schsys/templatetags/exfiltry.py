@@ -225,6 +225,11 @@ def args(obj, arg):
     return obj
 
 
+@register.filter(name="proxy_call")
+def proxy_call(proxy, arg):
+    return proxy.call(arg)
+
+
 # conversion functions
 @register.filter(name="bencode")
 def bencode(value):

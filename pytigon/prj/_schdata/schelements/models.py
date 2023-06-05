@@ -42,6 +42,51 @@ class ElementManager(models.Manager):
             return super().get_queryset()
 
 
+GROUP_FOR_TYPE = None
+
+STANDARD_STRUCTURE = {
+    "ROOT": {"next": ["I-GRP", "I-GRP-D", "C-GRP"]},
+    "O-GRP": {"title": "Group of owners", "table": "Element", "app": "schelements"},
+    "O-COM": {"title": "Companies", "table": "Element", "app": "schelements"},
+    "O-DIV": {"title": "Divisions", "table": "Element", "app": "schelements"},
+    "O-DEP": {"title": "Departaments", "table": "Element", "app": "schelements"},
+    "O-POS": {"title": "Positions", "table": "Element", "app": "schelements"},
+    "O-EMP": {"title": "Employees", "table": "Element", "app": "schelements"},
+    "O-LOC": {"title": "Locations", "table": "Element", "app": "schelements"},
+    "O-PER": {"title": "Persons", "table": "Element", "app": "schelements"},
+    "O-CUS": {"title": "Customers", "table": "Element", "app": "schelements"},
+    "O-SUP": {"title": "Suppliers", "table": "Element", "app": "schelements"},
+    "O-DEV": {"title": "Devices", "table": "Element", "app": "schelements"},
+    "O-OTH": {"title": "Other owners", "table": "Element", "app": "schelements"},
+    "O-ALI": {"title": "Aliases", "table": "Element", "app": "schelements"},
+    "I-GRP": {"title": "Group of items", "table": "Element", "app": "schelements"},
+    "I-SRV": {"title": "Services", "table": "Element", "app": "schelements"},
+    "I-INT": {"title": "Intellectual values", "table": "Element", "app": "schelements"},
+    "I-CUR": {"title": "Currency", "table": "Element", "app": "schelements"},
+    "I-MAT": {"title": "Materials", "table": "Element", "app": "schelements"},
+    "I-RAW": {"title": "Raw materials", "table": "Element", "app": "schelements"},
+    "I-PRD": {"title": "Products", "table": "Element", "app": "schelements"},
+    "I-IPR": {
+        "title": "Intermediate products",
+        "table": "Element",
+        "app": "schelements",
+    },
+    "I-MER": {"title": "Merchandises", "table": "Element", "app": "schelements"},
+    "I-DEV": {"title": "Devices", "table": "Element", "app": "schelements"},
+    "I-PMA": {"title": "Production machines", "table": "Element", "app": "schelements"},
+    "I-VEH": {"title": "Vehicles", "table": "Element", "app": "schelements"},
+    "I-OTH": {"title": "Other items", "table": "Element", "app": "schelements"},
+    "I-ALI": {"title": "Item aliases", "table": "Element", "app": "schelements"},
+    "C-SYS": {"title": "Config - system", "table": "Element", "app": "schelements"},
+    "C-UNT": {"title": "Units of measure", "table": "Element", "app": "schelements"},
+    "C-DIC": {"title": "Dictionaries", "table": "Element", "app": "schelements"},
+    "C-OTH": {"title": "Config - others", "table": "Element", "app": "schelements"},
+    "C-ALI": {"title": "Config aliases", "table": "Element", "app": "schelements"},
+    "C-FLD": {"title": "Config folders", "table": "Element", "app": "schelements"},
+    "C-GRP": {"title": "Group of config", "table": "Element", "app": "schelements"},
+}
+
+
 account_type_choice_2 = [
     ("B", "Balance"),
     ("O", "Off-balance"),
@@ -90,6 +135,7 @@ element_type_choice = [
     ("C-OTH", "Config/Other"),
     ("C-ALI", "Config/Alias"),
     ("C-FLD", "Config/Folder"),
+    ("C-GRP", "Config/Group"),
 ]
 
 doctype_status = [
@@ -207,25 +253,72 @@ class Element(TreeModel):
         editable=False,
         default=True,
     )
+    can_view_permission = models.CharField(
+        "Permission for view element",
+        null=True,
+        blank=True,
+        editable=True,
+        max_length=64,
+    )
+    can_change_permission = models.CharField(
+        "Permission for change element",
+        null=True,
+        blank=True,
+        editable=True,
+        max_length=64,
+    )
+    can_delete_permission = models.CharField(
+        "Permission for delete element",
+        null=True,
+        blank=True,
+        editable=True,
+        max_length=64,
+    )
 
     def init_new(self, request, view, param=None):
         defaults = {"type": param}
         return defaults
 
     def save(self, *argi, **argv):
+        if not self.parent:
+            global GROUP_FOR_TYPE
+            if GROUP_FOR_TYPE == None:
+                GROUP_FOR_TYPE = {}
+                object_list = Element.objects.filter(Q(type="I-GRP") | Q(type="O-GRP"))
+                for obj in object_list:
+                    if obj.code:
+                        if "(" in obj.description and ")" in obj.description:
+                            types = (
+                                obj.description.split("(")[1]
+                                .split(")")[0]
+                                .replace(",", ";")
+                                .split(";")
+                            )
+                            for t in types:
+                                t2 = t.strip()
+                                if t2:
+                                    GROUP_FOR_TYPE[t2] = obj
+            if self.type in GROUP_FOR_TYPE:
+                self.parent = GROUP_FOR_TYPE[self.type]
+
         if not self.code:
-            object_list = Element.objects.filter(
-                type=self.type, code__startswith=self.type
-            ).order_by("-id")
-            if len(object_list) > 0:
-                x = object_list[0].code.split("-")[-1]
-                try:
-                    i = int(x) + 1
-                except:
-                    i = 1
-                self.code = self.type + "-" + str(i)
-            else:
-                self.code = self.type + "-1"
+            self.code = self.gen_code()
+
+        if hasattr(self, "get_structure"):
+            s = self.get_structure()
+            if self.type in s and "table" in s[self.type] and "app" in s[self.type]:
+                if not self.can_view_permission:
+                    self.can_view_permission = (
+                        s[self.type]["app"] + ".view_" + s[self.type]["table"].lower()
+                    )
+                if not self.can_change_permission:
+                    self.can_change_permission = (
+                        s[self.type]["app"] + ".change_" + s[self.type]["table"].lower()
+                    )
+                if not self.can_delete_permission:
+                    self.can_delete_permission = (
+                        s[self.type]["app"] + ".delete_" + s[self.type]["table"].lower()
+                    )
 
         path = self.code
         if self.key:
@@ -483,19 +576,21 @@ class Element(TreeModel):
         return Element._get_new_buttons("ROOT")
 
     def get_new_buttons(self):
-        if self.type in ("O-GRP", "I-GRP"):
+        if self.type in ("O-GRP", "I-GRP", "C-GRP") and hasattr(
+            Element, "get_structure"
+        ):
             obj = self
-            while obj and obj.type in ("O-GRP", "I-GRP"):
+            while obj and obj.type in ("O-GRP", "I-GRP", "C-GRP"):
                 obj = obj.parent
             if obj:
                 buttons = self._get_new_buttons(obj.type)
             else:
                 buttons = self._get_new_buttons("ROOT")
             if self.description and "(" in self.description and ")" in self.description:
-                item = self.description.split("(")[1].split(")")[0]
-                if not "," in item and not ";" in item:
-                    s = Element.get_structure()
-                    if item in s:
+                items = self.description.split("(")[1].split(")")[0]
+                s = Element.get_structure()
+                for item in items.replace(",", ";").split(";"):
+                    if item and item in s:
                         button = {}
                         button["type"] = item
                         if "title" in s[item]:
@@ -525,11 +620,65 @@ class Element(TreeModel):
 
     @classmethod
     def filter(cls, value, view=None, request=None):
-        print("X1: ", value)
         if value and value != "-":
             return cls.objects.filter(type=value)
         else:
             return cls.objects.all()
+
+    def gen_standard_code(self):
+        code = ""
+        if self.parent and self.type in ("I-MAT", "I-RAW", "I-PRD", "I-IPR", "I-MER"):
+            if self.parent.type in ("I-GRP",):
+                code = self.parent.code
+            if self.parent.parent and self.parent.parent.type in ("I-GRP",):
+                code = self.parent.parent.code + "-" + code
+            if code:
+                code += "-"
+            obj = (
+                Element.objects.filter(type=self.type, code__startswith=code)
+                .order_by("-code")
+                .first()
+            )
+            if obj:
+                try:
+                    n = int(obj.code[len(code) :])
+                    n += 1
+                    code += str(n)
+                except:
+                    code = code + "0"
+            else:
+                code = code + "1"
+            return code
+        return None
+
+    def gen_code(self):
+        code = ""
+        try:
+            code = super().gen_code()
+        except:
+            code = self.gen_standard_code()
+        return code
+
+    def can_view(self, user):
+        if self.can_view_permission:
+            return user.has_perm("can_view_permission")
+        else:
+            return user.has_perm("schelements.view_element")
+
+    def can_change(self, user):
+        if self.can_change_permission:
+            return user.has_perm("can_change_permission")
+        else:
+            return user.has_perm("schelements.change_element")
+
+    def can_delete(self, user):
+        if self.can_delete_permission:
+            return user.has_perm("can_delete_permission")
+        else:
+            return user.has_perm("schelements.delete_element")
+
+    def can_add(self, user, child_type):
+        return user.has_perm("schelements.add_element")
 
     objects = ElementManager()
 

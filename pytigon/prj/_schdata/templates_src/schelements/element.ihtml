@@ -79,6 +79,14 @@
     td...{{object.name}}
 
 
+%% list_row_actions
+    % if object.call__can_change|proxy_call:user
+        % row_actions:
+            .edit
+    % if object.call__can_delete|proxy_call:user
+        % row_actions:
+            .delete
+
 %% row_edit
     % if form_add
         % form:
