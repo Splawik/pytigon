@@ -59,6 +59,11 @@
     % if content_limited_to and content_limited_to == 'min':
     % else:
         {{ block.super }}
+
+%% list_content_header
+    % if standard_web_browser != 6:
+        {{ block.super }}
+
 %% list_content_header_first_row
     % if content_limited_to and content_limited_to == 'min':
     % else:

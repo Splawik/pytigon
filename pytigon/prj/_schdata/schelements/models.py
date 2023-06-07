@@ -332,11 +332,12 @@ class Element(TreeModel):
                         s[self.type]["app"] + ".delete_" + s[self.type]["table"].lower()
                     )
 
-        path = self.code
+        path = self.code if self.code else ""
 
         tab = self.parents()
         for pos in tab:
-            path = pos.code + "/" + path
+            if pos.code:
+                path = pos.code + "/" + path
 
         self.path = path
 
@@ -417,18 +418,6 @@ class Element(TreeModel):
                 break
             parent = parent.parent
         return p
-
-    def del_get_children(self, child_type):
-        ret = []
-        object_list = Element.objects.filter(parent=self)
-        for child in object_list:
-            if child.type == child_type:
-                ret.append(child)
-            else:
-                x = child.get_children(child_type)
-                if x:
-                    ret.extend(list(x))
-        return ret
 
     def q_for_children(self, child_type):
         ret = []
@@ -520,6 +509,8 @@ class Element(TreeModel):
                     t = param["view"].kwargs["add_param"]
                     if t == "-":
                         return self
+                    if s[t]["app"] == "schelements" and s[t]["table"] == "Element":
+                        return self
                     if t in s:
                         model = apps.get_model(s[t]["app"], s[t]["table"])
                         return model.objects.get(pk=self.id)
@@ -529,6 +520,11 @@ class Element(TreeModel):
                         if hasattr(self, s[t]["table"].lower()):
                             return getattr(self, s[t]["table"].lower())
                         else:
+                            if (
+                                s[t]["app"] == "schelements"
+                                and s[t]["table"] == "Element"
+                            ):
+                                return self
                             model = apps.get_model(s[t]["app"], s[t]["table"])
                             return model.objects.get(pk=self.id)
         return self

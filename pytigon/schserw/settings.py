@@ -80,6 +80,7 @@ MANAGERS = ADMINS
 TIME_ZONE = "Europe/Warsaw"
 LANGUAGE_CODE = "pl"
 USE_I18N = True
+USE_L10N = False
 SITE_ID = 1
 LANGUAGES = [["en", "English"], ["pl", "Polish"]]
 LOGIN_REDIRECT_URL = "/"
