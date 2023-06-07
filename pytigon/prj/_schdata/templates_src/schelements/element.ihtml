@@ -95,7 +95,7 @@
         % form:
             .parent,type:!
     % form: 
-        "code", "name", "key"   
+        "code", "name", "permission1", "permission2", "permission3"   
     %if not object.type or object.type == 'S'
         % form:
             "grand_parent1", "grand_parent2", "grand_parent3"

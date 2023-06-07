@@ -192,14 +192,26 @@ class Element(TreeModel):
         editable=True,
         default=1,
     )
-    key = models.ForeignKey(
-        "auth.Group",
+    permission1 = models.ForeignKey(
+        "auth.Permission",
+        related_name="permission_set_perm1",
         on_delete=models.CASCADE,
         null=True,
         blank=True,
     )
-    key_path = models.CharField(
-        "Key path", null=True, blank=True, editable=False, db_index=True, max_length=256
+    permission2 = models.ForeignKey(
+        "auth.Permission",
+        related_name="permission_set_perm2",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    permission3 = models.ForeignKey(
+        "auth.Permission",
+        related_name="permission_set_perm3",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
     first_ancestor = models.ForeignKey(
         "self",
@@ -321,22 +333,12 @@ class Element(TreeModel):
                     )
 
         path = self.code
-        if self.key:
-            key_path = self.key.name
-        else:
-            key_path = ""
 
         tab = self.parents()
         for pos in tab:
             path = pos.code + "/" + path
-            if pos.key:
-                if key_path:
-                    key_path = pos.key.name + "/" + key_path
-                else:
-                    key_path = pos.key.name
 
         self.path = path
-        self.key_path = key_path
 
         if len(tab) > 0:
             self.first_ancestor = tab[-1]

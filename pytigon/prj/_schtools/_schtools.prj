@@ -823,7 +823,7 @@
                         "name": "Parameter",
                         "ordering": "['id']",
                         "proxy_model": "",
-                        "table_code": "@classmethod\n    def get_dict(cls, type, subtype):\n        d = {}\n        object_list = cls.objects.filter(type=type, subtype=subtype)\n        for obj in object_list:\n            d[obj.key] = obj.value\n        return d",
+                        "table_code": "@classmethod\ndef get_dict(cls, type, subtype):\n    d = {}\n    object_list = cls.objects.filter(type=type, subtype=subtype)\n    for obj in object_list:\n        d[obj.key] = obj.value\n    return d\n    ",
                         "url_params": "",
                         "verbose_name": "Parameter",
                         "verbose_name_plural": "Parameter"
