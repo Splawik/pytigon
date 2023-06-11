@@ -1,0 +1,37 @@
+.select2-selection {
+    padding-top: 1.625rem !important;
+    min-height: calc(3.5rem + 2px) !important;
+}
+
+span.select2-selection {
+    padding-left: 0px !important;
+}
+
+span.select2-selection {
+    border-top: none !important;
+    border-left: none !important;
+    border-right: none !important;
+    border-radius: unset !important;
+}
+
+:root {
+    --bs-primary-rgb: 30, 120, 180;
+}
+
+div.bootstrap-table div.columns.float-right {
+    margin-top: 5px !important;
+}
+
+div.bootstrap-table div.search input {
+    height: 2.4rem;
+    margin-top: 0.4rem;
+}
+
+a.foreignkey_button {
+    top: 5px;
+}
+
+.form-group.form-floating label,
+.form-group.form-floating form-label {
+    left: 0px;
+}

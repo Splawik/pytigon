@@ -1432,8 +1432,8 @@ moveelement_init = function flx_moveelement_init (dest_elem) {
 register_mount_fun(moveelement_init);
 select2_init = function flx_select2_init (dest_elem) {
     var _onloadeddata, control, controls, init_select2_ctrl, set_select2_value, stub15_seq, stub16_itr;
-    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2:not(.select2-full-width)")).djangoSelect2)(({minimumInputLength: 0}));
-    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2.select2-full-width")).djangoSelect2)(({minimumInputLength: 0}));
+    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2:not(.select2-full-width)")).djangoSelect2)(({minimumInputLength: 0, placeholder: "Select an option"}));
+    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2.select2-full-width")).djangoSelect2)(({minimumInputLength: 0, placeholder: "Select an option"}));
     set_select2_value = (function flx_set_select2_value (sel2, id, text) {
         _pymeth_append.call(sel2, (jQuery("<option>", ({value: id, text: text}))));
         sel2.val(id.toString());
@@ -3005,9 +3005,6 @@ old_datetable_set_height = function flx_old_datetable_set_height (element) {
 
 datetable_set_height = function flx_datetable_set_height (element) {
     var dy, elem, panel;
-    if (_pyfunc_truthy((jQuery(element).hasClass)("table_get"))) {
-        return null;
-    }
     if ((!_pyfunc_truthy(_is_visible(element)))) {
         return null;
     }

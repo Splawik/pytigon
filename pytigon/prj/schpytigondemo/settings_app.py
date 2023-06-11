@@ -61,8 +61,8 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
 # BOOTSTRAP_TEMPLATE = "bootswatch/sandstone"
 
 # BOOTSTRAP_TEMPLATE = "bootswatch/flatly"
-# BOOTSTRAP_TEMPLATE = "bootswatch/yeti"
-BOOTSTRAP_TEMPLATE = "bootswatch/materia"
+BOOTSTRAP_TEMPLATE = "bootswatch/yeti"
+# BOOTSTRAP_TEMPLATE = "bootswatch/materia"
 
 XMLRPC_PORT = 7080
 # PYODIDE = True
@@ -236,6 +236,22 @@ CHANNELS_URL_TAB += [
         "schcommander.consumers.ShellConsumer",
     ),
     (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schcommander/shell/channel/",
+        "schcommander.consumers.ShellConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
+        URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
+        "schtasks.consumers.TaskEventsConsumer",
+    ),
+    (
         URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
         "schtasks.consumers.TaskEventsConsumer",
     ),
@@ -311,7 +327,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.06.02 13:59:56"
+GEN_TIME = "2023.06.11 17:20:13"
 OFFLINE_SUPPORT = True
 
 

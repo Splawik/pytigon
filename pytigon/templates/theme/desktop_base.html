@@ -138,24 +138,13 @@
                         {% endif %}
                         {% css_link 'vanillajs_plugins/icheck-material-1.0.1/icheck-material.min.css' %}
                 {% endblock %}
+                {% css_link 'themes/default.css' %}
                 {% block theme_css_links %}
-                        {% if 'materia' in settings.BOOTSTRAP_TEMPLATE %}
-                                <style >
-    span.select2-selection{
-        border-top: none !important;
-        border-left: none !important;
-        border-right: none !important;
-        border-radius: unset !important
-    }
-    :root{
-        --bs-primary-rgb: 30,120,180
-    }
-
-</style>
+                        {% if theme %}
+                                {% css_link 'themes/'|append_str:theme|append_str:'.css' %}
                         {% endif %}
                 {% endblock %}
-                {% block theme_css_links_spec %}
-                        {% css_link 'themes/default.css' %}
+                {% block browser_type_css_links %}
                         {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
                 {% endblock %}
         {% endcompress %}

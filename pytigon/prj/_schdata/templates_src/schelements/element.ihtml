@@ -95,9 +95,9 @@
         % form:
             .parent,type:!
     % form: 
-        "code", "name", "permission1", "permission2", "permission3"   
+        "code", "name", "can_delete_permission", "can_add_permission", "can_change_permission", "can_delete_permission"   
     %if not object.type or object.type == 'S'
         % form:
-            "grand_parent1", "grand_parent2", "grand_parent3"
+            "grand_parent1", "grand_parent2", "grand_parent3", "grand_parent4"
     % form:
         "description"

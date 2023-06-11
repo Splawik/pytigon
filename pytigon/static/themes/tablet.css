@@ -131,12 +131,8 @@ header.main-header nav.navbar {
 .main-header .navbar-collapse div.card {
   width: 400px; }
 
-.main-header .navbar-collapse div.card p {
-  font-size: 14px; }
-
 /* sidebar menu */
 section.sidebar {
-  font-size: 14px;
   min-height: 100%; }
 
 ul.sidebar-menu ul.treeview-menu {

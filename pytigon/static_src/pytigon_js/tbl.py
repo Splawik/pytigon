@@ -57,8 +57,8 @@ def old_datetable_set_height(element):
 
 def datetable_set_height(element):
 
-    if jQuery(element).hasClass("table_get"):
-        return
+    # if jQuery(element).hasClass("table_get"):
+    #    return
     if not _is_visible(element):
         return
 

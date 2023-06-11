@@ -193,15 +193,10 @@ div.table-and-details {
   padding: 0.5rem; }
 
 div.bootstrap-table div.columns.float-right {
-  margin-right: 2px;
-  margin-top: 5px !important; }
+  margin-right: 2px; }
 
 div.bootstrap-table div.fixed-table-toolbar div.columns button {
   width: 50px; }
-
-div.bootstrap-table div.search input {
-  height: 2.4rem;
-  margin-top: 0.4rem; }
 
 div.tableframe {
   position: relative; }
@@ -236,31 +231,54 @@ form .row .row {
   margin-right: 0px;
   margin-left: 0px; }
 
-.form-group label, .form-group form-label {
-  font-style: italic;
-  font-size: 0.7rem;
-  left: auto; }
+.form-group {
+  position: relative; }
+  .form-group label, .form-group form-label {
+    font-style: italic;
+    font-size: 0.8rem; }
+  .form-group textarea {
+    line-height: 1.5;
+    height: 8rem; }
+  .form-group div.checkbox label, .form-group div.abc-checkbox label {
+    padding-right: 10px;
+    padding-top: 4px; }
 
-.form-group textarea {
-  line-height: 1.5;
-  height: 8rem; }
-
-.form-group div.checkbox label, .form-group div.abc-checkbox label {
-  padding-right: 10px;
-  padding-top: 4px; }
-
-.form-group.form-floating label, .form-group.form-floating form-label {
-  left: 0px; }
-
-.group_select2multiplefield, .group_heavyselect2multiplefield, .group_modelselect2multiplefield, .group_choicefield, .group_filepathfield, .group_typedchoicefield, .group_typedmultiplechoicefield, .group_select2field, .group_modelchoicefield, .group_modelselect2field, .group_multiplechoicefield {
+.group_select2multiplefield, .group_heavyselect2multiplefield, .group_modelselect2multiplefield, .group_filepathfield, .group_typedchoicefield, .group_typedmultiplechoicefield, .group_modelchoicefield, .group_multiplechoicefield, .group_modelmultiplechoicefield {
   margin-top: 0.5rem; }
-  .group_select2multiplefield label, .group_heavyselect2multiplefield label, .group_modelselect2multiplefield label, .group_choicefield label, .group_filepathfield label, .group_typedchoicefield label, .group_typedmultiplechoicefield label, .group_select2field label, .group_modelchoicefield label, .group_modelselect2field label, .group_multiplechoicefield label {
-    z-index: 1;
-    opacity: .65;
-    transform: scale(0.85) translateY(-0.5rem) translateX(0.15rem); }
 
-span.select2-selection {
-  padding-left: 0px !important; }
+.form-floating.group_select2multiplefield label, .form-floating.group_heavyselect2multiplefield label, .form-floating.group_modelselect2multiplefield label, .form-floating.group_typedmultiplechoicefield label, .form-floating.group_multiplechoicefield label, .form-floating.group_modelmultiplechoicefield label {
+  z-index: 1;
+  opacity: .65;
+  transform: scale(0.9) translateY(-1.3rem) translateX(0.15rem);
+  background: transparent !important; }
+
+.form-floating.group_typedmultiplechoicefield, .group_filefield, .form-floating.group_multiplechoicefield, .form-floating.group_modelmultiplechoicefield {
+  margin-top: 1.5rem; }
+
+.form-floating.group_typedmultiplechoicefield select, .form-floating.group_modelmultiplechoicefield select, .form-floating.group_multiplechoicefield select {
+  padding-top: 0.375rem !important; }
+
+.form-floating.group_heavyselect2multiplefield label, .form-floating.group_modelselect2multiplefield label, .form-floating.group_multiplechoicefield label, .form-floating.group_typedmultiplechoicefield label, .form-floating.group_modelmultiplechoicefield label {
+  transform: scale(0.9) translateY(-2.3rem) translateX(0.15rem) !important; }
+
+.form-floating .select2-selection--single {
+  height: calc(3.5rem + 2px) !important;
+  padding-top: 1.625rem !important; }
+
+.form-floating .select2-selection--multiple {
+  min-height: calc(3.5rem + 2px) !important;
+  padding-top: 1.625rem !important; }
+
+.form-floating label {
+  text-wrap: nowrap !important;
+  text-overflow: ellipsis;
+  left: 0;
+  right: 0;
+  overflow: hidden;
+  z-index: 10 !important; }
+
+.form-floating.group_select2multiplefield label, .form-floating.group_heavyselect2multiplefield label, .form-floating.group_modelselect2multiplefield label {
+  transform: scale(0.9) translateY(-0.6rem) translateX(0.15rem) !important; }
 
 .bootstrap-datetimepicker-widget {
   width: auto !important;
@@ -320,7 +338,7 @@ div.d-inline-flex div.form-group {
 
 .group_filefield label.top_label {
   position: absolute;
-  top: -14px;
+  top: -1.1rem;
   left: 2px;
   color: rgba(0, 0, 0, 0.5); }
 
@@ -353,22 +371,17 @@ div.dialog-form div.container-fluid {
   padding-left: 0;
   padding-right: 0; }
 
+a.foreignkey_button {
+  position: absolute !important;
+  right: 65px;
+  top: 0rem;
+  z-index: 10; }
+
 div.is-invalid .invalid-feedback {
   display: block; }
 
-.group_multiplechoicefield.form-floating label, .group_modelmultiplechoicefield.form-floating label, .group_typedmultiplechoicefield.form-floating label, .modelmultiplechoice_field.form-floating label, .group_choicefield.form-floating label {
-  height: auto;
-  z-index: 5;
-  background: white;
-  padding-bottom: 0px;
-  padding-top: 0px; }
-
-.group_modelmultiplechoicefield.form-floating label {
-  left: 0.2rem;
-  width: calc(100% - 1.2rem); }
-
-.group_modelmultiplechoicefield.form-floating select {
-  margin-top: 0.4rem; }
+input[required]:invalid, select[required] {
+  background-color: #ffc; }
 
 /* Inline form */
 .modal-dialog-inline > div > div > .modal-header {
@@ -428,9 +441,6 @@ div.is-invalid .invalid-feedback {
   padding-right: 1.5rem;
   border-radius: 30px;
   z-index: 1; }
-
-.form-inline input, .form-inline select {
-  font-size: 14px; }
 
 .table_filter {
   margin-top: 0px;
@@ -519,7 +529,6 @@ div.login-container > .row {
   text-align: center;
   padding: 6px 0;
   padding-top: 3px;
-  font-size: 14px;
   line-height: 1.428571429;
   border-radius: 15px; }
 
@@ -647,10 +656,6 @@ div.daterangepicker .drp-buttons {
       font-size: 2rem;
       color: white; }
 
-.select2-selection {
-  padding-top: 1.625rem !important;
-  min-height: calc(3.5rem + 2px) !important; }
-
 form div.get_row span.select2-container {
   margin-left: 5px; }
 
@@ -712,6 +717,9 @@ body {
 
 div.table {
   margin-bottom: 0rem; }
+
+.new_row {
+  min-height: 0.3rem; }
 
 .bootstrap-table .fixed-table-toolbar .btn-group, .bootstrap-table .fixed-table-toolbar .bs-bars,
 .bootstrap-table .fixed-table-toolbar .search {
@@ -787,8 +795,7 @@ span.tree-toolbar {
 
 span.tree-home a {
   padding-left: 11px !important;
-  padding-right: 11px !important;
-  margin-left: 11px !important; }
+  padding-right: 11px !important; }
 
 /* for firefox */
 a, button {

@@ -239,10 +239,10 @@ def select2_init(dest_elem):
     # )
 
     jQuery(dest_elem).find(".django-select2:not(.select2-full-width)").djangoSelect2(
-        {"minimumInputLength": 0}
+        {"minimumInputLength": 0, "placeholder": "Select an option"}
     )
     jQuery(dest_elem).find(".django-select2.select2-full-width").djangoSelect2(
-        {"minimumInputLength": 0}
+        {"minimumInputLength": 0, "placeholder": "Select an option"}
     )
 
     def set_select2_value(sel2, id, text):

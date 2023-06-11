@@ -65,8 +65,8 @@
         {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
 
         {{ form.media.css }}
-
         {% css_link 'bootstrap_plugins/select2-bootstrap-5-theme/select2-bootstrap-5-theme.css' %}
+
         %% botstrap_css
             % if settings.BOOTSTRAP_TEMPLATE:
                 {% css_link 'themes/'|add:settings.BOOTSTRAP_TEMPLATE|add:'/bootstrap.min.css' %}

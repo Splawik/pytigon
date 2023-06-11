@@ -679,6 +679,11 @@ def sch_standard(request):
     else:
         content_limited_to = ""
 
+    if hasattr(settings, "BOOTSTRAP_TEMPLATE"):
+        theme = settings.BOOTSTRAP_TEMPLATE.replace("/", "_")
+    else:
+        theme = ""
+
     ret = {
         "standard_web_browser": standard,
         "form_edit": form_edit,
@@ -717,6 +722,7 @@ def sch_standard(request):
         "user_agent": user_agent,
         "errors": False,
         "app_manager": AppManager(request),
+        "theme": theme,
         "settings": settings,
     }
     if "client_param" in request.session:

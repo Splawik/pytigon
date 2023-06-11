@@ -192,26 +192,50 @@ class Element(TreeModel):
         editable=True,
         default=1,
     )
-    permission1 = models.ForeignKey(
-        "auth.Permission",
-        related_name="permission_set_perm1",
+    grand_parent1 = ext_models.PtigForeignKey(
+        "self",
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+        editable=True,
+        verbose_name="Grand parent 1",
+        related_name="grandparent1",
     )
-    permission2 = models.ForeignKey(
-        "auth.Permission",
-        related_name="permission_set_perm2",
+    grand_parent2 = ext_models.PtigForeignKey(
+        "self",
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+        editable=True,
+        verbose_name="Grand parent 2",
+        related_name="grandparent2",
+        search_fields=[
+            "name__icontains",
+        ],
     )
-    permission3 = models.ForeignKey(
-        "auth.Permission",
-        related_name="permission_set_perm3",
+    grand_parent3 = ext_models.PtigForeignKey(
+        "self",
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+        editable=True,
+        verbose_name="Grand parent 3",
+        related_name="grandparent3",
+        search_fields=[
+            "name__icontains",
+        ],
+    )
+    grand_parent4 = ext_models.PtigForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        editable=True,
+        verbose_name="Grand parent 4",
+        related_name="grandparent4",
+        search_fields=[
+            "name__icontains",
+        ],
     )
     first_ancestor = models.ForeignKey(
         "self",
@@ -222,42 +246,6 @@ class Element(TreeModel):
         verbose_name="First ancestor",
         related_name="first_ancestors",
     )
-    grand_parent1 = models.ForeignKey(
-        "self",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        editable=True,
-        verbose_name="Grand parent 1",
-        related_name="grandparent1",
-    )
-    grand_parent2 = models.ForeignKey(
-        "self",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        editable=True,
-        verbose_name="Grand parent 2",
-        related_name="grandparent2",
-    )
-    grand_parent3 = models.ForeignKey(
-        "self",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        editable=True,
-        verbose_name="Grand parent 3",
-        related_name="grandparent3",
-    )
-    grand_parent4 = models.ForeignKey(
-        "self",
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        editable=True,
-        verbose_name="Grand parent 4",
-        related_name="grandparent4",
-    )
     can_have_children = models.BooleanField(
         "Can have children",
         null=True,
@@ -265,26 +253,33 @@ class Element(TreeModel):
         editable=False,
         default=True,
     )
-    can_view_permission = models.CharField(
-        "Permission for view element",
+    can_view_permission = models.ForeignKey(
+        "auth.Permission",
+        related_name="permission_set_perm_view",
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
-        editable=True,
-        max_length=64,
     )
-    can_change_permission = models.CharField(
-        "Permission for change element",
+    can_add_permission = models.ForeignKey(
+        "auth.Permission",
+        related_name="permission_set_perm_add",
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
-        editable=True,
-        max_length=64,
     )
-    can_delete_permission = models.CharField(
-        "Permission for delete element",
+    can_change_permission = models.ForeignKey(
+        "auth.Permission",
+        related_name="permission_set_perm_change",
+        on_delete=models.CASCADE,
         null=True,
         blank=True,
-        editable=True,
-        max_length=64,
+    )
+    can_delete_permission = models.ForeignKey(
+        "auth.Permission",
+        related_name="permission_set_perm_delete",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
 
     def init_new(self, request, view, param=None):
@@ -316,21 +311,15 @@ class Element(TreeModel):
         if not self.code:
             self.code = self.gen_code()
 
-        if hasattr(self, "get_structure"):
-            s = self.get_structure()
-            if self.type in s and "table" in s[self.type] and "app" in s[self.type]:
-                if not self.can_view_permission:
-                    self.can_view_permission = (
-                        s[self.type]["app"] + ".view_" + s[self.type]["table"].lower()
-                    )
-                if not self.can_change_permission:
-                    self.can_change_permission = (
-                        s[self.type]["app"] + ".change_" + s[self.type]["table"].lower()
-                    )
-                if not self.can_delete_permission:
-                    self.can_delete_permission = (
-                        s[self.type]["app"] + ".delete_" + s[self.type]["table"].lower()
-                    )
+        # if hasattr(self, "get_structure"):
+        #    s = self.get_structure()
+        #    if self.type in s and 'table' in s[self.type] and 'app' in s[self.type]:
+        #        if not self.can_view_permission:
+        #            self.can_view_permission = s[self.type]['app'] + ".view_"+ s[self.type]['table'].lower()
+        #        if not self.can_change_permission:
+        #            self.can_change_permission = s[self.type]['app'] + ".change_"+ s[self.type]['table'].lower()
+        #        if not self.can_delete_permission:
+        #            self.can_delete_permission = s[self.type]['app'] + ".delete_"+ s[self.type]['table'].lower()
 
         path = self.code if self.code else ""
 
@@ -657,26 +646,47 @@ class Element(TreeModel):
             code = self.gen_standard_code()
         return code
 
-    def can_view(self, user):
+    def can_view(self, user, check_parents=True):
         if self.can_view_permission:
-            return user.has_perm("can_view_permission")
+            ret = user.has_perm(self.can_view_permission.name)
         else:
-            return user.has_perm("schelements.view_element")
+            ret = user.has_perm("schelements.view_element")
+        if ret and self.parent:
+            ret = self.parent.can_view(user)
+        if ret and self.grand_parent1:
+            ret = self.grand_parent1.can_view(user, False)
+        if ret and self.grand_parent2:
+            ret = self.grand_parent2.can_view(user, False)
+        if ret and self.grand_parent3:
+            ret = self.grand_parent3.can_view(user, False)
+        return ret
 
     def can_change(self, user):
         if self.can_change_permission:
-            return user.has_perm("can_change_permission")
+            ret = user.has_perm(self.can_change_permission.name)
         else:
-            return user.has_perm("schelements.change_element")
+            ret = user.has_perm("schelements.change_element")
+        if ret:
+            return self.can_view(user)
+        return ret
 
     def can_delete(self, user):
         if self.can_delete_permission:
-            return user.has_perm("can_delete_permission")
+            ret = user.has_perm(self.can_delete_permission.name)
         else:
-            return user.has_perm("schelements.delete_element")
+            ret = user.has_perm("schelements.delete_element")
+        if ret:
+            return self.can_view(user)
+        return ret
 
     def can_add(self, user, child_type):
-        return user.has_perm("schelements.add_element")
+        if self.can_add_permission:
+            ret = user.has_perm(self.can_add_permission.name)
+        else:
+            ret = user.has_perm("schelements.add_element")
+        if ret:
+            return self.can_view(user)
+        return ret
 
     objects = ElementManager()
 

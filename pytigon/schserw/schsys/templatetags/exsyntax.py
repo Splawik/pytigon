@@ -1023,12 +1023,10 @@ class ComboSelect(Node):
         template_str = """
             {%% load exsyntax %%}
             <div class="form-group group_choicefield form-floating">
-                <div class="input-group get_row">
-                    <select class="select_combo form-select" name="%s" data-rel-name="%s" src="%s">
-                            <option disabled selected value />
-                            %s 
-                    </select>
-                </div>
+                <select class="select_combo form-select" name="%s" data-rel-name="%s" src="%s">
+                        <option disabled selected value />
+                        %s 
+                </select>
                 <label class="form-label control-label float-left">
                     %s
                 </label>

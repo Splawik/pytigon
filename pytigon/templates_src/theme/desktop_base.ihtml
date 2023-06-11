@@ -140,8 +140,8 @@
         {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
 
         {{ form.media.css }}
-
         {% css_link 'bootstrap_plugins/select2-bootstrap-5-theme/select2-bootstrap-5-theme.css' %}
+        
         %% botstrap_css
             % if settings.BOOTSTRAP_TEMPLATE:
                 {% css_link 'themes/'|add:settings.BOOTSTRAP_TEMPLATE|add:'/bootstrap.min.css' %}
@@ -149,22 +149,16 @@
                 {% css_link 'themes/bootswatch/default/bootstrap.min.css' %}
 
             {% css_link 'vanillajs_plugins/icheck-material-1.0.1/icheck-material.min.css' %}
-        
+
+        {% css_link 'themes/default.css' %}
+
         %% theme_css_links
-            % if 'materia' in settings.BOOTSTRAP_TEMPLATE:
-                style {:}
-                    span.select2-selection:
-                        border-top: none !important
-                        border-left: none !important
-                        border-right: none !important
-                        border-radius: unset !important
-                    :root:
-                        --bs-primary-rgb: 30,120,180
+            % if theme:
+                {% css_link 'themes/'|append_str:theme|append_str:'.css' %}
 
-
-        %% theme_css_links_spec
-            {% css_link 'themes/default.css' %}
+        %% browser_type_css_links    
             {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
+
 
 %% css_start
     <style type="text/css">

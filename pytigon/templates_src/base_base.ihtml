@@ -261,7 +261,7 @@
                             div class={% if table_type == 'datatable'%}tabsort_header{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %},,,role=form,,,id={{uuid}}_toolbar
                                 div class=dropdown
                                     % if standard_web_browser and object_list:
-                                        % if table_type == 'datatable':
+                                        % if table_type == 'datatable' and not get:
                                             div class=dropdown
                                                 button type=button,,,class=btn btn-light shadow-none {{btn_size}} dropdown-toggle,,,data-bs-toggle=dropdown,,,data-bs-toggle=dropdown
                                                     {% icon "fa-bars fa-lg" %}
