@@ -737,8 +737,6 @@ remove_element = function flx_remove_element (element) {
                     } else {
                         (jQuery(dialog).modal)("hide");
                     }
-                } else {
-                    aside.remove();
                 }
                 return null;
             }).bind(this);
@@ -2601,12 +2599,17 @@ on_new_tab = function flx_on_new_tab (target_element, data_element, new_url, par
 };
 
 on_replace_app = function flx_on_replace_app (target_element, data_element, new_url, param, event) {
+    var wrapper;
     if (_pyfunc_truthy(window.PUSH_STATE)) {
         history_push_state("", window.BASE_PATH);
     } else {
         window.location.pathname = window.BASE_PATH;
     }
     window.MENU = null;
+    wrapper = document.querySelector("div.content-wrapper");
+    if (_pyfunc_truthy(wrapper)) {
+        wrapper.innerHTML = "";
+    }
     mount_html(document.querySelector("div.content-wrapper"), data_element.querySelector("section.body-body"), false);
     window.init_start_page();
     window.activate_menu();

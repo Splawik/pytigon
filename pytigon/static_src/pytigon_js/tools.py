@@ -695,8 +695,8 @@ def remove_element(element):
                         d.hide()
                     else:
                         jQuery(dialog).modal("hide")
-                else:
-                    aside.remove()
+                # else:
+                #    aside.remove()
 
             jQuery.each(jQuery(element2).find(".plug"), _on_remove_aside)
 

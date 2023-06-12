@@ -548,6 +548,9 @@ def on_replace_app(target_element, data_element, new_url, param, event):
         window.location.pathname = window.BASE_PATH
 
     window.MENU = None
+    wrapper = document.querySelector("div.content-wrapper")
+    if wrapper:
+        wrapper.innerHTML = ""
     mount_html(
         document.querySelector("div.content-wrapper"),
         data_element.querySelector("section.body-body"),
