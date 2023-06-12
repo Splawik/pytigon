@@ -33,5 +33,11 @@ a.foreignkey_button {
 
 .form-group.form-floating label,
 .form-group.form-floating form-label {
-    left: 0px;
+    left: 0.8rem !important;
+}
+
+.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label,
+.form-floating>.form-select~label {
+    transform: scale(.85) translateY(-.5rem) translateX(0) !important;
 }

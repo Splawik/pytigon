@@ -61,7 +61,7 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
 # BOOTSTRAP_TEMPLATE = "bootswatch/sandstone"
 
 # BOOTSTRAP_TEMPLATE = "bootswatch/flatly"
-BOOTSTRAP_TEMPLATE = "bootswatch/yeti"
+# BOOTSTRAP_TEMPLATE = "bootswatch/yeti"
 # BOOTSTRAP_TEMPLATE = "bootswatch/materia"
 
 XMLRPC_PORT = 7080
@@ -327,7 +327,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.06.11 17:20:13"
+GEN_TIME = "2023.06.12 17:13:14"
 OFFLINE_SUPPORT = True
 
 

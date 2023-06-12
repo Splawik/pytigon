@@ -243,7 +243,7 @@ form .row .row {
     padding-right: 10px;
     padding-top: 4px; }
 
-.group_select2multiplefield, .group_heavyselect2multiplefield, .group_modelselect2multiplefield, .group_filepathfield, .group_typedchoicefield, .group_typedmultiplechoicefield, .group_modelchoicefield, .group_multiplechoicefield, .group_modelmultiplechoicefield {
+.group_select2multiplefield, .group_heavyselect2multiplefield, .group_modelselect2multiplefield, .group_filepathfield, .group_typedmultiplechoicefield, .group_multiplechoicefield, .group_modelmultiplechoicefield {
   margin-top: 0.5rem; }
 
 .form-floating.group_select2multiplefield label, .form-floating.group_heavyselect2multiplefield label, .form-floating.group_modelselect2multiplefield label, .form-floating.group_typedmultiplechoicefield label, .form-floating.group_multiplechoicefield label, .form-floating.group_modelmultiplechoicefield label {
@@ -773,6 +773,8 @@ div.td_information {
   transition: .3s;
   background: #fc0 !important;
   box-shadow: none !important; }
+  .tabsort-toolbar-expand i.fa {
+    vertical-align: 0 !important; }
 
 .tabsort-toolbar-expand.active {
   transform: rotate(315deg) !important;

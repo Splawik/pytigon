@@ -9,10 +9,6 @@
 @import 'default_txt3d'
 @import 'default_wiki'
 
-//.dialog-data .checkbox
-    //margin-left: -8px
-//    margin-left: 9px
-
 body 
     background-color: var(--bs-body-bg)
     height: 100vh
@@ -74,12 +70,13 @@ div.td_information
     position: absolute
     top: 4px
     left: 3px
-    //z-index: 999
     transform: rotate(0deg)
     transition: .3s
-    //background: transparent !important
     background: #fc0 !important
     box-shadow: none !important
+
+    i.fa
+        vertical-align: 0 !important
 
 .tabsort-toolbar-expand.active 
     transform: rotate(315deg) !important
@@ -165,14 +162,6 @@ table.layout0 tr td
             background: #2196F3
             color: white
 
-//.caret
-//   border-left: 8px solid transparent
-//    border-right: 8px solid transparent
-//    border-top: 8px solid #000000
-//    position: relative
-//    top: 10px
-
-
 .size_level_0
     color: #fff
 
@@ -189,16 +178,6 @@ table.layout0 tr td
     position: absolute
     right: 5px
     z-index: 100
-
-//#.wiki_collapse .wiki_view_actions a
-//#    position: absolute
-//    top: -40px
-
-//.wiki_collapse .wiki_view_actions a:nth-child(2)
-//    left: 35px
-
-//.wiki_collapse .wiki_view_actions a:nth-child(3)
-//    left: 70px
 
 .modal-max
     max-width: 100% !important
