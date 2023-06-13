@@ -485,10 +485,12 @@ div.modal-content.maximized {
   z-index: 1000; }
 
 .modal-content.inline-content {
-  background-color: white;
   padding: 0.5rem;
-  border: lightgray;
-  border-style: solid; }
+  background-color: var(--bs-body-bg);
+  background-clip: padding-box;
+  border: var(--bs-border-width) solid var(--bs-border-color-translucent);
+  border-radius: var(--bs-border-radius-lg);
+  outline: 0; }
 
 /* login form */
 .login_background {

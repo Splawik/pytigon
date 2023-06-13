@@ -89,7 +89,7 @@ INLINE = """
 """
 
 INLINE_BASE = """
-<div style='position:absolute;z-index:1001;right:1rem;left:1rem;'>
+<div style='position:fixed;z-index:1001;right:1rem;left:1rem;bottom:1rem;'>
     <div class='dark_background'></div>
     <div class='modal-dialog modal-dialog-inline' role='document'>
         <div class="modal-content ajax-region inline-content" data-region="error">
