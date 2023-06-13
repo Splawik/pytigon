@@ -416,7 +416,8 @@ input[required]:invalid, select[required] {
   padding-right: 1rem; }
 
 .form-inline .form-group label {
-  padding-right: 8px; }
+  padding-right: 8px;
+  background: transparent; }
 
 .form-inline .form-group label.upload {
   position: relative; }
@@ -449,10 +450,16 @@ input[required]:invalid, select[required] {
   margin-right: 50px; }
 
 form.table_filter label:not(.form-check-label):not(.upload)::after {
-  content: ":"; }
+  content: ":";
+  background-color: transparent !important; }
+
+form.table_filter .form-floating label:not(.form-check-label):not(.upload)::after {
+  content: "" !important;
+  background-color: transparent !important; }
 
 form.table_filter label.nocolon::after {
-  content: "" !important; }
+  content: "" !important;
+  background-color: transparent !important; }
 
 div.tab-content .modal-dialog-inline {
   position: relative;

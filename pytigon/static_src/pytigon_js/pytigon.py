@@ -122,7 +122,6 @@ def app_init(
                     obj.click()
                     break
 
-
 window.app_init = app_init
 
 

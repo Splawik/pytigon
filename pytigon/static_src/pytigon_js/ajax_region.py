@@ -229,6 +229,18 @@ register_mount_fun(moveelement_init)
 
 # register_mount_fun(label_floating_init)
 
+def create_onloadeddata(control):
+    def _onloadeddata(self, event):
+        nonlocal control
+        if hasattr(event, "data_source"):
+            src_elem = event.data_source
+            if src_elem:
+                id = src_elem.getAttribute("data-id")
+                text = src_elem.getAttribute("data-text")
+                if id and text:
+                    set_select2_value(jQuery(control), id, text)
+    return _onloadeddata
+
 
 def select2_init(dest_elem):
     # jQuery(dest_elem).find(".django-select2:not(.select2-full-width)").djangoSelect2(
@@ -239,10 +251,10 @@ def select2_init(dest_elem):
     # )
 
     jQuery(dest_elem).find(".django-select2:not(.select2-full-width)").djangoSelect2(
-        {"minimumInputLength": 0, "placeholder": "Select an option"}
+        {"minimumInputLength": 0, "placeholder": "Select an option", 'dropdownParent': jQuery(dest_elem) }
     )
     jQuery(dest_elem).find(".django-select2.select2-full-width").djangoSelect2(
-        {"minimumInputLength": 0, "placeholder": "Select an option"}
+        {"minimumInputLength": 0, "placeholder": "Select an option", 'dropdownParent': jQuery(dest_elem)}
     )
 
     def set_select2_value(sel2, id, text):
@@ -253,18 +265,7 @@ def select2_init(dest_elem):
     controls = Array.prototype.slice.call(dest_elem.querySelectorAll(".django-select2"))
     if controls:
         for control in controls:
-
-            def _onloadeddata(self, event):
-                nonlocal control
-                if hasattr(event, "data_source"):
-                    src_elem = event.data_source
-                    if src_elem:
-                        id = src_elem.getAttribute("data-id")
-                        text = src_elem.getAttribute("data-text")
-                        if id and text:
-                            set_select2_value(jQuery(control), id, text)
-
-            control.onloadeddata = _onloadeddata
+            control.onloadeddata = create_onloadeddata(control)
             control.classList.add("ajax-frame")
             control.setAttribute("data-region", "get_row")
 
@@ -277,9 +278,6 @@ def select2_init(dest_elem):
                 if id:
                     text = src.attr("item_str")
                     set_select2_value(sel2, id, text)
-                    # sel2.append(jQuery("<option>", {"value": id, "text": text}))
-                    # sel2.val(id.toString())
-                    # sel2.trigger("change")
 
     jQuery(dest_elem).find(".django-select2").each(init_select2_ctrl)
 

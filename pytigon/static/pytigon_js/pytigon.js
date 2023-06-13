@@ -1227,7 +1227,7 @@ GlobalBus.prototype.unregister = function (component) {
 window.GlobalBus = GlobalBus;
 export {set_state, DefineWebComponent, GlobalBus};
 
-var MOUNT_INIT_FUN, _on_shown_bs_tab, _refresh_page, ajax_load, auto_frame_init, auto_refresh_tab, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init;
+var MOUNT_INIT_FUN, _on_shown_bs_tab, _refresh_page, ajax_load, auto_frame_init, auto_refresh_tab, create_onloadeddata, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init;
 data_type = function flx_data_type (data_or_html) {
     var meta_list, pos, stub1_seq, stub2_itr;
     if (_pyfunc_truthy(data_or_html)) {
@@ -1428,10 +1428,30 @@ moveelement_init = function flx_moveelement_init (dest_elem) {
 };
 
 register_mount_fun(moveelement_init);
+create_onloadeddata = function flx_create_onloadeddata (control) {
+    var _onloadeddata;
+    _onloadeddata = function (event) {
+        var id, src_elem, text;
+        if (_pyfunc_hasattr(event, "data_source")) {
+            src_elem = event.data_source;
+            if (_pyfunc_truthy(src_elem)) {
+                id = src_elem.getAttribute("data-id");
+                text = src_elem.getAttribute("data-text");
+                if ((_pyfunc_truthy(id) && _pyfunc_truthy(text))) {
+                    set_select2_value(jQuery(control), id, text);
+                }
+            }
+        }
+        return null;
+    };
+
+    return _onloadeddata;
+};
+
 select2_init = function flx_select2_init (dest_elem) {
-    var _onloadeddata, control, controls, init_select2_ctrl, set_select2_value, stub15_seq, stub16_itr;
-    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2:not(.select2-full-width)")).djangoSelect2)(({minimumInputLength: 0, placeholder: "Select an option"}));
-    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2.select2-full-width")).djangoSelect2)(({minimumInputLength: 0, placeholder: "Select an option"}));
+    var control, controls, init_select2_ctrl, set_select2_value, stub15_seq, stub16_itr;
+    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2:not(.select2-full-width)")).djangoSelect2)(({minimumInputLength: 0, placeholder: "Select an option", dropdownParent: jQuery(dest_elem)}));
+    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2.select2-full-width")).djangoSelect2)(({minimumInputLength: 0, placeholder: "Select an option", dropdownParent: jQuery(dest_elem)}));
     set_select2_value = (function flx_set_select2_value (sel2, id, text) {
         _pymeth_append.call(sel2, (jQuery("<option>", ({value: id, text: text}))));
         sel2.val(id.toString());
@@ -1445,22 +1465,7 @@ select2_init = function flx_select2_init (dest_elem) {
         if ((typeof stub15_seq === "object") && (!Array.isArray(stub15_seq))) { stub15_seq = Object.keys(stub15_seq);}
         for (stub16_itr = 0; stub16_itr < stub15_seq.length; stub16_itr += 1) {
             control = stub15_seq[stub16_itr];
-            _onloadeddata = function (event) {
-                var id, src_elem, text;
-                if (_pyfunc_hasattr(event, "data_source")) {
-                    src_elem = event.data_source;
-                    if (_pyfunc_truthy(src_elem)) {
-                        id = src_elem.getAttribute("data-id");
-                        text = src_elem.getAttribute("data-text");
-                        if ((_pyfunc_truthy(id) && _pyfunc_truthy(text))) {
-                            set_select2_value(jQuery(control), id, text);
-                        }
-                    }
-                }
-                return null;
-            };
-
-            control.onloadeddata = _onloadeddata;
+            control.onloadeddata = create_onloadeddata(control);
             control.classList.add("ajax-frame");
             control.setAttribute("data-region", "get_row");
         }
@@ -1810,7 +1815,7 @@ ajax_load = function flx_ajax_load (element, url, complete) {
 };
 
 window.ajax_load = ajax_load;
-export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, auto_refresh_tab, moveelement_init, select2_init, select_combo_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
+export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, auto_refresh_tab, moveelement_init, create_onloadeddata, select2_init, select_combo_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
 
 var INIT_DB_STRUCT, SYNC_STRUCT, _MSIE, _MSIE2, _UA, get_list_from_table, get_table, init_db, init_sync, on_sys_sync, open_database, sync_and_run;
 INIT_DB_STRUCT = null;

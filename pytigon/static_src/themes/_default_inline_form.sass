@@ -10,11 +10,6 @@
 
 
 .form-inline .form-group
-    //margin-top: 1rem
-
-    //.form-control
-    //    max-height: 42px
-
     .select2field
         min-width: 10rem
 
@@ -44,9 +39,11 @@
 .form-inline .form-group
     label
         padding-right: 8px
+        background: transparent
 
     label.upload
         position: relative
+
 
 .form-inline .form-group .numberinput 
     width: 100px
@@ -62,19 +59,14 @@
     position: absolute !important
     right: 3px
     bottom: 3px
-    //height: 100%
     top: 3px
     min-height: 45px
     max-height: 6rem
-    //margin-right: 10px
     margin-right: 0px
     padding-left: 1.5rem
     padding-right: 1.5rem
     border-radius: 30px
     z-index: 1
-
-//.form-inline input, .form-inline select 
-//    font-size: 14px
 
 
 .table_filter
@@ -90,18 +82,16 @@ form.table_filter label
 
 form.table_filter label:not(.form-check-label):not(.upload)::after
     content: ":"
+    background-color: transparent !important
+
+form.table_filter .form-floating label:not(.form-check-label):not(.upload)::after
+    content: "" !important
+    background-color: transparent !important
+
 
 form.table_filter label.nocolon::after
     content: "" !important
-
-//.form-inline div.form-group.label-floating
-//    margin-top: 1rem
-//
-//    label
-//         white-space: nowrap
-
-//div.tab-content
-//    overflow-y: auto
+    background-color: transparent !important
 
 div.tab-content .modal-dialog-inline
     position: relative
@@ -113,8 +103,6 @@ div.tab-content .modal-dialog-inline
     .subform_frame
         margin: 15px 15px
 
-
-//div.form-group.label-floating label
 
 div.modal-content.maximized
     position: fixed
