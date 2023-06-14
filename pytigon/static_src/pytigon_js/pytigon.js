@@ -1311,7 +1311,7 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
             } else {
                 elem2.appendChild(data_or_html);
             }
-            morphdom(dest_elem, elem2);
+            Idiomorph.morph(dest_elem, elem2);
         } else if ((_pyfunc_op_equals(jQuery.type(data_or_html), "string"))) {
             dest_elem.innerHTML = data_or_html;
         } else {

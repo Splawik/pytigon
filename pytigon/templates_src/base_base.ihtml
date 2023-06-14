@@ -338,47 +338,53 @@
                                 % else:
                                     <div class="tbl_scroll ajax-link" data-region="table" href="{{request.path}}">
 
-                        table name=tabsort,,,table_type={{table_type}},,,{% block list_content_height %}{% endblock %},,,{% block tabsort_parameters %}{% endblock %}
-                            %% list_full_row_header
-                                thead
-                                    tr
-                                        %% list_row_header_start
-                                            % if not no_id
-                                                th data-field=cid,,,data-sortable=true
-                                                    % id_num 'Id'
-                                        %% list_row_header
-                                        %% list_row_header_end
-                                            th data-field=caction
-                                                ._(Action)
-                            %% list_table
-                                %if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser:
-                                    tbody
-                                        % if object_list
-                                            %for object in object_list
-                                                %% list_full_row
-                                                    <tr row-id="{{object.id}}" {% block list_row_attr %}{% endblock %}>
-                                                        %% list_row_start
-                                                            % if not no_id
-                                                                td
-                                                                    <div {% block id_row_attr %}class="td_information"{% endblock %}>
-                                                                        %% id_extra
-                                                                            %if get:
-                                                                                {% get_row object object.id %}
-                                                                            %else:
-                                                                                {% view_row object object.id %}
-                                                                    </div>
-                                                        %% list_row
-                                                            td...{{object}}
-                                                        %% list_row_end
-                                                            td
-                                                                div class=td_action,,,style=white-space:nowrap
-                                                                    %% list_row_actions
-                                                                        % if readonly
-                                                                            a href=../{{object.id}}/edit/?childwin=1,,,class=popup,,,name=get,,,title=Select...Select
-                                                                        % else
-                                                                            % row_actions:...edit;delete
-                                                    </tr>
-                                                %% list_row2
+                        %% list_table_start
+                            <table name="tabsort" table_type="{{table_type}}" {% block list_content_height %}{% endblock %} {% block tabsort_parameters %}{% endblock %}>
+                        %% list_full_row_header
+                            thead
+                                tr
+                                    %% list_row_header_start
+                                        % if not no_id
+                                            th data-field=cid,,,data-sortable=true
+                                                % id_num 'Id'
+                                    %% list_row_header
+                                    %% list_row_header_end
+                                        th data-field=caction
+                                            ._(Action)
+                        %% list_table
+                            %if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser:
+                                %% list_tbody_start
+                                    <tbody>
+                                % if object_list
+                                    %for object in object_list
+                                        %% list_full_row
+                                            <tr row-id="{{object.id}}" {% block list_row_attr %}{% endblock %}>
+                                                %% list_row_start
+                                                    % if not no_id
+                                                        td
+                                                            <div {% block id_row_attr %}class="td_information"{% endblock %}>
+                                                                %% id_extra
+                                                                    %if get:
+                                                                        {% get_row object object.id %}
+                                                                    %else:
+                                                                        {% view_row object object.id %}
+                                                            </div>
+                                                %% list_row
+                                                    td...{{object}}
+                                                %% list_row_end
+                                                    td
+                                                        div class=td_action,,,style=white-space:nowrap
+                                                            %% list_row_actions
+                                                                % if readonly
+                                                                    a href=../{{object.id}}/edit/?childwin=1,,,class=popup,,,name=get,,,title=Select...Select
+                                                                % else
+                                                                    % row_actions:...edit;delete
+                                            </tr>
+                                        %% list_row2
+                                %% list_tbody_end
+                                    </tbody>
+                        %% list_table_end
+                            </table>
 
                         %% list_table_footer
 
