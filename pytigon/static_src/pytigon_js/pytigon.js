@@ -1449,9 +1449,7 @@ create_onloadeddata = function flx_create_onloadeddata (control) {
 };
 
 select2_init = function flx_select2_init (dest_elem) {
-    var control, controls, init_select2_ctrl, set_select2_value, stub15_seq, stub16_itr;
-    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2:not(.select2-full-width)")).djangoSelect2)(({minimumInputLength: 0, placeholder: "Select an option", dropdownParent: jQuery(dest_elem)}));
-    ((_pymeth_find.call(jQuery(dest_elem), ".django-select2.select2-full-width")).djangoSelect2)(({minimumInputLength: 0, placeholder: "Select an option", dropdownParent: jQuery(dest_elem)}));
+    var control, controls, init_select2_ctrl, modal, set_select2_value, stub15_seq, stub16_itr;
     set_select2_value = (function flx_set_select2_value (sel2, id, text) {
         _pymeth_append.call(sel2, (jQuery("<option>", ({value: id, text: text}))));
         sel2.val(id.toString());
@@ -1465,6 +1463,12 @@ select2_init = function flx_select2_init (dest_elem) {
         if ((typeof stub15_seq === "object") && (!Array.isArray(stub15_seq))) { stub15_seq = Object.keys(stub15_seq);}
         for (stub16_itr = 0; stub16_itr < stub15_seq.length; stub16_itr += 1) {
             control = stub15_seq[stub16_itr];
+            modal = control.closest(".modal");
+            if (_pyfunc_truthy(modal)) {
+                (jQuery(control).djangoSelect2)(({minimumInputLength: 0, placeholder: "Select an option", dropdownParent: jQuery(modal)}));
+            } else {
+                (jQuery(control).djangoSelect2)(({minimumInputLength: 0, placeholder: "Select an option"}));
+            }
             control.onloadeddata = create_onloadeddata(control);
             control.classList.add("ajax-frame");
             control.setAttribute("data-region", "get_row");

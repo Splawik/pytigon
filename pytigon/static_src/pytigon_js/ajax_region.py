@@ -229,6 +229,7 @@ register_mount_fun(moveelement_init)
 
 # register_mount_fun(label_floating_init)
 
+
 def create_onloadeddata(control):
     def _onloadeddata(self, event):
         nonlocal control
@@ -239,6 +240,7 @@ def create_onloadeddata(control):
                 text = src_elem.getAttribute("data-text")
                 if id and text:
                     set_select2_value(jQuery(control), id, text)
+
     return _onloadeddata
 
 
@@ -250,12 +252,12 @@ def select2_init(dest_elem):
     #    {"width": "calc(100%)", "minimumInputLength": 0, "theme": "bootstrap-5"}
     # )
 
-    jQuery(dest_elem).find(".django-select2:not(.select2-full-width)").djangoSelect2(
-        {"minimumInputLength": 0, "placeholder": "Select an option", 'dropdownParent': jQuery(dest_elem) }
-    )
-    jQuery(dest_elem).find(".django-select2.select2-full-width").djangoSelect2(
-        {"minimumInputLength": 0, "placeholder": "Select an option", 'dropdownParent': jQuery(dest_elem)}
-    )
+    # jQuery(dest_elem).find(".django-select2:not(.select2-full-width)").djangoSelect2(
+    #    {"minimumInputLength": 0, "placeholder": "Select an option", 'dropdownParent': jQuery(dest_elem) }
+    # )
+    # jQuery(dest_elem).find(".django-select2.select2-full-width").djangoSelect2(
+    #    {"minimumInputLength": 0, "placeholder": "Select an option", 'dropdownParent': jQuery(dest_elem)}
+    # )
 
     def set_select2_value(sel2, id, text):
         sel2.append(jQuery("<option>", {"value": id, "text": text}))
@@ -265,6 +267,22 @@ def select2_init(dest_elem):
     controls = Array.prototype.slice.call(dest_elem.querySelectorAll(".django-select2"))
     if controls:
         for control in controls:
+            modal = control.closest(".modal")
+            if modal:
+                jQuery(control).djangoSelect2(
+                    {
+                        "minimumInputLength": 0,
+                        "placeholder": "Select an option",
+                        "dropdownParent": jQuery(modal),
+                    }
+                )
+            else:
+                jQuery(control).djangoSelect2(
+                    {
+                        "minimumInputLength": 0,
+                        "placeholder": "Select an option",
+                    }
+                )
             control.onloadeddata = create_onloadeddata(control)
             control.classList.add("ajax-frame")
             control.setAttribute("data-region", "get_row")
