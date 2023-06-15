@@ -173,6 +173,9 @@ class Element(TreeModel):
         choices=element_type_choice,
         max_length=8,
     )
+    subtype = models.CharField(
+        "Element subtype", null=True, blank=True, editable=False, max_length=16
+    )
     code = models.CharField(
         "Code", null=True, blank=True, editable=True, db_index=True, max_length=16
     )
