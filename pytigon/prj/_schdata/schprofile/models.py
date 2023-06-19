@@ -23,6 +23,7 @@ from django.dispatch import receiver
 from schelements.models import Element
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth import get_user_model
 from pytigon_lib.schtools.tools import get_request
 
 
@@ -58,6 +59,9 @@ SET_ACTIVE_VARIANT = OverwritableCallable(set_active_variant)
 GET_ACTIVE_VARIANT = OverwritableCallable(get_active_variant)
 GET_ACTIVE_VARIANT_DESCRIPTION = OverwritableCallable(get_active_variant_description)
 GET_ALL_VARIANTS = OverwritableCallable(get_all_variants)
+
+
+User = get_user_model()
 
 
 class Profile(models.Model):
@@ -150,6 +154,21 @@ class Profile(models.Model):
 
 
 admin.site.register(Profile)
+
+
+class UserProxy(User):
+    class Meta:
+        verbose_name = _("User")
+        verbose_name_plural = _("Users")
+        default_permissions = ("add", "change", "delete", "list")
+        app_label = "schprofile"
+
+        ordering = ["id"]
+
+        proxy = True
+
+
+admin.site.register(UserProxy)
 
 
 USER_PROFILES = False

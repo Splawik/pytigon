@@ -208,11 +208,61 @@ ajax_get = function flx_ajax_get (url, complete, process_req) {
             } else {
                 reader = new FileReader();
                 _on_reader_load = (function flx__on_reader_load () {
+                    var _complete2, url2data;
                     if ((((!_pyfunc_op_equals(req.status, 200))) && ((!_pyfunc_op_equals(req.status, 0))))) {
                         console.log(reader.result);
                         (window.open().document.write)(reader.result);
                         complete("Error - details on new page");
                     } else {
+                        if (_pyfunc_op_equals(disp, "redirect")) {
+                            url2data = _pymeth_split.call(reader.result, "|");
+                            _complete2 = (function flx__complete2 (data) {
+                                var _callback_next, element, next_href, next_target, query;
+                                element = complete(data);
+                                if (_pyfunc_truthy(element)) {
+                                    next_href = url2data[1];
+                                    next_target = url2data[2];
+                                    query = url2data[3];
+                                    element = element.querySelector(query);
+                                    _callback_next = (function flx__callback_next (data) {
+                                        var s, t;
+                                        if (_pymeth_startswith.call(next_target, "inline")) {
+                                            t = _pymeth_replace.call(next_target, "inline", "");
+                                            if (_pyfunc_op_equals(t, "_info")) {
+                                                s = "INLINE_INFO";
+                                            } else if (_pyfunc_op_equals(t, "_delete")) {
+                                                s = "INLINE_DELETE";
+                                            } else if (_pyfunc_op_equals(t, "_edit")) {
+                                                s = "INLINE_EDIT";
+                                            } else {
+                                                s = "INLINE";
+                                            }
+                                            return window._on_inline(element, get_elem_from_string(data), next_href, ({}), null, s);
+                                        } else if (_pymeth_startswith.call(next_target, "popup")) {
+                                            t = _pymeth_replace.call(next_target, "popup", "");
+                                            if (_pyfunc_op_equals(t, "_info")) {
+                                                s = "MODAL_INFO";
+                                            } else if (_pyfunc_op_equals(t, "_delete")) {
+                                                s = "MODAL_DELETE";
+                                            } else if (_pyfunc_op_equals(t, "_edit")) {
+                                                s = "MODAL_EDIT";
+                                            } else {
+                                                s = "MODAL";
+                                            }
+                                            return window._on_popup(element, get_elem_from_string(data), next_href, ({}), null, s);
+                                        } else {
+                                            return window.on_new_tab(element, get_elem_from_string(data), next_href, ({}), null);
+                                        }
+                                        return null;
+                                    }).bind(this);
+
+                                    ajax_get(next_href, _callback_next);
+                                }
+                                return element;
+                            }).bind(this);
+
+                            return ajax_get(url2data[0], _complete2);
+                        }
                         complete(reader.result);
                     }
                     return null;
@@ -234,7 +284,7 @@ ajax_get = function flx_ajax_get (url, complete, process_req) {
     req.onload = _onload;
     req.open("GET", url, true);
     req.send(null);
-    return null;
+    return req;
 };
 
 window.ajax_get = ajax_get;
@@ -298,7 +348,7 @@ _req_post = function flx__req_post (req, url, data, complete, content_type) {
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     }
     req.send(data);
-    return null;
+    return req;
 };
 
 ajax_post = function flx_ajax_post (url, data, complete, process_req, content_type) {
@@ -310,7 +360,7 @@ ajax_post = function flx_ajax_post (url, data, complete, process_req, content_ty
         process_req(req);
     }
     _req_post(req, url, data, complete, content_type);
-    return null;
+    return req;
 };
 
 window.ajax_post = ajax_post;
@@ -331,8 +381,7 @@ ajax_json = function flx_ajax_json (url, data, complete, process_req) {
     }).bind(this);
 
     data2 = JSON.stringify(data);
-    ajax_post(url, data2, _complete, null, "application/json");
-    return null;
+    return ajax_post(url, data2, _complete, null, "application/json");
 };
 
 window.ajax_json = ajax_json;
@@ -380,9 +429,9 @@ ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_re
         }
     }
     if (_pyfunc_truthy(url)) {
-        _req_post(req, url, data, complete, content_type);
+        return _req_post(req, url, data, complete, content_type);
     } else {
-        _req_post(req, correct_href(form.attr("action"), [_form[0]]), data, complete, content_type);
+        return _req_post(req, correct_href(form.attr("action"), [_form[0]]), data, complete, content_type);
     }
     return null;
 };
@@ -1295,7 +1344,7 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
         evt.data = data_or_html;
         evt.data_source = link;
         dest_elem.dispatchEvent(evt);
-        return null;
+        return dest_elem;
     }
     if ((!_pyfunc_op_equals(data_or_html, null))) {
         _on_remove = (function flx__on_remove (index, value) {
@@ -1326,7 +1375,7 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
             fun(dest_elem);
         }
     }
-    return null;
+    return dest_elem;
 };
 
 window.mount_html = mount_html;
@@ -1690,7 +1739,8 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
     link = get_ajax_link(element, region_name);
     loading = new Loading(element);
     _callback = (function flx__callback (data) {
-        var dt, elem, evt, options, plug, txt;
+        var dt, elem, evt, options, plug, ret, txt;
+        ret = null;
         loading.stop();
         loading.remove();
         dt = data_type(data);
@@ -1698,7 +1748,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
             dt = "$$" + element.getAttribute("rettype");
         }
         if ((((!_pyfunc_op_equals(dt, "$$RETURN_ERROR"))) && (_pyfunc_truthy(_pyfunc_getattr(frame, "onloadeddata"))) && _pyfunc_truthy(frame.onloadeddata))) {
-            mount_html(frame, data, link);
+            ret = mount_html(frame, data, link);
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_REFRESH"])) {
             return refresh_ajax_frame(region, region_name, null, callback, callback_on_error);
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_REFRESH_PARENT"])) {
@@ -1716,7 +1766,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
             return refresh_ajax_frame(elem, region_name, null, null, callback_on_error, data);
         } else if (_pyfunc_op_equals(dt, "$$RETURN_RELOAD")) {
             if (_pyfunc_op_equals(region_name, "error")) {
-                mount_html(frame, data, link);
+                ret = mount_html(frame, data, link);
             } else {
                 return refresh_ajax_frame(element, "error", data, callback, callback_on_error);
             }
@@ -1752,7 +1802,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
             }
             return null;
         } else {
-            mount_html(frame, data, link);
+            ret = mount_html(frame, data, link);
         }
         if (_pyfunc_op_contains(dt, ["$$RETURN_ERROR", "$$RETURN_RELOAD", "$$RETURN_HTML_ERROR"])) {
             if (_pyfunc_truthy(callback_on_error)) {
@@ -1761,12 +1811,11 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         } else if (_pyfunc_truthy(callback)) {
             callback();
         }
-        return null;
+        return ret;
     }).bind(this);
 
     if (_pyfunc_truthy(data_element)) {
-        _callback(data_element);
-        return null;
+        return _callback(data_element);
     }
     url = null;
     post = false;
@@ -1799,8 +1848,9 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         } else {
             ajax_get(url, _callback);
         }
+        return null;
     } else {
-        _callback(data_if_none);
+        return _callback(data_if_none);
     }
     return null;
 };
@@ -2290,13 +2340,15 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
         }
     }
     _get_or_post = (function flx__get_or_post (url, callback, data2) {
-        var _callback, loading;
+        var _callback, loading, req;
         data2 = (data2 === undefined) ? null: data2;
+        req = null;
         loading = new Loading(target_element);
         loading.create();
         loading.start();
         _callback = (function flx__callback (data) {
-            var data_element, new_callback, new_target, new_target_elem, new_url, stub9_;
+            var data_element, element, new_callback, new_target, new_target_elem, new_url, stub9_;
+            element = null;
             loading.stop();
             loading.remove();
             data_element = get_elem_from_string(data);
@@ -2309,18 +2361,18 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
             if ((_pyfunc_truthy(new_target) && ((!_pyfunc_op_equals(new_target, target))))) {
                 stub9_ = _get_click_event_from_tab(target_element, new_target, url);
                 new_callback = stub9_[0];new_url = stub9_[1];
-                new_callback(target_element, data_element, new_url, param, event);
+                element = new_callback(target_element, data_element, new_url, param, event);
             } else {
-                callback(target_element, data_element, url, param, event);
+                element = callback(target_element, data_element, url, param, event);
             }
-            return null;
+            return element;
         }).bind(this);
 
         if (_pyfunc_truthy(url)) {
             if (_pyfunc_truthy(param)) {
-                ajax_post(url, param, _callback);
+                req = ajax_post(url, param, _callback);
             } else {
-                ajax_get(url, _callback);
+                req = ajax_get(url, _callback);
             }
         } else {
             _callback(data2);
@@ -2481,9 +2533,10 @@ _on_inline = function flx__on_inline (target_element, data_element, url, param, 
             }
         }
     }
-    return null;
+    return dialog_slot;
 };
 
+window._on_inline = _on_inline;
 on_inline = function flx_on_inline (target_element, data_element, new_url, param, event) {
     return _on_inline(target_element, data_element, new_url, param, event, "INLINE");
 };
@@ -2568,9 +2621,10 @@ _on_popup = function flx__on_popup (target_element, data_element, url, param, ev
             }
         }
     }
-    return null;
+    return content;
 };
 
+window._on_popup = _on_popup;
 on_popup = function flx_on_popup (target_element, data_element, new_url, param, event) {
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL");
 };
@@ -2619,10 +2673,10 @@ on_replace_app = function flx_on_replace_app (target_element, data_element, new_
     if (_pyfunc_truthy(wrapper)) {
         wrapper.innerHTML = "";
     }
-    mount_html(document.querySelector("div.content-wrapper"), data_element.querySelector("section.body-body"), false);
+    mount_html(wrapper, data_element.querySelector("section.body-body"), false);
     window.init_start_page();
     window.activate_menu();
-    return null;
+    return wrapper;
 };
 
 refresh_frame = function flx_refresh_frame (target_element, data_element, new_url, param, event, data_region) {
@@ -2671,8 +2725,7 @@ refresh_frame = function flx_refresh_frame (target_element, data_element, new_ur
     if (_pyfunc_truthy(aside)) {
         aside.style.opacity = "50%";
     }
-    refresh_ajax_frame(target_element, data_region2, data_element2, _callback, _callback_on_error);
-    return null;
+    return refresh_ajax_frame(target_element, data_region2, data_element2, _callback, _callback_on_error);
 };
 
 refresh_page = function flx_refresh_page (target_element, data_element, new_url, param, event) {

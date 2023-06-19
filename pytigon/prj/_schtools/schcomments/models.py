@@ -14,25 +14,7 @@ import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
-
-from django.contrib.auth import get_user_model
-
-User = get_user_model()
-
-
-class UserProxy(User):
-    class Meta:
-        verbose_name = _("User")
-        verbose_name_plural = _("Users")
-        default_permissions = ("add", "change", "delete", "list")
-        app_label = "schcomments"
-
-        ordering = ["id"]
-
-        proxy = True
-
-
-admin.site.register(UserProxy)
+import schprofile.models
 
 
 class Comment(JSONModel):
@@ -72,7 +54,7 @@ class Comment(JSONModel):
         editable=True,
     )
     sender = models.ForeignKey(
-        UserProxy,
+        schprofile.models.UserProxy,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
@@ -81,7 +63,7 @@ class Comment(JSONModel):
         related_name="comment_sender_set",
     )
     recipient = models.ForeignKey(
-        UserProxy,
+        schprofile.models.UserProxy,
         on_delete=models.CASCADE,
         null=True,
         blank=True,

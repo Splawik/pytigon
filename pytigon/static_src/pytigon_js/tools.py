@@ -140,7 +140,7 @@ def ajax_get(url, complete, process_req=None):
         pass
 
     def _onload():
-        nonlocal process_blob
+        nonlocal process_blob, req
         if not req.response:
             complete(req.responseText)
         elif process_blob:
@@ -152,11 +152,77 @@ def ajax_get(url, complete, process_req=None):
                 reader = FileReader()
 
                 def _on_reader_load():
+                    nonlocal disp, req
                     if req.status != 200 and req.status != 0:
                         console.log(reader.result)
                         window.open().document.write(reader.result)
                         complete("Error - details on new page")
                     else:
+                        if disp == "redirect":
+                            url2data = reader.result.split("|")
+
+                            def _complete2(data):
+                                nonlocal url2data
+                                element = complete(data)
+                                if element:
+                                    next_href = url2data[1]
+                                    next_target = url2data[2]
+                                    query = url2data[3]
+                                    element = element.querySelector(query)
+
+                                    def _callback_next(data):
+                                        nonlocal element, next_target, next_href
+                                        if next_target.startswith("inline"):
+                                            t = next_target.replace("inline", "")
+                                            if t == "_info":
+                                                s = "INLINE_INFO"
+                                            elif t == "_delete":
+                                                s = "INLINE_DELETE"
+                                            elif t == "_edit":
+                                                s = "INLINE_EDIT"
+                                            else:
+                                                s = "INLINE"
+                                            return window._on_inline(
+                                                element,
+                                                get_elem_from_string(data),
+                                                next_href,
+                                                {},
+                                                None,
+                                                s,
+                                            )
+                                        elif next_target.startswith("popup"):
+                                            t = next_target.replace("popup", "")
+                                            if t == "_info":
+                                                s = "MODAL_INFO"
+                                            elif t == "_delete":
+                                                s = "MODAL_DELETE"
+                                            elif t == "_edit":
+                                                s = "MODAL_EDIT"
+                                            else:
+                                                s = "MODAL"
+                                            return window._on_popup(
+                                                element,
+                                                get_elem_from_string(data),
+                                                next_href,
+                                                {},
+                                                None,
+                                                s,
+                                            )
+                                        else:
+                                            return window.on_new_tab(
+                                                element,
+                                                get_elem_from_string(data),
+                                                next_href,
+                                                {},
+                                                None,
+                                            )
+
+                                    ajax_get(next_href, _callback_next)
+
+                                return element
+
+                            return ajax_get(url2data[0], _complete2)
+
                         complete(reader.result)
 
                 reader.onload = _on_reader_load
@@ -174,6 +240,7 @@ def ajax_get(url, complete, process_req=None):
     req.open("GET", url, True)
     # req.overrideMimeType('text/plain; charset=x-user-defined')
     req.send(None)
+    return req
 
 
 window.ajax_get = ajax_get
@@ -234,6 +301,7 @@ def _req_post(req, url, data, complete, content_type=None):
     # req.setRequestHeader("Connection", "close")
 
     req.send(data)
+    return req
 
 
 def ajax_post(url, data, complete, process_req=None, content_type=None):
@@ -242,6 +310,7 @@ def ajax_post(url, data, complete, process_req=None, content_type=None):
         process_req(req)
 
     _req_post(req, url, data, complete, content_type)
+    return req
 
 
 window.ajax_post = ajax_post
@@ -256,7 +325,7 @@ def ajax_json(url, data, complete, process_req=None):
         complete(_data)
 
     data2 = JSON.stringify(data)
-    ajax_post(url, data2, _complete, None, "application/json")
+    return ajax_post(url, data2, _complete, None, "application/json")
 
 
 window.ajax_json = ajax_json
@@ -301,9 +370,9 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None, url=None):
             data = data_filter(data)
 
     if url:
-        _req_post(req, url, data, complete, content_type)
+        return _req_post(req, url, data, complete, content_type)
     else:
-        _req_post(
+        return _req_post(
             req,
             correct_href(form.attr("action"), (_form[0],)),
             data,

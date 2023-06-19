@@ -188,8 +188,8 @@ class Element(TreeModel):
     description = models.CharField(
         "Description", null=True, blank=True, editable=True, max_length=256
     )
-    quantity = models.IntegerField(
-        "Quantity",
+    amount = models.IntegerField(
+        "Amount",
         null=True,
         blank=True,
         editable=True,
@@ -1273,6 +1273,12 @@ class DocHead(JSONModel):
                 name = t.lower() + "dochead"
                 if hasattr(self, name):
                     return getattr(self, name)
+                else:
+                    c = ContentType.objects.filter(model=name).first()
+                    if c:
+                        obj2 = copy.copy(self)
+                        obj2.__class__ = c.model_class()
+                        return obj2
         return self
 
     @classmethod
@@ -1624,9 +1630,11 @@ class DocItem(JSONModel):
                 if hasattr(self, name):
                     return getattr(self, name)
                 else:
-                    obj2 = copy.copy(self)
-                    obj2.__class__ = ContentType.objects.get(model=name).model_class()
-                    return obj2
+                    c = ContentType.objects.filter(model=name).first()
+                    if c:
+                        obj2 = copy.copy(self)
+                        obj2.__class__ = c.model_class()
+                        return obj2
         return self
 
     def get_period(self):

@@ -453,6 +453,7 @@ function str2ab(str) {
       "getAllResponseHeaders",
       "getResponseHeader",
       "overrideMimeType",
+      "responseURL",
     ].forEach(function(item) {
       Object.defineProperty(self, item, {
         value: function() {

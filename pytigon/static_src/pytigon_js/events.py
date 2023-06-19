@@ -202,12 +202,16 @@ def on_click_default_action(event, target_element):
     def _get_or_post(url, callback, data2=None):
         nonlocal target_element, target, param, event
 
+        req = None
+
         loading = Loading(target_element)
         loading.create()
         loading.start()
 
         def _callback(data):
-            nonlocal target_element, target, param, event, url, callback, loading
+            nonlocal target_element, target, param, event, url, callback, loading, req
+
+            element = None
 
             loading.stop()
             loading.remove()
@@ -222,15 +226,18 @@ def on_click_default_action(event, target_element):
                 new_callback, new_url = _get_click_event_from_tab(
                     target_element, new_target, url
                 )
-                new_callback(target_element, data_element, new_url, param, event)
+                element = new_callback(
+                    target_element, data_element, new_url, param, event
+                )
             else:
-                callback(target_element, data_element, url, param, event)
+                element = callback(target_element, data_element, url, param, event)
+            return element
 
         if url:
             if param:
-                ajax_post(url, param, _callback)
+                req = ajax_post(url, param, _callback)
             else:
-                ajax_get(url, _callback)
+                req = ajax_get(url, _callback)
         else:
             _callback(data2)
 
@@ -381,6 +388,10 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
                 btn.addEventListener("click", _on_click)
             else:
                 btn.style.display = "none"
+    return dialog_slot
+
+
+window._on_inline = _on_inline
 
 
 def on_inline(target_element, data_element, new_url, param, event):
@@ -492,6 +503,10 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
                 btn.addEventListener("click", _on_click)
             else:
                 btn.style.display = "none"
+    return content
+
+
+window._on_popup = _on_popup
 
 
 def on_popup(target_element, data_element, new_url, param, event):
@@ -552,12 +567,13 @@ def on_replace_app(target_element, data_element, new_url, param, event):
     if wrapper:
         wrapper.innerHTML = ""
     mount_html(
-        document.querySelector("div.content-wrapper"),
+        wrapper,
         data_element.querySelector("section.body-body"),
         False,
     )
     window.init_start_page()
     window.activate_menu()
+    return wrapper
 
 
 def refresh_frame(
@@ -602,7 +618,7 @@ def refresh_frame(
     if aside:
         aside.style.opacity = "50%"
 
-    refresh_ajax_frame(
+    return refresh_ajax_frame(
         target_element, data_region2, data_element2, _callback, _callback_on_error
     )
 

@@ -46,7 +46,7 @@ class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}{%i
         {% for line in table.metaclass_code.splitlines %}{{line|safe}}
         {% endfor %}
         {% endif %}
-        {% if table.proxy_model %}proxy=True{% endif %}
+        {% if table.proxy_model and not 'abstract' in table.metaclass_code %}proxy=True{% endif %}
     {% if not table.proxy_model %}{% if table.tree_tab == 1 %}
     {% if not table.fields_have_parent %}parent = ext_models.PtigTreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children'){% endif %}
     {% endif %}

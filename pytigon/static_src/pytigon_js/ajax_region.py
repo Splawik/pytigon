@@ -56,7 +56,7 @@ def mount_html(dest_elem, data_or_html, link=None):
     global MOUNT_INIT_FUN
 
     if dest_elem == None:
-        return
+        return None
 
     if (
         hasattr(dest_elem, "onloadeddata")
@@ -68,7 +68,7 @@ def mount_html(dest_elem, data_or_html, link=None):
         evt.data = data_or_html
         evt.data_source = link
         dest_elem.dispatchEvent(evt)
-        return
+        return dest_elem
 
     if data_or_html != None:
 
@@ -94,7 +94,8 @@ def mount_html(dest_elem, data_or_html, link=None):
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:
             fun(dest_elem)
-
+    
+    return dest_elem
 
 window.mount_html = mount_html
 
@@ -492,6 +493,7 @@ def refresh_ajax_frame(
 
     def _callback(data):
         nonlocal element, link, frame, region, callback, loading
+        ret = None
 
         loading.stop()
         loading.remove()
@@ -506,7 +508,7 @@ def refresh_ajax_frame(
             and getattr(frame, "onloadeddata")
             and frame.onloadeddata
         ):
-            mount_html(frame, data, link)
+            ret = mount_html(frame, data, link)
         else:
             if dt in ("$$RETURN_REFRESH",):
                 return refresh_ajax_frame(
@@ -534,7 +536,7 @@ def refresh_ajax_frame(
                 )
             elif dt == "$$RETURN_RELOAD":
                 if region_name == "error":
-                    mount_html(frame, data, link)
+                    ret = mount_html(frame, data, link)
                 else:
                     return refresh_ajax_frame(
                         element, "error", data, callback, callback_on_error
@@ -581,7 +583,7 @@ def refresh_ajax_frame(
                         return
                 return
             else:
-                mount_html(frame, data, link)
+                ret  = mount_html(frame, data, link)
 
         if dt in ("$$RETURN_ERROR", "$$RETURN_RELOAD", "$$RETURN_HTML_ERROR"):
             if callback_on_error:
@@ -589,10 +591,11 @@ def refresh_ajax_frame(
         else:
             if callback:
                 callback()
+        
+        return ret
 
     if data_element:
-        _callback(data_element)
-        return
+        return _callback(data_element)
 
     url = None
     post = False
@@ -623,8 +626,9 @@ def refresh_ajax_frame(
                 ajax_post(url, data, _callback)
         else:
             ajax_get(url, _callback)
+        return None
     else:
-        _callback(data_if_none)
+        return _callback(data_if_none)
 
 
 window.refresh_ajax_frame = refresh_ajax_frame
