@@ -24,6 +24,8 @@ from django.contrib.contenttypes.models import ContentType
 from pytigon_lib.schtools.tools import content_to_function
 from django.db.models import Q, Sum
 from django.apps import apps
+from django.dispatch import receiver
+from django.db.models.signals import post_delete
 
 
 def get_element_queryset():
@@ -37,9 +39,12 @@ class ElementManager(models.Manager):
     def get_queryset(self):
         q = GET_ELEMENT_QUERYSET()
         if q:
-            return super().get_queryset().filter(q)
+            q2 = super().get_queryset().filter(q)
         else:
-            return super().get_queryset()
+            q2 = super().get_queryset()
+        return q2.select_related(
+            "parent", "grand_parent1", "grand_parent2", "grand_parent3", "grand_parent4"
+        )
 
 
 GROUP_FOR_TYPE = None
@@ -256,6 +261,13 @@ class Element(TreeModel):
         editable=False,
         default=True,
     )
+    has_children = models.BooleanField(
+        "Element has children",
+        null=True,
+        blank=True,
+        editable=False,
+        default=False,
+    )
     can_view_permission = models.ForeignKey(
         "auth.Permission",
         related_name="permission_set_perm_view",
@@ -341,6 +353,11 @@ class Element(TreeModel):
             self.first_ancestor = self
             super().save(*argi, **argv)
 
+        if self.parent:
+            if not self.parent.has_children:
+                self.parent.has_children = True
+                self.parent.save()
+
     def get_name(self):
         return self.name
 
@@ -425,6 +442,9 @@ class Element(TreeModel):
     def get_children(self, child_type):
         qq = self.q_for_children(child_type)
         return Element.objects.filter(*qq)
+
+    def number_of_children(self):
+        return Element.objects.filter(parent=self).count()
 
     @staticmethod
     def get_children_for_element(parent_code, child_type):
@@ -654,14 +674,15 @@ class Element(TreeModel):
             ret = user.has_perm(self.can_view_permission.name)
         else:
             ret = user.has_perm("schelements.view_element")
-        if ret and self.parent:
-            ret = self.parent.can_view(user)
-        if ret and self.grand_parent1:
-            ret = self.grand_parent1.can_view(user, False)
-        if ret and self.grand_parent2:
-            ret = self.grand_parent2.can_view(user, False)
-        if ret and self.grand_parent3:
-            ret = self.grand_parent3.can_view(user, False)
+        if check_parents:
+            if ret and self.parent:
+                ret = self.parent.can_view(user)
+            if ret and self.grand_parent1:
+                ret = self.grand_parent1.can_view(user, False)
+            if ret and self.grand_parent2:
+                ret = self.grand_parent2.can_view(user, False)
+            if ret and self.grand_parent3:
+                ret = self.grand_parent3.can_view(user, False)
         return ret
 
     def can_change(self, user):
@@ -670,7 +691,7 @@ class Element(TreeModel):
         else:
             ret = user.has_perm("schelements.change_element")
         if ret:
-            return self.can_view(user)
+            ret = self.can_view(user)
         return ret
 
     def can_delete(self, user):
@@ -679,7 +700,7 @@ class Element(TreeModel):
         else:
             ret = user.has_perm("schelements.delete_element")
         if ret:
-            return self.can_view(user)
+            ret = self.can_view(user)
         return ret
 
     def can_add(self, user, child_type):
@@ -688,7 +709,7 @@ class Element(TreeModel):
         else:
             ret = user.has_perm("schelements.add_element")
         if ret:
-            return self.can_view(user)
+            ret = self.can_view(user)
         return ret
 
     objects = ElementManager()
@@ -2617,3 +2638,11 @@ class BaseObject(models.Model):
             return ihtml_to_html(None, self.action_template)
         else:
             return None
+
+
+@receiver(post_delete, sender=Element)
+def delete_profile(sender, instance, *args, **kwargs):
+    if instance.parent:
+        n = instance.parent.number_of_children()
+        if n < 2:
+            instance.parent.has_children = False

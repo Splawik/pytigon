@@ -661,6 +661,8 @@ def field_as_widget(value, arg):
 
 @register.filter(name="model_has_children")
 def model_has_children(value):
+    if hasattr(value, "has_children"):
+        return value.has_children
     set_name = value._meta.model_name
     if hasattr(value, set_name + "_set"):
         o = getattr(value, set_name + "_set")
