@@ -388,6 +388,13 @@ input[required]:invalid, select[required] {
   padding-bottom: 0.2rem;
   padding-top: 0.2rem; }
 
+.modal-dialog-inline > div > div > .modal-body {
+  max-height: calc(100vh - 8rem);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-top: 0.5rem;
+  margin-bottom: 0.5rem; }
+
 .form-inline .form-group, .form-inline div.checkbox {
   padding: 2px;
   margin-right: 15px; }
@@ -481,7 +488,6 @@ div.modal-content.maximized {
   overflow-x: hidden; }
 
 .inline-content {
-  margin-top: -4.5rem;
   z-index: 1000; }
 
 .modal-content.inline-content {
