@@ -218,11 +218,12 @@ INSTALLED_APPS = [
 
 if GRAPHQL:
     INSTALLED_APPS.append("graphene_django")
-    INSTALLED_APPS.append("oauth2_provider")
+    INSTALLED_APPS.append("pytigon.schserw.oauth2_ext")
 
 if REST:
     INSTALLED_APPS.append("rest_framework")
     if not "oauth2_provider" in INSTALLED_APPS:
+        INSTALLED_APPS.append("pytigon.schserw.oauth2_ext")
         INSTALLED_APPS.append("oauth2_provider")
     INSTALLED_APPS.append("drf_yasg")
     REST_FRAMEWORK = {
@@ -245,11 +246,11 @@ if GRAPHQL or REST:
         "SCOPES": {
             "read": "Read scope",
             "write": "Write scope",
-            "groups": "Access to your groups",
         },
         "PKCE_REQUIRED": False,
     }
 
+    OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
 
 try:
     import mptt

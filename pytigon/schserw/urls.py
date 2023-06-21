@@ -184,10 +184,12 @@ if settings.REST:
 
 
 if settings.GRAPHQL or settings.REST:
+    from oauth2_ext.views import ApplicationScopesTokenView
 
     _urlpatterns.extend(
         [
             path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
+            path("o/token/", ApplicationScopesTokenView.as_view(), name="token"),
         ]
     )
 
