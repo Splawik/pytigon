@@ -42,8 +42,13 @@ class ElementManager(models.Manager):
             q2 = super().get_queryset().filter(q)
         else:
             q2 = super().get_queryset()
-        return q2.select_related(
-            "parent", "grand_parent1", "grand_parent2", "grand_parent3", "grand_parent4"
+        return q2.prefetch_related(
+            "parent",
+            "grand_parent1",
+            "grand_parent2",
+            "grand_parent3",
+            "grand_parent4",
+            "first_ancestor",
         )
 
 
