@@ -471,9 +471,9 @@ class CanCanWrapper:
         self.action = action
         self.request = request
 
-    def call(obj):
-        return self.request.ability.can(action, obj)
-
+    def call(self, obj):
+        return self.request.ability.can(self.action, obj)
+ 
 
 class CanCanPermWrapper(PermWrapper):
     def __init__(self, request):
@@ -482,7 +482,7 @@ class CanCanPermWrapper(PermWrapper):
 
     def __getitem__(self, app_label):
         if app_label.startswith("can_"):
-            return CanCan(app_label, self.request)
+            return CanCanWrapper(app_label[4:], self.request)
         else:
             return super().__getitem(app_label)
 
@@ -757,6 +757,6 @@ def sch_standard(request):
         ret["context"] = ret
 
     if hasattr(settings, "CANCAN") and settings.CANCAN:
-        ret["parms"] = (CanCanPermWrapper(request),)
+        ret["perms"] = CanCanPermWrapper(request)
 
     return ret
