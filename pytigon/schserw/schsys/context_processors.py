@@ -32,6 +32,7 @@ from django.urls import get_script_prefix
 
 try:
     from django.contrib.auth.models import Permission
+    from django.contrib.auth.context_processors import PermWrapper
 except:
     pass
 
@@ -465,6 +466,27 @@ class Env:
         return self.env(name)
 
 
+class CanCanWrapper:
+    def __init__(self, action, request):
+        self.action = action
+        self.request = request
+
+    def call(obj):
+        return self.request.ability.can(action, obj)
+
+
+class CanCanPermWrapper(PermWrapper):
+    def __init__(self, request):
+        super().__init__(request.user)
+        self.request = request
+
+    def __getitem__(self, app_label):
+        if app_label.startswith("can_"):
+            return CanCan(app_label, self.request)
+        else:
+            return super().__getitem(app_label)
+
+
 def sch_standard(request):
     """Context processor function
 
@@ -733,5 +755,8 @@ def sch_standard(request):
 
     if settings.DEBUG:
         ret["context"] = ret
+
+    if hasattr(settings, "CANCAN") and settings.CANCAN:
+        ret["parms"] = (CanCanPermWrapper(request),)
 
     return ret

@@ -150,7 +150,6 @@ TEMPLATES = [
         ],
         "OPTIONS": {
             "context_processors": [
-                "pytigon.schserw.schsys.context_processors.sch_standard",
                 "django.contrib.auth.context_processors.auth",
                 "django.template.context_processors.request",
                 "django.template.context_processors.debug",
@@ -160,6 +159,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.request",
+                "pytigon.schserw.schsys.context_processors.sch_standard",
             ],
             "loaders": [
                 "pytigon_lib.schdjangoext.python_style_template_loader.Loader",
@@ -260,8 +260,11 @@ if GRAPHQL or REST:
 if CANCAN_ENABLED:
     INSTALLED_APPS.append("cancan")
     MIDDLEWARE.append("cancan.middleware.CanCanMiddleware")
-    TEMPLATES[0]["OPTIONS"]["context_processors"].append(
-        "cancan.context_processors.abilities"
+    i = TEMPLATES[0]["OPTIONS"]["context_processors"].index(
+        "pytigon.schserw.schsys.context_processors.sch_standard"
+    )
+    TEMPLATES[0]["OPTIONS"]["context_processors"].insert(
+        i, "cancan.context_processors.abilities"
     )
 
 try:

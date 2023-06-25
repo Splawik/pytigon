@@ -80,10 +80,10 @@
 
 
 %% list_row_actions
-    % if object.call__can_change|proxy_call:user
+    % if object.call__can_change|call_with:user and perms.can_change|call_with:object
         % row_actions:
             .edit
-    % if object.call__can_delete|proxy_call:user
+    % if object.call__can_delete|call_with:user and perms.can_delete|call_with:object
         % row_actions:
             .delete
 

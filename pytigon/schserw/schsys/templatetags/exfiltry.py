@@ -225,8 +225,13 @@ def args(obj, arg):
     return obj
 
 
-@register.filter(name="proxy_call")
-def proxy_call(proxy, arg):
+# @register.filter(name="proxy_call")
+# def proxy_call(proxy, arg):
+#    return proxy.call(arg)
+
+
+@register.filter(name="call_with")
+def call_with(proxy, arg):
     return proxy.call(arg)
 
 
