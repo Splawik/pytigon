@@ -23,7 +23,7 @@ INLINE_INFO = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(I
 INLINE_DELETE = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", DELETE_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_ERROR = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", ERROR_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 
-var LOADED_FILES, Loading, TEMPLATES, _OPERATOR, _req_post, ajax_get, ajax_json, ajax_post, ajax_submit, animate_combo, can_popup, correct_href, download_binary_file, frontend_view, get_elem_from_string, get_page, get_table_type, get_template, history_push_state, inline_maximize, inline_minimize, is_hidden, is_visible, load_css, load_js, load_many_js, on_load_js, process_resize, remove_element, remove_page_from_href, save_as, send_to_dom, super_insert, super_query_selector;
+var LOADED_FILES, Loading, TEMPLATES, _OPERATOR, _req_post, ajax_get, ajax_json, ajax_post, ajax_submit, animate_combo, can_popup, correct_href, download_binary_file, frontend_view, get_elem_from_string, get_page, get_table_type, get_template, history_push_state, inline_maximize, inline_minimize, is_hidden, is_visible, load_css, load_js, load_many_js, on_load_js, process_resize, remove_element, remove_page_from_href, save_as, send_to_dom, standard_error_handler, super_insert, super_query_selector;
 LOADED_FILES = ({});
 Loading = function () {
     _pyfunc_op_instantiate(this, arguments);
@@ -111,6 +111,22 @@ save_as = function flx_save_as (blob, file_name) {
     return null;
 };
 
+standard_error_handler = function flx_standard_error_handler (req) {
+    var _on_reader_load, reader;
+    if ((!_pyfunc_op_equals(req.status, 200))) {
+        reader = new FileReader();
+        _on_reader_load = (function flx__on_reader_load () {
+            Swal.fire(({icon: "error", title: _pymeth_format.call("Error: {:d}", req.status), text: reader.result}));
+            return null;
+        }).bind(this);
+
+        reader.onload = _on_reader_load;
+        reader.readAsText(req.response);
+    }
+    return null;
+};
+
+window.standard_error_handler = standard_error_handler;
 download_binary_file = function flx_download_binary_file (buf, content_disposition) {
     var file_name, pos, stub1_seq, stub2_itr, var_list;
     file_name = "temp.dat";
@@ -128,8 +144,9 @@ download_binary_file = function flx_download_binary_file (buf, content_dispositi
     return null;
 };
 
-frontend_view = function flx_frontend_view (url, complete, param) {
+frontend_view = function flx_frontend_view (url, complete, callback_on_error, param) {
     var _callback, param2, url2, x;
+    callback_on_error = (callback_on_error === undefined) ? null: callback_on_error;
     param = (param === undefined) ? null: param;
     url2 = _pymeth_replace.call(url, ".fview", ".js");
     param2 = param;
@@ -171,15 +188,16 @@ frontend_view = function flx_frontend_view (url, complete, param) {
     }).bind(this);
 
     if (((_pyfunc_truthy(window.hasOwnProperty("cordova"))) || _pyfunc_op_equals(location.protocol, "file:"))) {
-        ajax_get(url2, _callback);
+        ajax_get(url2, _callback, callback_on_error);
     } else {
         x = window.dynamic_import(url2, _callback);
     }
     return null;
 };
 
-ajax_get = function flx_ajax_get (url, complete, process_req) {
+ajax_get = function flx_ajax_get (url, complete, callback_on_error, process_req) {
     var _onload, process_blob, req;
+    callback_on_error = (callback_on_error === undefined) ? null: callback_on_error;
     process_req = (process_req === undefined) ? null: process_req;
     if (_pyfunc_op_contains(".fview", url)) {
         return frontend_view(url, complete, null);
@@ -198,6 +216,14 @@ ajax_get = function flx_ajax_get (url, complete, process_req) {
     }
     _onload = (function flx__onload () {
         var _on_reader_load, disp, reader;
+        if ((!_pyfunc_op_contains(req.status, [200, 500]))) {
+            if (_pyfunc_truthy(callback_on_error)) {
+                callback_on_error(req);
+            } else {
+                standard_error_handler(req);
+            }
+            return null;
+        }
         if ((!_pyfunc_truthy(req.response))) {
             complete(req.responseText);
         } else if (_pyfunc_truthy(process_blob)) {
@@ -288,8 +314,9 @@ ajax_get = function flx_ajax_get (url, complete, process_req) {
 };
 
 window.ajax_get = ajax_get;
-_req_post = function flx__req_post (req, url, data, complete, content_type) {
+_req_post = function flx__req_post (req, url, data, complete, callback_on_error, content_type) {
     var _onload, process_blob;
+    callback_on_error = (callback_on_error === undefined) ? null: callback_on_error;
     content_type = (content_type === undefined) ? null: content_type;
     if (_pyfunc_op_contains(".fview", url)) {
         return frontend_view(url, complete, data);
@@ -304,6 +331,14 @@ _req_post = function flx__req_post (req, url, data, complete, content_type) {
     }
     _onload = (function flx__onload (event) {
         var _on_reader_load, disp, reader;
+        if ((!_pyfunc_op_contains(req.status, [200, 500]))) {
+            if (_pyfunc_truthy(callback_on_error)) {
+                callback_on_error(req);
+            } else {
+                standard_error_handler(req);
+            }
+            return null;
+        }
         if ((!_pyfunc_truthy(req.response))) {
             complete(req.responseText);
         } else if (_pyfunc_truthy(process_blob)) {
@@ -351,7 +386,7 @@ _req_post = function flx__req_post (req, url, data, complete, content_type) {
     return req;
 };
 
-ajax_post = function flx_ajax_post (url, data, complete, process_req, content_type) {
+ajax_post = function flx_ajax_post (url, data, complete, callback_on_error, process_req, content_type) {
     var req;
     process_req = (process_req === undefined) ? null: process_req;
     content_type = (content_type === undefined) ? null: content_type;
@@ -359,12 +394,12 @@ ajax_post = function flx_ajax_post (url, data, complete, process_req, content_ty
     if (_pyfunc_truthy(process_req)) {
         process_req(req);
     }
-    _req_post(req, url, data, complete, content_type);
+    _req_post(req, url, data, complete, callback_on_error, content_type);
     return req;
 };
 
 window.ajax_post = ajax_post;
-ajax_json = function flx_ajax_json (url, data, complete, process_req) {
+ajax_json = function flx_ajax_json (url, data, complete, callback_on_error, process_req) {
     var _complete, data2;
     process_req = (process_req === undefined) ? null: process_req;
     _complete = (function flx__complete (data_in) {
@@ -381,12 +416,13 @@ ajax_json = function flx_ajax_json (url, data, complete, process_req) {
     }).bind(this);
 
     data2 = JSON.stringify(data);
-    return ajax_post(url, data2, _complete, null, "application/json");
+    return ajax_post(url, data2, _complete, callback_on_error, null, "application/json");
 };
 
 window.ajax_json = ajax_json;
-ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_req, url) {
+ajax_submit = function flx_ajax_submit (_form, complete, callback_on_error, data_filter, process_req, url) {
     var _progressHandlingFunction, content_type, data, form, pair, req, stub3_seq, stub4_itr;
+    callback_on_error = (callback_on_error === undefined) ? null: callback_on_error;
     data_filter = (data_filter === undefined) ? null: data_filter;
     process_req = (process_req === undefined) ? null: process_req;
     url = (url === undefined) ? null: url;
@@ -429,9 +465,9 @@ ajax_submit = function flx_ajax_submit (_form, complete, data_filter, process_re
         }
     }
     if (_pyfunc_truthy(url)) {
-        return _req_post(req, url, data, complete, content_type);
+        return _req_post(req, url, data, complete, callback_on_error, content_type);
     } else {
-        return _req_post(req, correct_href(form.attr("action"), [_form[0]]), data, complete, content_type);
+        return _req_post(req, correct_href(form.attr("action"), [_form[0]]), data, complete, callback_on_error, content_type);
     }
     return null;
 };
@@ -1001,7 +1037,7 @@ inline_minimize = function flx_inline_minimize (elem) {
 };
 
 window.inline_minimize = inline_minimize;
-export {Loading, save_as, download_binary_file, frontend_view, ajax_get, ajax_post, ajax_json, ajax_submit, load_css, on_load_js, load_js, load_many_js, history_push_state, get_elem_from_string, animate_combo, is_hidden, is_visible, get_template, super_query_selector, super_insert, send_to_dom, remove_element, process_resize, get_page, get_table_type, can_popup, correct_href, remove_page_from_href, inline_maximize, inline_minimize};
+export {Loading, save_as, standard_error_handler, download_binary_file, frontend_view, ajax_get, ajax_post, ajax_json, ajax_submit, load_css, on_load_js, load_js, load_many_js, history_push_state, get_elem_from_string, animate_combo, is_hidden, is_visible, get_template, super_query_selector, super_insert, send_to_dom, remove_element, process_resize, get_page, get_table_type, can_popup, correct_href, remove_page_from_href, inline_maximize, inline_minimize};
 
 var DefineWebComponent, GlobalBus, set_state;
 set_state = function flx_set_state (component, state) {
@@ -1725,7 +1761,7 @@ _refresh_page = function flx__refresh_page (target_element, data_element) {
 };
 
 refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data_element, callback, callback_on_error, data_if_none) {
-    var _callback, data, frame, link, loading, post, region, url;
+    var _callback, _callback_on_error, data, frame, link, loading, post, region, url;
     region_name = (region_name === undefined) ? null: region_name;
     data_element = (data_element === undefined) ? null: data_element;
     callback = (callback === undefined) ? null: callback;
@@ -1814,6 +1850,13 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         return ret;
     }).bind(this);
 
+    _callback_on_error = (function flx__callback_on_error (req) {
+        loading.stop();
+        loading.remove();
+        window.standard_error_handler(req);
+        return null;
+    }).bind(this);
+
     if (_pyfunc_truthy(data_element)) {
         return _callback(data_element);
     }
@@ -1840,13 +1883,13 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         loading.start();
         if (_pyfunc_truthy(post)) {
             if ((_pyfunc_op_equals(_pymeth_lower.call(link.tagName), "form"))) {
-                ajax_submit(link, _callback, null, null, url);
+                ajax_submit(link, _callback, _callback_on_error, null, null, url);
             } else {
                 data = (jQuery(link).serialize)();
-                ajax_post(url, data, _callback);
+                ajax_post(url, data, _callback, _callback_on_error);
             }
         } else {
-            ajax_get(url, _callback);
+            ajax_get(url, _callback, _callback_on_error);
         }
         return null;
     } else {
@@ -2340,7 +2383,7 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
         }
     }
     _get_or_post = (function flx__get_or_post (url, callback, data2) {
-        var _callback, loading, req;
+        var _callback, _callback_on_error, loading, req;
         data2 = (data2 === undefined) ? null: data2;
         req = null;
         loading = new Loading(target_element);
@@ -2368,11 +2411,18 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
             return element;
         }).bind(this);
 
+        _callback_on_error = (function flx__callback_on_error (req) {
+            loading.stop();
+            loading.remove();
+            window.standard_error_handler(req);
+            return null;
+        }).bind(this);
+
         if (_pyfunc_truthy(url)) {
             if (_pyfunc_truthy(param)) {
-                req = ajax_post(url, param, _callback);
+                req = ajax_post(url, param, _callback, _callback_on_error);
             } else {
-                req = ajax_get(url, _callback);
+                req = ajax_get(url, _callback, _callback_on_error);
             }
         } else {
             _callback(data2);
@@ -2389,7 +2439,7 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
                 return null;
             }).bind(this);
 
-            ajax_submit(target_element, _callback2, null, null);
+            ajax_submit(target_element, _callback2, null, null, null);
         } else if (_pyfunc_truthy(url)) {
             _get_or_post(url, callback, null);
         } else {

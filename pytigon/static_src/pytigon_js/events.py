@@ -233,11 +233,17 @@ def on_click_default_action(event, target_element):
                 element = callback(target_element, data_element, url, param, event)
             return element
 
+        def _callback_on_error(req):
+            nonlocal loading
+            loading.stop()
+            loading.remove()
+            window.standard_error_handler(req)
+
         if url:
             if param:
-                req = ajax_post(url, param, _callback)
+                req = ajax_post(url, param, _callback, _callback_on_error)
             else:
-                req = ajax_get(url, _callback)
+                req = ajax_get(url, _callback, _callback_on_error)
         else:
             _callback(data2)
 
@@ -248,7 +254,7 @@ def on_click_default_action(event, target_element):
             def _callback2(data2):
                 _get_or_post(None, callback, data2)
 
-            ajax_submit(target_element, _callback2, None, None)
+            ajax_submit(target_element, _callback2, None, None, None)
         elif url:
             _get_or_post(url, callback, None)
         else:

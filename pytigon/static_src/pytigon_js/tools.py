@@ -62,6 +62,27 @@ def save_as(blob, file_name):
     setTimeout(_, 1000)
 
 
+def standard_error_handler(req):
+    if req.status != 200:
+        reader = FileReader()
+
+        def _on_reader_load():
+            nonlocal req, reader
+            Swal.fire(
+                {
+                    "icon": "error",
+                    "title": "Error: %d" % req.status,
+                    "text": reader.result,
+                }
+            )
+
+        reader.onload = _on_reader_load
+        reader.readAsText(req.response)
+
+
+window.standard_error_handler = standard_error_handler
+
+
 def download_binary_file(buf, content_disposition):
     # mimetype = 'text/html'
     # if 'odf' in content_disposition or 'ods' in content_disposition:
@@ -83,7 +104,7 @@ def download_binary_file(buf, content_disposition):
     save_as(buf, file_name)
 
 
-def frontend_view(url, complete, param=None):
+def frontend_view(url, complete, callback_on_error=None, param=None):
     url2 = url.replace(".fview", ".js")
 
     param2 = param
@@ -94,7 +115,7 @@ def frontend_view(url, complete, param=None):
             param2 = window.getParamsFromUrl(url)
 
     def _callback(module):
-        nonlocal url, complete, param2
+        nonlocal url, complete, callback_on_error, param2
 
         def _callback2(context):
             if jQuery.type(context) == "object" and context["template"]:
@@ -118,12 +139,12 @@ def frontend_view(url, complete, param=None):
             module["request"](param2, _callback2)
 
     if window.hasOwnProperty("cordova") or location.protocol == "file:":
-        ajax_get(url2, _callback)
+        ajax_get(url2, _callback, callback_on_error)
     else:
         x = window.dynamic_import(url2, _callback)
 
 
-def ajax_get(url, complete, process_req=None):
+def ajax_get(url, complete, callback_on_error=None, process_req=None):
     if ".fview" in url:
         return frontend_view(url, complete, None)
 
@@ -140,7 +161,15 @@ def ajax_get(url, complete, process_req=None):
         pass
 
     def _onload():
-        nonlocal process_blob, req
+        nonlocal complete, callback_on_error, process_blob, req
+
+        if not req.status in (200, 500):
+            if callback_on_error:
+                callback_on_error(req)
+            else:
+                standard_error_handler(req)
+            return
+
         if not req.response:
             complete(req.responseText)
         elif process_blob:
@@ -246,7 +275,7 @@ def ajax_get(url, complete, process_req=None):
 window.ajax_get = ajax_get
 
 
-def _req_post(req, url, data, complete, content_type=None):
+def _req_post(req, url, data, complete, callback_on_error=None, content_type=None):
     if ".fview" in url:
         return frontend_view(url, complete, data)
 
@@ -258,7 +287,15 @@ def _req_post(req, url, data, complete, content_type=None):
         pass
 
     def _onload(event):
-        nonlocal req, process_blob, complete, url
+        nonlocal req, process_blob, complete, callback_on_error, url
+
+        if not req.status in (200, 500):
+            if callback_on_error:
+                callback_on_error(req)
+            else:
+                standard_error_handler(req)
+            return
+
         if not req.response:
             complete(req.responseText)
         elif process_blob:
@@ -304,19 +341,21 @@ def _req_post(req, url, data, complete, content_type=None):
     return req
 
 
-def ajax_post(url, data, complete, process_req=None, content_type=None):
+def ajax_post(
+    url, data, complete, callback_on_error, process_req=None, content_type=None
+):
     req = XMLHttpRequest()
     if process_req:
         process_req(req)
 
-    _req_post(req, url, data, complete, content_type)
+    _req_post(req, url, data, complete, callback_on_error, content_type)
     return req
 
 
 window.ajax_post = ajax_post
 
 
-def ajax_json(url, data, complete, process_req=None):
+def ajax_json(url, data, complete, callback_on_error, process_req=None):
     def _complete(data_in):
         try:
             _data = JSON.parse(data_in)
@@ -325,13 +364,20 @@ def ajax_json(url, data, complete, process_req=None):
         complete(_data)
 
     data2 = JSON.stringify(data)
-    return ajax_post(url, data2, _complete, None, "application/json")
+    return ajax_post(url, data2, _complete, callback_on_error, None, "application/json")
 
 
 window.ajax_json = ajax_json
 
 
-def ajax_submit(_form, complete, data_filter=None, process_req=None, url=None):
+def ajax_submit(
+    _form,
+    complete,
+    callback_on_error=None,
+    data_filter=None,
+    process_req=None,
+    url=None,
+):
     content_type = None
     req = XMLHttpRequest()
     form = jQuery(_form)
@@ -370,13 +416,14 @@ def ajax_submit(_form, complete, data_filter=None, process_req=None, url=None):
             data = data_filter(data)
 
     if url:
-        return _req_post(req, url, data, complete, content_type)
+        return _req_post(req, url, data, complete, callback_on_error, content_type)
     else:
         return _req_post(
             req,
             correct_href(form.attr("action"), (_form[0],)),
             data,
             complete,
+            callback_on_error,
             content_type,
         )
 

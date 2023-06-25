@@ -126,6 +126,11 @@ if ENV("REST"):
 else:
     REST = False
 
+if ENV("CANCAN_ENABLED"):
+    CANCAN_ENABLED = True
+else:
+    CANCAN_ENABLED = False
+
 
 ROOT_URLCONF = "pytigon.schserw.urls"
 
@@ -251,6 +256,13 @@ if GRAPHQL or REST:
     }
 
     OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
+
+if CANCAN_ENABLED:
+    INSTALLED_APPS.append("cancan")
+    MIDDLEWARE.append("cancan.middleware.CanCanMiddleware")
+    TEMPLATES[0]["OPTIONS"]["context_processors"].append(
+        "cancan.context_processors.abilities"
+    )
 
 try:
     import mptt

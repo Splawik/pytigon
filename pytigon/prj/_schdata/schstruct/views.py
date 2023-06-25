@@ -175,15 +175,23 @@ def edit__group(request, group_id):
     return HttpResponse(t.render(c))
 
 
-def list_group_by_tag(request, group_tag):
+def list_group_by_tag(request, group_tag, template):
+
+    if template:
+        target_template = "__" + template
+    else:
+        target_template = ""
 
     groups = models.CommonGroup.objects.filter(tag_name=group_tag)
     if len(groups) > 0:
         group = groups[0]
         url = make_href(
-            "/schstruct/table/CommonGroup/%d/%d/form/tree/?only_content=1"
-            % (group.id, group.id)
+            "/schstruct/table/CommonGroup/%d/%d/form%s/tree/?only_content=1"
+            % (group.id, group.id, target_template)
         )
     else:
-        url = make_href("/schstruct/table/CommonGroup/0/form/tree/?only_content=1")
+        url = make_href(
+            "/schstruct/table/CommonGroup/0/form%s/tree/?only_content=1"
+            % target_template
+        )
     return HttpResponseRedirect(url)

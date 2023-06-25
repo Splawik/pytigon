@@ -26,6 +26,7 @@ from django.db.models import Q, Sum
 from django.apps import apps
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
+from django.conf import settings
 
 
 def get_element_queryset():
@@ -635,10 +636,16 @@ class Element(TreeModel):
 
     @classmethod
     def filter(cls, value, view=None, request=None):
-        if value and value != "-":
-            return cls.objects.filter(type=value)
+        if hasattr(settings, "CANCAN") and settings.CANCAN and request:
+            if value and value != "-":
+                return request.ability.queryset_for("view", cls).filter(type=value)
+            else:
+                return request.ability.queryset_for("view", cls)
         else:
-            return cls.objects.all()
+            if value and value != "-":
+                return cls.objects.filter(type=value)
+            else:
+                return cls.objects.all()
 
     def gen_standard_code(self):
         code = ""

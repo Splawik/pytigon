@@ -422,7 +422,7 @@ input[required]:invalid, select[required] {
   padding-bottom: 2px;
   padding-right: 1rem; }
 
-.form-inline .form-group label {
+.form-inline .form-group label :not(.upload) {
   padding-right: 8px;
   background: transparent; }
 

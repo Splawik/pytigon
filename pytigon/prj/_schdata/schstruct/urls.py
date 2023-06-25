@@ -17,8 +17,8 @@ urlpatterns = [
         {},
         name="schstruct_edit__group",
     ),
-    re_path(
-        "list_group_by_tag/(?P<group_tag>\w+)/$",
+    path(
+        "list_group_by_tag/<slug:group_tag>/<slug:template>/",
         views.list_group_by_tag,
         {},
         name="schstruct_list_group_by_tag",

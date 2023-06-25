@@ -94,8 +94,9 @@ def mount_html(dest_elem, data_or_html, link=None):
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:
             fun(dest_elem)
-    
+
     return dest_elem
+
 
 window.mount_html = mount_html
 
@@ -583,7 +584,7 @@ def refresh_ajax_frame(
                         return
                 return
             else:
-                ret  = mount_html(frame, data, link)
+                ret = mount_html(frame, data, link)
 
         if dt in ("$$RETURN_ERROR", "$$RETURN_RELOAD", "$$RETURN_HTML_ERROR"):
             if callback_on_error:
@@ -591,8 +592,13 @@ def refresh_ajax_frame(
         else:
             if callback:
                 callback()
-        
+
         return ret
+
+    def _callback_on_error(req):
+        loading.stop()
+        loading.remove()
+        window.standard_error_handler(req)
 
     if data_element:
         return _callback(data_element)
@@ -620,12 +626,12 @@ def refresh_ajax_frame(
 
         if post:
             if link.tagName.lower() == "form":
-                ajax_submit(link, _callback, None, None, url)
+                ajax_submit(link, _callback, _callback_on_error, None, None, url)
             else:
                 data = jQuery(link).serialize()
-                ajax_post(url, data, _callback)
+                ajax_post(url, data, _callback, _callback_on_error)
         else:
-            ajax_get(url, _callback)
+            ajax_get(url, _callback, _callback_on_error)
         return None
     else:
         return _callback(data_if_none)

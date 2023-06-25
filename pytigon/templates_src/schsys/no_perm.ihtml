@@ -1,5 +1,1 @@
-% extends "forms/form.html"|translate:lang
-
-%% content
-    h1
-        .Brak praw do tej opcji!
+_(You do not have permission to this option)!
