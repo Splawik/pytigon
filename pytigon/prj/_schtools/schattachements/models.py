@@ -128,6 +128,9 @@ class Attachement(JSONModel):
     description = models.CharField(
         "Description", null=True, blank=True, editable=True, max_length=256
     )
+    status = models.CharField(
+        "Status", null=True, blank=True, editable=True, max_length=16
+    )
 
     @classmethod
     def filter(cls, value, view=None, request=None):

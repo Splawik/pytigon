@@ -383,6 +383,10 @@ div.is-invalid .invalid-feedback {
 input[required]:invalid, select[required] {
   background-color: #ffc; }
 
+.modal-footer button {
+  margin-left: 0.2rem;
+  margin-right: 0.2rem; }
+
 /* Inline form */
 .modal-dialog-inline > div > div > .modal-header {
   padding-bottom: 0.2rem;
@@ -392,6 +396,8 @@ input[required]:invalid, select[required] {
   max-height: calc(100vh - 8rem);
   overflow-y: auto;
   overflow-x: hidden;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
   padding-top: 0.5rem;
   margin-bottom: 0.5rem; }
 
@@ -497,6 +503,9 @@ div.modal-content.maximized {
   border: var(--bs-border-width) solid var(--bs-border-color-translucent);
   border-radius: var(--bs-border-radius-lg);
   outline: 0; }
+
+tr.plug > td {
+  background-color: var(--bs-warning); }
 
 /* login form */
 .login_background {

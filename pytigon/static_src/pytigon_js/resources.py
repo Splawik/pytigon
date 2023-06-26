@@ -93,7 +93,7 @@ INLINE_BASE = """
     <div class='dark_background'></div>
     <div class='modal-dialog modal-dialog-inline' role='document'>
         <div class="modal-content ajax-region inline-content" data-region="error">
-            <div class='modal-content' style='min-height: 50vh;'>
+            <div class='modal-content2' style='min-height: 50vh;'>
                 <div class='modal-header'>
                     <h4 class='modal-title'>{title}</h4>
                     <div class='dialog-buttons>
