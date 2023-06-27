@@ -51,7 +51,7 @@
                 edit
                 delete
         {% endrow_actions %}
-        {% row_related_list "schworkflow/WorkFlowItem" title="Workflow items" filter=object.application|append_str:"__"|append_str:object.table|append_str:"__"|append_str:object.id|append_str:"__"|append_str:object.group icon_name="fa fa-lg fa-paperclip" tag_class="+class='btn-info'" version="{{version}}__" %}
+        {% row_related_list "schworkflow/WorkflowItem" title="Workflow items" filter=object.application|append_str:"__"|append_str:object.table|append_str:"__"|append_str:object.id|append_str:"__"|append_str:object.group icon_name="fa fa-lg fa-paperclip" tag_class="+class='btn-info'" version="{{version}}" %}
 {% endblock %}
 {% block row_edit %}
         {% form %}

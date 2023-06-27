@@ -15,7 +15,7 @@
             return href
 
 %% all
-    %with form_width=800 form_height=600 table_type='simple' title=_("Common Groups"):
+    %with form_width=800 form_height=600 table_type='scrolled' title=_("Common Groups"):
         {{ block.super }}
 
 %% list_content_actions_new_row

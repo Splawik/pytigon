@@ -121,11 +121,14 @@ def view_row(
         if "version" in context and context["version"]:
             href = "{tp}%s/%s/view/?version=%s" % (
                 context["object"].id,
-                context["target"] if context["target"] != 'json' else "_",
+                context["target"] if context["target"] != "json" else "_",
                 context["version"],
             )
         else:
-            href = "{tp}%s/%s/view/" % (context["object"].id, context["target"]if context["target"] != 'json' else "_")
+            href = "{tp}%s/%s/view/" % (
+                context["object"].id,
+                context["target"] if context["target"] != "json" else "_",
+            )
     ret = action_fun(
         context, "view_row", title, icon_name, target, attrs, tag_class, href
     )
