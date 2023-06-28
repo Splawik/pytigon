@@ -27,18 +27,19 @@
 %% sidebar
 
 %% tabs
-    head
-        meta charset=utf-8
-        title
-            {{title}}
+    % if standard_web_browser != 6:
+        head
+            meta charset=utf-8
+            title
+                {{title}}
 
-        %if form:
-            %if form.errors or errors:
-                meta name=target,,,content=_self
-                meta name=RETURN,,,content=$$RETURN_RELOAD_PAGE
+            %if form:
+                %if form.errors or errors:
+                    meta name=target,,,content=_self
+                    meta name=RETURN,,,content=$$RETURN_RELOAD_PAGE
 
-    % with NO_TABS=True:
-        {{block.super}}
+        % with NO_TABS=True:
+            {{block.super}}
 
 %% content_start
     % if form.errors or errors:
@@ -50,15 +51,17 @@
         
 
 %% list_page_start
-    % if content_limited_to and content_limited_to == 'min':
-        <div class="d-flex flex-column" style="height:100%">
-    % else:
-        {{ block.super }}
+    % if standard_web_browser != 6:
+        % if content_limited_to and content_limited_to == 'min':
+            <div class="d-flex flex-column" style="height:100%">
+        % else:
+            {{ block.super }}
 
-%% list_page_header
-    % if content_limited_to and content_limited_to == 'min':
-    % else:
-        {{ block.super }}
+%% list_page_header    
+    % if standard_web_browser != 6:
+        % if content_limited_to and content_limited_to == 'min':
+        % else:
+            {{ block.super }}
 
 %% list_content_header
     % if standard_web_browser != 6:
@@ -95,15 +98,17 @@
         {{ block.super }}
 
 %% list_page_footer
-    % if content_limited_to and content_limited_to == 'min':
-    % else:
-        {{ block.super }}
+    % if standard_web_browser != 6:
+        % if content_limited_to and content_limited_to == 'min':
+        % else:
+            {{ block.super }}
 
 %% list_page_end
-    % if content_limited_to and content_limited_to == 'min':
-        </div>
-    % else:
-        {{ block.super }}
+    % if standard_web_browser != 6:
+        % if content_limited_to and content_limited_to == 'min':
+            </div>
+        % else:
+            {{ block.super }}
 
 
 

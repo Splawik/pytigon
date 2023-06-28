@@ -1312,7 +1312,7 @@ GlobalBus.prototype.unregister = function (component) {
 window.GlobalBus = GlobalBus;
 export {set_state, DefineWebComponent, GlobalBus};
 
-var MOUNT_INIT_FUN, _on_shown_bs_tab, _refresh_page, ajax_load, auto_frame_init, auto_refresh_tab, create_onloadeddata, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init;
+var MOUNT_INIT_FUN, _on_shown_bs_tab, _refresh_page, ajax_load, auto_frame_init, auto_refresh_tab, create_onloadeddata, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, init_select2_ctrl, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init, set_select2_value;
 data_type = function flx_data_type (data_or_html) {
     var meta_list, pos, stub1_seq, stub2_itr;
     if (_pyfunc_truthy(data_or_html)) {
@@ -1513,6 +1513,13 @@ moveelement_init = function flx_moveelement_init (dest_elem) {
 };
 
 register_mount_fun(moveelement_init);
+set_select2_value = function flx_set_select2_value (sel2, id, text) {
+    _pymeth_append.call(sel2, (jQuery("<option>", ({value: id, text: text}))));
+    sel2.val(id.toString());
+    sel2.trigger("change");
+    return null;
+};
+
 create_onloadeddata = function flx_create_onloadeddata (control) {
     var _onloadeddata;
     _onloadeddata = function (event) {
@@ -1533,15 +1540,24 @@ create_onloadeddata = function flx_create_onloadeddata (control) {
     return _onloadeddata;
 };
 
-select2_init = function flx_select2_init (dest_elem) {
-    var control, controls, init_select2_ctrl, modal, set_select2_value, stub15_seq, stub16_itr;
-    set_select2_value = (function flx_set_select2_value (sel2, id, text) {
-        _pymeth_append.call(sel2, (jQuery("<option>", ({value: id, text: text}))));
-        sel2.val(id.toString());
-        sel2.trigger("change");
-        return null;
-    }).bind(this);
+init_select2_ctrl = function () {
+    var id, sel2, src, text;
+    sel2 = jQuery(this);
+    src = sel2.closest(".input-group");
+    if ((src.length == 1)) {
+        if (_pyfunc_truthy((src[0].hasAttribute)("item_id"))) {
+            id = src.attr("item_id");
+            if (_pyfunc_truthy(id)) {
+                text = src.attr("item_str");
+                set_select2_value(sel2, id, text);
+            }
+        }
+    }
+    return null;
+};
 
+select2_init = function flx_select2_init (dest_elem) {
+    var control, controls, modal, stub15_seq, stub16_itr;
     controls = Array.prototype.slice.call(dest_elem.querySelectorAll(".django-select2"));
     if (_pyfunc_truthy(controls)) {
         stub15_seq = controls;
@@ -1559,22 +1575,6 @@ select2_init = function flx_select2_init (dest_elem) {
             control.setAttribute("data-region", "get_row");
         }
     }
-    init_select2_ctrl = function () {
-        var id, sel2, src, text;
-        sel2 = jQuery(this);
-        src = sel2.closest(".input-group");
-        if ((src.length == 1)) {
-            if (_pyfunc_truthy((src[0].hasAttribute)("item_id"))) {
-                id = src.attr("item_id");
-                if (_pyfunc_truthy(id)) {
-                    text = src.attr("item_str");
-                    set_select2_value(sel2, id, text);
-                }
-            }
-        }
-        return null;
-    };
-
     ((_pymeth_find.call(jQuery(dest_elem), ".django-select2")).each)(init_select2_ctrl);
     return null;
 };
@@ -1912,7 +1912,7 @@ ajax_load = function flx_ajax_load (element, url, complete) {
 };
 
 window.ajax_load = ajax_load;
-export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, auto_refresh_tab, moveelement_init, create_onloadeddata, select2_init, select_combo_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
+export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, auto_refresh_tab, moveelement_init, set_select2_value, create_onloadeddata, init_select2_ctrl, select2_init, select_combo_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
 
 var INIT_DB_STRUCT, SYNC_STRUCT, _MSIE, _MSIE2, _UA, get_list_from_table, get_table, init_db, init_sync, on_sys_sync, open_database, sync_and_run;
 INIT_DB_STRUCT = null;

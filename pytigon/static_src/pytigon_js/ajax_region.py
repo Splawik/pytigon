@@ -233,6 +233,12 @@ register_mount_fun(moveelement_init)
 # register_mount_fun(label_floating_init)
 
 
+def set_select2_value(sel2, id, text):
+    sel2.append(jQuery("<option>", {"value": id, "text": text}))
+    sel2.val(id.toString())
+    sel2.trigger("change")
+
+
 def create_onloadeddata(control):
     def _onloadeddata(self, event):
         nonlocal control
@@ -245,6 +251,17 @@ def create_onloadeddata(control):
                     set_select2_value(jQuery(control), id, text)
 
     return _onloadeddata
+
+
+def init_select2_ctrl(self):
+    sel2 = jQuery(self)
+    src = sel2.closest(".input-group")
+    if src.length == 1:
+        if src[0].hasAttribute("item_id"):
+            id = src.attr("item_id")
+            if id:
+                text = src.attr("item_str")
+                set_select2_value(sel2, id, text)
 
 
 def select2_init(dest_elem):
@@ -261,11 +278,6 @@ def select2_init(dest_elem):
     # jQuery(dest_elem).find(".django-select2.select2-full-width").djangoSelect2(
     #    {"minimumInputLength": 0, "placeholder": "Select an option", 'dropdownParent': jQuery(dest_elem)}
     # )
-
-    def set_select2_value(sel2, id, text):
-        sel2.append(jQuery("<option>", {"value": id, "text": text}))
-        sel2.val(id.toString())
-        sel2.trigger("change")
 
     controls = Array.prototype.slice.call(dest_elem.querySelectorAll(".django-select2"))
     if controls:
@@ -289,16 +301,6 @@ def select2_init(dest_elem):
             control.onloadeddata = create_onloadeddata(control)
             control.classList.add("ajax-frame")
             control.setAttribute("data-region", "get_row")
-
-    def init_select2_ctrl(self):
-        sel2 = jQuery(self)
-        src = sel2.closest(".input-group")
-        if src.length == 1:
-            if src[0].hasAttribute("item_id"):
-                id = src.attr("item_id")
-                if id:
-                    text = src.attr("item_str")
-                    set_select2_value(sel2, id, text)
 
     jQuery(dest_elem).find(".django-select2").each(init_select2_ctrl)
 
