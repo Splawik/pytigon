@@ -234,7 +234,7 @@ class WorkflowItem(JSONModel):
         editable=True,
     )
     title = models.CharField(
-        "Title", null=True, blank=True, editable=False, db_index=True, max_length=128
+        "Title", null=True, blank=True, editable=True, db_index=True, max_length=128
     )
     item_type = models.CharField(
         "Item type", null=True, blank=True, editable=True, max_length=16

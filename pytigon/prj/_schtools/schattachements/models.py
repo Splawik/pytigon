@@ -124,6 +124,10 @@ class Attachement(JSONModel):
         editable=True,
         verbose_name="Folder",
         db_index=True,
+        search_fields=[
+            "name__icontains",
+        ],
+        limit_choices_to={"type__startswith": "C-FLD"},
     )
     description = models.CharField(
         "Description", null=True, blank=True, editable=True, max_length=256
