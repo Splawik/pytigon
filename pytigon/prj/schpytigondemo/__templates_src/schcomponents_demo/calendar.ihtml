@@ -1,0 +1,9 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% content
+    div class=flexible_size
+        ptig-calendar

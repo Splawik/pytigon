@@ -1,0 +1,30 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New peripheral"
+
+%% list_row_header
+    th..._(Description)
+    
+
+%% list_row
+    td...{{ object.description }}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:
+        .parent:!,description

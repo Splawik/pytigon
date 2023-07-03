@@ -20,7 +20,7 @@
                                                                         <br />
                                                                         <p id="login_txt1">Sign in:</p>
                                                                         <p id="login_txt2" class="d-none">Wrong login or password, try again:</p>
-                                                                        <form class="login-form" action="{{base_path}}schsys/do_login/?&next={% if request_path != Null %}{{base_path}}?no_scripts=1&next_after_error={{base_path}}{% else %}{{base_path}}?no_scripts=1{% endif %}" method="post" name="signin" target="_top">
+                                                                        <form class="login-form" fragment="all" action="{{base_path}}schsys/do_login/?&next={% if request_path != Null %}{{base_path}}?no_scripts=1&next_after_error={{base_path}}{% else %}{{base_path}}?no_scripts=1{% endif %}" method="post" name="signin" target="_top">
                                                                                 <div class="form-group mb-3">
                                                                                         <label class="control-label" for="username_ ">User name</label>
                                                                                         <div class="input-group mb-3">
@@ -226,7 +226,7 @@
                         {% endif %}
                   {% else %}
                         {% block row_edit_start %}
-                                {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
+                                {% if standard_web_browser == 1 or standard_web_browser == 2 or "page" in fragment %}
                                         <div class="move-element {% block dialog_type %}modal-lg v-autosize{% endblock %}" data-position="^.plug/.modal-dialog:class"></div>
                                 {% endif %}
                         {% endblock %}
@@ -237,7 +237,7 @@
                                 {% endif %}
                         {% endblock %}
                         {% block row_edit_all %}
-                                <form method="post" action="{% block form_action%}{{request.path}}{% endblock %}" name="DialogForm" class="ajax-link DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %}" role="form" enctype="{% block enctype %}{{form|preferred_enctype}}{% endblock %}" data-region="{% block dialog_form_region %}page{% endblock %}">
+                                <form method="post" action="{% block form_action%}{{request.path}}{% endblock %}" name="DialogForm" class="ajax-link DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %}" role="form" enctype="{% block enctype %}{{form|preferred_enctype}}{% endblock %}" data-region="{% block dialog_form_region %}page-content{% endblock %}">
                                         {% csrf_token %}
                                         {% block row_edit_form %}
                                                 <table width="100%" style="table-layout:fixed;">
@@ -281,325 +281,305 @@
                 </section>
         {% endblock %}
 {% endblock %}
-{% block content_start2 %}
-        <div class="content ajax-region ajax-frame" data-region="page" href="{{request.path}}">
-        {{ block.super }}
-{% endblock %}
-{% block content_end2 %}
-        {{ block.super }}
-        </div>
-{% endblock %}
 {% block content %}
-        {% if standard_web_browser and standard_web_browser < 5 %}
+        {% if standard_web_browser and "table" not in fragment and "page" not in fragment %}
                 <div class="page-content content">
         {% endif %}
-        {% if not form_delete %}
-                {% block list_page_start %}
-                        <div class="ajax-region {% if vtype == 'tree' %}ajax-frame{% endif %} table-and-details d-flex flex-column" data-region="table" >
-                {% endblock %}
-                {% block list_page_header %}
-                        {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 %}
+        {% block list_page_start %}
+                <div class="ajax-region ajax-frame table-and-details d-flex flex-column" data-region="page">
+        {% endblock %}
+        {% block list_page_header %}
+                {% if standard_web_browser == 1 or standard_web_browser == 2 or "page" in fragment %}
+                        <div class="ajax-region ajax-frame table-without-details d-flex flex-grow-1 flex-column" data-region="page-content">
                                 <div class="move-element {% block sublist_type %}sublist-xl{% endblock %}" data-position=".modal-dialog:class"></div>
-                        {% endif %}
-                {% endblock %}
-                {% block list_page %}
-                        {% block list_content_start %}{% endblock %}
-                        {% block list_content_header %}
-                                <div class="pseudotable container-fluid col-12">
-                                        {% block list_content_header_first_row %}
-                                                {% if not get %}
-                                                        <div class="tr row list_content_header list_content_header_first_row">
-                                                                <div class="td col-sm-12 hidden-sm-down text-center">
-                                                                        {% block list_content_title %}
-                                                                                <h4 style="white-space:nowrap;" class="txt3d wiki-title">
-                                                                                        {{title|wiki_href|safe}}
-                                                                                        {% if settings.DEBUG %}
-                                                                                                <a data-bs-toggle="collapse" href="#collapse_{{uuid}}" role="button">>></a>
-                                                                                        {% endif %}
-                                                                                </h4>
+                {% endif %}
+        {% endblock %}
+        {% block list_page %}
+                {% block list_content_start %}{% endblock %}
+                {% block list_content_header %}
+                        <div class="pseudotable container-fluid col-12">
+                                {% block list_content_header_first_row %}
+                                        {% if not get %}
+                                                <div class="tr row list_content_header list_content_header_first_row">
+                                                        <div class="td col-sm-12 hidden-sm-down text-center">
+                                                                {% block list_content_title %}
+                                                                        <h4 style="white-space:nowrap;" class="txt3d wiki-title">
+                                                                                {{title|wiki_href|safe}}
                                                                                 {% if settings.DEBUG %}
-                                                                                        <div class="collapse" id="collapse_{{uuid}}">
-                                                                                                model: {{object_list.model|get_model_app}}/{{object_list.model|class_name}}, template: {{template}}
-                                                                                        </div>
+                                                                                        <a data-bs-toggle="collapse" href="#collapse_{{uuid}}" role="button">>></a>
                                                                                 {% endif %}
-                                                                        {% endblock %}
-                                                                </div>
-                                                        </div>
-                                                {% endif %}
-                                        {% endblock %}
-                                        {% block list_content_header_second_row %}
-                                                {% if form %}
-                                                        <div class="tr row list_content_header list_content_header_second_row">
-                                                                <div class="td col-md-12 col-sm-12" colspan="3">
-                                                                        {% block list_filter_form %}
-                                                                                <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="{% if form.errors or errors %}refresh_page{% else %}refresh_frame{% endif %}" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
-                                                                                        {% csrf_token %}
-                                                                                        {% block form_filter %}
-                                                                                                {% if form %}
-                                                                                                        {% block form_content %}
-                                                                                                                {{ form.non_field_errors }}
-                                                                                                                {% block form_table_filter %}
-                                                                                                                        {% inline_form %}
-                                                                                                                        {% endinline_form %}
-                                                                                                                {% endblock %}
-                                                                                                                {% block form_content_button %}
-                                                                                                                        {% if table_type != 'datatable' %}
-                                                                                                                                <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="{% if form.errors or errors or always_refresh_whole_page %}refresh_page{% else %}refresh_frame{% endif %}" data-region="{% if form.errors or errors %}page{% else %}table{% endif %}">
-                                                                                                                                        {% icon "fa-refresh fa-lg" %}
-                                                                                                                                </button>
-                                                                                                                        {% endif %}
-                                                                                                                {% endblock %}
-                                                                                                        {% endblock %}
-                                                                                                {% endif %}
-                                                                                        {% endblock %}
-                                                                                </form>
-                                                                                {% if table_type == 'datatable' %}
-                                                                                        <button value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" onclick="datatable_refresh(this);" data-region="{% if form.errors or errors or always_refresh_whole_page%}page{% else %}table{% endif %}">
-                                                                                                {% icon "fa-refresh fa-lg" %}
-                                                                                        </button>
-                                                                                {% endif %}
-                                                                        {% endblock %}
-                                                                </div>
-                                                        </div>
-                                                  {% else %}
-                                                        <form method="post" action="{{request.path}}" role="form" class="ajax-link table_filter form-inline" target="refresh_frame" data-region="table">
-                                                                {% csrf_token %}
-                                                        </form>
-                                                {% endif %}
-                                        {% endblock %}
-                                        {% block list_content_header_third_row %}
-                                                <div class="tr row list_content_header list_content_header_third_row">
-                                                        <div class="{% if table_type == 'datatable'%}tabsort_header{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %}" role="form" id="{{uuid}}_toolbar">
-                                                                <div class="dropdown">
-                                                                        {% if standard_web_browser and object_list %}
-                                                                                {% if table_type == 'datatable' and not get %}
-                                                                                        <div class="dropdown">
-                                                                                                <button type="button" class="btn btn-light shadow-none {{btn_size}} dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="dropdown">
-                                                                                                        {% icon "fa-bars fa-lg" %}
-                                                                                                </button>
-                                                                                                <div class="dropdown-menu">
-                                                                                                        <a href="../../odf/list/" class="dropdown-item" target="_blank">=> ods</a>
-                                                                                                        <a href="../../pdf/list/" class="dropdown-item" target="_blank">=> pdf</a>
-                                                                                                        <a href="{{base_path}}schtools/{{app_name}}/{{table_name}}/import_table/" class="dropdown-item" target="popup_edit" title="Import data to table"><= ods,xlsx,txt,csv</a>
-                                                                                                </div>
-                                                                                        </div>
-                                                                                {% endif %}
+                                                                        </h4>
+                                                                        {% if settings.DEBUG %}
+                                                                                <div class="collapse" id="collapse_{{uuid}}">
+                                                                                        model: {{object_list.model|get_model_app}}/{{object_list.model|class_name}}, template: {{template}}
+                                                                                </div>
                                                                         {% endif %}
-                                                                </div>
-                                                                {% block list_content_actions %}{% endblock %}
+                                                                {% endblock %}
                                                         </div>
-                                                        {% if is_paginated and table_type != 'datatable' %}
-                                                                <div class="td col-sm-4 col-xs-7 text-right" align="right">
-                                                                </div>
-                                                        {% endif %}
                                                 </div>
-                                        {% endblock %}
-                                </div>
-                                {% block list_content_header_fourth_row %}
-                                        {% if standard_web_browser %}
-                                                {% if table_type == 'datatable' and not get %}
-                                                        <button type="button" class="btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %}" data-bs-toggle="button">
-                                                                {% icon "fa-times fa-lg" %}
-                                                        </button>
-                                                {% endif %}
                                         {% endif %}
                                 {% endblock %}
+                                {% block list_content_header_second_row %}
+                                        {% if form %}
+                                                <div class="tr row list_content_header list_content_header_second_row">
+                                                        <div class="td col-md-12 col-sm-12" colspan="3">
+                                                                {% block list_filter_form %}
+                                                                        <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="{% if form.errors or errors or vtype == 'tree' %}refresh_page{% else %}refresh_frame{% endif %}" data-region="page-content">
+                                                                                {% csrf_token %}
+                                                                                {% block form_filter %}
+                                                                                        {% if form %}
+                                                                                                {% block form_content %}
+                                                                                                        {{ form.non_field_errors }}
+                                                                                                        {% block form_table_filter %}
+                                                                                                                {% inline_form %}
+                                                                                                                {% endinline_form %}
+                                                                                                        {% endblock %}
+                                                                                                        {% block form_content_button %}
+                                                                                                                {% if table_type != 'datatable' %}
+                                                                                                                        <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="{% if form.errors or errors or always_refresh_whole_page %}refresh_page{% else %}refresh_frame{% endif %}" data-region="page-content">
+                                                                                                                                {% icon "fa-refresh fa-lg" %}
+                                                                                                                        </button>
+                                                                                                                {% endif %}
+                                                                                                        {% endblock %}
+                                                                                                {% endblock %}
+                                                                                        {% endif %}
+                                                                                {% endblock %}
+                                                                        </form>
+                                                                        {% if table_type == 'datatable' %}
+                                                                                <button value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" onclick="datatable_refresh(this);" data-region="{% if form.errors or errors or always_refresh_whole_page%}page-content{% else %}table-content{% endif %}">
+                                                                                        {% icon "fa-refresh fa-lg" %}
+                                                                                </button>
+                                                                        {% endif %}
+                                                                {% endblock %}
+                                                        </div>
+                                                </div>
+                                          {% else %}
+                                                <form method="post" action="{{request.path}}" role="form" class="ajax-link table_filter form-inline" target="refresh_frame" data-region="page-content">
+                                                        {% csrf_token %}
+                                                </form>
+                                        {% endif %}
+                                {% endblock %}
+                                {% block list_content_header_third_row %}
+                                        <div class="tr row list_content_header list_content_header_third_row">
+                                                <div class="{% if table_type == 'datatable'%}tabsort_header{% else %}table_panel td {% if is_paginated %}col-sm-8 col-xs-5{% endif %}{% endif %}" role="form" id="{{uuid}}_toolbar">
+                                                        <div class="dropdown">
+                                                                {% if standard_web_browser and object_list %}
+                                                                        {% if table_type == 'datatable' and not get %}
+                                                                                <div class="dropdown">
+                                                                                        <button type="button" class="btn btn-light shadow-none {{btn_size}} dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="dropdown">
+                                                                                                {% icon "fa-bars fa-lg" %}
+                                                                                        </button>
+                                                                                        <div class="dropdown-menu">
+                                                                                                <a href="../../odf/list/" class="dropdown-item" target="_blank">=> ods</a>
+                                                                                                <a href="../../pdf/list/" class="dropdown-item" target="_blank">=> pdf</a>
+                                                                                                <a href="{{base_path}}schtools/{{app_name}}/{{table_name}}/import_table/" class="dropdown-item" target="popup_edit" title="Import data to table"><= ods,xlsx,txt,csv</a>
+                                                                                        </div>
+                                                                                </div>
+                                                                        {% endif %}
+                                                                {% endif %}
+                                                        </div>
+                                                        {% block list_content_actions %}{% endblock %}
+                                                </div>
+                                                {% if is_paginated and table_type != 'datatable' %}
+                                                        <div class="td col-sm-4 col-xs-7 text-right" align="right">
+                                                        </div>
+                                                {% endif %}
+                                        </div>
+                                {% endblock %}
+                        </div>
+                        {% block list_content_header_fourth_row %}
+                                {% if standard_web_browser %}
+                                        {% if table_type == 'datatable' and not get %}
+                                                <button type="button" class="btn btn-secondary btn-circle tabsort-toolbar-expand {% if 'smartfon' in client_type %}active tabsort-toolbar-expand2{% endif %}" data-bs-toggle="button">
+                                                        {% icon "fa-times fa-lg" %}
+                                                </button>
+                                        {% endif %}
+                                {% endif %}
                         {% endblock %}
-                        {% if standard_web_browser %}
-                                <div class="new_row">
-                                </div>
-                        {% endif %}
-                        {% if standard_web_browser and standard_web_browser != 6 %}
-                                {% if table_type == 'datatable' %}
-                                        <div class="tableframe flex-grow-1 d-flex flex-row" data-actions="{% block data_actions %}delete/Delete selected rows{% endblock %}">
-                                  {% else %}
-                                        <div class="tableframe ajax-frame flex-grow-1 d-flex flex-row" data-region="table">
-                                {% endif %}
-                          {% else %}
-                                {% if form.errors or errors %}
-                                        <div class="tableframe ajax-frame flex-grow-1 d-flex flex-row" data-region="table">
-                                {% endif %}
-                        {% endif %}
-                        {% block list_content_body %}
-                                {% block list_content_paginator %}
-                                        {% if standard_web_browser and table_type != 'datatable' %}
-                                                {% if is_paginated %}
-                                                        <ul class="pagination simple_pagination">
-                                                                {% if page_obj.has_previous %}
-                                                                        <li class="page-item">
-                                                                                <a class="page-link" target="refresh_frame" data-region="table" href="?page={{ page_obj.previous_page_number }}&only_table=1"> &laquo;</a>
-                                                                        </li>
-                                                                  {% else %}
-                                                                        <li class="disabled page-item">
+                {% endblock %}
+                {% if standard_web_browser %}
+                        <div class="new_row">
+                        </div>
+                {% endif %}
+                {% block list_content_body %}
+                        {% block list_content_paginator %}
+                                {% if standard_web_browser and table_type != 'datatable' %}
+                                        {% if is_paginated %}
+                                                <ul class="pagination simple_pagination">
+                                                        {% if page_obj.has_previous %}
+                                                                <li class="page-item">
+                                                                        <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ page_obj.previous_page_number }}&fragment=page-content" data-href="^div.table-without-details/form.table_filter"> &laquo;</a>
+                                                                </li>
+                                                          {% else %}
+                                                                <li class="disabled page-item">
+                                                                        <a class="page-link">
+                                                                                <span>
+                                                                                 &laquo;
+                                                                                </span>
+                                                                        </a>
+                                                                </li>
+                                                        {% endif %}
+                                                        {% for i in paginator.page_range %}
+                                                                {% if page_obj.number == i %}
+                                                                        <li class="active page-item">
                                                                                 <a class="page-link">
                                                                                         <span>
-                                                                                         &laquo;
+                                                                                        {{ i }}
+                                                                                                <span class="sr-only">
+                                                                                                        (current)
+                                                                                                </span>
                                                                                         </span>
                                                                                 </a>
                                                                         </li>
-                                                                {% endif %}
-                                                                {% for i in paginator.page_range %}
-                                                                        {% if page_obj.number == i %}
-                                                                                <li class="active page-item">
-                                                                                        <a class="page-link">
-                                                                                                <span>
-                                                                                                {{ i }}
-                                                                                                        <span class="sr-only">
-                                                                                                                (current)
-                                                                                                        </span>
-                                                                                                </span>
-                                                                                        </a>
-                                                                                </li>
-                                                                          {% else %}
-                                                                                <li class="page-item">
-                                                                                        <a class="page-link" target="refresh_frame" data-region="table" href="?page={{ i }}&only_table=1">
-                                                                                                {{ i }}
-                                                                                        </a>
-                                                                                </li>
-                                                                        {% endif %}
-                                                                {% endfor %}
-                                                                {% if page_obj.has_next %}
-                                                                        <li class="page-item">
-                                                                                <a class="page-link" target="refresh_frame" data-region="table" href="?page={{ page_obj.next_page_number }}&only_table=1"> &raquo;</a>
-                                                                        </li>
                                                                   {% else %}
-                                                                        <li class="disabled page-item">
-                                                                                <a class="page-link">
-                                                                                        <span> &raquo;</span>
+                                                                        <li class="page-item">
+                                                                                <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ i }}&fragment=page-content" data-href="^div.table-without-details/form.table_filter">
+                                                                                        {{ i }}
                                                                                 </a>
                                                                         </li>
                                                                 {% endif %}
-                                                        </ul>
-                                                {% endif %}
-                                          {% else %}
-                                                {% paginator %}
-                                        {% endif %}
-                                {% endblock %}
-                                <div class="flex-grow-1" style="position:relative;margin-right:4px;">
-                                        <div class="tabsort_panel flex-grow-1" table-details="{% if table_details_height %}0{% endif %}">
-                                                {% if table_subtype and table_subtype == 'table_with_details' %}
-                                                        <input type="hidden" name="table_row_pk" value="[[ERROR]]" />
-                                                {% endif %}
-                                                {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 or standard_web_browser == 6 %}
-                                                        {% if table_type == 'datatable' %}
-                                                                <div class="ajax-frame ajax-link ajax-region" data-region="table" onloadeddata="table_loadeddata(event);">
+                                                        {% endfor %}
+                                                        {% if page_obj.has_next %}
+                                                                <li class="page-item">
+                                                                        <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ page_obj.next_page_number }}&fragment=page-content" data-href="^div.table-without-details/form.table_filter"> &raquo;</a>
+                                                                </li>
                                                           {% else %}
-                                                                {% if table_type == 'scrolled' or not table_type %}
-                                                                        <div class="tbl_scroll ajax-link" data-region="table" style="overflow-y:auto;height:100%" href="{{request.path}}">
-                                                                  {% else %}
-                                                                        <div class="tbl_scroll ajax-link" data-region="table" href="{{request.path}}">
-                                                                {% endif %}
+                                                                <li class="disabled page-item">
+                                                                        <a class="page-link">
+                                                                                <span> &raquo;</span>
+                                                                        </a>
+                                                                </li>
                                                         {% endif %}
+                                                </ul>
+                                        {% endif %}
+                                  {% else %}
+                                        {% paginator %}
+                                {% endif %}
+                        {% endblock %}
+                        {% block list_table_start %}
+                                {% if table_type == 'datatable' %}
+                                        <div class="tableframe flex-grow-1 d-flex flex-row" data-actions="{% block data_actions %}delete/Delete selected rows{% endblock %}">
+                                  {% else %}
+                                        <div class="tableframe flex-grow-1 d-flex flex-row">
+                                {% endif %}
+                                <div class="flex-grow-1" style="position:relative;margin-right:4px;">
+                                <div class="tabsort_panel flex-grow-1" table-details="{% if table_details_height %}0{% endif %}">
+                                {% if table_subtype and table_subtype == 'table_with_details' %}
+                                        <input type="hidden" name="table_row_pk" value="[[ERROR]]">
+                                        </input>
+                                {% endif %}
+                                {% if standard_web_browser == 1 or standard_web_browser == 2 or "page" in fragment or "table" in fragment %}
+                                        {% if table_type == 'datatable' %}
+                                                <div class="ajax-frame ajax-link ajax-region" data-region="table-content" onloadeddata="table_loadeddata(event);">
+                                          {% else %}
+                                                {% if table_type == 'scrolled' or not table_type %}
+                                                        <div class="tbl_scroll ajax-link" data-region="table-content" style="overflow-y:auto;height:100%" href="{{request.path}}">
+                                                  {% else %}
+                                                        <div class="tbl_scroll ajax-link" data-region="table-content" href="{{request.path}}">
                                                 {% endif %}
-                                                {% block list_table_start %}
-                                                        <table name="tabsort" table_type="{{table_type}}" {% block list_content_height %}{% endblock %} {% block tabsort_parameters %}{% endblock %}>
+                                        {% endif %}
+                                {% endif %}
+                                <table name="tabsort" table_type="{{table_type}}" {% block list_content_height %}{% endblock %} {% block tabsort_parameters %}{% endblock %}>
+                        {% endblock %}
+                        {% block list_full_row_header %}
+                                <thead>
+                                        <tr>
+                                                {% block list_row_header_start %}
+                                                        {% if not no_id %}
+                                                                <th data-field="cid" data-sortable="true">
+                                                                        {% id_num 'Id' %}
+                                                                </th>
+                                                        {% endif %}
                                                 {% endblock %}
-                                                {% block list_full_row_header %}
-                                                        <thead>
-                                                                <tr>
-                                                                        {% block list_row_header_start %}
+                                                {% block list_row_header %}{% endblock %}
+                                                {% block list_row_header_end %}
+                                                        <th data-field="caction">
+                                                                Action
+                                                        </th>
+                                                {% endblock %}
+                                        </tr>
+                                </thead>
+                        {% endblock %}
+                        {% block list_table %}
+                                {% if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser %}
+                                        {% block list_tbody_start %}
+                                                <tbody>
+                                        {% endblock %}
+                                        {% if object_list %}
+                                                {% for object in object_list %}
+                                                        {% block list_full_row %}
+                                                                <tr row-id="{{object.id}}" {% block list_row_attr %}{% endblock %}>
+                                                                        {% block list_row_start %}
                                                                                 {% if not no_id %}
-                                                                                        <th data-field="cid" data-sortable="true">
-                                                                                                {% id_num 'Id' %}
-                                                                                        </th>
+                                                                                        <td>
+                                                                                                <div {% block id_row_attr %}class="td_information"{% endblock %}>
+                                                                                                        {% block id_extra %}
+                                                                                                                {% if get %}
+                                                                                                                        {% get_row object object.id %}
+                                                                                                                  {% else %}
+                                                                                                                        {% view_row object object.id %}
+                                                                                                                {% endif %}
+                                                                                                        {% endblock %}
+                                                                                                </div>
+                                                                                        </td>
                                                                                 {% endif %}
                                                                         {% endblock %}
-                                                                        {% block list_row_header %}{% endblock %}
-                                                                        {% block list_row_header_end %}
-                                                                                <th data-field="caction">
-                                                                                        Action
-                                                                                </th>
+                                                                        {% block list_row %}
+                                                                                <td>{{object}}</td>
                                                                         {% endblock %}
-                                                                </tr>
-                                                        </thead>
-                                                {% endblock %}
-                                                {% block list_table %}
-                                                        {% if table_type != 'datatable' or doc_type == 'json' or not standard_web_browser %}
-                                                                {% block list_tbody_start %}
-                                                                        <tbody>
-                                                                {% endblock %}
-                                                                {% if object_list %}
-                                                                        {% for object in object_list %}
-                                                                                {% block list_full_row %}
-                                                                                        <tr row-id="{{object.id}}" {% block list_row_attr %}{% endblock %}>
-                                                                                                {% block list_row_start %}
-                                                                                                        {% if not no_id %}
-                                                                                                                <td>
-                                                                                                                        <div {% block id_row_attr %}class="td_information"{% endblock %}>
-                                                                                                                                {% block id_extra %}
-                                                                                                                                        {% if get %}
-                                                                                                                                                {% get_row object object.id %}
-                                                                                                                                          {% else %}
-                                                                                                                                                {% view_row object object.id %}
-                                                                                                                                        {% endif %}
-                                                                                                                                {% endblock %}
-                                                                                                                        </div>
-                                                                                                                </td>
+                                                                        {% block list_row_end %}
+                                                                                <td>
+                                                                                        <div class="td_action" style="white-space:nowrap">
+                                                                                                {% block list_row_actions %}
+                                                                                                        {% if readonly %}
+                                                                                                                <a href="../{{object.id}}/edit/?childwin=1" class="popup" name="get" title="Select">Select</a>
+                                                                                                          {% else %}
+                                                                                                                {% row_actions %}
+                                                                                                                edit;delete
+                                                                                                                {% endrow_actions %}
                                                                                                         {% endif %}
                                                                                                 {% endblock %}
-                                                                                                {% block list_row %}
-                                                                                                        <td>{{object}}</td>
-                                                                                                {% endblock %}
-                                                                                                {% block list_row_end %}
-                                                                                                        <td>
-                                                                                                                <div class="td_action" style="white-space:nowrap">
-                                                                                                                        {% block list_row_actions %}
-                                                                                                                                {% if readonly %}
-                                                                                                                                        <a href="../{{object.id}}/edit/?childwin=1" class="popup" name="get" title="Select">Select</a>
-                                                                                                                                  {% else %}
-                                                                                                                                        {% row_actions %}
-                                                                                                                                        edit;delete
-                                                                                                                                        {% endrow_actions %}
-                                                                                                                                {% endif %}
-                                                                                                                        {% endblock %}
-                                                                                                                </div>
-                                                                                                        </td>
-                                                                                                {% endblock %}
-                                                                                        </tr>
-                                                                                {% endblock %}
-                                                                                {% block list_row2 %}{% endblock %}
-                                                                        {% endfor %}
-                                                                {% endif %}
-                                                                {% block list_tbody_end %}
-                                                                        </tbody>
-                                                                {% endblock %}
-                                                        {% endif %}
-                                                {% endblock %}
-                                                {% block list_table_end %}
-                                                        </table>
-                                                {% endblock %}
-                                                {% block list_table_footer %}
-                                                {% endblock %}
-                                        </div>
-                                        {% if standard_web_browser == 1 or standard_web_browser == 2 or standard_web_browser == 5 or standard_web_browser == 6 %}
-                                                {% if table_type == 'scrolled' or not table_type %}
-                                                        </div>
-                                                  {% else %}
-                                                        </div>
-                                                {% endif %}
+                                                                                        </div>
+                                                                                </td>
+                                                                        {% endblock %}
+                                                                </tr>
+                                                        {% endblock %}
+                                                        {% block list_row2 %}{% endblock %}
+                                                {% endfor %}
                                         {% endif %}
-                                </div>
-                                {% block list_page_sidebar %}{% endblock %}
+                                        {% block list_tbody_end %}
+                                                </tbody>
+                                        {% endblock %}
+                                {% endif %}
                         {% endblock %}
-                        {% if standard_web_browser and standard_web_browser != 6 %}
-                                </div>
-                          {% else %}
-                                {% if form.errors or errors %}
+                        {% block list_table_end %}
+                                </table>
+                                {% if standard_web_browser == 1 or standard_web_browser == 2 or "page" in fragment or "table" in fragment %}
                                         </div>
                                 {% endif %}
-                        {% endif %}
-                        {% block list_content_footer %}
+                                </div>
+                                </div>
+                                </div>
                         {% endblock %}
-                        {% block list_content_end %}
+                        {% block list_table_footer %}
                         {% endblock %}
                 {% endblock %}
-                {% block list_page_footer %}
+                {% block list_content_footer %}
                 {% endblock %}
-                {% block list_page_end %}
+                {% block list_content_end %}
+                {% endblock %}
+        {% endblock %}
+        {% block list_page_sidebar %}
+        {% endblock %}
+        {% block list_page_footer %}
+                {% if standard_web_browser == 1 or standard_web_browser == 2 or "page" in fragment %}
                         </div>
-                {% endblock %}
-        {% endif %}
-        {% if standard_web_browser and standard_web_browser < 5 %}
+                {% endif %}
+        {% endblock %}
+        {% block list_page_end %}
+                </div>
+        {% endblock %}
+        {% if standard_web_browser and "table" not in fragment %}
                 </div>
         {% endif %}
 {% endblock %}

@@ -1,0 +1,9 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% content
+    <ptig-d3 width='50%'></ptig-d3>

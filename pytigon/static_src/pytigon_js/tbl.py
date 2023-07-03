@@ -358,7 +358,17 @@ def table_loadeddata(event):
                 pk = int(_data.split("id:")[1].strip())
                 table = event.srcElement if event.srcElement else event.data_source
                 datatable = jQuery(table).find("table[name=tabsort].datatable")
-                link = get_ajax_link(table, "page")
+                # if table.hasAttribute("data-region"):
+                #    data_region = table.getAttribute("data-region")
+                # else:
+                #    data_region = None
+                # link = None
+                # if data_region:
+                #    link = get_ajax_link(table, data_region, True)
+                # if not link:
+                link = get_ajax_link(table, "page-content", True)
+                if not link:
+                    link = get_ajax_link(table, "page")
                 url = None
                 if link:
                     if link.hasAttribute("href"):
@@ -375,6 +385,9 @@ def table_loadeddata(event):
                     else:
                         url += "?&json=1&pk=" + str(pk)
                     url = url.replace("/form/", "/json/")
+
+                    url = correct_href(url, (link,))
+                    url = process_href(url, jQuery(link.parentElement))
 
                     def _update(data):
                         nonlocal datatable, dt

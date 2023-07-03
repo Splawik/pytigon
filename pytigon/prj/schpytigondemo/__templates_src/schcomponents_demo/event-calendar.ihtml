@@ -1,0 +1,10 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% content
+    div class=row
+        div class=col-12
+            ptig-event-calendar

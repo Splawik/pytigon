@@ -1,0 +1,15 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with show_title_bar=1 title='template example'
+        {{ block.super }}
+
+
+%% content
+    h1...{{name}}
+    h2...{{description}}
+    

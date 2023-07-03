@@ -1,0 +1,9 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% content
+    <ptig-pivottable></ptig-pivottable>

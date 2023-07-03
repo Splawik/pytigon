@@ -238,6 +238,8 @@ def listdialog(request, action):
     if action == "dialog":
         c = {"value": value}
         ret = render_to_response("schsys/list.html", context=c, request=request)
+        #print("X1: ", ret)
+        #print("X2: ", ret.content)
         return ret
     if action == "test":
         return HttpResponse(schjson.dumps((2, None, (None,))))
@@ -424,7 +426,7 @@ def search(request, **argv):
     q2 = bencode(q)
     if hasattr(settings, "SEARCH_PATH"):
         return HttpResponseRedirect(
-            make_href((settings.SEARCH_PATH % q2) + "?only_content=1")
+            make_href((settings.SEARCH_PATH % q2) + "?fragment=page")
         )
     else:
         return Http404()

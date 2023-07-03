@@ -295,14 +295,14 @@
                 {% endif %}
         {% endifchanged %}
         {% if item_info.url|is_menu_checked:request.get_full_path %}
-                <a href="{{base_path}}{{item_info.url}}" class="btn btn-warning shadow-none {{btn_size}} btn-raised menu-href ladda-button" target="_parent" data-style="zoom-in" {{item_info.description}}>
+                <a href="{{base_path}}{{item_info.url}}?fragment=page" class="btn btn-warning shadow-none {{btn_size}} btn-raised menu-href ladda-button" target="_parent" data-style="zoom-in" {{item_info.description}}>
                         {% if item_info.icon %}
                                 {% icon item_info.icon|append_str:" fa-lg" %}
                         {% endif %}
                         {{item_info.description}}
                 </a>
           {% else %}
-                <a href="{{base_path}}{{item_info.url}}" class="btn btn-light shadow-none {{btn_size}} menu-href ladda-button" data-style="zoom-in" target="_parent" title="{{item_info.description}}">
+                <a href="{{base_path}}{{item_info.url}}?fragment=page" class="btn btn-light shadow-none {{btn_size}} menu-href ladda-button" data-style="zoom-in" target="_parent" title="{{item_info.description}}">
                         {% if item_info.icon %}
                                 {% if standard_web_browser %}
                                         {% icon item_info.icon|append_str:" fa-lg tablet_menu_icon" width=22 %}
@@ -352,12 +352,12 @@
         {% endif %}
 {% endblock %}
 {% block body_desktop %}
-        {% if ONLY_CONTENT and not form.errors %}
-                {{block.super}}
-          {% else %}
+        {% if fragment == "all" %}
                 <div id="body_desktop" class="container-fluid tab-pane ajax-region ajax-frame win-content page" data-region="page">
-                        {{block.super}}
+                        {{ block.super }}
                 </div>
+          {% else %}
+                {{ block.super }}
         {% endif %}
 {% endblock %}
 {% block body_end %}

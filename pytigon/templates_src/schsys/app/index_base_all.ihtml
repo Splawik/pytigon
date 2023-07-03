@@ -2,6 +2,10 @@
 
 % load exsyntax
 
+%% all
+    % with fragment="all":
+        {{ block.super }}
+
 %% body_start
     % if settings.START_PAGE != 'None':
         {{ block.super }}

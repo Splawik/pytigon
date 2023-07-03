@@ -42,7 +42,7 @@ Urls = (
         """png://actions/format-justify-fill.png""",
     ),
     (
-        "table/Example6ComputerFromExample1/-/form/list/?view_in=desktop",
+        "table/Example6ComputerFromExample1/-/form__scrolled/list/?view_in=desktop",
         _("Example 6 - scrolled"),
         None,
         """png://actions/format-justify-fill.png""",

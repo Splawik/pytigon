@@ -573,7 +573,7 @@ window.history_push_state = history_push_state
 
 def get_elem_from_string(html, selectors=None):
     temp = document.createElement("div")
-    temp.classList.add("ajax-item")
+    temp.classList.add("ajax-temp-item")
     temp.innerHTML = html
     if selectors:
         element = temp.querySelector(selectors)
@@ -899,22 +899,24 @@ def correct_href(href, elements=None):
     if not href:
         return href
 
+    if "fragment=" in href:
+        return href
+
     only_table = False
     if elements != None:
         for element in elements:
             if (
                 element != None
                 and element.hasAttribute("data-region")
-                and element.getAttribute("data-region").lower() == "table"
+                and "table" in element.getAttribute("data-region").lower()
             ):
                 only_table = True
 
     if only_table:
-        if not "only_table" in href:
-            if "?" in href:
-                href += "&only_table=1"
-            else:
-                href += "?only_table=1"
+        if "?" in href:
+            href += "&fragment=table-content"
+        else:
+            href += "?fragment=table-content"
     else:
         only_content = True
         if elements != None:
@@ -927,11 +929,10 @@ def correct_href(href, elements=None):
                     only_content = False
 
         if only_content:
-            if not "only_content" in href:
-                if "?" in href:
-                    href += "&only_content=1"
-                else:
-                    href += "?only_content=1"
+            if "?" in href:
+                href += "&fragment=page-content"
+            else:
+                href += "?fragment=page-content"
 
     if elements != None:
         for element in elements:
@@ -992,3 +993,23 @@ def inline_minimize(elem):
 
 
 window.inline_minimize = inline_minimize
+
+
+def element_get_url(element):
+    for attr in ("href", "action", "src"):
+        if element.hasAttribute(attr):
+            return element.getAttribute(attr)
+    return None
+
+
+window.element_get_url = element_get_url
+
+
+def element_set_url(element, url):
+    for attr in ("href", "action", "src"):
+        if element.hasAttribute(attr):
+            element.setAttribute(attr, url)
+            return
+
+
+window.element_set_url = element_set_url

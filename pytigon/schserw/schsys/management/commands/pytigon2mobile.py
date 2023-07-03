@@ -124,7 +124,7 @@ class Command(BaseCommand):
                         else:
                             if "class" in item.attrib:
                                 if "menu-href" in item.attrib["class"]:
-                                    urls.append(u + "?only_content=1")
+                                    urls.append(u + "?fragment=page")
                                     continue
                             if (
                                 # not "?" in u
@@ -132,13 +132,13 @@ class Command(BaseCommand):
                                 and not u.startswith("#")
                                 and not "://" in u
                             ):
-                                if "only_content" in u or "static" in u:
+                                if "fragment=page" in u or "static" in u:
                                     urls.append(u)
                                 else:
                                     if "?" in u:
-                                        urls.append(u + "&only_content=1")
+                                        urls.append(u + "&fragment=page")
                                     else:
-                                        urls.append(u + "?only_content=1")
+                                        urls.append(u + "?fragment=page")
 
             for url in urls:
                 try:

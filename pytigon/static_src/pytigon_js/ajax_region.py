@@ -82,14 +82,27 @@ def mount_html(dest_elem, data_or_html, link=None):
             if jQuery.type(data_or_html) == "string":
                 elem2.innerHTML = data_or_html
             else:
-                elem2.appendChild(data_or_html)
-            # morphdom(dest_elem, elem2)
+                if (
+                    data_or_html.tagName.lower() == "div"
+                    and data_or_html.classList.contains("ajax-temp-item")
+                ):
+                    for item in Array.prototype.slice.call(data_or_html.childNodes):
+                        elem2.appendChild(item)
+                else:
+                    elem2.appendChild(data_or_html)
             Idiomorph.morph(dest_elem, elem2)
         else:
             if jQuery.type(data_or_html) == "string":
                 dest_elem.innerHTML = data_or_html
             else:
-                dest_elem.appendChild(data_or_html)
+                if (
+                    data_or_html.tagName.lower() == "div"
+                    and data_or_html.classList.contains("ajax-temp-item")
+                ):
+                    for item in Array.prototype.slice.call(data_or_html.childNodes):
+                        dest_elem.appendChild(item)
+                else:
+                    dest_elem.appendChild(data_or_html)
 
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:
@@ -386,7 +399,7 @@ register_mount_fun(datatable_init)
 register_mount_fun(process_resize)
 
 
-def get_ajax_region(element, region_name=None):
+def get_ajax_region(element, region_name=None, strict_mode=False):
     if element.classList.contains("ajax-region") and (
         (not region_name) or element.getAttribute("data-region") == region_name
     ):
@@ -400,7 +413,7 @@ def get_ajax_region(element, region_name=None):
                 ret = ret.parentElement
                 if ret != None:
                     ret = ret.closest(".ajax-region")
-            if region_name:
+            if region_name and not strict_mode:
                 return get_ajax_region(element, None)
             else:
                 return None
@@ -411,25 +424,38 @@ def get_ajax_region(element, region_name=None):
 window.get_ajax_region = get_ajax_region
 
 
-def get_ajax_link(element, region_name=None):
+def get_ajax_link(element, region_name=None, strict_mode=False):
     if element.classList.contains("ajax-link") and (
         (not region_name) or element.getAttribute("data-region") == region_name
     ):
         return element
-    region = get_ajax_region(element, region_name)
+    region = get_ajax_region(element, region_name, strict_mode)
     if region != None:
         if region.classList.contains("ajax-link"):
             return region
         else:
             if region_name:
-                link = region.querySelector(
-                    ".ajax-link[data-region='" + region_name + "']"
+                # link = region.querySelector(
+                #    ".ajax-link[data-region='" + region_name + "']"
+                # )
+                # if link != None:
+                #    return link
+
+                link_list = Array.prototype.slice.call(
+                    region.querySelectorAll(
+                        ".ajax-link[data-region='" + region_name + "']"
+                    )
                 )
-                if link != None:
-                    return link
+                for link in link_list:
+                    if (
+                        link.closest(".ajax-region[data-region='" + region_name + "']")
+                        == region
+                    ):
+                        return link
+                return None
             else:
                 return region.querySelector(".ajax-link")
-    if region_name:
+    if region_name and not strict_mode:
         return get_ajax_link(element, None)
     else:
         return None
@@ -438,8 +464,8 @@ def get_ajax_link(element, region_name=None):
 window.get_ajax_link = get_ajax_link
 
 
-def get_ajax_frame(element, region_name=None):
-    region = get_ajax_region(element, region_name)
+def get_ajax_frame(element, region_name=None, strict_mode=False):
+    region = get_ajax_region(element, region_name, strict_mode)
     if region != None:
         if region.classList.contains("ajax-frame") and (
             (not region_name) or region.getAttribute("data-region") == region_name
@@ -447,14 +473,28 @@ def get_ajax_frame(element, region_name=None):
             return region
         else:
             if region_name:
-                frame = region.querySelector(
-                    ".ajax-frame[data-region='" + region_name + "']"
+                # frame = region.querySelector(
+                #    ".ajax-frame[data-region='" + region_name + "']"
+                #
+                # if frame != None:
+                #    return frame
+
+                frame_list = Array.prototype.slice.call(
+                    region.querySelectorAll(
+                        ".ajax-frame[data-region='" + region_name + "']"
+                    )
                 )
-                if frame != None:
-                    return frame
+                for f in frame_list:
+                    if (
+                        f.closest(".ajax-region[data-region='" + region_name + "']")
+                        == region
+                    ):
+                        return f
+                return None
+
             else:
                 return region.querySelector(".ajax-frame")
-    if region_name:
+    if region_name and not strict_mode:
         return get_ajax_frame(element, None)
     else:
         return None
@@ -491,11 +531,12 @@ def refresh_ajax_frame(
     if frame == None:
         return
     link = get_ajax_link(element, region_name)
+    url = None
 
     loading = Loading(element)
 
     def _callback(data):
-        nonlocal element, link, frame, region, callback, loading
+        nonlocal element, link, frame, region, callback, loading, url
         ret = None
 
         loading.stop()
@@ -528,9 +569,14 @@ def refresh_ajax_frame(
                 "$$RETURN_NEW_ROW_OK",
                 "$$RETURN_UPDATE_ROW_OK",
             ):
+                # if url and "fragment=" in url:
+                #   x = url.split("fragment=")[1].split("&")[0]
+                #    if x:
+                #       region_name = x
                 plug = region.closest(".plug")
                 if plug:
                     elem = region.closest(".plug").parentElement
+                    # elem = get_ajax_frame(region.closest(".plug"), None)
                 else:
                     elem = element
                 callback()
@@ -605,7 +651,6 @@ def refresh_ajax_frame(
     if data_element:
         return _callback(data_element)
 
-    url = None
     post = False
     if link != None:
         if link.hasAttribute("href"):

@@ -36,7 +36,9 @@
 {% endblock %}
 {% block id_extra %}
         {{ block.super }}
-        {% row_related_list "schworkflow/WorkflowItem" title="Workflow items" filter=object.application|append_str:"__"|append_str:object.table|append_str:"__"|append_str:object.id|append_str:"__"|append_str:object.group icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}" %}
+        {% block related_workflow %}
+                {% row_related_list "schworkflow/WorkflowItem" title="Workflow items" filter=object.application|append_str:"__"|append_str:object.table|append_str:"__"|append_str:object.id|append_str:"__"|append_str:object.group icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}" %}
+        {% endblock %}
 {% endblock %}
 {% block list_row %}
         <td>{{object.name}}</td>

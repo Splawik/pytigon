@@ -1,0 +1,37 @@
+% extends "forms/tree.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='simple':
+        {{ block.super }}
+
+
+%% scroll
+
+
+%% list_content_actions_new_row
+    % new_row _("New group")
+
+%% list_row_header
+    th..._(Main parameter)
+    th..._(Parameters)
+    
+
+%% list_row
+    td...{{ object.main_parameter.key }}
+    td
+        % for parameter in object.parameters.all:
+            ({{ parameter.key}})
+
+    
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+
+%% row_edit
+    % form:
+        .parent:!,main_parameter,second_parameter,parameters

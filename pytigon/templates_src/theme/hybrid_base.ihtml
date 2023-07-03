@@ -1,5 +1,4 @@
-% extends default_template2
-
+% extends "page.html"
 
 %% heading
 

@@ -1,0 +1,15 @@
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with show_title_bar=1 title='Plotly example'
+        {{ block.super }}
+
+
+%% content
+    div 
+        ptig-plotly
+            {{plotly_content|safe}}

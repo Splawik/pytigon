@@ -1,0 +1,215 @@
+@@@ markdown_example
+% load i18n
+ 
+hr
+<!-- html code -->
+<h1>Hello world!</h1>
+hr 
+<!-- ihtml equivalent -->
+h1...Hello world!
+hr 
+
+
+hr
+<!-- html code --> 
+<table><tr><th>Title 1</th><th>Title2</th></tr><tr><td>Data 1</td><td>Data 2</td></tr></table>
+hr
+<!-- ihtml equivalent -->
+table
+    tr
+        th...Title 1
+        th...Title 2
+    tr
+        td...Data 1
+        td...Data 2
+hr
+
+
+hr
+<!-- html code --> 
+<div class="alert alert-primary" role="alert">
+  <button type="button" class="btn btn-danger">Danger</button>
+  <strong>Heads up!</strong> This <a href="#" class="alert-link">alert needs your attention</a>, but it's not super important.
+</div>
+<div class="test" width="100%"><span class="test2">Test</span></div>
+hr
+<!-- ihtml equivalent -->
+div class=alert alert-primary,,,role=alert
+  button type=button,,,class=btn btn-danger...Danger
+  <strong>Heads up!</strong>This 
+  a href=#,,,class=alert-link...alert needs your attention
+  .,but it's not super important.
+div class=test,,,width=100%:::span=test2...Test
+hr
+
+
+hr
+<!-- html code --> 
+{% block title1 %}Title{% endblock %}
+hr
+<!-- ihtml equivalent -->
+%% title2
+    .Title
+hr
+
+
+hr
+<!-- html code --> 
+{% for letter in "abc" %}letter: {{letter}}<br/>{% endfor %}
+{% if True %}Hello!{% endif %}
+hr
+<!-- ihtml equivalent -->
+% for letter in "abc":
+    .letter: {{letter}}
+    br
+% if True:
+    .Hello!
+hr
+
+
+hr
+<!-- html code --> 
+<h3>do not process indented text</h3>def test(): <br>x = 10 <br>y = 20 <br>
+<br>
+<h4>finish!</h3>
+hr
+<!-- ihtml equivalent -->
+h3...do not process indented text
+===>
+    def test(): <br>
+        x = 10 <br>
+        y = 20 <br>
+br
+h4...finish!
+hr
+
+
+hr
+<!-- html code --> 
+<h3>do not process text block</h3>def test2(): <br>x = 10 <br>y = 20 <br>
+<br>
+<h4>finish!</h3>
+<!-- ihtml equivalent -->
+hr
+h3...do not process text block 
+>>>
+    def test2(): <br>
+        x = 10 <br>
+        y = 20 <br>
+<<<
+br
+h4...finish!
+hr
+
+
+hr
+<!-- html code --> 
+<h3>Markdown block</h3>
+<h1>H1</h1>Test <strong>test</strong> <em>test</em>
+hr
+<!-- ihtml equivalent -->
+h3...Markdown block 
+###>
+    #H1
+    
+    Test **test** *test*
+
+hr
+
+hr
+<!-- html code --> 
+<h4>{% translate "This is the title." %}</h4>
+hr
+<!-- ihtml equivalent -->
+h4..._(This is the title.) 
+hr
+
+
+hr
+<!-- html code --> 
+{% translate "This is full line translated text" %}
+hr
+<!-- ihtml equivalent -->
+_This is full line translated text
+hr
+
+
+hr
+<!-- html code --> 
+.See page source
+<script language="python">
+.def init_form(self):
+.    pass
+</script>
+hr
+<!-- ihtml equivalent -->
+.See page source
+script language=python
+    def init_form(self):
+        pass
+hr
+
+hr
+<!-- html code --> 
+.See page source
+<script>
+.function javascript_function() {
+.    console.log("Hello world!");
+.}
+</script>
+hr
+<!-- ihtml equivalent -->
+.See page source
+script
+    def javascript_function():
+        print("Hello world!")
+hr
+
+hr
+<!-- html code --> 
+.See page source
+<script>
+.function javascript_function() {
+.    console.log("Hello world!");
+.}
+</script>
+hr
+<!-- ihtml equivalent -->
+.See page source
+script language=javascript
+    .function javascript_function() {
+    .   console.log("Hello world!");
+    .}
+hr
+
+
+hr
+<!-- html code --> 
+.function test_js(a,b){ var a=10; a=a+1; if(a>1){ a=1 } return 0 }
+hr
+<!-- ihtml equivalent -->
+{:}
+    function test_js(a,b):
+        var a=10
+        a=a+1
+        if (a>1):
+            a=1
+        return 0
+hr
+
+###>
+    # H1
+    
+    ## H2
+    
+    ### H3
+
+    1. test
+    2. test2
+    
+    
+    - a1
+    - a2
+    
+    
+    Test *test* **test2**

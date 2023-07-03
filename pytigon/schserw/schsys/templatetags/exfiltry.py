@@ -964,3 +964,24 @@ def prefetch_related(object_list, param):
 @register.filter(name="append_uuid")
 def append_uuid(var):
     return str(var) + str(uuid.uuid4())
+
+
+@register.filter(name="append_suffix")
+def append_suffix(value, s):
+    if s == None or s == "":
+        return value
+    else:
+        if value.endswith(s):
+            return value
+        else:
+            return value + str(s)
+
+@register.filter(name="remove_suffix")
+def remove_suffix(value, s):
+    if s == None or s == "":
+        return value
+    else:
+        if value.endswith(s):
+            return value[:-len(s)]
+        else:
+            return value

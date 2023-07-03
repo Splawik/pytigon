@@ -1,4 +1,4 @@
-% extends default_template2
+% extends "base.html"
 
 
 % load exfiltry

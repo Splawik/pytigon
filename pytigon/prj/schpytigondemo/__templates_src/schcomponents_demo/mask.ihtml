@@ -1,0 +1,28 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% content
+    p...pattern mask
+    p
+        ptig-imask mask=+{7}(000)000-00-00
+            input class=form-control,,,type=text,,,name=test1
+    p...Number
+        ptig-imask mask=number,,,scale=3,,,thousands-separator
+            input class=form-control,,,type=text,,,name=test2
+    p...Monay
+        ptig-imask mask=monay
+            input class=form-control,,,type=text,,,name=test3
+    p...Range
+        ptig-imask mask=range,,,from=0,,,to=99,,,max-length=2
+            input class=form-control,,,type=text,,,name=test3
+    p...Date
+        ptig-imask mask=date
+            input class=form-control,,,type=text,,,name=test5
+    p...Enum
+        ptig-imask mask=enum,,,enum=pl;fr;en;gb;us
+            input class=form-control,,,type=text,,,name=test6
+    

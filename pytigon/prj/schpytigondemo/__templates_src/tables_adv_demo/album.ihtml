@@ -1,0 +1,42 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New album"
+
+%% list_row_header
+    th..._(Release date)
+    th..._(Artist)
+    th..._(Description)
+    th..._(Genre)
+    
+
+%% id_extra
+    {{ block.super }}
+    % row_actions:
+        .field_list/track_set,Tracks
+
+
+%% list_row
+    td...{{ object.release_date }}
+    td...{{ object.artist }}
+    td...{{ object.description }}
+    td...{{ object.genre }}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:
+        .release_date,artist,description,genre

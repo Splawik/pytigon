@@ -1,0 +1,39 @@
+% extends "forms/form.html"
+ 
+% load exsyntax
+
+%% content
+    form method=post,,,action={{base_path}}forms_demo/form/form_test4/?only_content=1,,,class=ajax-link form-inline
+        % csrf_token
+        % inline_form:
+            .test
+            ((
+                % comboselect "x1" label="X1" data_rel_name="x2" src="":
+                    option disabled,,,selected,,,value 
+                    option value=a1...A1
+                    option value=a2...A2
+                    option value=a3...A3
+            ))
+            ((
+                % comboselect "x2" label="X2" data_rel_name="x3" src="/forms_demo/list2?q=[[x1]]":
+                    option disabled,,,selected,,,value 
+            ))
+            ((
+                div class=form-group group_choicefield form-floating
+                    select class=select_combo form-select,,,name=x3,,,src=/forms_demo/list3?q=[[x2]]
+                        option disabled,,,selected,,,value 
+                    label class=form-label control-label float-left
+                        .X3           
+            ))
+            ((
+                % comboselect form.test2 data_rel_name="x3":
+                    option disabled,,,selected,,,value 
+                    option value=s1...S1
+                    option value=s2...S2
+                    option value=s3...S3
+            ))
+        div class=row
+            div class=col
+            div class=col div_content_center
+                button type=submit,,,class=btn btn-primary btn-lg ...OK
+            div class=col

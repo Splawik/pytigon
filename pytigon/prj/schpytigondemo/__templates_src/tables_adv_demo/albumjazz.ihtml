@@ -1,0 +1,14 @@
+% extends "tables_adv_demo/album.html"
+
+% load exfiltry
+% load exsyntax
+
+%% list_row_header
+    th..._(Release date)
+    th..._(Artist)
+    th..._(Description)
+    
+%% list_row
+    td...{{ object.release_date|isoformat }}
+    td...{{ object.artist }}
+    td...{{ object.description }}

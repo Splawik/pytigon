@@ -1,0 +1,41 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='scrolled' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New computer" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Serial number</th>
+        <th>Description</th>
+        <th>IP</th>
+        <th>
+        Active
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.sn }}</td>
+        <td>{{ object.description }}</td>
+        <td>{{ object.ip }}</td>
+        <td>
+        {{ object.active }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                sn,description,ip,active
+        {% endform %}
+{% endblock %}
+

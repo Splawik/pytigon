@@ -1,0 +1,36 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New computer"
+    
+%% list_row_header
+    th..._(Serial number)
+    th..._(Description)
+    th..._(IP)
+    th..._(Active)
+    
+
+%% list_row
+    td...{{ object.sn }}
+    td...{{ object.description }}
+    td...{{ object.ip }}
+    td...{{ object.active }}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:
+        .sn,description,ip,active

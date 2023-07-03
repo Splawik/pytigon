@@ -1,0 +1,13 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with show_title_bar=1 title='task_test'
+        {{ block.super }}
+
+%% content
+    h1...Task was started

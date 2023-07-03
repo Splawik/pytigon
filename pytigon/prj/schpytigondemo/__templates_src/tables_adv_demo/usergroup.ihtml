@@ -1,0 +1,30 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "<<new_row_title>>"
+    % list_action "<<action>>" "<<action_description>>"
+
+%% list_row_header
+    
+
+%% list_row
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+        .<<action_name>>,<<description>>
+
+%% row_edit
+    % form:
+        .

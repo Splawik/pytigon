@@ -1,4 +1,9 @@
 {% extends "theme.html" %}
+{% block all %}
+        {% with fragment="all" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
 {% block heading %}
 {% endblock %}
 {% block content %}{% endblock %}

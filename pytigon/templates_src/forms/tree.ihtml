@@ -4,9 +4,19 @@
 % load exsyntax
 
 %% content
-    input type=hidden,,,name=parent_filter,,,value={{filter}}
-    div class=container-fluid tab-pane ajax-region ajax-frame win-content,,,data-region=page
+    % if fragment == "page" or fragment == "all":
+        input type=hidden,,,name=parent_filter,,,value={{filter}}
+        div class=container-fluid tab-pane ajax-region ajax-frame win-content,,,data-region=page-content
+            {{ block.super }}
+    % else:
         {{ block.super }}
+
+
+%% list_page_start
+    % comment:
+        <div class="ajax-region {% if vtype == 'xxxtree' %}ajax-frame{% endif %} table-and-details d-flex flex-column" data-region="table-content" >
+
+    <div class="table-and-details d-flex flex-column">
 
 %% list_content_title
     % if parent_pk > 0:
@@ -33,7 +43,7 @@
             % if standard_web_browser
                 span class=tree-home
                     % if parent_pk > 0 and base_filter != parent_pk|to_str:
-                        % action "home-_self" "/" url=table_path_and_base_filter|append_str:'[[parent_filter]]/{{kwargs.target}}/{{gtree}}/' attrs="data-remote-elem=.table-and-details"
+                        % action "home-_self" "/" url=table_path_and_base_filter|append_str:'[[parent_filter]]/{{kwargs.target}}/{{gtree}}/'
                     % else:
                         % action "home-_self" "/" url=table_path_and_base_filter|append_str:'[[parent_filter]]/{{kwargs.target}}/tree/' tag_class="+disabled"
             % else:
@@ -48,7 +58,7 @@
                     % if not base_parent_pk:
                         % for pos in parent|get_all_model_parents reversed:
                             % if not forloop.last:
-                                % action "back-_self" pos.code url=table_path_and_base_filter|append_str:'{{pos.id}}/{{kwargs.target}}/{{gtree}}/' attrs="data-remote-elem=.table-and-details"
+                                % action "back-_self" pos.code url=table_path_and_base_filter|append_str:'{{pos.id}}/{{kwargs.target}}/{{gtree}}/'
 
         %% list_content_actions_new_row
             % if not readonly:
@@ -65,9 +75,9 @@
                     % if vtype == 'tree' or vtype == 'gettree':
                         %if parent_pk > 0 and base_filter != parent_pk|to_str:
                             % if parent|get_all_model_parents|length > 1
-                                % action "back-_self" ".." url=table_path_and_base_filter|append_str:'-{{parent_pk}}/{{kwargs.target}}/{{ro}}{{gtree}}/' attrs="data-remote-elem=.table-and-details"
+                                % action "back-_self" ".." url=table_path_and_base_filter|append_str:'-{{parent_pk}}/{{kwargs.target}}/{{ro}}{{gtree}}/'
                             % else:
-                                % action "back-_self" ".." url=table_path_and_base_filter|append_str:'[[parent_filter]]/{{kwargs.target}}/{{ro}}{{gtree}}/' attrs="data-remote-elem=.table-and-details"
+                                % action "back-_self" ".." url=table_path_and_base_filter|append_str:'[[parent_filter]]/{{kwargs.target}}/{{ro}}{{gtree}}/'
                         % else:
                             % action "back-_self" ".." url=table_path_and_base_filter|append_str:'-{{parent_pk}}/{{kwargs.target}}/{{ro}}{{gtree}}/' tag_class="+disabled" attrs="+disabled='disabled'"                           
                 {% id_num 'Id' %}
@@ -78,20 +88,20 @@
             % with gtree=get|get_or_tree:
                 % if object|model_can_have_children: 
                     %if object|model_has_children
-                        a href={{table_path_and_base_filter}}{{object.id}}/{{kwargs.target|replace:"json|form"}}/{{ro}}{{gtree}}/,,,target=_self,,,class=button btn btn-light shadow-none,,,name=+,,,data-remote-elem=.table-and-details
+                        a href={{table_path_and_base_filter}}{{object.id}}/{{kwargs.target|replace:"json|form"}}/{{ro}}{{gtree}}/,,,target=_self,,,class=button btn btn-light shadow-none,,,name=+
                             {% icon "fa-plus fa-lg" %}
                     %else
                         % if get:
                             span class=button btn
                                 {% icon "fa-ban fa-lg" %}
                         % else:
-                            a href={{table_path_and_base_filter}}{{object.id}}/{{kwargs.target|replace:"json|form"}}/{{ro}}{{gtree}}/,,,target=_self,,,class=button btn,,,name=+,,,data-remote-elem=.table-and-details
+                            a href={{table_path_and_base_filter}}{{object.id}}/{{kwargs.target|replace:"json|form"}}/{{ro}}{{gtree}}/,,,target=_self,,,class=button btn,,,name=+
                                 {% icon "fa-plus-square-o fa-lg" %}
         % else:
             % with gtree=get|get_or_tree:
                 % if object|model_can_have_children: 
                     %if object|model_has_children
-                        a href={{table_path_and_base_filter}}{{object.id}}/{{kwargs.target|replace:"json|form"}}/{{ro}}{{gtree}}/,,,target=_self,,,class=button btn btn-light shadow-none,,,name=+,,,data-remote-elem=.table-and-details
+                        a href={{table_path_and_base_filter}}{{object.id}}/{{kwargs.target|replace:"json|form"}}/{{ro}}{{gtree}}/,,,target=_self,,,class=button btn btn-light shadow-none,,,name=+
                             +
                     %else
                         % if get:

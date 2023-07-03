@@ -111,6 +111,18 @@ def standard_web_browser(request):
             return 1
 
 
+def get_fragment(request):
+    fragment = "page"
+    if "fragment" in request.GET:
+        fragment = request.GET.get("fragment")
+    else:
+        if "only_content" in request.GET:
+            fragment = "page"
+        if "only_table" in request.GET:
+            fragment = "table-content"
+    return fragment
+
+
 def client_type(request):
     if standard_web_browser(request):
         if test_mobile(request):
@@ -473,7 +485,7 @@ class CanCanWrapper:
 
     def call(self, obj):
         return self.request.ability.can(self.action, obj)
- 
+
 
 class CanCanPermWrapper(PermWrapper):
     def __init__(self, request):
@@ -659,24 +671,24 @@ def sch_standard(request):
         b_type2 = "standard"
 
     if standard == 2:
-        d_template = default_template("hybrid")
-        d_template2 = default_template2(b_type)
+        # d_template = default_template("hybrid")
+        d_template = default_template2(b_type)
     elif standard == 5:
-        d_template = default_template("only_content")
-        d_template2 = default_template2(b_type)
+        # d_template = default_template("only_content")
+        d_template = default_template2(b_type)
     elif standard == 6:
-        d_template = default_template("only_table")
-        d_template2 = default_template2(b_type)
+        # d_template = default_template("only_table")
+        d_template = default_template2(b_type)
     elif standard == 9:
-        d_template = default_template("to_print")
-        d_template2 = default_template2(b_type)
+        # d_template = default_template("to_print")
+        d_template = default_template2(b_type)
     else:
         d_template = default_template2(b_type)
-        d_template2 = d_template
+        # d_template = d_template
 
     if lng and lng != "en":
         d_template = d_template.replace(".html", "_" + lng + ".html")
-        d_template2 = d_template2.replace(".html", "_" + lng + ".html")
+        # d_template2 = d_template2.replace(".html", "_" + lng + ".html")
 
     if settings.GEN_TIME:
         gmt_str = settings.GEN_TIME
@@ -696,15 +708,24 @@ def sch_standard(request):
     else:
         user_agent = ""
 
-    if "only_content" in request.GET and request.GET["only_content"]:
-        content_limited_to = request.GET["only_content"]
-    else:
-        content_limited_to = ""
+    #if "only_content" in request.GET and request.GET["only_content"]:
+    #    content_limited_to = request.GET["only_content"]
+    #else:
+    #    content_limited_to = ""
+    #if "fragment" in request.GET and request.GET["fragment"] == "min":
+    #    content_limited_to = request.GET["only_content"]
+
 
     if hasattr(settings, "BOOTSTRAP_TEMPLATE"):
         theme = settings.BOOTSTRAP_TEMPLATE.replace("/", "_")
     else:
         theme = ""
+
+    if 'extra_param' in request.GET:
+        extra_param = request.GET.get("extra_param")
+    else:
+        extra_param = ""
+
 
     ret = {
         "standard_web_browser": standard,
@@ -715,7 +736,7 @@ def sch_standard(request):
         "form_list": list_view,
         "readonly": readonly,
         "ro": ro,
-        "content_limited_to": content_limited_to,
+        #"content_limited_to": content_limited_to,
         "form_info": form_info,
         "form_grid": form_grid,
         "URL_ROOT_FOLDER": settings.URL_ROOT_FOLDER,
@@ -727,7 +748,7 @@ def sch_standard(request):
         "client_type": c_type,
         "application_type": b_type2,
         "default_template": d_template,
-        "default_template2": d_template2,
+        # "default_template2": d_template2,
         "prj_name": settings.PRJ_NAME,
         "prj_title": settings.PRJ_TITLE,
         "show_title_bar": show_title_bar,
@@ -746,6 +767,8 @@ def sch_standard(request):
         "app_manager": AppManager(request),
         "theme": theme,
         "settings": settings,
+        "fragment": get_fragment(request) if standard else "",
+        "extra_param": extra_param,
     }
     if "client_param" in request.session:
         ret.update(request.session["client_param"])
@@ -759,4 +782,7 @@ def sch_standard(request):
     if hasattr(settings, "CANCAN") and settings.CANCAN:
         ret["perms"] = CanCanPermWrapper(request)
 
+    # print("FRAGMENT: ", get_fragment(request))
+    # print("TEMPLATE: ", d_template)
+    
     return ret

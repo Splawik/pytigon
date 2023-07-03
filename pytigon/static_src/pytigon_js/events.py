@@ -144,6 +144,20 @@ def _get_click_event_from_tab(target_element, target, href):
 def on_click_default_action(event, target_element):
     global EVENT_CLICK_TAB
 
+    if target_element.hasAttribute("data-href"):
+        obj = super_query_selector(
+            target_element, target_element.getAttribute("data-href")
+        )
+        if obj:
+            tmp_url1 = window.element_get_url(obj)
+            tmp_url2 = window.element_get_url(target_element)
+            if tmp_url1 != None and tmp_url2:
+                element_set_url(obj, tmp_url1 + tmp_url2)                    
+            ret = on_click_default_action(event, obj)
+            if tmp_url1 != None and tmp_url2:
+                window.element_set_url(obj, tmp_url1)                    
+            return ret
+
     target = target_element.getAttribute("target")
 
     # if window.APPLICATION_TEMPLATE == "traditional":
@@ -630,7 +644,9 @@ def refresh_frame(
 
 
 def refresh_page(target_element, data_element, new_url, param, event):
-    return refresh_frame(target_element, data_element, new_url, param, event, "page")
+    return refresh_frame(
+        target_element, data_element, new_url, param, event, "page-content"
+    )
 
 
 # def refresh_page2(target_element, data_element, new_url, param, event):

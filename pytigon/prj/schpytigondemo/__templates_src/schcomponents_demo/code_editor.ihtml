@@ -1,0 +1,9 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% content
+    ptig-codeeditor class=flexible_size,,,value={{'Sample text'|bencode}},,,title=Hello world!,,,width=100%

@@ -1,5 +1,9 @@
 % extends "theme.html"
 
+%% all
+    % with fragment="all":
+        {{ block.super }}
+        
 %% heading
 
 %% content

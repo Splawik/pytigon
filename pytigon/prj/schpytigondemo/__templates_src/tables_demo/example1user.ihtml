@@ -1,0 +1,36 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New user"
+
+%% list_row_header
+    th..._(User name)
+    th..._(Email)
+
+%% id_extra
+    % row_related_list "schattachements/Attachement" title="Attachements" filter="tables_demo__Example1Use__{{object.id}}__default" icon_name="fa fa-lg fa-paperclip" tag_class="+class='btn-info'" version="tables_demo__"
+    {{ block.super }}
+
+    
+%% list_row
+    td...{{ object.username }}
+    td...{{ object.email }}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:
+        "username","email"

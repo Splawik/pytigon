@@ -1,0 +1,30 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% content
+    ptig-time
+        table border=1
+            tr
+                td...time
+                td
+                    div data-bind=time
+            tr
+                td...date
+                td
+                    div data-bind=date
+            tr
+                td...datetime
+                td
+                    div data-bind=datetime
+            tr
+                td...time_short
+                td
+                    div data-bind=time_short
+            tr
+                td...datetimeshort
+                td
+                    div data-bind=datetimeshort

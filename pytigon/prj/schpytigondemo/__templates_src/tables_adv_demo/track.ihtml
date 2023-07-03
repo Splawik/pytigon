@@ -1,0 +1,34 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "new track"
+
+%% list_row_header
+    th..._(Parent)
+    th..._(Name)
+    th..._(Param)
+    
+
+%% list_row
+    td...{{ object.parent }}
+    td...{{ object.name }}
+    td...{{ object.param }}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:
+        .parent,name,param,params

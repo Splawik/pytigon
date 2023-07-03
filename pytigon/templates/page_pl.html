@@ -1,0 +1,252 @@
+{% extends "theme.html"|translate:lang %}
+{% block page_start %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block page_head %}
+        {% if standard_web_browser == 0 %}
+                {{ block.super }}
+          {% else %}
+                {% if "table" in fragment or "page" in fragment %}
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block nav %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block login %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block body_start %}
+        {% if standard_web_browser == 0 or 'all' in fragment %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block body_body_start %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block body_init %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block panel %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block messages %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block navglobal %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block sidebar %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block tabs %}
+        {% if "page" in fragment %}
+                <head>
+                        <meta charset="utf-8" />
+                        <title>
+                                {{title}}
+                        </title>
+                        {% if form %}
+                                {% if form.errors or errors %}
+                                        <meta name="target" content="_self" />
+                                        <meta name="RETURN" content="$$RETURN_RELOAD_PAGE">
+                                        </meta>
+                                {% endif %}
+                        {% endif %}
+                </head>
+                {% with NO_TABS=True %}
+                        {{ block.super }}
+                {% endwith %}
+          {% else %}
+                {% if "table" in fragment %}
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block content_start %}
+        {% if "table" in fragment or "page" in fragment %}
+                {% if form.errors or errors %}
+                        {{ block.super }}
+                {% endif %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block content_end %}
+        {% if form.errors or errors %}
+                {{block.super}}
+        {% endif %}
+{% endblock %}
+{% block list_page_start %}
+        {% if "table" not in fragment and "page-content" not in fragment %}
+                {% if 'min' in fragment %}
+                        <div class="d-flex flex-column" style="height:100%">
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block list_page_header %}
+        {% if "table" not in fragment and "page-content" not in fragment %}
+                {% if 'min' in fragment %}
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block list_content_header %}
+        {% if not "table" in fragment %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block list_content_header_first_row %}
+        {% if not "table" in fragment %}
+                {% if 'min' in fragment %}
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block list_content_header_second_row %}
+        {% if not "table" in fragment %}
+                {% if 'min' in fragment %}
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block list_content_header_fourth_row %}
+        {% if not "table" in fragment %}
+                {% if 'min' in fragment %}
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block list_content_header_third_row %}
+        {% if not "table" in fragment %}
+                {% with btn_size='btn-sm' %}
+                        {{ block.super }}
+                {% endwith %}
+        {% endif %}
+{% endblock %}
+{% block list_content_footer %}
+        {% if not "table" in fragment %}
+                {% if 'min' in fragment %}
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block list_content_end %}
+        {% if not "table" in fragment %}
+                {% if 'min' in fragment %}
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block list_page_footer %}
+        {% if not "table" in fragment %}
+                {% if 'min' in fragment %}
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block list_page_end %}
+        {% if "table" not in fragment and "page-content" not in fragment %}
+                {% if 'min' in fragment %}
+                        </div>
+                  {% else %}
+                        {{ block.super }}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block body_desktop %}
+        {% if "table" in fragment %}
+                {% with ONLY_CONTENT=True %}
+                        {{ block.super }}
+                {% endwith %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block html_widgets_init %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block body_footer %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block page_footer %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block body_footer_scripts %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block body_body_end %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block body_end %}
+        {% if standard_web_browser == 0 or 'all' in fragment %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block page_end %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block js_all_scripts %}
+        {% if "table" in fragment or "page" in fragment %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+

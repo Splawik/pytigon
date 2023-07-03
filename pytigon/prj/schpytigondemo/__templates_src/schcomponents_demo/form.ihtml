@@ -1,0 +1,30 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% content
+    ptig-form src={{base_path}}schcomponents_demo/form/
+        form
+            div class=form-group
+                label...F1:
+                input name=f1,,,type=text,,,class=form-control
+            div class=form-group
+                label...F2:
+                input name=f2,,,type=number,,,class=form-control
+            div class=form-group
+                textarea name=f3,,,class=form-control
+            div class=form-group
+                select name=f4,,,class=form-control
+                    option value=x1...X1
+                    option value=x2...X2
+                    option value=x3...X3
+            div class=form-group
+                label...R1:
+                input name=r1,,,type=text,,,class=form-control r1
+            div class=form-group
+                h1 class=result
+            
+            

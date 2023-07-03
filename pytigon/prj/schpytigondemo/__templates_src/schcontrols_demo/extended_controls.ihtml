@@ -1,0 +1,61 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% scroll
+
+%% list_page_header
+    h3...Demo - extended controls
+
+%% list_page
+    table width=100%
+        tr
+            th width=150 ... Tytuł
+            th ... Kontrolka
+        tr
+            th
+                .Select:
+            td
+                CTRLSELECT
+                    tdata
+                        tr
+                            td ... Pos1
+                        tr
+                            td ... Pos2
+                        tr
+                            td ... Pos3
+        tr
+            th...Bitmap combo box:
+            td
+                CTRLBITMAPCOMBOBOX
+        tr
+            th...Error list:
+            td
+                CTRLERRORLIST
+                    li...pos1
+                    li...pos2
+        tr
+            th...Notebook
+            td
+                CTRLNOTEBOOK width=100%-150,,,height=300
+                    tdata
+                        tr
+                            td...page 1
+                            td.../schwiki/simplecontrols/userwiki/view/
+                        tr
+                            td...page 2
+                            td.../schwiki/simplecontrols/HelloWorld1/view/
+                        tr
+                            td...page 3
+                            td.../schwiki/simplecontrols/ToJestHelp/view/
+        tr
+            th...Web 1
+            td
+                CTRLHTML src=/schwiki/simplecontrols/userwiki/view/,,,width=100%-150,,,height=300            
+        tr
+            th...Web 2
+            td
+                CTRLHTML2 href=http://www.onet.pl,,,width=100%-150,,,height=300

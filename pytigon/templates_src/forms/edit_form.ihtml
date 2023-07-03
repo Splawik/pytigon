@@ -1,4 +1,4 @@
-% extends "only_content.html"
+% extends "page.html"
 
 %% body
     % with show_form=True

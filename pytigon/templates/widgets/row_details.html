@@ -6,7 +6,7 @@
           {% else %}
                 <ptig-sliderline rel="^.table-and-details/.row-details"></ptig-sliderline>
         {% endif %}
-        <div class="auto-refresh {% if vertical %}v-row-details{% else %}row-details{% endif %} d-flex flex-column" style="height:{{table_details_height}}" style="display:flex;flex-direction:column;justify-content:space-between;">
+        <div class="ajax-region auto-refresh {% if vertical %}v-row-details{% else %}row-details{% endif %} d-flex flex-column" data-region="page-content" style="height:{{table_details_height}};display:flex;flex-direction:column;justify-content:space-between;">
                 <nav>
                         <div class="nav nav-tabs" role="tablist">
                                 {% for item in title_url_tab %}
@@ -16,7 +16,7 @@
                 </nav>
                 <div class="tab-content auto-refresh flex-grow-1" id="nav-tabContent">
                         {% for item in title_url_tab %}
-                                <div href="{{base_path}}{{item.1|append_get_param:"view_in=desktop&only_content=min"}}" class="{% if item.2 %}active show{% endif %} tab-pane table-row-active ajax-frame ajax-link ajax-region fade" id="nav-row-details-{{forloop.counter}}{{uuid}}" role="tabpanel" tabindex="0">
+                                <div href="{{base_path}}{{item.1|append_get_param:"view_in=desktop&fragment=page-min"}}" class="{% if item.2 %}active show{% endif %} tab-pane table-row-active ajax-frame ajax-link ajax-region fade" data-region="page-content" id="nav-row-details-{{forloop.counter}}{{uuid}}" role="tabpanel" tabindex="0">
                                         &nbsp;
                                 </div>
                         {% endfor %}
