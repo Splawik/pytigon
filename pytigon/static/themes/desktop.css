@@ -148,7 +148,8 @@ body > .body-body {
   position: absolute;
   top: 0px;
   left: 0px;
-  width: 40px; }
+  width: 40px;
+  z-index: 1; }
 
 img.tablet_menu_icon, a.menu-href svg {
   vertical-align: middle; }

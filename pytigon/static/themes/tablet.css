@@ -53,8 +53,7 @@ img.tablet_menu_icon, a.menu-href svg {
 
 #loading-indicator {
   position: absolute;
-  top: 3px;
-  left: -11px; }
+  z-index: 1; }
 
 /* top navbar */
 .main-header .navbar {
