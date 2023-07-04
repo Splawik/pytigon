@@ -15,8 +15,8 @@ MODAL_BASE = """
                 <button type="button" class="close btn-close" data-dismiss='modal' data-bs-dismiss='modal' aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid ajax-region ajax-frame table-and-details" data-region='page' href='{href}'>
-                    <div class="ajax-region ajax-frame table-without-details d-flex flex-grow-1 flex-column" data-region="page-content">
+                <div class="container-fluid ajax-region ajax-frame form-and-details" data-region='page' href='{href}'>
+                    <div class="ajax-region ajax-frame form-without-details d-flex flex-grow-1 flex-column" data-region="page-content">
                         <div class="dialog-data ajax-frame" data-region="error"></div>
                     </div>
                 </div>
