@@ -1,0 +1,33 @@
+{% extends default_template %}
+{% load exfiltry %}
+{% load django_bootstrap5 %}
+{% load i18n %}
+{% load account %}
+{% load exsyntax %}
+{% block all %}
+        {% with NO_CHECK_AUTH=True SHOW_LOGIN_WIN=False show_form=False %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block body %}
+        <div class="login_background"></div>
+        <div class="container login-container">
+                <div class="row align-items-center">
+                        <div class="col"></div>
+                        <div class="col-lg-6 col-xl-5">
+                                <div class="card card-inverse login-card">
+                                        {% block content %}{% endblock %}
+                                </div>
+                        </div>
+                        <div class="col"></div>
+                </div>
+        </div>
+        {% block body_desktop_cd %}
+        {% endblock %}
+{% endblock %}
+{% block nav %}
+{% endblock %}
+{% block body_footer_scripts %}
+{% endblock %}
+{% block page_footer %}{% endblock %}
+

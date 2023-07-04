@@ -1,0 +1,13 @@
+{% load exfiltry %}
+{% if not only_field %}
+        <tr><th>{{field.label_tag}}</th><td>
+{% endif %}
+<div class="panel panel-default" style="padding:0.5em;margin:0.5em 0 0.5em 0;">
+        <div class="panel-body checkboxselectmultiple">
+                {{field}}
+        </div>
+</div>
+{% if not only_field %}
+        </td></tr>
+{% endif %}
+

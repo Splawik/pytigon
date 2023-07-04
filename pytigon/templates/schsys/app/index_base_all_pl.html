@@ -1,0 +1,73 @@
+{% extends "schsys/app/index.html" %}
+{% load exsyntax %}
+{% block all %}
+        {% with fragment="all" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block body_start %}
+        {% if settings.START_PAGE != 'None' %}
+                {{ block.super }}
+          {% else %}
+                <body bgcolor="#{{color_body_1_5}}" class="login_background">
+        {% endif %}
+{% endblock %}
+{% block body %}
+        {% if settings.START_PAGE != 'None' %}
+                {{ block.super }}
+          {% else %}
+                <div class="wrapper container">
+                        <header>
+                                <h2 class="text-primary txt3d app_chose_title">
+                                        Pytigon - application list
+                                </h2>
+                        </header>
+                        <div class="row">
+                                {% for apppack in prjs %}
+                                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-4">
+                                                <div class="card app_chose rounded">
+                                                        <div class="card-block">
+                                                                <h4 class="card-title">{{apppack.0}}</h4>
+                                                                <h6 class="card-subtitle">{{apppack.1}}</h6>
+                                                                <a class="card-link btn btn-success btn-lg" href="{{base_path}}{{apppack.0}}/" role="button">
+                                                                        {% icon "fa-play fa-lg" %}
+                                                                        run
+                                                                </a>
+                                                        </div>
+                                                </div>
+                                        </div>
+                                {% endfor %}
+                        </div>
+                </div>
+        {% endif %}
+{% endblock %}
+{% block body_header %}
+{% endblock %}
+{% block nav %}
+{% endblock %}
+{% block login %}
+{% endblock %}
+{% block body_init %}
+{% endblock %}
+{% block panel %}
+{% endblock %}
+{% block messages %}
+{% endblock %}
+{% block navglobal %}
+{% endblock %}
+{% block sidebar %}
+{% endblock %}
+{% block tabs %}
+        {% with NO_TABS=True %}
+                {{block.super}}
+        {% endwith %}
+{% endblock %}
+{% block html_widgets_init %}
+{% endblock %}
+{% block body_footer2 %}
+{% endblock %}
+{% block body_end %}
+{% endblock %}
+{% block page_end %}
+{% endblock %}
+

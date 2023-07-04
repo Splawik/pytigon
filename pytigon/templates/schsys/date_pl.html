@@ -1,0 +1,61 @@
+{% extends "forms/form.html"|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        import datetime
+        from pytigon_lib.schparser.html_parsers import Td
+
+        def init_form(self):
+            self.cal1.SetFocus()
+            data=wx.DateTime()
+            if len("{{value}}") > 10:
+                self.is_time = True
+            else:
+                self.is_time = False
+
+            data_init = "{{value|left:10}}"
+            if data_init and data_init[0]>='0' and data_init[0] <= '9':
+                data.ParseFormat('{{value|left:10}}', '%Y-%m-%d')
+            else:
+                data=data.Now()
+            self.cal1.SetDate(data)
+            self.cal1.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+            self.cal1.Bind(wx.adv.EVT_CALENDAR, self.on_click)
+            self.dayclick=False
+
+
+        def refr(self, value=None):
+            pass
+
+        def on_click(self, event):
+            wx.CallAfter(self.ok)
+            event.Skip()
+
+        def OnKeyDown(self, event):
+            if event.KeyCode == wx.WXK_ESCAPE:
+                self.parent_combo.Dismiss()
+            elif event.KeyCode == wx.WXK_RETURN:
+                self.ok()
+            else:
+                event.Skip()
+
+        def ok(self):
+            date = self.cal1.GetDate()
+            if self.is_time:
+                retdate = datetime.datetime(date.GetYear(), date.GetMonth()+1, date.GetDay(), 0, 0)
+                self.parent_combo.set_rec(retdate.isoformat().replace('T',' ')[:16], Td(retdate.isoformat().replace('T',' ')[:16]), dismiss=True)
+            else:
+                retdate = datetime.date(date.GetYear(), date.GetMonth()+1, date.GetDay())
+                self.parent_combo.set_rec(retdate.isoformat()[:10], Td(retdate.isoformat()[:10]), dismiss=True)
+
+
+</script>
+{% endblock %}
+{% block form_bar %}
+{% endblock %}
+{% block content %}
+        <CTRL-CALENDAR name="cal1"  width="100%" height="100%">
+        </CTRL-CALENDAR>
+{% endblock %}
+

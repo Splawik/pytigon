@@ -1013,3 +1013,33 @@ def element_set_url(element, url):
 
 
 window.element_set_url = element_set_url
+
+
+def join_urls(url1, url2):
+    d = {}
+    if not "?" in url2:
+        return url1
+    if "?" in url1:
+        url1base, x = url1.split("?", 1)
+        for item in x.split("&"):
+            y = item.split("=", 1)
+            if len(y) > 1:
+                d[y[0]] = y[1]
+            else:
+                d[y[0]] = ""
+    else:
+        url1base = url1
+    z, xx = url2.split("?", 1)
+    for item in xx.split("&"):
+        y = item.split("=", 1)
+        if len(y) > 1:
+            d[y[0]] = y[1]
+        else:
+            d[y[0]] = ""
+    url1base += "?"
+    for key, value in d.items():
+        url1base += key + "=" + value + "&"
+    return url1base[:-1]
+
+
+window.join_urls = join_urls

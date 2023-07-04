@@ -1,0 +1,19 @@
+{% extends "widgets/html_widgets/treeview.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block widget_content %}
+        <div class='tree' style='border: 0px; background-color:transparent; padding: 20px 0px 0px 0px; max-height: 300px; overflow-y: auto;'{% if not standard_web_browser %} width='300' height='120'{% endif %}>
+                <ul class="root">
+                        <li class="show_node" style="left:-35px;">
+                                <span class="root" style="height: 34px">
+                                        {% icon "fa-plus fa-lg" %}
+                                        {{title}}
+                                </span>
+                                <ul class="children">
+                                        {{data}}
+                                </ul>
+                        </li>
+                </ul>
+        </div>
+{% endblock %}
+

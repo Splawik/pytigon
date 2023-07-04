@@ -1,0 +1,85 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block body_start_0 %}
+        <body bgcolor="#{{color_info}}" style="background:#{{color_info}}">
+{% endblock %}
+{% block jquery_ovr  %}
+    var options = {
+        success: refresh_win2
+    }
+    function refresh_win2(responseText, statusText){
+        location.href = "/schwiki/{{page_name}}/view/"
+    }
+
+{% endblock %}
+{% block pythoncode %}
+        <script language="python">
+        def Signal(self, signal):
+            if signal=='RefreshControls':
+                self.GetParent()._RefreshHtml()
+
+        def init_form(self):
+            self.GetParent().Signal=self.Signal
+
+</script>
+{% endblock %}
+{% block table_title %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block form_rect %}
+        width: 780, height: 740
+{% endblock %}
+{% block table_start %}
+        {% if standard_web_browser %}
+                <table width="100%" cellspacing="0" cellpadding="5" bgcolor="#fff">
+                        <tr>
+                                <td bgcolor="#fff">
+                                        <strong>
+                                                Hasło: "{{page_name}}"
+                                        </strong>
+                                </td>
+                                <td align="right" bgcolor="#fff">
+                                                <a href="/schwiki/{{page_name}}/edit/" class="popup">edytuj stronę</a>
+                                </td>
+                        </tr>
+                </table>
+          {% else %}
+                <table width="100%" cellspacing="0" cellpadding="1" bgcolor="#{{color_body_0_7}}"><tr><td>
+                        <table width="100%" cellspacing="0" cellpadding="3">
+                                        <tr bgcolor="#{{color_body}}">
+                                                <td width="1%"></td>
+                                                <td width="99%" align="left">
+                                                        <strong>
+                                                                <font color="#000">
+                                                                        {% block form_title %}
+                                                                                Hasło: "{{page_name}}"
+                                                                        {% endblock %}
+                                                                </font>
+                                                        </strong>
+                                                </td>
+                                                <td align="left" valign="top">
+                                                        <CTRLBUTTON HREF="/schwiki/{{page_name}}/edit/" LABEL="edytuj stronę"></CTRLBUTTON>
+                                                </td>
+                                                <td right="left" valign="top">
+                                                        <CTRLCLOSEBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK">
+                                                        </CTRLCLOSEBUTTON>
+                                                </td>
+                                        </tr>
+                        </table>
+                    </td></tr></table>
+        {% endif %}
+        <table width="100%" CELLSPACING="0" CELLPADDING="5">
+                <tr>
+                        <td>
+                                {% if content %}
+                                        {{content|wikify|safe}}
+                                  {% else %}
+                                        Ta strona jeszcze nie istnieje!
+                                {% endif %}
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+

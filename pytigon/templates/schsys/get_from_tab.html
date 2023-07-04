@@ -1,0 +1,46 @@
+{% extends "forms/form.html"|translate:lang %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            self.tabwin.Body.filter_url = self.filter_url
+            grid = self.tabwin.Body.tabsort.grid
+            grid.set_typ(grid.GET_ID)
+            for i in range(0, grid.GetTable().GetNumberRows()):
+                actions = grid.GetTable().GetAction(i)
+                if 'get' in actions:
+                    action = actions['get']
+                    href=action[1]
+                    try:
+                        id=href.split('/')[-3]
+                        id = int(id)
+                    except:
+                        id = -1
+                    try:
+                        id2 = int('{{value}}')
+                    except:
+                        id2 = -1
+                    if id==id2:
+                        grid.SetGridCursor(i, 0)
+                        grid.MakeCellVisible(i, 0)
+                        return
+
+        def filter_url(self, target, href):
+            if '/edit/' in href:
+                from pytigon_lib.schmodels import import_model
+                model = import_model('{{app}}', '{{tab}}')
+                id = href.split('/')[-3]
+                obj = model.objects.get(id=id)
+                self.parent_combo.SetRec(unicode(obj), [id,unicode(obj)], dismiss=True)
+                return True
+            else:
+                return None
+
+</script>
+{% endblock %}
+{% block form_bar %}
+{% endblock %}
+{% block content %}
+        <CTRL-HTML name="tabwin" src="/{{app}}/table/{{tab}}/_list" width="100%" height="100%">
+        </CTRL-HTML>
+{% endblock %}
+

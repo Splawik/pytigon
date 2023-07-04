@@ -420,11 +420,10 @@
 {% endblock %}
 {% block row_edit_header %}
         {% if form %}
-                {{form.errors}}
                 {% if form.errors %}
                         <meta name="RETURN" content="$$RETURN_RELOAD" />
                         <div class="alert alert-danger alert-dismissable alert-link">
-                                <button class="close" type="button" data-bs-dismiss="alert" aria-hidden="true"> &#215;</button>
+                                <button class="close btn btn-secondary" type="button" data-bs-dismiss="alert" aria-hidden="true" style="position:absolute;right:0.5rem;"> &#215;</button>
                                 <ul class="errorlist">
                                         {% if form.non_field_errors %}
                                                 <li>{{ form.non_field_errors }}</li>
@@ -435,18 +434,15 @@
                                                                 {{ field.label }}
                                                                 <ul class="errorlist">
                                                                         {% for error in field.errors %}
-                                                                                <li>{{ error }}</li>
+                                                                                <li>
+                                                                                {{ error }}
+                                                                                </li>
                                                                         {% endfor %}
                                                                 </ul>
                                                         </li>
                                                 {% endif %}
                                         {% endfor %}
                                 </ul>
-                                {% comment %}
-                                        {% for error in form.errors %}
-                                                {{ error }} {{error.code}}, {{ error.message }} {% if not forloop.last %}<br>{% endif %}
-                                        {% endfor %}
-                                {% endcomment %}
                         </div>
                 {% endif %}
         {% endif %}

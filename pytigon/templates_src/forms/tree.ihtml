@@ -13,9 +13,6 @@
 
 
 %% list_page_start
-    % comment:
-        <div class="ajax-region {% if vtype == 'xxxtree' %}ajax-frame{% endif %} table-and-details d-flex flex-column" data-region="table-content" >
-
     <div class="table-and-details d-flex flex-column">
 
 %% list_content_title

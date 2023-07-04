@@ -1,0 +1,24 @@
+{% load exfiltry %}
+{% load exsyntax %}
+{% if standard_web_browser %}
+        {% if sort == column_name %}
+                {% if order == 'asc' %}
+                        <a href=".?sort={{column_name}}&order=desc" target="_self">
+                                {{column_description}}
+                                <i class="fa fa-sort-down"></i>
+                        </a>
+                  {% else %}
+                        <a href=".?sort={{column_name}}&order=asc" target="_self">
+                                {{column_description}}
+                                <i class="fa fa-sort-up"></i>
+                        </a>
+                {% endif %}
+          {% else %}
+                <a href=".?sort={{column_name}}&order=asc" target="_self">
+                        {{column_description}}
+                </a>
+        {% endif %}
+  {% else %}
+        {{column_description}}
+{% endif %}
+

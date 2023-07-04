@@ -1,0 +1,25 @@
+{% extends "page.html" %}
+{% block heading %}
+{% endblock %}
+{% block page_head %}
+        <title>
+                {{title}}
+        </title>
+{% endblock %}
+{% block menu_start %}{% endblock %}
+{% block menu %}
+        {% block topmenu_start %}{% endblock %}
+        {% block topmenu_end %}{% endblock %}
+        {% block submenu_start %}{% endblock %}
+        {% block submenu_end %}{% endblock %}
+{% endblock %}
+{% block menu_end %}
+{% endblock %}
+{% block body_init %}
+{% endblock %}
+{% block tabs %}
+        {% with NO_TABS=True %}
+                {{block.super}}
+        {% endwith %}
+{% endblock %}
+

@@ -1,0 +1,28 @@
+{% extends 'theme.html'|translate:lang %}
+{% block jquery_init %}
+{% endblock %}
+{% block jquery_ready %}
+{% endblock %}
+{% block nav %}
+{% endblock %}
+{% block body_start %}
+                <body style="background-color: [[color]]">
+{% endblock %}
+{% block body_init %}
+{% endblock %}
+{% block messages %}
+{% endblock %}
+{% block tabs %}
+        <div id="comp">
+                <component>
+        </div>
+{% endblock %}
+{% block js_script_body %}
+        new Vue({
+            el: '#comp'
+        })
+        test = { 'X1': "Hello world!",
+                 'X2': 10 }
+        wx_fun(test)
+{% endblock %}
+

@@ -474,6 +474,11 @@ def field(context, form_field, fieldformat=None, inline=False):
     ret["addon_before_class"] = addon_before_class
     ret["show_label"] = show_label
     ret["standard_web_browser"] = context["standard_web_browser"]
+    ret["server_side_validation"] = (
+        False
+        if "server_side_validation" in context and context["server_side_validation"] == False
+        else True
+    )
     return ret
 
 

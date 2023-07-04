@@ -5,7 +5,7 @@ _CANCEL = gettext("Cancel");
 _CLOSE = gettext("Close");
 _COPY_TO_CLIP = gettext("Copy to clipboard");
 MODAL = "\n    <div class=\"dialog-data\"></div>\n";
-MODAL_BASE = _pymeth_replace.call(("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n                <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"container-fluid ajax-region ajax-frame\" data-region='page' href='{href}'>\n                    <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n"), "Close", _CLOSE);
+MODAL_BASE = _pymeth_replace.call(("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n                <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"container-fluid ajax-region ajax-frame table-and-details\" data-region='page' href='{href}'>\n                    <div class=\"ajax-region ajax-frame table-without-details d-flex flex-grow-1 flex-column\" data-region=\"page-content\">\n                        <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n"), "Close", _CLOSE);
 MODAL_DELETE_BASE = _pymeth_replace.call(("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-header\">\n            <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n            <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"container-fluid\">\n                <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            {{modal_footer}}\n        </div>\n    </div>\n</div>\n"), "Close", _CLOSE);
 EDIT_FOOTER = _pymeth_replace.call((" \n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-primary\" target=\"refresh_frame\">OK</button>\n"), "Cancel", _CANCEL);
 INFO_FOOTER = _pymeth_replace.call(((_pymeth_replace.call(("\n<button type = \"button\" class =\"btn btn-info copy_to_clipboard\">Copy to clipboard</button>\n<button type = \"button\" class =\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Close</button>\n"), "Copy to clipboard", _COPY_TO_CLIP))), "Close", _CLOSE);
@@ -16,14 +16,14 @@ MODAL_INFO = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", INFO_FOOTER);
 MODAL_DELETE = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", DELETE_FOOTER);
 MODAL_ERROR = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", ERROR_FOOTER);
 INLINE = "\n    <div class=\"dialog-data\"></div>\n";
-INLINE_BASE = _pymeth_replace.call((("\n<div style='position:fixed;z-index:1001;right:1rem;left:1rem;bottom:1rem;max-height:calc(100% - 1rem);'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class=\"modal-content ajax-region inline-content\" data-region=\"error\">\n            <div class='modal-content2 d-flex flex-column' style='min-height: 50vh;'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <div class='dialog-buttons>\n                        <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                            <span class='fa fa-window-minimize'></span> \n                        </button> \n                        <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                            <span class='fa fa-window-maximize'></span> \n                        </button> \n                        <button type='button' class='close btn btn-light btn-transparent shadow-none ptig-btn-close' aria-label='Close'>\n                            <span class='fa fa-times'></span>\n                        </button>\n                    </div>\n                </div>\n                <div class='modal-body ajax-region ajax-frame d-flex flex-comumn' data-region='page' href='{href}'>\n                    <div class='dialog-data ajax-frame flex-grow-1' data-region='error'></div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
+INLINE_BASE = _pymeth_replace.call((("\n<div class='inline-dialog-frame'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class=\"modal-content ajax-region inline-content\" data-region=\"error\">\n            <div class='modal-content2 d-flex flex-column' style='min-height: 50vh;'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <div class='dialog-buttons>\n                        <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                            <span class='fa fa-window-minimize'></span> \n                        </button> \n                        <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                            <span class='fa fa-window-maximize'></span> \n                        </button> \n                        <button type='button' class='close btn btn-light btn-transparent shadow-none ptig-btn-close' aria-label='Close'>\n                            <span class='fa fa-times'></span>\n                        </button>\n                    </div>\n                </div>\n                <div class='modal-body ajax-region ajax-frame d-flex flex-column table-and-details' data-region='page' href='{href}'>\n                    <div class=\"ajax-region ajax-frame table-without-details d-flex flex-grow-1 flex-column\" data-region=\"page-content\">\n                        <div class='dialog-data ajax-frame d-flex flex-column flex-grow-1' data-region='error'></div>\n                    </div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
 INLINE_DELETE_BASE = _pymeth_replace.call("\n<div style='position:relative;z-index:1001;'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class='modal-content'>\n            <div class='modal-header'>\n                <h4 class='modal-title'>{title}</h4>\n                <div>\n                    <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                        <span class='fa fa-window-minimize'></span> \n                    </button> \n                    <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                        <span class='fa fa-window-maximize'></span> \n                    </button> \n                    <button type='button' class='close btn-close shadow-none ptig-btn-close' aria-label='Close'></button>\n                </div>\n            </div>\n            <div class='modal-body'>\n                <div class='dialog-data ajax-frame' data-region='error'></div>\n            </div>\n            <div class='modal-footer'>\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n", "Close", _CLOSE);
 INLINE_EDIT = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", EDIT_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_INFO = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", INFO_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_DELETE = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", DELETE_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_ERROR = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", ERROR_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 
-var LOADED_FILES, Loading, TEMPLATES, _OPERATOR, _req_post, ajax_get, ajax_json, ajax_post, ajax_submit, animate_combo, can_popup, correct_href, download_binary_file, element_get_url, element_set_url, frontend_view, get_elem_from_string, get_page, get_table_type, get_template, history_push_state, inline_maximize, inline_minimize, is_hidden, is_visible, load_css, load_js, load_many_js, on_load_js, process_resize, remove_element, remove_page_from_href, save_as, send_to_dom, standard_error_handler, super_insert, super_query_selector;
+var LOADED_FILES, Loading, TEMPLATES, _OPERATOR, _req_post, ajax_get, ajax_json, ajax_post, ajax_submit, animate_combo, can_popup, correct_href, download_binary_file, element_get_url, element_set_url, frontend_view, get_elem_from_string, get_page, get_table_type, get_template, history_push_state, inline_maximize, inline_minimize, is_hidden, is_visible, join_urls, load_css, load_js, load_many_js, on_load_js, process_resize, remove_element, remove_page_from_href, save_as, send_to_dom, standard_error_handler, super_insert, super_query_selector;
 LOADED_FILES = ({});
 Loading = function () {
     _pyfunc_op_instantiate(this, arguments);
@@ -1065,7 +1065,54 @@ element_set_url = function flx_element_set_url (element, url) {
 };
 
 window.element_set_url = element_set_url;
-export {Loading, save_as, standard_error_handler, download_binary_file, frontend_view, ajax_get, ajax_post, ajax_json, ajax_submit, load_css, on_load_js, load_js, load_many_js, history_push_state, get_elem_from_string, animate_combo, is_hidden, is_visible, get_template, super_query_selector, super_insert, send_to_dom, remove_element, process_resize, get_page, get_table_type, can_popup, correct_href, remove_page_from_href, inline_maximize, inline_minimize, element_get_url, element_set_url};
+join_urls = function flx_join_urls (url1, url2) {
+    var d, item, key, stub33_, stub34_seq, stub35_itr, stub36_, stub37_seq, stub38_itr, stub39_seq, url1base, value, x, xx, y, z;
+    d = ({});
+    if ((!_pyfunc_op_contains("?", url2))) {
+        return url1;
+    }
+    if (_pyfunc_op_contains("?", url1)) {
+        stub33_ = _pymeth_split.call(url1, "?", 1);
+        url1base = stub33_[0];x = stub33_[1];
+        stub34_seq = _pymeth_split.call(x, "&");
+        if ((typeof stub34_seq === "object") && (!Array.isArray(stub34_seq))) { stub34_seq = Object.keys(stub34_seq);}
+        for (stub35_itr = 0; stub35_itr < stub34_seq.length; stub35_itr += 1) {
+            item = stub34_seq[stub35_itr];
+            y = _pymeth_split.call(item, "=", 1);
+            if ((y.length > 1)) {
+                d[y[0]] = y[1];
+            } else {
+                d[y[0]] = "";
+            }
+        }
+    } else {
+        url1base = url1;
+    }
+    stub36_ = _pymeth_split.call(url2, "?", 1);
+    z = stub36_[0];xx = stub36_[1];
+    stub37_seq = _pymeth_split.call(xx, "&");
+    if ((typeof stub37_seq === "object") && (!Array.isArray(stub37_seq))) { stub37_seq = Object.keys(stub37_seq);}
+    for (stub38_itr = 0; stub38_itr < stub37_seq.length; stub38_itr += 1) {
+        item = stub37_seq[stub38_itr];
+        y = _pymeth_split.call(item, "=", 1);
+        if ((y.length > 1)) {
+            d[y[0]] = y[1];
+        } else {
+            d[y[0]] = "";
+        }
+    }
+    url1base += "?";
+    stub39_seq = d;
+    for (key in stub39_seq) {
+        if (!stub39_seq.hasOwnProperty(key)){ continue; }
+        value = stub39_seq[key];
+        url1base = _pyfunc_op_add(url1base, ((key + "=") + value) + "&");
+    }
+    return url1base.slice(0,-1);
+};
+
+window.join_urls = join_urls;
+export {Loading, save_as, standard_error_handler, download_binary_file, frontend_view, ajax_get, ajax_post, ajax_json, ajax_submit, load_css, on_load_js, load_js, load_many_js, history_push_state, get_elem_from_string, animate_combo, is_hidden, is_visible, get_template, super_query_selector, super_insert, send_to_dom, remove_element, process_resize, get_page, get_table_type, can_popup, correct_href, remove_page_from_href, inline_maximize, inline_minimize, element_get_url, element_set_url, join_urls};
 
 var DefineWebComponent, GlobalBus, set_state;
 set_state = function flx_set_state (component, state) {
@@ -2394,12 +2441,9 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
             tmp_url1 = window.element_get_url(obj);
             tmp_url2 = window.element_get_url(target_element);
             if ((((!_pyfunc_op_equals(tmp_url1, null))) && _pyfunc_truthy(tmp_url2))) {
-                element_set_url(obj, _pyfunc_op_add(tmp_url1, tmp_url2));
+                element_set_url(obj, join_urls(tmp_url1, tmp_url2));
             }
             ret = on_click_default_action(event, obj);
-            if ((((!_pyfunc_op_equals(tmp_url1, null))) && _pyfunc_truthy(tmp_url2))) {
-                window.element_set_url(obj, tmp_url1);
-            }
             return ret;
         }
     }
@@ -2559,7 +2603,7 @@ _get_scrolled_parent = function flx__get_scrolled_parent (node) {
 };
 
 _on_inline = function flx__on_inline (target_element, data_element, url, param, event, template_name) {
-    var _on_click, bottom, btn, child, content, dialog, dialog_slot, dialog_slot2, dy, height, inline_position, on_hidden, plug, rect1, rect2, scroll_frame, sy, top, top2, txt, viewportOffset;
+    var _on_click, bottom, btn, child, content, dialog, dialog_slot, dialog_slot2, dy, height, inline_position, item, on_hidden, plug, rect1, rect2, scroll_frame, stub11_seq, stub12_itr, sy, top, top2, txt, viewportOffset;
     inline_position = target_element.getAttribute("data-inline-position");
     if ((_pyfunc_truthy(inline_position) && (_pyfunc_truthy(_pymeth_endswith.call(((_pymeth_split.call(inline_position, ":")[0])), "tr"))))) {
         dialog_slot = document.createElement("tr");
@@ -2578,7 +2622,16 @@ _on_inline = function flx__on_inline (target_element, data_element, url, param, 
     target_element.setAttribute("data-style", "zoom-out");
     target_element.setAttribute("data-spinner-color", "#FF0000");
     content = dialog_slot.querySelector("div.dialog-data");
-    content.appendChild(data_element);
+    if ((((_pyfunc_op_equals(_pymeth_lower.call(data_element.tagName), "div"))) && (_pyfunc_truthy(data_element.classList.contains("ajax-temp-item"))))) {
+        stub11_seq = Array.prototype.slice.call(data_element.childNodes);
+        if ((typeof stub11_seq === "object") && (!Array.isArray(stub11_seq))) { stub11_seq = Object.keys(stub11_seq);}
+        for (stub12_itr = 0; stub12_itr < stub11_seq.length; stub12_itr += 1) {
+            item = stub11_seq[stub12_itr];
+            content.appendChild(item);
+        }
+    } else {
+        content.appendChild(data_or_html);
+    }
     super_insert(target_element, inline_position, dialog_slot);
     mount_html(dialog_slot, null);
     if (_pyfunc_truthy(data_element.classList.contains("maximized"))) {
@@ -2773,9 +2826,9 @@ on_popup_error = function flx_on_popup_error (target_element, data_element, new_
 
 window.on_popup_error = on_popup_error;
 on_new_tab = function flx_on_new_tab (target_element, data_element, new_url, param, event) {
-    var data_element2, stub11_, title, title_alt;
-    stub11_ = _get_title(target_element, data_element, new_url);
-    title = stub11_[0];title_alt = stub11_[1];
+    var data_element2, stub13_, title, title_alt;
+    stub13_ = _get_title(target_element, data_element, new_url);
+    title = stub13_[0];title_alt = stub13_[1];
     data_element2 = data_element.querySelector("section.body-body");
     if ((!_pyfunc_truthy(data_element2))) {
         data_element2 = data_element;

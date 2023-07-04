@@ -152,10 +152,10 @@ def on_click_default_action(event, target_element):
             tmp_url1 = window.element_get_url(obj)
             tmp_url2 = window.element_get_url(target_element)
             if tmp_url1 != None and tmp_url2:
-                element_set_url(obj, tmp_url1 + tmp_url2)                    
+                element_set_url(obj, join_urls(tmp_url1, tmp_url2))
             ret = on_click_default_action(event, obj)
-            if tmp_url1 != None and tmp_url2:
-                window.element_set_url(obj, tmp_url1)                    
+            # if tmp_url1 != None and tmp_url2:
+            #    window.element_set_url(obj, tmp_url1)
             return ret
 
     target = target_element.getAttribute("target")
@@ -336,7 +336,16 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
     target_element.setAttribute("data-spinner-color", "#FF0000")
 
     content = dialog_slot.querySelector("div.dialog-data")
-    content.appendChild(data_element)
+
+    if data_element.tagName.lower() == "div" and data_element.classList.contains(
+        "ajax-temp-item"
+    ):
+        for item in Array.prototype.slice.call(data_element.childNodes):
+            content.appendChild(item)
+    else:
+        content.appendChild(data_or_html)
+
+    # content.appendChild(data_element)
 
     super_insert(target_element, inline_position, dialog_slot)
     mount_html(dialog_slot, None)

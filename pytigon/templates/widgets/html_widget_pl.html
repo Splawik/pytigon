@@ -1,0 +1,36 @@
+{% extends template_name %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block js_standard %}
+        {% if not standard_web_browser %}
+                {% css_link 'themes/bootstrap/jquery-ui.css' %}
+                {% css_link 'bootstrap/css/bootstrap.min.css' %}
+                {% css_link 'themes/default.css' %}
+                {% css_link 'jquery.plugins/ladda/ladda-themeless.min.css' %}
+                {% jscript_link 'jquery/js/jquery.min.js' %}
+                {% jscript_link 'jquery/js/jquery-migrate.min.js' %}
+                {% jscript_link 'jquery/js/jquery-ui.min.js' %}
+                {% jscript_link 'jquery/js/jquery.ui.datepicker-pl.js' %}
+                {% jscript_link 'csrf.js' %}
+                {% jscript_link 'pytigon.js' %}
+        {% endif %}
+{% endblock %}
+{% block js %}
+                {{ block.super }}
+{% endblock %}
+{% block all %}
+        {% if standard_web_browser %}
+                {{ block.super }}
+          {% else %}
+                <CTRL-HTML2 id='{{id}}' class='{{id}}' {{def_param|safe}}>
+                        <tdata>
+                                <tr>
+                                        <td>
+                                                {{ block.super|bencode }}
+                                        </td>
+                                </tr>
+                        </tdata>
+                </CTRL-HTML2>
+        {% endif %}
+{% endblock %}
+

@@ -324,19 +324,21 @@
                                                 <div class="tr row list_content_header list_content_header_second_row">
                                                         <div class="td col-md-12 col-sm-12" colspan="3">
                                                                 {% block list_filter_form %}
-                                                                        <form method="post" action="{{request.path}}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="{% if form.errors or errors or vtype == 'tree' %}refresh_page{% else %}refresh_frame{% endif %}" data-region="page-content">
+                                                                        <form method="post" action="{{request.path}}{%if is_paginated%}?page={{page_obj.number}}{% endif %}" role="form" class="table_filter ajax-link form-inline" enctype="{% block filter_form_enctype %}application/x-www-form-urlencoded{% endblock %}" target="{% if form.errors or errors or vtype == 'tree' %}refresh_page{% else %}refresh_frame{% endif %}" data-region="page-content">
                                                                                 {% csrf_token %}
                                                                                 {% block form_filter %}
                                                                                         {% if form %}
                                                                                                 {% block form_content %}
                                                                                                         {{ form.non_field_errors }}
                                                                                                         {% block form_table_filter %}
-                                                                                                                {% inline_form %}
-                                                                                                                {% endinline_form %}
+                                                                                                                {% with server_side_validation=False %}
+                                                                                                                        {% inline_form %}
+                                                                                                                        {% endinline_form %}
+                                                                                                                {% endwith %}
                                                                                                         {% endblock %}
                                                                                                         {% block form_content_button %}
                                                                                                                 {% if table_type != 'datatable' %}
-                                                                                                                        <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="{% if form.errors or errors or always_refresh_whole_page %}refresh_page{% else %}refresh_frame{% endif %}" data-region="page-content">
+                                                                                                                        <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="{% if form.errors or errors or always_refresh_whole_page %}refresh_page{% else %}refresh_frame{% endif %}" data-region="page-content" data-href="^form" href="?page=1">
                                                                                                                                 {% icon "fa-refresh fa-lg" %}
                                                                                                                         </button>
                                                                                                                 {% endif %}
@@ -405,52 +407,54 @@
                         {% block list_content_paginator %}
                                 {% if standard_web_browser and table_type != 'datatable' %}
                                         {% if is_paginated %}
-                                                <ul class="pagination simple_pagination">
-                                                        {% if page_obj.has_previous %}
-                                                                <li class="page-item">
-                                                                        <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ page_obj.previous_page_number }}&fragment=page-content" data-href="^div.table-without-details/form.table_filter"> &laquo;</a>
-                                                                </li>
-                                                          {% else %}
-                                                                <li class="disabled page-item">
-                                                                        <a class="page-link">
-                                                                                <span>
-                                                                                 &laquo;
-                                                                                </span>
-                                                                        </a>
-                                                                </li>
-                                                        {% endif %}
-                                                        {% for i in paginator.page_range %}
-                                                                {% if page_obj.number == i %}
-                                                                        <li class="active page-item">
+                                                <div class="col-12">
+                                                        <ul class="pagination simple_pagination">
+                                                                {% if page_obj.has_previous %}
+                                                                        <li class="page-item">
+                                                                                <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ page_obj.previous_page_number }}&fragment=page-content" data-href="^div.table-without-details/form.table_filter"> &laquo;</a>
+                                                                        </li>
+                                                                  {% else %}
+                                                                        <li class="disabled page-item">
                                                                                 <a class="page-link">
                                                                                         <span>
-                                                                                        {{ i }}
-                                                                                                <span class="sr-only">
-                                                                                                        (current)
-                                                                                                </span>
+                                                                                         &laquo;
                                                                                         </span>
                                                                                 </a>
                                                                         </li>
-                                                                  {% else %}
+                                                                {% endif %}
+                                                                {% for i in paginator.page_range %}
+                                                                        {% if page_obj.number == i %}
+                                                                                <li class="active page-item">
+                                                                                        <a class="page-link">
+                                                                                                <span>
+                                                                                                {{ i }}
+                                                                                                        <span class="sr-only">
+                                                                                                                (current)
+                                                                                                        </span>
+                                                                                                </span>
+                                                                                        </a>
+                                                                                </li>
+                                                                          {% else %}
+                                                                                <li class="page-item">
+                                                                                        <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ i }}&fragment=page-content" data-href="^div.table-without-details/form.table_filter">
+                                                                                                {{ i }}
+                                                                                        </a>
+                                                                                </li>
+                                                                        {% endif %}
+                                                                {% endfor %}
+                                                                {% if page_obj.has_next %}
                                                                         <li class="page-item">
-                                                                                <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ i }}&fragment=page-content" data-href="^div.table-without-details/form.table_filter">
-                                                                                        {{ i }}
+                                                                                <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ page_obj.next_page_number }}&fragment=page-content" data-href="^div.table-without-details/form.table_filter"> &raquo;</a>
+                                                                        </li>
+                                                                  {% else %}
+                                                                        <li class="disabled page-item">
+                                                                                <a class="page-link">
+                                                                                        <span> &raquo;</span>
                                                                                 </a>
                                                                         </li>
                                                                 {% endif %}
-                                                        {% endfor %}
-                                                        {% if page_obj.has_next %}
-                                                                <li class="page-item">
-                                                                        <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ page_obj.next_page_number }}&fragment=page-content" data-href="^div.table-without-details/form.table_filter"> &raquo;</a>
-                                                                </li>
-                                                          {% else %}
-                                                                <li class="disabled page-item">
-                                                                        <a class="page-link">
-                                                                                <span> &raquo;</span>
-                                                                        </a>
-                                                                </li>
-                                                        {% endif %}
-                                                </ul>
+                                                        </ul>
+                                                </div>
                                         {% endif %}
                                   {% else %}
                                         {% paginator %}
@@ -462,8 +466,8 @@
                                   {% else %}
                                         <div class="tableframe flex-grow-1 d-flex flex-row">
                                 {% endif %}
-                                <div class="flex-grow-1" style="position:relative;margin-right:4px;">
-                                <div class="tabsort_panel flex-grow-1" table-details="{% if table_details_height %}0{% endif %}">
+                                <div class="d-flex flex-column flex-grow-1" style="position:relative;margin-right:4px;">
+                                <div class="tabsort_panel d-flex flex-column flex-grow-1" table-details="{% if table_details_height %}0{% endif %}">
                                 {% if table_subtype and table_subtype == 'table_with_details' %}
                                         <input type="hidden" name="table_row_pk" value="[[ERROR]]">
                                         </input>

@@ -1,0 +1,24 @@
+{% extends "forms/form.html"|translate:lang %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            self.cal1.SetFocus()
+            data=wx.DateTime()
+            data.ParseFormat('{{value}}', '%Y-%m-%d')
+            self.Month = data.GetMonth()
+            self.cal1.SetDate(data)
+            self.cal1.Bind(wx.calendar.EVT_CALENDAR_SEL_CHANGED, self.OnCalSelected, id=self.cal1.GetId())
+            self.cal1.Bind(wx.EVT_KEY_DOWN, self.OnKeyDown)
+            self.cal1.Bind(wx.EVT_LEFT_DOWN, self.OnLDown)
+            self.cal1.Bind(wx.EVT_LEFT_UP, self.OnLUp)
+            self.dayclick=False
+            self.retdate = None
+
+</script>
+{% endblock %}
+{% block form_bar %}
+{% endblock %}
+{% block content %}
+        {{message}}
+{% endblock %}
+

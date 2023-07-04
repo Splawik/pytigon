@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="{{LANGUAGE_CODE}}" xml:lang="{{LANGUAGE_CODE}}" {% if LANGUAGE_BIDI %} dir="rtl" {% endif %} >
+        <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                <meta name="Copyright" content="Sławomir Chołaj" />
+                <meta name="description" content="schweb" />
+                <title>
+                        {% block title %}
+                              {{title}}
+                        {% endblock %}
+                </title>
+                {% block extrahead %}{% endblock %}
+                <style type="text/css">
+                        
+                        {% block extrastyle %}
+                                
+                        {% endblock %}
+                </style>
+        </head>
+        {% block body %}
+                <body>
+                {% block content0 %}{% endblock %}
+                {% block all_content %}
+                        {% block content %}
+                        content
+                        {% endblock %}
+                {% endblock %}
+                {% block footer %}
+                {% endblock %}
+        {% endblock %}
+        {% block body_stop %}
+        </body>
+        {% endblock %}
+        {% block page_stop %}
+        </html>
+        {% endblock %}
+

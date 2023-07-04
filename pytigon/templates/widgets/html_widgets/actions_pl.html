@@ -1,0 +1,39 @@
+{% extends "widgets/html_widgets/treeview.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block widget_content %}
+        <div class="tree">
+                <ul class="root">
+                        <li class="show_node">
+                                <span class="root">
+                                        {% icon "fa-plus fa-lg" %}
+                                        {{title}}
+                                </span>
+                                <ul class="children">
+                                        {% for node in obj %}
+                                                <li class="hide hide_node">
+                                                        {% if node|hasattr:'id' %}
+                                                                <a href="{{href|format:node.id}}" {% if href_attr %}{{href_attr}}{% else %}class="btn btn-primary {{btn_size}}"{%endif %}>
+                                                                        {% if data|slugify == "" %}
+                                                                                {{node.name}}
+                                                                          {% else %}
+                                                                                {{data|format:node.name}}
+                                                                        {% endif %}
+                                                                </a>
+                                                          {% else %}
+                                                                <a href="{{href|format:node.0}}" {% if href_attr %}{{href_attr}}{% else %}class="btn btn-primary {{btn_size}}"{%endif %}>
+                                                                        {% if data|slugify == "" %}
+                                                                                {{node.1}}
+                                                                          {% else %}
+                                                                                {{data|format:node.1}}
+                                                                        {% endif %}
+                                                                </a>
+                                                        {% endif %}
+                                                </li>
+                                        {% endfor %}
+                                </ul>
+                        </li>
+                </ul>
+        </div>
+{% endblock %}
+

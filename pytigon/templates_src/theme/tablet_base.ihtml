@@ -191,7 +191,7 @@
         {{block.super}}
     % else:
         % if not NO_TABS and application_type == 'modern':
-            div class=tab-content win-content flex-grow-1,,,id=tabs2_content
+            div class=tab-content win-content d-flex flex-column flex-grow-1,,,id=tabs2_content
         % with NO_TABS=True:
             {{block.super}}
 

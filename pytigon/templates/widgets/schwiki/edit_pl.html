@@ -1,0 +1,28 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block form_title %}
+        Hasło: "{{page_name}}" - edycja
+{% endblock %}
+{% block form_action %}
+        /schwiki/{{page_name}}/save/
+{% endblock %}
+{% block table_contents_edit %}
+        {% csrf_token %}
+        {% if standard_web_browser %}
+                <textarea name="content" rows="30" cols="80">{{content}}</textarea>
+          {% else %}
+                <CTRL-STYLEDTEXT name="content" WIDTH="100%" HEIGHT="100%" SRC="wiki">
+                        <data>
+                                {{content|bencode}}
+                        </data>
+                </CTRL-STYLEDTEXT>
+        {% endif %}
+{% endblock %}
+{% block form_ok_cancel %}
+        {% if not standard_web_browser %}
+                <CTRL-BUTTON NAME="Anuluj" label="Anuluj" TARGET="_parent"></CTRL-BUTTON>
+                <CTRL-BUTTON href="/schwiki/{{page_name}}/save/" DEFAULTVALUE="1" PARAM="post" TARGET="_parent_refr" label="OK" FIELDS="POST:content,csrfmiddlewaretoken"></CTRL-BUTTON>
+        {% endif %}
+{% endblock %}
+

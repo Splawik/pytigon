@@ -352,6 +352,9 @@ div.form_delete, div.form_info {
 select.form-control {
   padding-right: 1rem; }
 
+select.show-form-btn + span.select2 span.select2-selection {
+  padding-right: 5rem; }
+
 .modal-fullscreen {
   position: fixed !important;
   z-index: 1050;
@@ -492,6 +495,17 @@ div.modal-content.maximized {
   z-index: 9000;
   overflow-y: auto;
   overflow-x: hidden; }
+
+div.inline-dialog-frame {
+  position: fixed;
+  z-index: 1001;
+  right: 1rem;
+  left: 1rem;
+  bottom: 1rem;
+  max-height: calc(100% - 1rem); }
+  div.inline-dialog-frame div.inline-dialog-frame {
+    left: 2rem;
+    bottom: 2rem; }
 
 .inline-content {
   z-index: 1000; }
@@ -872,9 +886,10 @@ table.layout0 tr td {
   display: none; }
 
 .pagination {
-  margin-top: 5px;
   float: right;
-  margin-right: -3px; }
+  margin-right: 3px;
+  padding-bottom: 0px;
+  margin-bottom: 0.2rem; }
   .pagination li.active a {
     background: #2196F3;
     color: white; }

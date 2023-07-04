@@ -15,8 +15,10 @@ MODAL_BASE = """
                 <button type="button" class="close btn-close" data-dismiss='modal' data-bs-dismiss='modal' aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid ajax-region ajax-frame" data-region='page' href='{href}'>
-                    <div class="dialog-data ajax-frame" data-region="error"></div>
+                <div class="container-fluid ajax-region ajax-frame table-and-details" data-region='page' href='{href}'>
+                    <div class="ajax-region ajax-frame table-without-details d-flex flex-grow-1 flex-column" data-region="page-content">
+                        <div class="dialog-data ajax-frame" data-region="error"></div>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -89,7 +91,7 @@ INLINE = """
 """
 
 INLINE_BASE = """
-<div style='position:fixed;z-index:1001;right:1rem;left:1rem;bottom:1rem;max-height:calc(100% - 1rem);'>
+<div class='inline-dialog-frame'>
     <div class='dark_background'></div>
     <div class='modal-dialog modal-dialog-inline' role='document'>
         <div class="modal-content ajax-region inline-content" data-region="error">
@@ -108,8 +110,10 @@ INLINE_BASE = """
                         </button>
                     </div>
                 </div>
-                <div class='modal-body ajax-region ajax-frame d-flex flex-comumn' data-region='page' href='{href}'>
-                    <div class='dialog-data ajax-frame flex-grow-1' data-region='error'></div>
+                <div class='modal-body ajax-region ajax-frame d-flex flex-column table-and-details' data-region='page' href='{href}'>
+                    <div class="ajax-region ajax-frame table-without-details d-flex flex-grow-1 flex-column" data-region="page-content">
+                        <div class='dialog-data ajax-frame d-flex flex-column flex-grow-1' data-region='error'></div>
+                    </div>
                 </div>
                 <div class='modal-footer'>
                     {{modal_footer}}

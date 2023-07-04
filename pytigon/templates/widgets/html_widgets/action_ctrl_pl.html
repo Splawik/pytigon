@@ -1,0 +1,54 @@
+{% load exfiltry %}
+{% load exsyntax %}
+{% if not standard_web_browser %}
+        <input type="hidden" id="id_{{id}}" name="{{id}}" value="{{object|get_attr:id}}">
+        </input>
+{% endif %}
+{% block all %}
+        {% block js_standard %}
+        {% endblock %}
+        {% block widget_content %}
+                {% if standard_web_browser %}
+                        <input type="hidden" id="id_{{id}}" name="{{id}}" value="{{object|get_attr:id}}">
+                        </input>
+                {% endif %}
+                <div id="{{id}}_div">
+                        {{data}}
+                </div>
+        {% endblock %}
+        {% block js %}
+        {% endblock %}
+        {% block js2 %}
+                <script >
+    var {{id}}_var = null;
+    {% block init %}var href = 'href'; var sel_class = 'control_sel';{% endblock %}
+    $('#{{id}}_div a').click(
+        function(){
+            {% block click %}
+            if({{id}}_var){
+                {{id}}_var.parent('.control').removeClass(sel_class)
+            }
+            {{id}}_var = $(this);
+            $(this).parent('.control').addClass(sel_class);
+            {% endblock %}
+            if($(this).attr(href)){
+                {% if standard_web_browser %}$('#id_{{id}}').val($(this).attr(href).replace('action/','')){% else %}cmd_to_python('python|self.{{id}}.SetValue(\'' + $(this).attr(href).replace('action/','') + '\')'){% endif %}
+            }
+            return false
+        }
+    );
+    var {{id}}_var_id = '{{object|get_attr:id}}';
+    if({{id}}_var_id && {{id}}_var_id != 'None'){
+        $('#{{id}}_div').find('a').each(
+            function( index ){
+                if( $(this).attr(href) ==  "action/" + {{id}}_var_id){
+                    $(this).click()
+                }
+            }
+        )
+    }
+
+</script>
+        {% endblock %}
+{% endblock %}
+

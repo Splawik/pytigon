@@ -1,0 +1,34 @@
+{% load exfiltry %}
+{% load exsyntax %}
+{% if standard_web_browser %}
+        <table><tr><td>
+                {% for pos in fields %}
+                        <div class="col-md-6">
+                                <div class="vert_form_panel">
+                                        {% form %}
+                                                {{pos}}
+                                        {% endform %}
+                                </div>
+                        </div>
+                {% endfor %}
+            </td></tr></table>
+  {% else %}
+        <table>
+                {% for pos2 in fields2 %}
+                        <tr>
+                                <td width="50%">
+                                        % expr form[pos2[0]].label
+                                        <br />
+                                        % expr form[pos2[0]]
+                                </td>
+                                <td width="50%">
+                                        % if pos2.1:
+                                            % expr form[pos2[1]].label
+                                            br
+                                             % expr form[pos2[1]]
+                                </td>
+                        </tr>
+                {% endfor %}
+        </table>
+{% endif %}
+

@@ -1,0 +1,158 @@
+{% extends "base_pdf.html"|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block css %}
+        <style type="text/css">
+    body{
+        font-family:sans-serif;
+        font-size:60%;
+        padding:20
+    }
+    table{
+        border:0;
+        vertical-align:top;
+        padding:3
+    }
+    td table{
+        padding: 1;
+        border: 0
+    }
+    th{
+        cellpadding:3;
+        font-weight:bold;
+        border: 0
+    }
+    td{
+        vertical-align:top;
+        cellpadding:3;
+        border: 0
+    }
+    strong,b{
+        font-weight:bold
+    }
+    p{
+        cellpadding:2;
+        border:0;
+        width:100%
+    }
+    a{
+        color:#0000ff;
+        text-decoration: underline
+    }
+    strong a{
+        color:#00ffff
+    }
+    ul{
+        border:0
+    }
+    li{
+        cellpadding:5;
+        width:95%-60
+    }
+    ul li{
+        font-style: italic
+    }
+    em{
+        font-style: italic
+    }
+    b{
+        font-weight: bold
+    }
+    td:hover.test{
+        bgcolor: #ff0000
+    }
+    h1{
+        font-size:300%;
+        font-weight:bold;
+        cellpadding:12 2 12 2
+    }
+    h2{
+        font-size:240%;
+        font-weight:bold;
+        cellpadding:10 2 50 2
+    }
+    h3{
+        font-size:190%;
+        font-weight: bold;
+        cellpadding:8 2 8 2;
+        width: 100%;
+        align: center
+    }
+    h4{
+        font-size:150%;
+        font-weight: bold;
+        cellpadding:6 2 6 2
+    }
+    h5{
+        font-size:120%;
+        font-weight: bold;
+        cellpadding:4 2 4 2
+    }
+    h6{
+        font-size:100%;
+        font-weight: bold;
+        cellpadding:2 2 2 2
+    }
+    table.tabdel{
+        border:1;
+        width:100%
+    }
+    table.tabdel tr th{
+        bgcolor:#ccc;
+        border:1;
+        padding:5;
+        cellpadding:5
+    }
+    table.tabdel tr td{
+        bgcolor:#eee;
+        border:1;
+        padding:5;
+        cellpadding:5
+    }
+    .helptext{
+        font-size:120%;
+        font-style:italic
+    }
+    i{
+        font-style:italic
+    }
+    .podpis{
+        align: center
+    }
+
+</style>
+{% endblock %}
+{% block page_setup %}
+        <page>
+                {% block page_header %}{% endblock %}
+                {% block page_footer %}
+                        <footer height="30">
+                                <p width="100%" align="center">
+                                Strona <calc>body.page</calc>
+                                </p>
+                        </footer>
+                {% endblock %}
+        </page>
+{% endblock %}
+{% block content %}
+        <p align="right">{{time_str}}</p>
+        {% if object_list %}
+                <table width="100%">
+                        <tr>
+                                {% for pos in object_list.0|get_model_fields_verbose_names %}
+                                        <th>{{pos}}</th>
+                                {% endfor %}
+                        </tr>
+                        {% for row in object_list %}
+                                <tr>
+                                        {% for field in row|get_model_ooxml_row %}
+                                                <td align="left">
+                                                {{field}}
+                                                </td>
+                                        {% endfor %}
+                                </tr>
+                        {% endfor %}
+                </table>
+        {% endif %}
+{% endblock %}
+

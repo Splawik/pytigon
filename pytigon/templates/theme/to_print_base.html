@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load static %}
+{% block js_scripts_base %}
+        <script language="javascript">
+                window.BASE_PATH = '{{base_path}}';
+                window.LOADED = 0
+        </script>
+        {% if request.get_host == '127.0.0.2' %}
+                {% jscript_link 'sch/schXMLHttpRequest.js' %}
+        {% endif %}
+        {% jscript_link 'system/browser-polyfill.min.js' %}
+        {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
+        {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
+        {% jscript_link 'vanillajs_plugins/lz-string/lz-string.min.js' %}
+        {% jscript_link 'vanillajs_plugins/cookie/js.cookie.js' %}
+        {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
+        {% jscript_link 'vanillajs_plugins/popper/popper.min.js' %}
+        {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
+        {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
+        {% jscript_link 'django_select2/django_select2.js' %}
+        {% jscript_link 'jquery_plugins/form/jquery.form.js' %}
+        {% jscript_link 'jquery_plugins/csrf/csrf.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table-locale-all.min.js' %}
+        {% jscript_link 'jquery_plugins/unique-element-id/jquery.unique-element-id.js' %}
+        {% jscript_link 'jquery_plugins/draggable/jquery.draggable.js' %}
+        {% jscript_link 'jquery_plugins/perfect-scrollbar/js/perfect-scrollbar.min.js' %}
+        {% block bootstrap_js %}
+                {% jscript_link 'bootstrap/js/bootstrap.js' %}
+        {% endblock %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-hover-dropdown/bootstrap-hover-dropdown.min.js' %}
+        {% jscript_link 'jquery_plugins/daterangepicker/daterangepicker.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-ladda/spin.min.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-ladda/ladda.min.js' %}
+        {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-typeahead/bootstrap-typeahead.js' %}
+        {% block ext_js_scripts %}
+        {% endblock %}
+        {% jscript_link 'sch/pytigon.js' %}
+        {% jscript_link 'sch/inline_dialog.js' %}
+        {% block theme_js_scripts %}
+        {% endblock %}
+{% endblock %}
+{% block jquery_init %}
+        {% block js_app_init %}
+                function base_fragment_init() {
+                }
+        {% endblock %}
+        {% block component_init %}
+                var component_init = null
+        {% endblock %}
+        pytigon.app_init('{{prj_name}}', 'to_print', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' )
+{% endblock %}
+{% block jquery_ready_start %}
+        jQuery(document).ready(function() {
+{% endblock %}
+{% block jquery_ready %}
+        pytigon.jquery_ready();
+        base_fragment_init();
+{% endblock %}
+{% block jquery_ready_end %}
+    });
+{% endblock %}
+{% block js_scripts %}
+        {% if form_edit or form_delete or form_info %}
+                {% if form_ext %}
+                        {{ block.super }}
+                {% endif %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block js_extrascipts_init %}
+        {% if form_edit or form_delete or form_info %}
+                {% if form_ext %}
+                        {{ block.super }}
+                {% endif %}
+          {% else %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block js_script_body %}
+        {% block jquery_ovr %}
+        {% endblock %}
+{% endblock %}
+{% block css_links %}
+        {% css_link 'vanillajs_plugins/tether/css/tether.min.css' %}
+        {% css_link 'bootstrap_plugins/bootstrap-table/bootstrap-table.css' %}
+        {% css_link 'fonts/fork-awesome/css/fork-awesome.min.css' %}
+        {{ form.media.css }}
+        {% block botstrap_css %}
+                {% css_link 'bootstrap/css/bootstrap.min.css' %}
+        {% endblock %}
+{% endblock %}
+{% block css_start %}
+        <style type="text/css">
+{% endblock %}
+{% block css_end %}
+        </style>
+{% endblock %}
+{% block page_start %}
+{% endblock %}
+{% block body_start %}
+{% endblock %}
+{% block body_header %}
+{% endblock %}
+{% block nav %}
+{% endblock %}
+{% block login %}
+{% endblock %}
+{% block body_init %}
+{% endblock %}
+{% block panel %}
+{% endblock %}
+{% block messages %}
+{% endblock %}
+{% block navglobal %}
+{% endblock %}
+{% block sidebar %}
+{% endblock %}
+{% block tabs %}
+        <head>
+                <meta charset="utf-8" />
+                <title>
+                        {{title}}
+                </title>
+        </head>
+        {% with NO_TABS=True %}
+                <div id="body_desktop" class="container-fluid tab-pane ajax-region ajax-frame win-content page">
+                        {{block.super}}
+                </div>
+        {% endwith %}
+{% endblock %}
+{% block html_widgets_init %}
+{% endblock %}
+{% block body_end %}
+{% endblock %}
+{% block page_end %}
+{% endblock %}
+

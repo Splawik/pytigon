@@ -1,0 +1,43 @@
+{% load django_bootstrap5 %}
+{% if standard_web_browser %}
+        {% for row in field_rows %}
+                {% for obj in row %}
+                        {% if obj.type == 'l' %}
+                                {% bootstrap_field obj.field %}
+                        {% endif %}
+                        {% if obj.type == 'f' %}
+                                {% bootstrap_field obj.field %}
+                        {% endif %}
+                        {% if obj.type == 'L' %}
+                                {% bootstrap_field obj.field %}
+                        {% endif %}
+                        {% if obj.type == 'F' %}
+                                {% bootstrap_field obj.field %}
+                        {% endif %}
+                        {% if obj.type == 'LF' %}
+                                {% bootstrap_field obj.field %}
+                        {% endif %}
+                {% endfor %}
+        {% endfor %}
+  {% else %}
+        {% for row in field_rows %}
+                {% for obj in row %}
+                        {% if obj.type == 'l' %}
+                                {{obj.field}}
+                        {% endif %}
+                        {% if obj.type == 'f' %}
+                                {{obj.field}}
+                        {% endif %}
+                        {% if obj.type == 'L' %}
+                                {{obj.field}}
+                        {% endif %}
+                        {% if obj.type == 'F' %}
+                                {{obj.field}}
+                        {% endif %}
+                        {% if obj.type == 'LF' %}
+                                {{obj.field}}
+                        {% endif %}
+                {% endfor %}
+        {% endfor %}
+{% endif %}
+
