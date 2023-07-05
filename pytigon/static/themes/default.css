@@ -277,6 +277,9 @@ form .row .row {
   overflow: hidden;
   z-index: 10 !important; }
 
+.row > .form-floating > label {
+  left: 0.6rem; }
+
 .form-floating.group_select2multiplefield label, .form-floating.group_heavyselect2multiplefield label, .form-floating.group_modelselect2multiplefield label {
   transform: scale(0.9) translateY(-0.6rem) translateX(0.15rem) !important; }
 
@@ -865,6 +868,9 @@ a, button {
 
 div.modal-body label:not(.form-check-label):not(.upload)::after {
   content: ":"; }
+
+div.modal-body .form-floating label:not(.form-check-label):not(.upload)::after {
+  content: ""; }
 
 .tbl_scroll {
   min-height: 11rem; }
