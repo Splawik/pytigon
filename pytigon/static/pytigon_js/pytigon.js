@@ -34,9 +34,13 @@ Loading.prototype.__name__ = "Loading";
 Loading.prototype.__init__ = function (element) {
     var loading_indicator;
     this.load_type = null;
-    this.element = element;
-    if (_pyfunc_truthy(element)) {
-        if (_pyfunc_truthy(element.classList.contains("ladda-button"))) {
+    if ((_pyfunc_hasattr(element, "data") && (_pyfunc_truthy(_pyfunc_getattr(element, "data"))))) {
+        this.element = _pyfunc_getattr(element, "data");
+    } else {
+        this.element = element;
+    }
+    if (_pyfunc_truthy(this.element)) {
+        if (_pyfunc_truthy(this.element.classList.contains("ladda-button"))) {
             this.load_type = "ladda";
             this.ladda = null;
         }
@@ -2435,15 +2439,17 @@ _get_click_event_from_tab = function flx__get_click_event_from_tab (target_eleme
 
 on_click_default_action = function flx_on_click_default_action (event, target_element) {
     var _callback2, _get_or_post, callback, href, obj, param, ret, src_obj, stub10_, target, tmp_url1, tmp_url2, url;
-    if (_pyfunc_truthy(target_element.hasAttribute("data-href"))) {
-        obj = super_query_selector(target_element, target_element.getAttribute("data-href"));
+    if (_pyfunc_truthy(target_element.hasAttribute("data-link"))) {
+        obj = super_query_selector(target_element, target_element.getAttribute("data-link"));
         if (_pyfunc_truthy(obj)) {
             tmp_url1 = window.element_get_url(obj);
             tmp_url2 = window.element_get_url(target_element);
             if ((((!_pyfunc_op_equals(tmp_url1, null))) && _pyfunc_truthy(tmp_url2))) {
                 element_set_url(obj, join_urls(tmp_url1, tmp_url2));
             }
+            _pyfunc_setattr(obj, "data", target_element);
             ret = on_click_default_action(event, obj);
+            _pyfunc_setattr(obj, "data", null);
             return ret;
         }
     }
@@ -2857,9 +2863,9 @@ on_replace_app = function flx_on_replace_app (target_element, data_element, new_
 refresh_frame = function flx_refresh_frame (target_element, data_element, new_url, param, event, data_region) {
     var _callback, _callback_on_error, aside, data_element2, data_region2, dialog, f, region;
     data_region = (data_region === undefined) ? null: data_region;
-    f = target_element.getAttribute("data-remote-elem");
+    f = target_element.getAttribute("data-link");
     if (_pyfunc_truthy(f)) {
-        data_element2 = data_element.querySelector(f);
+        data_element2 = super_query_selector(data_element, f);
     } else {
         data_element2 = data_element;
     }

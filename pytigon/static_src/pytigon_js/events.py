@@ -144,16 +144,18 @@ def _get_click_event_from_tab(target_element, target, href):
 def on_click_default_action(event, target_element):
     global EVENT_CLICK_TAB
 
-    if target_element.hasAttribute("data-href"):
+    if target_element.hasAttribute("data-link"):
         obj = super_query_selector(
-            target_element, target_element.getAttribute("data-href")
+            target_element, target_element.getAttribute("data-link")
         )
         if obj:
             tmp_url1 = window.element_get_url(obj)
             tmp_url2 = window.element_get_url(target_element)
             if tmp_url1 != None and tmp_url2:
                 element_set_url(obj, join_urls(tmp_url1, tmp_url2))
+            setattr(obj, "data", target_element)
             ret = on_click_default_action(event, obj)
+            setattr(obj, "data", None)
             # if tmp_url1 != None and tmp_url2:
             #    window.element_set_url(obj, tmp_url1)
             return ret
@@ -184,7 +186,6 @@ def on_click_default_action(event, target_element):
         href = process_href(href, jQuery(target_element))
 
     if target_element.tagName.lower() == "form":
-
         if target_element.getAttribute("target") == "_blank":
             target_element.setAttribute("enctype", "multipart/form-data")
             target_element.setAttribute("encoding", "multipart/form-data")
@@ -608,9 +609,9 @@ def on_replace_app(target_element, data_element, new_url, param, event):
 def refresh_frame(
     target_element, data_element, new_url, param, event, data_region=None
 ):
-    f = target_element.getAttribute("data-remote-elem")
+    f = target_element.getAttribute("data-link")
     if f:
-        data_element2 = data_element.querySelector(f)
+        data_element2 = super_query_selector(data_element, f)
     else:
         data_element2 = data_element
 

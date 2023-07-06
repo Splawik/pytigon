@@ -238,7 +238,7 @@
                                                             % inline_form:
                                                     %% form_content_button
                                                         % if table_type != 'datatable':
-                                                            button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh),,,target={% if form.errors or errors or always_refresh_whole_page %}refresh_page{% else %}refresh_frame{% endif %},,,data-region=page-content,,,data-href=^form,,,href=?page=1
+                                                            button type=submit,,,value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh),,,target={% if form.errors or errors or always_refresh_whole_page %}refresh_page{% else %}refresh_frame{% endif %},,,data-region=page-content,,,data-link=^form,,,href=?page=1
                                                                 {% icon "fa-refresh fa-lg" %}
                                     % if table_type == 'datatable':
                                         button value=_(Refresh),,,class=btn btn-fab btn-raised btn-info ladda-button refresh-button,,,data-style=slide-left,,,title=_(Refresh),,,onclick=datatable_refresh(this);,,,data-region={% if form.errors or errors or always_refresh_whole_page%}page-content{% else %}table-content{% endif %}
@@ -281,7 +281,7 @@
                             ul class=pagination simple_pagination
                                 % if page_obj.has_previous:
                                     li class=page-item
-                                        a class=page-link,,,target=refresh_frame,,,data-region=table-content,,,href=?page={{ page_obj.previous_page_number }}&fragment=page-content,,,data-href=^div.table-without-details/form.table_filter... &laquo;
+                                        a class=page-link,,,target=refresh_frame,,,data-region=table-content,,,href=?page={{ page_obj.previous_page_number }}&fragment=page-content,,,data-link=^div.table-without-details/form.table_filter... &laquo;
                                 % else:
                                     li class=disabled page-item
                                         a class=page-link
@@ -296,12 +296,12 @@
                                                         (current)
                                     % else:
                                         li class=page-item
-                                            a class=page-link,,,target=refresh_frame,,,data-region=table-content,,,href=?page={{ i }}&fragment=page-content,,,data-href=^div.table-without-details/form.table_filter
+                                            a class=page-link,,,target=refresh_frame,,,data-region=table-content,,,href=?page={{ i }}&fragment=page-content,,,data-link=^div.table-without-details/form.table_filter
                                                 {{ i }}
 
                                 % if page_obj.has_next:
                                     li class=page-item
-                                        a class=page-link,,,target=refresh_frame,,,data-region=table-content,,,href=?page={{ page_obj.next_page_number }}&fragment=page-content,,,data-href=^div.table-without-details/form.table_filter... &raquo;
+                                        a class=page-link,,,target=refresh_frame,,,data-region=table-content,,,href=?page={{ page_obj.next_page_number }}&fragment=page-content,,,data-link=^div.table-without-details/form.table_filter... &raquo;
                                 % else:
                                     li class=disabled page-item
                                         a class=page-link

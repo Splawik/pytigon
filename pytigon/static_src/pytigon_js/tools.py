@@ -6,9 +6,12 @@ LOADED_FILES = {}
 class Loading:
     def __init__(self, element):
         self.load_type = None
-        self.element = element
-        if element:
-            if element.classList.contains("ladda-button"):
+        if hasattr(element, "data") and getattr(element, "data"):
+            self.element = getattr(element, "data")
+        else:
+            self.element = element
+        if self.element:
+            if self.element.classList.contains("ladda-button"):
                 self.load_type = "ladda"
                 self.ladda = None
         if not self.load_type:

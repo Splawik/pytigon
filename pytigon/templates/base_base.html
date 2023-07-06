@@ -338,7 +338,7 @@
                                                                                                         {% endblock %}
                                                                                                         {% block form_content_button %}
                                                                                                                 {% if table_type != 'datatable' %}
-                                                                                                                        <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="{% if form.errors or errors or always_refresh_whole_page %}refresh_page{% else %}refresh_frame{% endif %}" data-region="page-content" data-href="^form" href="?page=1">
+                                                                                                                        <button type="submit" value="Refresh" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Refresh" target="{% if form.errors or errors or always_refresh_whole_page %}refresh_page{% else %}refresh_frame{% endif %}" data-region="page-content" data-link="^form" href="?page=1">
                                                                                                                                 {% icon "fa-refresh fa-lg" %}
                                                                                                                         </button>
                                                                                                                 {% endif %}
@@ -411,7 +411,7 @@
                                                         <ul class="pagination simple_pagination">
                                                                 {% if page_obj.has_previous %}
                                                                         <li class="page-item">
-                                                                                <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ page_obj.previous_page_number }}&fragment=page-content" data-href="^div.table-without-details/form.table_filter"> &laquo;</a>
+                                                                                <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ page_obj.previous_page_number }}&fragment=page-content" data-link="^div.table-without-details/form.table_filter"> &laquo;</a>
                                                                         </li>
                                                                   {% else %}
                                                                         <li class="disabled page-item">
@@ -436,7 +436,7 @@
                                                                                 </li>
                                                                           {% else %}
                                                                                 <li class="page-item">
-                                                                                        <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ i }}&fragment=page-content" data-href="^div.table-without-details/form.table_filter">
+                                                                                        <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ i }}&fragment=page-content" data-link="^div.table-without-details/form.table_filter">
                                                                                                 {{ i }}
                                                                                         </a>
                                                                                 </li>
@@ -444,7 +444,7 @@
                                                                 {% endfor %}
                                                                 {% if page_obj.has_next %}
                                                                         <li class="page-item">
-                                                                                <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ page_obj.next_page_number }}&fragment=page-content" data-href="^div.table-without-details/form.table_filter"> &raquo;</a>
+                                                                                <a class="page-link" target="refresh_frame" data-region="table-content" href="?page={{ page_obj.next_page_number }}&fragment=page-content" data-link="^div.table-without-details/form.table_filter"> &raquo;</a>
                                                                         </li>
                                                                   {% else %}
                                                                         <li class="disabled page-item">

@@ -187,7 +187,6 @@ class _FilterFormDocHead(forms.Form):
     )
 
     def process(self, request, queryset=None):
-
         date_from = self.cleaned_data["date_from"]
         date_to = self.cleaned_data["date_to"]
         target = self.cleaned_data["target"]
@@ -258,7 +257,6 @@ class _FilterFormAccountState(forms.Form):
     )
 
     def process(self, request, queryset=None):
-
         return self.process_empty_or_invalid(request, queryset)
 
     def process_empty_or_invalid(self, request, queryset):
@@ -308,7 +306,6 @@ def view__filterformaccountstate(request, *argi, **argv):
 
 
 def view_doc_heads(request, filter, target, vtype):
-
     regs = models.DocReg.objects.filter(name=filter.replace("_", "/"))
     if regs.count() > 0:
         new_url = make_href(
@@ -327,7 +324,6 @@ def view_doc_heads(request, filter, target, vtype):
 
 
 def view_doc_items(request, parent_id):
-
     items = models.DocItem.objects.filter(parent=parent_id)
     if items.count() > 0:
         new_url = make_href(
@@ -341,29 +337,24 @@ def view_doc_items(request, parent_id):
 
 
 def edit_head(request, id):
-
     return HttpResponse("Error")
 
 
 def edit_item(request, id):
-
     return HttpResponse("Error")
 
 
 @dict_to_template("schelements/v_approve.html")
 def approve(request, pk):
-
     return change_status(request, pk, action="accept")
 
 
 @dict_to_template("schelements/v_discard.html")
 def discard(request, pk):
-
     return change_status(request, pk, action="undo")
 
 
 def view_elements(request, code, filter, template):
-
     id = 0
 
     if code:
@@ -388,7 +379,6 @@ def view_elements(request, code, filter, template):
 
 
 def view_elements_as_tree(request, code, filter, template):
-
     # if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
     #    url_base = '/' + settings.URL_ROOT_FOLDER + '/'
     # else:
@@ -414,7 +404,6 @@ def view_elements_as_tree(request, code, filter, template):
 
 
 def view_elements_of_type(request, type, template):
-
     s = models.Element.get_structure()
     if type in s:
         x = s[type]

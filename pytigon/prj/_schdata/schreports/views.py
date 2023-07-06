@@ -103,11 +103,10 @@ class _FilterFormReport(forms.Form):
     )
     date_to = forms.DateField(
         label=_("Data do"),
-        required=True,
+        required=False,
     )
 
     def process(self, request, queryset=None):
-
         date_from = self.cleaned_data["date_from"]
         date_to = self.cleaned_data["date_to"]
 
@@ -128,7 +127,6 @@ def view__filterformreport(request, *argi, **argv):
 
 
 def new_rep(request, rep_type, doc_type_name):
-
     # new_rep/(?P<rep_type>\w+)/(?P<doc_type_name>\w+)/$
     doc_type = DocType.objects.filter(name=doc_type_name)
     if len(doc_type) == 1:
@@ -153,7 +151,6 @@ def new_rep(request, rep_type, doc_type_name):
 
 
 def edit__rep(request, rep_id, rep=None):
-
     if rep == None:
         rep = models.Report.objects.get(pk=rep_id)
     rep_def = models.ReportDef.objects.get(name=rep.report_def_name)
@@ -195,7 +192,6 @@ def edit__rep(request, rep_id, rep=None):
 
 
 def new_subrep(request, parent_rep_id, rep_type):
-
     rep_parent = models.Report.objects.get(pk=parent_rep_id)
     rep = models.Report()
     rep.parent = rep_parent
@@ -216,7 +212,6 @@ def new_subrep(request, parent_rep_id, rep_type):
 
 
 def edit_subrep(request, parent_rep_id, rep_type, view_type):
-
     parent_rep = models.Report.objects.get(pk=parent_rep_id)
     parent_rep_def = models.ReportDef.objects.get(name=parent_rep.report_def_name)
     rep_def = parent_rep_def.getsubrep(rep_type)
@@ -238,17 +233,14 @@ def edit_subrep(request, parent_rep_id, rep_type, view_type):
 
 
 def move_up(request, pk):
-
     return move_rep(request, pk, "-1")
 
 
 def move_down(request, pk):
-
     return move_rep(request, pk, "+1")
 
 
 def edit__rep2(request, dochead_id):
-
     reps = models.Report.objects.filter(parent_doc__id=dochead_id)
     if reps.count() > 0:
         new_url = make_href("/schreports/table/Report/%d/edit__rep/" % reps[0].id)
@@ -258,7 +250,6 @@ def edit__rep2(request, dochead_id):
 
 
 def repaction(request, dochead_id, rep_action):
-
     doc = DocHead.objects.get(pk=dochead_id)
     reps = models.Report.objects.filter(parent_doc=doc)
     if reps.count() > 0:
@@ -272,13 +263,11 @@ def repaction(request, dochead_id, rep_action):
 
 
 def move_to(request, rep_id, to_pos):
-
     return move_rep(request, rep_id, int(to_pos))
 
 
 @dict_to_json
 def plot_service(request, **argv):
-
     if "param" in request.GET:
         request_param = request.GET["param"]
     else:
@@ -349,7 +338,6 @@ def plot_service(request, **argv):
 
 
 def new_group(request, group_type, parent_id):
-
     # new_group/(?P<group_type>\w+)/(?P<parent_id\d+)/$
     if parent_id and int(parent_id) > 0:
         parent = models.CommonGroup.objects.get(id=int(parent_id))
@@ -378,7 +366,6 @@ def new_group(request, group_type, parent_id):
 
 
 def edit__group(request, group_id):
-
     group = models.CommonGroup.objects.get(pk=group_id)
     group_def = models.CommonGroupDef.objects.get(name=group.group_def_name)
 
@@ -432,7 +419,6 @@ def edit__group(request, group_id):
 
 
 def list_group_by_tag(request, group_tag):
-
     groups = models.CommonGroup.objects.filter(tag_name=group_tag)
     if len(groups) > 0:
         group = groups[0]
