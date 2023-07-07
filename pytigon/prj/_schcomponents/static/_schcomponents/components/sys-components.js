@@ -1,4 +1,4 @@
-var comp, drag_element, init, stub10_err, stub11_context, stub12_err, stub13_context, stub14_err, stub15_context, stub16_err, stub1_context, stub2_err, stub3_context, stub4_err, stub7_context, stub8_err, stub9_context, test;
+var comp, convert_rem_to_pixels, drag_element, init, stub10_err, stub11_context, stub12_err, stub13_context, stub14_err, stub15_context, stub16_err, stub1_context, stub2_err, stub3_context, stub4_err, stub7_context, stub8_err, stub9_context, test;
 stub1_context = (new DefineWebComponent("sys-sidebarmenu", false));
 comp = stub1_context.__enter__();
 try {
@@ -224,6 +224,10 @@ try {
     comp.options["template"] = '<div class=\"slider-line\" style=\"width:100%;height:7px;cursor:move;\"></div>\n' +
     '\n' +
     '';
+    convert_rem_to_pixels = function flx_convert_rem_to_pixels (rem) {
+        return _pyfunc_op_mult(rem, (parseFloat(getComputedStyle(document.documentElement).fontSize)));
+    };
+
     drag_element = function flx_drag_element (elmnt, related_element, multiplier, vertical) {
         var close_drag_element, drag_mouse_down, element_drag, height, width, x, y;
         multiplier = (multiplier === undefined) ? 1: multiplier;
@@ -243,6 +247,7 @@ try {
         }).bind(this);
 
         element_drag = (function flx_element_drag (e) {
+            var h, w;
             e = (_pyfunc_truthy(e))? (e) : (window.event);
             e.preventDefault();
             width = x - e.screenX;
@@ -250,9 +255,11 @@ try {
             x = e.screenX;
             y = e.screenY;
             if (_pyfunc_truthy(vertical)) {
-                related_element.style.width = (_pyfunc_str((_pyfunc_op_add(related_element.clientWidth, _pyfunc_op_mult(width, multiplier))))) + "px";
+                w = _pyfunc_op_add(related_element.clientWidth, _pyfunc_op_mult(width, multiplier));
+                related_element.style.width = _pyfunc_str(w) + "px";
             } else {
-                related_element.style.height = (_pyfunc_str((_pyfunc_op_add(related_element.clientHeight, _pyfunc_op_mult(height, multiplier))))) + "px";
+                h = _pyfunc_op_add(related_element.clientHeight, _pyfunc_op_mult(height, multiplier));
+                related_element.style.height = _pyfunc_str(h) + "px";
             }
             window.process_resize(document.body);
             return null;
