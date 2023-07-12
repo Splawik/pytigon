@@ -1,0 +1,34 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "<<new_row_title>>"
+    % list_action "<<action>>" "<<action_description>>"
+
+%% list_row_header
+    th..._(Date from)
+    th..._(Date to)
+    
+
+%% list_row
+    td...{{ object.date_from }}
+    td...{{ object.date_to }}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+        .<<action_name>>,<<description>>
+
+%% row_edit
+    % form:
+        .date_from,date_to

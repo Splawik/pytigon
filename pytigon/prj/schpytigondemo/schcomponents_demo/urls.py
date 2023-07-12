@@ -82,6 +82,11 @@ urlpatterns = [
         TemplateView.as_view(template_name="schcomponents_demo/event-calendar.html"),
         {},
     ),
+    path(
+        "test_inline_content",
+        TemplateView.as_view(template_name="schcomponents_demo/testinlinecontent.html"),
+        {},
+    ),
 ]
 
 gen = generic_table_start(urlpatterns, "schcomponents_demo", views)

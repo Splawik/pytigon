@@ -62,7 +62,6 @@ class TestForm(forms.Form):
     )
 
     def process(self, request, queryset=None):
-
         object_list = [
             [1, 2, 3, 4, 5, 6, 7, 8],
             [1, 2, 3, 4, 5, 6, 7, 8],

@@ -14,9 +14,9 @@ try {
     comp.options["template"] = TEMPLATE;
     constructor = function flx_constructor (component) {
         var process_slot;
-        component.makers = [];
+        component.markers = [];
         process_slot = (function flx_process_slot (slot) {
-            _pymeth_append.call(component.makers, [slot.getAttribute("x"), slot.getAttribute("y"), slot.getAttribute("txt")]);
+            _pymeth_append.call(component.markers, [slot.getAttribute("x"), slot.getAttribute("y"), slot.getAttribute("txt"), slot.getAttribute("href"), slot.getAttribute("target")]);
             return null;
         }).bind(this);
 
@@ -26,7 +26,7 @@ try {
 
     comp.options["constructor"] = constructor;
     init = function flx_init (component) {
-        var create, div, state, x, y, z;
+        var create, create_event_handler, div, state, x, y, z;
         div = component.root.querySelector("div.leafletdiv");
         L.Icon.Default.imagePath = BASE_PATH + "/images";
         if (_pyfunc_truthy(component.hasAttribute("x"))) {
@@ -48,19 +48,37 @@ try {
             state = ({height: component.getAttribute("height")});
             component.set_state(state);
         }
+        create_event_handler = (function flx_create_event_handler (href, target) {
+            var _handler;
+            _handler = (function flx__handler (event) {
+                var a;
+                a = document.createElement("a");
+                a.setAttribute("href", href);
+                a.setAttribute("target", target);
+                (document.querySelector("div.page.active").appendChild)(a);
+                window.on_click_default_action(event.originalEvent, a);
+                return null;
+            }).bind(this);
+
+            return _handler;
+        }).bind(this);
+
         create = (function flx_create () {
-            var maker, mapobj, pos, stub3_seq, stub4_itr;
+            var mapobj, marker, pos, stub3_seq, stub4_itr;
             mapobj = (L.map(div).setView)([x, y], z);
             ((L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", ({attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"}))).addTo)(mapobj);
-            if (_pyfunc_truthy(component.makers)) {
-                stub3_seq = component.makers;
+            if (_pyfunc_truthy(component.markers)) {
+                stub3_seq = component.markers;
                 if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
                 for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
                     pos = stub3_seq[stub4_itr];
-                    maker = L.marker([pos[0], pos[1]]);
-                    maker.addTo(mapobj);
-                    maker.bindPopup(pos[2]);
-                    maker.openPopup();
+                    marker = L.marker([pos[0], pos[1]]);
+                    marker.addTo(mapobj);
+                    marker.bindPopup(pos[2]);
+                    marker.openPopup();
+                    if (_pyfunc_truthy(pos[3])) {
+                        marker.on("click", create_event_handler(pos[3], pos[4]));
+                    }
                 }
             }
             component.mapobj = mapobj;
@@ -78,7 +96,7 @@ try {
     if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
     } else { stub1_context.__exit__(null, null, null); }
 }
-stub5_context = (new DefineWebComponent("ptig-maker", false));
+stub5_context = (new DefineWebComponent("ptig-marker", false));
 comp = stub5_context.__enter__();
 try {
     comp.options["template"] = "";

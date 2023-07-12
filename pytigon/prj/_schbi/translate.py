@@ -1,0 +1,5 @@
+_("Name")
+_("Refresh data")
+_("Form")
+_("View")
+_("Template")

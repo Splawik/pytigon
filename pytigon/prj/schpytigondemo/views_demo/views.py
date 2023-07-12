@@ -36,55 +36,46 @@ from tables_demo.models import Example1Computer
 
 @dict_to_odf("views_demo/v_odf_example.ods")
 def odf_example(request, **argv):
-
     return {"name": "odf test", "description": "Hello!"}
 
 
 @dict_to_pdf("views_demo/v_pdf_example_pdf.html")
 def pdf_example(request, **argv):
-
     return {"name": "pdf test", "description": "Hello!"}
 
 
 @dict_to_json
 def json_example(request, **argv):
-
     return {"name": "json test", "description": "Hello!"}
 
 
 @dict_to_xml
 def xml_example(request, **argv):
-
     return Example1Computer.objects.all()
 
 
 @dict_to_ooxml("views_demo/v_xlsx_example.xlsx")
 def xlsx_example(request, **argv):
-
     return {"name": "xlsx test", "description": "Hello!", "x": 1.4}
 
 
 @dict_to_txt("views_demo/v_txt_example_txt.html")
 def txt_example(request, **argv):
-
     return {"name": "txt test", "description": "Hello!"}
 
 
 @dict_to_template("views_demo/v_template_example.html")
 def template_example(request, **argv):
-
     return {"name": "template test", "description": "Hello!"}
 
 
 @dict_to_hdoc("views_demo/v_hdoc_example_hdoc.html")
 def hdoc_example(request, **argv):
-
     return {"name": "txt test", "description": "Hello!"}
 
 
 @dict_to_template("views_demo/v_plotly_example.html")
 def plotly_example(request, **argv):
-
     import plotly.graph_objects as go
     import numpy as np
     from io import StringIO
@@ -117,7 +108,6 @@ def plotly_example(request, **argv):
 
 @dict_to_template("views_demo/v_plotly_export_example.html")
 def plotly_export_example(request, **argv):
-
     from io import BytesIO
     import plotly.express as px
 

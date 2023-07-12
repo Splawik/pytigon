@@ -294,6 +294,7 @@ def _on_menu_click(event, target_element):
     else:
         on_click_default_action(event, target_element)
 
+window.on_click_default_action = on_click_default_action
 
 register_global_event("click", _on_menu_click, "a.menu-href")
 

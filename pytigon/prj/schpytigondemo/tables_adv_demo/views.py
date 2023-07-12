@@ -41,7 +41,6 @@ class _FilterFormAlbum(forms.Form):
     )
 
     def process(self, request, queryset=None):
-
         artist = self.cleaned_data["artist"]
         if artist:
             queryset = queryset.filter(artist__contains=artist)

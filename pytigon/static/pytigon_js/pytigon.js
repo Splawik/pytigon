@@ -2592,6 +2592,7 @@ _on_menu_click = function flx__on_menu_click (event, target_element) {
     return null;
 };
 
+window.on_click_default_action = on_click_default_action;
 register_global_event("click", _on_menu_click, "a.menu-href");
 register_global_event("click", on_click_default_action, "a");
 register_global_event("click", on_click_default_action, "button");

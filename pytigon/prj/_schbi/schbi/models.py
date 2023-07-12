@@ -250,15 +250,18 @@ def refresh_data(refresh_type):
         bi_sheduler_9 - defined by user, handled by django-q sheduler
     """
 
-    for prj in Project.objects.all():
-        run_code_from_db_field(
-            "bi_prj_{prj.name}_refresh_data.py",
-            prj,
-            "refresh_data",
-            "refresh_data",
-            locals_dict=locals(),
-            globals_dict=globals(),
-            module=ModuleStruct(globals(), locals()),
-            prj=prj,
-            refresh_type=refresh_type,
-        )
+    try:
+        for prj in Project.objects.all():
+            run_code_from_db_field(
+                "bi_prj_{prj.name}_refresh_data.py",
+                prj,
+                "refresh_data",
+                "refresh_data",
+                locals_dict=locals(),
+                globals_dict=globals(),
+                module=ModuleStruct(globals(), locals()),
+                prj=prj,
+                refresh_type=refresh_type,
+            )
+    except:
+        pass
