@@ -26,7 +26,7 @@ try {
 
     comp.options["constructor"] = constructor;
     init = function flx_init (component) {
-        var create, create_event_handler, div, state, x, y, z;
+        var create, div, state, x, y, z;
         div = component.root.querySelector("div.leafletdiv");
         L.Icon.Default.imagePath = BASE_PATH + "/images";
         if (_pyfunc_truthy(component.hasAttribute("x"))) {
@@ -48,21 +48,6 @@ try {
             state = ({height: component.getAttribute("height")});
             component.set_state(state);
         }
-        create_event_handler = (function flx_create_event_handler (href, target) {
-            var _handler;
-            _handler = (function flx__handler (event) {
-                var a;
-                a = document.createElement("a");
-                a.setAttribute("href", href);
-                a.setAttribute("target", target);
-                (document.querySelector("div.page.active").appendChild)(a);
-                window.on_click_default_action(event.originalEvent, a);
-                return null;
-            }).bind(this);
-
-            return _handler;
-        }).bind(this);
-
         create = (function flx_create () {
             var mapobj, marker, pos, stub3_seq, stub4_itr;
             mapobj = (L.map(div).setView)([x, y], z);
@@ -77,7 +62,7 @@ try {
                     marker.bindPopup(pos[2]);
                     marker.openPopup();
                     if (_pyfunc_truthy(pos[3])) {
-                        marker.on("click", create_event_handler(pos[3], pos[4]));
+                        marker.on("click", window.create_event_handler(pos[3], pos[4]));
                     }
                 }
             }

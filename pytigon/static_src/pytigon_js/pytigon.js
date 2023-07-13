@@ -2269,7 +2269,7 @@ sync_and_run = function flx_sync_and_run (tbl, fun) {
 window.sync_and_run = sync_and_run;
 export {init_db, open_database, get_table, get_list_from_table, on_sys_sync, init_sync, sync_and_run};
 
-var EVENT_CLICK_TAB, EVENT_TAB, REGISTERED_EVENT_TYPES, _chcek_element, _get_click_event_from_tab, _get_scrolled_parent, _get_title, _get_value, _on_inline, _on_menu_click, _on_popup, on_click_default_action, on_global_event, on_inline, on_inline_delete, on_inline_edit_new, on_inline_error, on_inline_info, on_message, on_new_tab, on_popup, on_popup_delete, on_popup_edit_new, on_popup_error, on_popup_info, on_replace_app, on_resize, only_get, process_href, refresh_app, refresh_frame, refresh_page, register_global_event;
+var EVENT_CLICK_TAB, EVENT_TAB, REGISTERED_EVENT_TYPES, _chcek_element, _get_click_event_from_tab, _get_scrolled_parent, _get_title, _get_value, _on_inline, _on_menu_click, _on_popup, create_event_handler, on_click_default_action, on_global_event, on_inline, on_inline_delete, on_inline_edit_new, on_inline_error, on_inline_info, on_message, on_new_tab, on_popup, on_popup_delete, on_popup_edit_new, on_popup_error, on_popup_info, on_replace_app, on_resize, only_get, process_href, refresh_app, refresh_frame, refresh_page, register_global_event;
 EVENT_TAB = [];
 REGISTERED_EVENT_TYPES = [];
 _chcek_element = function flx__chcek_element (element, selector) {
@@ -2592,11 +2592,28 @@ _on_menu_click = function flx__on_menu_click (event, target_element) {
     return null;
 };
 
-window.on_click_default_action = on_click_default_action;
 register_global_event("click", _on_menu_click, "a.menu-href");
 register_global_event("click", on_click_default_action, "a");
 register_global_event("click", on_click_default_action, "button");
 register_global_event("submit", on_click_default_action, "form");
+create_event_handler = function flx_create_event_handler (href, target, position) {
+    var _handler;
+    target = (target === undefined) ? "inline_info": target;
+    position = (position === undefined) ? "div.page.active": position;
+    _handler = (function flx__handler (event) {
+        var a;
+        a = document.createElement("a");
+        a.setAttribute("href", href);
+        a.setAttribute("target", target);
+        (document.querySelector(position).appendChild)(a);
+        on_click_default_action(event.originalEvent, a);
+        return false;
+    }).bind(this);
+
+    return _handler;
+};
+
+window.create_event_handler = create_event_handler;
 _get_scrolled_parent = function flx__get_scrolled_parent (node) {
     if (_pyfunc_op_equals(node, null)) {
         return null;
@@ -2651,7 +2668,7 @@ _on_inline = function flx__on_inline (target_element, data_element, url, param, 
             obj = region.querySelector(".plug");
             obj.remove();
         }
-        return null;
+        return false;
     };
 
     dialog = dialog_slot.firstElementChild;
@@ -2767,7 +2784,7 @@ _on_popup = function flx__on_popup (target_element, data_element, url, param, ev
         if (_pyfunc_truthy(obj)) {
             obj.remove();
         }
-        return null;
+        return false;
     };
 
     if (_pyfunc_truthy(window.hasOwnProperty("bootstrap"))) {
@@ -2952,7 +2969,7 @@ on_resize = function (event) {
 };
 
 window.addEventListener("resize", on_resize);
-export {on_global_event, register_global_event, process_href, on_click_default_action, on_inline, on_inline_edit_new, on_inline_info, on_inline_delete, on_inline_error, on_popup, on_popup_edit_new, on_popup_info, on_popup_delete, on_popup_error, on_new_tab, on_replace_app, refresh_frame, refresh_page, refresh_app, only_get, on_message, on_resize};
+export {on_global_event, register_global_event, process_href, on_click_default_action, create_event_handler, on_inline, on_inline_edit_new, on_inline_info, on_inline_delete, on_inline_error, on_popup, on_popup_edit_new, on_popup_info, on_popup_delete, on_popup_error, on_new_tab, on_replace_app, refresh_frame, refresh_page, refresh_app, only_get, on_message, on_resize};
 
 var install_service_worker, service_worker_and_indexedDB_test;
 install_service_worker = function flx_install_service_worker () {

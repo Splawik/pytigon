@@ -294,13 +294,30 @@ def _on_menu_click(event, target_element):
     else:
         on_click_default_action(event, target_element)
 
-window.on_click_default_action = on_click_default_action
+
+# window.on_click_default_action = on_click_default_action
 
 register_global_event("click", _on_menu_click, "a.menu-href")
 
 register_global_event("click", on_click_default_action, "a")
 register_global_event("click", on_click_default_action, "button")
 register_global_event("submit", on_click_default_action, "form")
+
+
+def create_event_handler(href, target="inline_info", position="div.page.active"):
+    def _handler(event):
+        nonlocal href, target, position
+        a = document.createElement("a")
+        a.setAttribute("href", href)
+        a.setAttribute("target", target)
+        document.querySelector(position).appendChild(a)
+        on_click_default_action(event.originalEvent, a)
+        return False
+
+    return _handler
+
+
+window.create_event_handler = create_event_handler
 
 
 def _get_scrolled_parent(node):
@@ -363,6 +380,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
         if region:
             obj = region.querySelector(".plug")
             obj.remove()
+        return False
 
     dialog = dialog_slot.firstElementChild
 
@@ -499,6 +517,7 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
         obj = region.querySelector(".plug")
         if obj:
             obj.remove()
+        return False
 
     if window.hasOwnProperty("bootstrap"):
         dialog_slot.firstElementChild.addEventListener("hidden.bs.modal", on_hidden)
