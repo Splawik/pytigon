@@ -199,7 +199,10 @@
         <div class="page-content content">
 
     %% list_page_start
-        <div class="ajax-region ajax-frame table-and-details d-flex flex-column" data-region="page">
+        % if table_type:
+            <div class="ajax-region ajax-frame table-and-details d-flex flex-column" data-region="page">
+        % else:
+            <div class="table-and-details d-flex flex-column">
 
     %% list_page_header
         % if standard_web_browser == 1 or standard_web_browser == 2 or "page" in fragment:

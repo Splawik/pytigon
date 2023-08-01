@@ -15,7 +15,7 @@ MODAL_BASE = """
                 <button type="button" class="close btn-close" data-dismiss='modal' data-bs-dismiss='modal' aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid ajax-region ajax-frame form-and-details" data-region='page' href='{href}'>
+                <div class="container-fluid ajax-region ajax-frame win-content form-and-details" data-region='page' href='{href}'>
                     <div class="ajax-region ajax-frame form-without-details d-flex flex-grow-1 flex-column" data-region="page-content">
                         <div class="dialog-data ajax-frame" data-region="error"></div>
                     </div>
@@ -110,7 +110,7 @@ INLINE_BASE = """
                         </button>
                     </div>
                 </div>
-                <div class='modal-body ajax-region ajax-frame d-flex flex-column table-and-details' data-region='page' href='{href}'>
+                <div class='modal-body ajax-region ajax-frame d-flex flex-column win-content table-and-details' data-region='page' href='{href}'>
                     <div class="ajax-region ajax-frame table-without-details d-flex flex-grow-1 flex-column" data-region="page-content">
                         <div class='dialog-data ajax-frame d-flex flex-column flex-grow-1' data-region='error'></div>
                     </div>

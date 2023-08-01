@@ -73,7 +73,7 @@
     </div>
     
 %% list_content_header
-    % if not fragment == 'table':
+    % if not standard_web_browser == 6:
         % if standard_web_browser and perms.schwiki.add_page:
             a data-bs-toggle=collapse,,,href=#{{uuid}}collapse,,,class=wiki_collapse_link,,,accesskey=o
                 span class=fa fa-arrows-v fa-fw
@@ -83,12 +83,12 @@
             {{ block.super }}
 
 %% list_content_title
-    % if not fragment == 'table':
+    % if not standard_web_browser == 6:
         % if perms.schwiki.add_page:
             h4 style=white-space:nowrap;...{{subject}}: {{description}}
 
 %% list_content_actions
-    % if not fragment == 'table':
+    % if not standard_web_browser == 6:
         % if perms.schwiki.add_page:
             table width=100%
                 tr
@@ -105,7 +105,7 @@
         % markdown2html content "" subject
 
 %% list_content_body
-    % if not fragment == 'table' and wiki_path_desc:
+    % if not standard_web_browser == 6 and wiki_path_desc:
         % if standard_web_browser:
             ol class=breadcrumb wiki-breadcrumb
                 % for wiki_elem in wiki_path_desc:

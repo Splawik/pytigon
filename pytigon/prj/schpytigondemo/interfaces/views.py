@@ -72,9 +72,12 @@ def test_interfaces(request, **argv):
     result2 = lib.add(2, 2)
 
     title3 = "setuptools test"
+    # try:
     import c_sum
 
     result3 = c_sum.sum(2, 2)
+    # except:
+    #    print("c_sum demo error")
 
     title4 = "wasm from zig"
     from wasmer import engine, wasi, Store, Module, ImportObject, Instance

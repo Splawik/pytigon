@@ -476,7 +476,8 @@ def field(context, form_field, fieldformat=None, inline=False):
     ret["standard_web_browser"] = context["standard_web_browser"]
     ret["server_side_validation"] = (
         False
-        if "server_side_validation" in context and context["server_side_validation"] == False
+        if "server_side_validation" in context
+        and context["server_side_validation"] == False
         else True
     )
     return ret
@@ -947,13 +948,9 @@ def editable(context, name, title="", url=None):
 @register.simple_tag(takes_context=True)
 def td_editable(context, name, title=""):
     if context["standard_web_browser"]:
-        url = "../../../{oid}/{field_name}/editable/editor/"
+        url = context["table_path"] + "{oid}/{field_name}/editable/editor/"
         return mark_safe("<td>%s</td>" % editable_base(context, name, title, url))
     else:
-        # if ':' in name:
-        #    field_name, t = name.split(':')
-        # else:
-        #   field_name = name
         ret = "<td>%s</td>" % getattr(context["object"], name)
         return mark_safe(ret)
 

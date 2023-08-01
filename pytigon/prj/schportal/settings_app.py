@@ -49,7 +49,6 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     STATIC_URL = URL_ROOT_FOLDER + "/static/"
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
     MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
-
 BOOTSTRAP_TEMPLATE = "bootswatch/materia"
 
 SEARCH_PATH = "/schwiki/%s/search/"
@@ -144,29 +143,23 @@ LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "lo
 
 _NAME = os.path.join(DATA_PATH, "%s/%s.db" % (PRJ_NAME, PRJ_NAME))
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": _NAME,
-    },
+DATABASES["default"] = {
+    "ENGINE": "django.db.backends.sqlite3",
+    "NAME": _NAME,
 }
 
 if setup_databases:
     db_setup = setup_databases(PRJ_NAME)
     db_local = DATABASES["default"]
-
-    DATABASES = db_setup[0]
+    for key, value in db_setup[0].items():
+        DATABASES[key] = value
     DATABASES["local"] = db_local
-
     if db_setup[1]:
         AUTHENTICATION_BACKENDS = db_setup[1]
 else:
     if "DATABASE_URL" in os.environ:
-        db_url = os.environ["DATABASE_URL"]
         db_local = DATABASES["default"]
-        DATABASES = {
-            "default": ENV.db(),
-        }
+        DATABASES["default"] = ENV.db()
         DATABASES["local"] = db_local
 
 
@@ -174,70 +167,6 @@ CHANNELS_URL_TAB += [
     (
         URL_ROOT_PREFIX + "teleconference/teleconference/channel/",
         "teleconference.consumers.teleconference",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
-    ),
-    (
-        URL_ROOT_PREFIX + "schcommander/shell/channel/",
-        "schcommander.consumers.ShellConsumer",
     ),
     (
         URL_ROOT_PREFIX + "schcommander/shell/channel/",
@@ -251,7 +180,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.05.29 17:48:13"
+GEN_TIME = "2023.07.18 07:55:28"
 
 
 for key, value in os.environ.items():

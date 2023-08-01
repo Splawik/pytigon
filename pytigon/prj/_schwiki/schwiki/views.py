@@ -78,7 +78,6 @@ template_simple = """
 
 
 def view_page(request, app_or_subject, page_path):
-
     transfer_to_cache = False
     key = ""
 
@@ -189,7 +188,6 @@ def view_page(request, app_or_subject, page_path):
 
 
 def edit_page(request, app_or_subject, page_name):
-
     page = Page.get_page(request, subject=app_or_subject, name=page_name)
     if not page:
         page = Page(app=app, name=page_name, subject=app_or_subject)
@@ -202,7 +200,6 @@ def edit_page(request, app_or_subject, page_name):
 
 @dict_to_template("schwiki/v_publish.html")
 def publish(request, pk):
-
     conf = models.WikiConf.objects.get(pk=pk)
     object_list = []
 
@@ -242,17 +239,22 @@ def publish(request, pk):
 
 @dict_to_template("schwiki/v_search.html")
 def search(request, q):
-
     search_txt = bdecode(q).decode("utf-8")
     object_list = Page.objects.filter(content__iregex=search_txt)
     return {"object_list": object_list, "q": search_txt}
 
 
 def edit_page_object(request, **argv):
-
-    data = json_loads(request.body)
-    status = data["status"]
-    if status in ("new_object", "edit_object"):
+    if request.body:
+        data = json_loads(request.body)
+        status = data["status"]
+    else:
+        return JsonResponse(
+            {
+                "status": "object_name not found!",
+            }
+        )
+    if data and status in ("new_object", "edit_object"):
         if status == "new_object":
             obj_name = data["object_name"]
             param = None
@@ -294,7 +296,6 @@ def edit_page_object(request, **argv):
 
 
 def edit_page_object_form(request, object_name):
-
     obj_conf = get_obj_renderer(object_name)
     if obj_conf:
         form_source = obj_conf.get_edit_form()
@@ -327,7 +328,6 @@ def edit_page_object_form(request, object_name):
 
 
 def edit_object_on_page(request, page_id, line_number):
-
     page = Page.objects.get(pk=page_id)
     data = page.content_src
     lines = data.split("\n")
@@ -371,7 +371,6 @@ def edit_object_on_page(request, page_id, line_number):
 
 
 def edit_object_on_page_form(request, page_id, line_number, object_name):
-
     param_indent = 120
 
     obj_conf = get_obj_renderer(object_name)

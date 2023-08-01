@@ -1,7 +1,7 @@
 var BASE_PATH, TAG, comp, css_libs, height, init, js_libs, stub1_context, stub2_err, width;
 TAG = "ptig-spreadsheet";
 BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins";
-js_libs = [BASE_PATH + "/jexcel/jexcel.js", BASE_PATH + "/jsuites/jsuites.js"];
+js_libs = [BASE_PATH + "/jsuites/jsuites.js", BASE_PATH + "/jexcel/jexcel.js"];
 css_libs = [BASE_PATH + "/jsuites/jsuites.css", BASE_PATH + "/jexcel/jexcel.css"];
 stub1_context = (new DefineWebComponent(TAG, false, js_libs, css_libs));
 comp = stub1_context.__enter__();
@@ -22,7 +22,7 @@ try {
         var columns, data;
         columns = [({type: "text", title: "Column A", width: 120}), ({type: "text", title: "Column B", width: 120}), ({type: "text", title: "Column C", width: 120})];
         data = [["1", "2", "3"]];
-        component.jtable = jexcel(component, ({data: data, columns: columns, minDimensions: [10, 10]}));
+        component.jtable = jspreadsheet(component, ({data: data, columns: columns, minDimensions: [10, 10]}));
         return null;
     };
 
