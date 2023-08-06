@@ -2,6 +2,7 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% load static %}
+{% load catch %}
 {% block ext_js_scripts %}
         {{block.super}}
         {% jscript_link 'jquery_plugins/sidebar-menu/sidebar-menu.js' %}
@@ -13,55 +14,6 @@
 {% block menu_start %}
         <div class="control-sidebar-bg">
         </div>
-{% endblock %}
-{% block topmenu_start %}
-{% endblock %}
-{% block topmenu %}
-{% endblock %}
-{% block topmenu_end %}
-{% endblock %}
-{% block submenu_start %}
-{% endblock %}
-{% block submenu %}
-        {% ifchanged item_info.app_name %}
-                {% if not forloop.first %}
-                        </ul></li>
-                        <li class="treeview">
-                  {% else %}
-                        <li class="treeview active">
-                {% endif %}
-                <a href="#">
-                        {% if item_info.icon|penultimate_elem:"<=" %}
-                                {% icon item_info.icon|penultimate_elem:"<="|append_str:" fa-lg" %}
-                          {% else %}
-                                {% icon "fa-arrow-circle-right fa-lg" %}
-                        {% endif %}
-                        <span>{{item_info.app_title}}</span>
-                        {% icon "fa-angle-left fa-lg pull-right" %}
-                </a>
-                <ul class="treeview-menu sidebar-submenu">
-        {% endifchanged %}
-        <li>
-                <a href="{{base_path}}{{item_info.url}}?fragment=page" class="menu-href ladda-button" target="_parent" data-bs-toggle="tooltip" title="{{item_info.description}}">
-                        {% if item_info.icon|last_elem:"<=" %}
-                                {% if standard_web_browser %}
-                                        {% icon item_info.icon|last_elem:"<="|append_str:" fa-lg tablet_menu_icon" width=22 %}
-                                  {% else %}
-                                        {{item_info.icon}}
-                                {% endif %}
-                          {% else %}
-                                {% icon "arrow-circle-right" width=22 %}
-                        {% endif %}
-                        {{item_info.description}}
-                </a>
-        </li>
-        {% if forloop.last %}
-                </ul></li>
-        {% endif %}
-{% endblock %}
-{% block submenu_end %}
-{% endblock %}
-{% block menu_end %}
 {% endblock %}
 {% block menu %}
         <div class="sidebarmenu">
@@ -83,12 +35,115 @@
                                                                 {% endblock %}
                                                         </a>
                                                 </li>
-                                                {{block.super}}
+                                                {% for item_info in app_manager|args:prj|call:"get_main_tools_app_items_width_perm" %}
+                                                        {% ifchanged item_info.app_name %}
+                                                                {% if not forloop.first %}
+                                                                        </ul></li>
+                                                                {% endif %}
+                                                                <li class="treeview {% if forloop.first %}active{% endif %}">
+                                                                <a href="#">
+                                                                        {% if item_info.icon|penultimate_elem:"<=" %}
+                                                                                {% icon item_info.icon|penultimate_elem:"<="|append_str:" fa-lg" %}
+                                                                          {% else %}
+                                                                                {% icon "fa-arrow-circle-right fa-lg" %}
+                                                                        {% endif %}
+                                                                        <span>{{item_info.app_title}}</span>
+                                                                        {% icon "fa-angle-left fa-lg pull-right" %}
+                                                                </a>
+                                                                <ul class="treeview-menu sidebar-submenu">
+                                                        {% endifchanged %}
+                                                        <li>
+                                                                <a href="{{base_path}}{{item_info.url}}?fragment=page" class="menu-href ladda-button" target="_parent" data-bs-toggle="tooltip" title="{{item_info.description}}">
+                                                                        {% if item_info.icon|last_elem:"<=" %}
+                                                                                {% if standard_web_browser %}
+                                                                                        {% icon item_info.icon|last_elem:"<="|append_str:" fa-lg tablet_menu_icon" width=22 %}
+                                                                                  {% else %}
+                                                                                        {{item_info.icon}}
+                                                                                {% endif %}
+                                                                          {% else %}
+                                                                                {% icon "arrow-circle-right" width=22 %}
+                                                                        {% endif %}
+                                                                        {{item_info.description}}
+                                                                </a>
+                                                        </li>
+                                                        {% if forloop.last %}
+                                                                </ul></li>
+                                                        {% endif %}
+                                                {% endfor %}
+                                                {% for item_info in app_manager|args:prj|call:"get_not_main_tools_app_items_width_perm" %}
+                                                        {% ifchanged item_info.app_name %}
+                                                                {% ifchanged item_info.module_title %}
+                                                                        {% if not forloop.first %}
+                                                                                </ul></li>
+                                                                        {% endif %}
+                                                                {% endifchanged %}
+                                                                {% if not forloop.first %}
+                                                                        </ul></li>
+                                                                {% endif %}
+                                                        {% endifchanged %}
+                                                        {% ifchanged item_info.app_name %}
+                                                                {% ifchanged item_info.module_title %}
+                                                                        <li class="treeview">
+                                                                        <a href="#">
+                                                                                {% if item_info.icon|penultimate_elem:"<=" %}
+                                                                                        {% icon item_info.icon|penultimate_elem:"<="|append_str:" fa-lg" %}
+                                                                                  {% else %}
+                                                                                        {% icon "fa-arrow-circle-right fa-lg" %}
+                                                                                {% endif %}
+                                                                                <span>{{item_info.module_title}}</span>
+                                                                                {% icon "fa-angle-left fa-lg pull-right" %}
+                                                                        </a>
+                                                                        <ul class="treeview-menu sidebar-submenu">
+                                                                {% endifchanged %}
+                                                                {% if item_info.module_title == item_info.app_title %}
+                                                                        <li class="treeview-merged">
+                                                                  {% else %}
+                                                                        <li class="treeview">
+                                                                {% endif %}
+                                                                {% if item_info.module_title != item_info.app_title %}
+                                                                        <a href="#">
+                                                                                {% if item_info.icon|penultimate_elem:"<=" %}
+                                                                                        {% icon item_info.icon|penultimate_elem:"<="|append_str:" fa-lg" %}
+                                                                                  {% else %}
+                                                                                        {% icon "fa-arrow-circle-right fa-lg" %}
+                                                                                {% endif %}
+                                                                                <span>{{item_info.app_title}}</span>
+                                                                                {% icon "fa-angle-left fa-lg pull-right" %}
+                                                                        </a>
+                                                                {% endif %}
+                                                                {% if item_info.module_title == item_info.app_title %}
+                                                                        <ul class="list-unstyled">
+                                                                  {% else %}
+                                                                        <ul class="treeview-menu sidebar-submenu">
+                                                                {% endif %}
+                                                        {% endifchanged %}
+                                                        <li>
+                                                                <a href="{{base_path}}{{item_info.url}}?fragment=page" class="menu-href ladda-button" target="_parent" data-bs-toggle="tooltip" title="{{item_info.description}}">
+                                                                        {% if item_info.icon|last_elem:"<=" %}
+                                                                                {% if standard_web_browser %}
+                                                                                        {% icon item_info.icon|last_elem:"<="|append_str:" fa-lg tablet_menu_icon" width=22 %}
+                                                                                  {% else %}
+                                                                                        {{item_info.icon}}
+                                                                                {% endif %}
+                                                                          {% else %}
+                                                                                {% icon "arrow-circle-right" width=22 %}
+                                                                        {% endif %}
+                                                                        <span>
+                                                                        {{item_info.description}}
+                                                                        </span>
+                                                                </a>
+                                                        </li>
+                                                        {% if forloop.last %}
+                                                                </ul></li></ul></li>
+                                                        {% endif %}
+                                                {% endfor %}
                                         </ul>
                                 </div>
                         </aside>
                 </sys-sidebarmenu>
         </div>
+{% endblock %}
+{% block menu_end %}
 {% endblock %}
 {% block body_start %}
         {% if form_ext or not show_form %}

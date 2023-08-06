@@ -15,7 +15,25 @@ Urls = (
 )
 UserParam = {}
 
-from django.utils.translation import gettext_lazy as _
+#from django.utils.translation import gettext_lazy as _
+
+#ModuleTitle = _("main tools")
+#Title = _("Wiki")
+#Perms = True
+#Index = "None"
+#Urls = (
+#    ("table/Page/-/form/list/?view_in=desktop", _("Wiki"), "wiki.change_page", """"""),
+#    (
+#        "table/WikiConf/-/form/list/?view_in=desktop",
+#        _("Publish options"),
+#        None,
+#        """png://categories/applications-system.png""",
+#    ),
+#)
+#UserParam = {}
+
+#from django.utils.translation import gettext_lazy as _
+
 
 def AdditionalUrls(prj_name, lang):
     from .models import Page
@@ -40,11 +58,11 @@ def AdditionalUrls(prj_name, lang):
                     icon = "fa://arrow-circle-right.png"
             else:
                 icon = "png://status/dialog-error.png"
-                        
+
             if object.menu_position:
-                lp = "%02d" % object.menu_position
+                lp = int(object.menu_position)
             else:
-                lp = "00"
+                lp = 0
             ret_buf.append(
                 (
                     lp,
@@ -53,8 +71,8 @@ def AdditionalUrls(prj_name, lang):
                         object.description,
                         object.rights_group,
                         icon,
-                        module_title,
-                        _(module_title),
+                        module_title if module_title else app_name,
+                        _(module_title) if module_title else _(app_name),
                         app_name,
                         _(app_name),
                     ),
@@ -64,6 +82,7 @@ def AdditionalUrls(prj_name, lang):
         buf = sorted(ret_buf, key=lambda pos: pos[0])
         for pos in buf:
             ret.append(pos[1])
+        print(ret)
         return ret
     else:
         return []

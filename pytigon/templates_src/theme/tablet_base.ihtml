@@ -3,6 +3,7 @@
 % load exfiltry
 % load exsyntax
 % load static
+% load catch
 
 %% ext_js_scripts
     {{block.super}}
@@ -15,52 +16,6 @@
 %% menu_start
     div class=control-sidebar-bg
 
-%% topmenu_start
-
-%% topmenu
-
-%% topmenu_end
-
-%% submenu_start
-
-%% submenu
-    % ifchanged item_info.app_name
-        % if not forloop.first
-            </ul></li>
-            <li class="treeview">
-        % else:
-            <li class="treeview active">
-
-        <a href="#">
-            % if item_info.icon|penultimate_elem:"<=":
-                {% icon item_info.icon|penultimate_elem:"<="|append_str:" fa-lg" %}
-            % else:
-                {% icon "fa-arrow-circle-right fa-lg" %}
-            <span>{{item_info.app_title}}</span>
-            {% icon "fa-angle-left fa-lg pull-right" %}
-
-        </a>
-
-        <ul class="treeview-menu sidebar-submenu">
-
-    li
-        a href={{base_path}}{{item_info.url}}?fragment=page,,,class=menu-href ladda-button,,,target=_parent,,,data-bs-toggle=tooltip,,,title={{item_info.description}}
-            % if item_info.icon|last_elem:"<=":
-                % if standard_web_browser:
-                    {% icon item_info.icon|last_elem:"<="|append_str:" fa-lg tablet_menu_icon" width=22 %}
-                % else:
-                    {{item_info.icon}}
-            % else:
-                {% icon "arrow-circle-right" width=22 %}
-
-            {{item_info.description}}
-
-    % if forloop.last
-        </ul></li>
-
-%% submenu_end
-
-%% menu_end
 
 %% menu
     div class=sidebarmenu 
@@ -77,7 +32,93 @@
                                             small...{{prj_title}}
                                         % else:
                                             {{prj_title}}
-                        {{block.super}}
+                        
+                        % for item_info in app_manager|args:prj|call:"get_main_tools_app_items_width_perm":
+                            % ifchanged item_info.app_name
+                                % if not forloop.first:
+                                    </ul></li>
+                                <li class="treeview {% if forloop.first %}active{% endif %}">
+                                <a href="#">
+                                    % if item_info.icon|penultimate_elem:"<=":
+                                        {% icon item_info.icon|penultimate_elem:"<="|append_str:" fa-lg" %}
+                                    % else:
+                                        {% icon "fa-arrow-circle-right fa-lg" %}
+                                    <span>{{item_info.app_title}}</span>
+                                    {% icon "fa-angle-left fa-lg pull-right" %}
+
+                                </a>
+                                <ul class="treeview-menu sidebar-submenu">
+
+                            li
+                                a href={{base_path}}{{item_info.url}}?fragment=page,,,class=menu-href ladda-button,,,target=_parent,,,data-bs-toggle=tooltip,,,title={{item_info.description}}
+                                    % if item_info.icon|last_elem:"<=":
+                                        % if standard_web_browser:
+                                            {% icon item_info.icon|last_elem:"<="|append_str:" fa-lg tablet_menu_icon" width=22 %}
+                                        % else:
+                                            {{item_info.icon}}
+                                    % else:
+                                        {% icon "arrow-circle-right" width=22 %}
+
+                                    {{item_info.description}}
+
+                            % if forloop.last:
+                                </ul></li>
+
+                        % for item_info in app_manager|args:prj|call:"get_not_main_tools_app_items_width_perm":
+                            % ifchanged item_info.app_name
+                                % ifchanged item_info.module_title:
+                                    % if not forloop.first:
+                                        </ul></li>
+                                % if not forloop.first:
+                                    </ul></li>
+
+                            % ifchanged item_info.app_name
+                                % ifchanged item_info.module_title
+                                    <li class="treeview">
+                                    <a href="#">
+                                        % if item_info.icon|penultimate_elem:"<=":
+                                            {% icon item_info.icon|penultimate_elem:"<="|append_str:" fa-lg" %}
+                                        % else:
+                                            {% icon "fa-arrow-circle-right fa-lg" %}
+                                        <span>{{item_info.module_title}}</span>
+                                        {% icon "fa-angle-left fa-lg pull-right" %}
+                                    </a>
+                                    <ul class="treeview-menu sidebar-submenu">
+                                        
+                                % if item_info.module_title == item_info.app_title:
+                                    <li class="treeview-merged">
+                                % else:
+                                    <li class="treeview">
+                                % if item_info.module_title != item_info.app_title:
+                                    <a href="#">
+                                        % if item_info.icon|penultimate_elem:"<=":
+                                            {% icon item_info.icon|penultimate_elem:"<="|append_str:" fa-lg" %}
+                                        % else:
+                                            {% icon "fa-arrow-circle-right fa-lg" %}
+                                        <span>{{item_info.app_title}}</span>
+                                        {% icon "fa-angle-left fa-lg pull-right" %}
+
+                                    </a>
+                                % if item_info.module_title == item_info.app_title:
+                                    <ul class="list-unstyled">
+                                % else:
+                                    <ul class="treeview-menu sidebar-submenu">
+
+                            li
+                                a href={{base_path}}{{item_info.url}}?fragment=page,,,class=menu-href ladda-button,,,target=_parent,,,data-bs-toggle=tooltip,,,title={{item_info.description}}
+                                    % if item_info.icon|last_elem:"<=":
+                                        % if standard_web_browser:
+                                            {% icon item_info.icon|last_elem:"<="|append_str:" fa-lg tablet_menu_icon" width=22 %}
+                                        % else:
+                                            {{item_info.icon}}
+                                    % else:
+                                        {% icon "arrow-circle-right" width=22 %}
+                                    span...{{item_info.description}}
+
+                            % if forloop.last
+                                </ul></li></ul></li>
+
+%% menu_end
 
 %% body_start
     % if form_ext or not show_form:

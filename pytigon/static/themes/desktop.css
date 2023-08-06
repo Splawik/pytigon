@@ -111,7 +111,8 @@
       font-size: small; }
 
 #tabs2_content {
-  padding-top: 10 px; }
+  padding-top: 10px;
+  overflow-y: auto; }
 
 #body_desktop {
   height: calc(100% - 10px) important; }

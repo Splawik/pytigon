@@ -200,7 +200,7 @@
                 {% icon app_info.get_icon|append_str:" tablet_meni_icon" width=22 %}
             {{app_info.app_title}}
 
-%%topmenu_end
+%% topmenu_end
     </ul>
 
     ul class=nav drop_down_blocks

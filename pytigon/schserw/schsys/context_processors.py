@@ -460,6 +460,37 @@ class AppManager:
                         ret.append(item)
         return ret
 
+    def get_main_tools_app_items_width_perm(self, prj=settings.PRJ_NAME):
+        ret = self.get_app_items_width_perm(prj)
+        if settings.THREE_LEVEL_MENU:
+            return [item for item in ret if item.module_title == "main tools"]
+        else:
+            return ret
+
+    def get_not_main_tools_app_items_width_perm(self, prj=settings.PRJ_NAME):
+        ret = self.get_app_items_width_perm(prj)
+        if settings.THREE_LEVEL_MENU:
+            print("-------------------------------------------------------------")
+            print(
+                [
+                    (item.module_title, item.app_title)
+                    for item in ret
+                    if item.module_title == "main tools"
+                ]
+            )
+            print("=============================================================")
+            print(
+                [
+                    (item.module_title, item.app_title)
+                    for item in ret
+                    if item.module_title != "main tools"
+                ]
+            )
+            print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+            return [item for item in ret if item.module_title != "main tools"]
+        else:
+            return []
+
     def login_providers(self):
         ret = []
 
@@ -708,24 +739,22 @@ def sch_standard(request):
     else:
         user_agent = ""
 
-    #if "only_content" in request.GET and request.GET["only_content"]:
+    # if "only_content" in request.GET and request.GET["only_content"]:
     #    content_limited_to = request.GET["only_content"]
-    #else:
+    # else:
     #    content_limited_to = ""
-    #if "fragment" in request.GET and request.GET["fragment"] == "min":
+    # if "fragment" in request.GET and request.GET["fragment"] == "min":
     #    content_limited_to = request.GET["only_content"]
-
 
     if hasattr(settings, "BOOTSTRAP_TEMPLATE"):
         theme = settings.BOOTSTRAP_TEMPLATE.replace("/", "_")
     else:
         theme = ""
 
-    if 'extra_param' in request.GET:
+    if "extra_param" in request.GET:
         extra_param = request.GET.get("extra_param")
     else:
         extra_param = ""
-
 
     ret = {
         "standard_web_browser": standard,
@@ -736,7 +765,7 @@ def sch_standard(request):
         "form_list": list_view,
         "readonly": readonly,
         "ro": ro,
-        #"content_limited_to": content_limited_to,
+        # "content_limited_to": content_limited_to,
         "form_info": form_info,
         "form_grid": form_grid,
         "URL_ROOT_FOLDER": settings.URL_ROOT_FOLDER,
@@ -784,5 +813,5 @@ def sch_standard(request):
 
     # print("FRAGMENT: ", get_fragment(request))
     # print("TEMPLATE: ", d_template)
-    
+
     return ret

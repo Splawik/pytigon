@@ -210,3 +210,21 @@ aside.main-sidebar.off:not(:hover) {
 
 aside.main-sidebar.off:hover {
   width: var(--sidebar-off-width-hover) !important; }
+
+li.treeview-merged > ul.list-unstyled > li {
+  padding-top: 0px;
+  padding-bottom: 3px; }
+
+li.treeview-merged > ul.list-unstyled > li > a {
+  color: var(--sidebar-color-level2);
+  font-size: 14px;
+  padding: 5px 5px 5px 15px; }
+
+ul.sidebar-menu ul.treeview-menu {
+  padding-left: 25px !important; }
+
+ul.treeview-menu a .fa {
+  width: 20px; }
+
+#tabs2_content {
+  overflow-y: auto; }

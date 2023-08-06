@@ -51,6 +51,8 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
 BOOTSTRAP_TEMPLATE = "bootswatch/materia"
 # BOOTSTRAP_TEMPLATE = "bootswatch/united"
+THREE_LEVEL_MENU = True
+
 
 PWA_APP_NAME = "SCDevTools"
 PWA_APP_DESCRIPTION = "Pytigon developer tools"
@@ -202,7 +204,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.07.19 08:33:27"
+GEN_TIME = "2023.08.05 18:02:50"
 OFFLINE_SUPPORT = True
 
 

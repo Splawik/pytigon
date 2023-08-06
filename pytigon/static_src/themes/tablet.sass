@@ -11,15 +11,13 @@ html
 //    overflow-x: hidden
 //    overflow-y: auto
 
-section.content 
+section.content
     background-color: #fff
     margin: 0px
     padding: 0px
 
-
-div.content 
+div.content
     padding-top: 10px
-
 
 /* application structure */
 
@@ -43,10 +41,9 @@ img.tablet_menu_icon, a.menu-href svg
     margin-right: -2px
     vertical-align: middle
 
-#panel 
+#panel
     //margin-left: var( --sidebar-width )
     transition: margin-left 0.2s
-
 
 //#panel.off 
     //margin-left: var( --sidebar-width )
@@ -54,72 +51,62 @@ img.tablet_menu_icon, a.menu-href svg
 //#panel.on 
     //margin-left: var( --sidebar-width-min )
 
-
-#menu:not(.show) + #panel 
+#menu:not(.show) + #panel
     margin-left: 0px
 
-
-#tab_tabs2 
+#tab_tabs2
     float: left
     bottom: 0px
     position: absolute
     left: 52px
     right: 200px
 
-
-.logo 
+.logo
     //background-color: rgba(0,0,0,0.1    ) !important
     //width: 256px
-    height: 3.2rem     
+    height: 3.2rem
     font-size: 22px
     padding: 6px
     text-decoration: none !important
     border-left: none !important
     background: var( --bg-primary ) !important
 
-#loading-indicator 
+#loading-indicator
     position: absolute
     //top: 3px
     //left: -11px
     z-index: 1
 
-
 /* top navbar */
 .main-header .navbar
-  -webkit-transition: margin-left 0.3s ease-in-out
-  -o-transition: margin-left 0.3s ease-in-out
-  transition: margin-left 0.3s ease-in-out
-  margin-bottom: 0
-  margin-left: 0px
-  border: none
-  min-height: 3.2rem
-  border-radius: 0
+    -webkit-transition: margin-left 0.3s ease-in-out
+    -o-transition: margin-left 0.3s ease-in-out
+    transition: margin-left 0.3s ease-in-out
+    margin-bottom: 0
+    margin-left: 0px
+    border: none
+    min-height: 3.2rem
+    border-radius: 0
 
-
-header.main-header nav.navbar div.navbar-collapse 
+header.main-header nav.navbar div.navbar-collapse
     position: absolute
     right: 0px
     top: 0px
     width: auto
-    min-height: 100%   
+    min-height: 100%
     font-size: 15px
-
 
 header.main-header nav.navbar div.navbar-collapse > ul 
     min-height: 100%
 
-
 header.main-header nav.navbar div.navbar-collapse > ul > li 
     min-height: 100%
 
-
 header.main-header nav.navbar div.navbar-collapse > ul > li:hover, .sidebar-toggle:hover  
-    background-color: rgba(0, 0, 0, .1) 
-
+    background-color: rgba(0, 0, 0, .1)
 
 header.main-header nav.navbar div.navbar-collapse > ul > li > a, .sidebar-toggle 
     color: #fff !important
-
 
 .main-sidebar-toggle
     border-radius: 20px
@@ -127,9 +114,8 @@ header.main-header nav.navbar div.navbar-collapse > ul > li > a, .sidebar-toggle
 .main-sidebar-toggle:hover
     background-color: rgba(255,255,255,0.2) !important
 
-header.main-header nav.navbar 
+header.main-header nav.navbar
     padding: 0px !important
-
 
 .sidebar-toggle
     //padding: 15px 20px
@@ -143,44 +129,37 @@ header.main-header nav.navbar
     background: none
     border: none
 
-.main-header .nav-item .nav-link 
+.main-header .nav-item .nav-link
     padding-right: 10px
     padding-left: 4px
 
-
-.main-header .nav-link 
+.main-header .nav-link
     padding-right: 10px
     padding-left: 6px
 
-
-.main-header a.nav-link 
-    background-color: transparent !important 
+.main-header a.nav-link
+    background-color: transparent !important
     white-space: nowrap
-
 
 //.main-header a.active 
 //    background-color: var(--bs-body-bg) !important;
 //    color: var(--bs-body-color) !important;
 
-.main-header div.navbar-collapse ul.nav li.nav-item a 
+.main-header div.navbar-collapse ul.nav li.nav-item a
     height: 3.2rem
     padding: 15px 20px
     display: block
     text-decoration: none !important
- 
 
-.main-header .nav-item .close 
+.main-header .nav-item .close
     margin-top: 2px
     margin-right: 2px
 
-
-.main-header .navbar-collapse div.card 
+.main-header .navbar-collapse div.card
     width: 400px
-
 
 //.main-header .navbar-collapse div.card p
 //    font-size: 14px
-
 
 /* sidebar menu */
 
@@ -188,17 +167,14 @@ section.sidebar
     //font-size: 14px
     min-height: 100%
 
-
-ul.sidebar-menu ul.treeview-menu 
+ul.sidebar-menu ul.treeview-menu
     padding-left: 25px !important
 
-
-.sidebar-menu > li:hover > a, .sidebar-menu > li.active > a 
+.sidebar-menu > li:hover > a, .sidebar-menu > li.active > a
     border-left-color: #FDFD8C !important
 
 .sidebar-menu > li > a > .fa-lg
     width: 24px !important
-
 
 .tabsort-toolbar-expand2
     top: -40px !important
@@ -207,11 +183,9 @@ ul.sidebar-menu ul.treeview-menu
 .tabsort .badge-secondary
     background: #868e96
 
-
 .dropdown-menu-right
     right: 0px
     left: auto
-
 
 .sidebar-menu
     ul.sidebar-submenu
@@ -227,13 +201,11 @@ ul.sidebar-menu ul.treeview-menu
         padding-left: 3.2rem
         padding-top: 0.6rem
 
-
-.sidebar-menu 
+.sidebar-menu
     background: var(--sidebar-background-level1)
     height: 100%
 
-
-.sidebar-menu > li:hover > a, .sidebar-menu > li.active > a 
+.sidebar-menu > li:hover > a, .sidebar-menu > li.active > a
     background: var(--sidebar-background-active-level1)
 
 .sidebar-menu > li > a
@@ -242,17 +214,14 @@ ul.sidebar-menu ul.treeview-menu
 .sidebar-menu > li:hover > a, .sidebar-menu > li.active > a
     color: var(--sidebar-color-active-level1)
 
-
-.sidebar-menu .sidebar-submenu 
+.sidebar-menu .sidebar-submenu
     background: var(--sidebar-background-level2)
 
-.sidebar-menu .sidebar-submenu > li > a 
+.sidebar-menu .sidebar-submenu > li > a
     color: var(--sidebar-color-level2)
-
 
 .sidebar-menu .sidebar-submenu > li.active > a, .sidebar-menu .sidebar-submenu > li > a:hover
     color: var(--sidebar-color-active-level2)
-
 
 a.logo
     span
@@ -260,13 +229,10 @@ a.logo
         position: relative
         left: 5px
 
-
-
 aside.main-sidebar
     transition: width 0.2s
     height: 100%
     position: relative
-
 
 aside.main-sidebar.off:not(:hover)
     width: var( --sidebar-width-min ) !important
@@ -280,6 +246,24 @@ aside.main-sidebar.off:not(:hover)
         i.pull-right
             display: none
 
-
 aside.main-sidebar.off:hover
     width: var( --sidebar-off-width-hover ) !important
+
+li.treeview-merged > ul.list-unstyled > li
+    padding-top: 0px
+    padding-bottom: 3px
+
+li.treeview-merged > ul.list-unstyled > li > a 
+    color: var(--sidebar-color-level2)
+    font-size: 14px
+    padding: 5px 5px 5px 15px
+
+ul.sidebar-menu ul.treeview-menu
+    padding-left: 25px !important
+
+ul.treeview-menu a .fa
+    width: 20px
+
+#tabs2_content
+    //background-color: #fff
+    overflow-y: auto

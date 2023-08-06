@@ -1,5 +1,6 @@
 APPS = [
     "schbuilder",
+    "_schwiki.schwiki",
     "_schcomponents.standard_components",
     "_schtools.schcommander",
     "_schtools.schtools",
@@ -7,7 +8,6 @@ APPS = [
     "_schtools.schsimplescripts",
     "_schdata.schelements",
     "_schsetup.schadmin",
-    "_schwiki.schwiki",
 ]
 APPS_EXT = []
 PUBLIC = True
