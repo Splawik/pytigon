@@ -82,7 +82,6 @@ def AdditionalUrls(prj_name, lang):
         buf = sorted(ret_buf, key=lambda pos: pos[0])
         for pos in buf:
             ret.append(pos[1])
-        print(ret)
         return ret
     else:
         return []
