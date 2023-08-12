@@ -72,34 +72,46 @@ def test_interfaces(request, **argv):
     result2 = lib.add(2, 2)
 
     title3 = "setuptools test"
-    # try:
-    import c_sum
+    try:
+        import c_sum
 
-    result3 = c_sum.sum(2, 2)
-    # except:
-    #    print("c_sum demo error")
+        result3 = c_sum.sum(2, 2)
+    except:
+        print("c_sum demo error")
+        result3 = 0
 
     title4 = "wasm from zig"
-    from wasmer import engine, wasi, Store, Module, ImportObject, Instance
-    from wasmer_compiler_cranelift import Compiler
     import interfaces.applib
+    from wasmtime import Store, Module, Instance, Func, FuncType
 
-    with open(os.path.join(interfaces.applib.__path__[0], "test_zig.wasm"), "rb") as f:
-        wasm_bytes = f.read()
-        store = Store(engine.Universal(Compiler))
-        module = Module(store, wasm_bytes)
-        wasi_env = (
-            wasi.StateBuilder("wasi_test_program")
-            .argument("--test")
-            .environment("COLOR", "true")
-            .environment("APP_SHOULD_LOG", "false")
-            .map_directory("the_host_current_dir", ".")
-            .finalize()
-        )
-        module = Module(store, wasm_bytes)
-        instance = Instance(module)
-        sum = instance.exports.add
-        result4 = sum(2, 2)
+    wasm_path = os.path.join(interfaces.applib.__path__[0], "test_zig.wasm")
+
+    store = Store()
+    module = Module.from_file(store.engine, wasm_path)
+
+    instance = Instance(store, module, [])
+    sum_func = instance.exports(store)["add"]
+    result4 = sum_func(store, 2, 2)
+
+    # from wasmer import engine, wasi, Store, Module, ImportObject, Instance
+    # from wasmer_compiler_cranelift import Compiler
+    # import interfaces.applib
+    # with open(os.path.join(interfaces.applib.__path__[0], "test_zig.wasm"), "rb") as f:
+    #    wasm_bytes = f.read()
+    #    store = Store(engine.Universal(Compiler))
+    #    module = Module(store, wasm_bytes)
+    #    wasi_env = (
+    #        wasi.StateBuilder("wasi_test_program")
+    #        .argument("--test")
+    #        .environment("COLOR", "true")
+    #        .environment("APP_SHOULD_LOG", "false")
+    #        .map_directory("the_host_current_dir", ".")
+    #        .finalize()
+    #    )
+    #    module = Module(store, wasm_bytes)
+    #    instance = Instance(module)
+    #    sum = instance.exports.add
+    #    result4 = sum(2, 2)
 
     title5 = "llvm test"
     result5 = csum(1, 3)
