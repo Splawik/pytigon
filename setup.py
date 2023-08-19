@@ -4,7 +4,7 @@ import os
 
 def package_files(directory, ext=None):
     paths = []
-    for (path, directories, filenames) in os.walk(directory):
+    for path, directories, filenames in os.walk(directory):
         for filename in filenames:
             if not ext or (ext and filename.endswith(ext)):
                 paths.append(os.path.join("..", path, filename))
@@ -35,7 +35,7 @@ with open("requirements.txt") as f:
 set
 setup(
     name="pytigon",
-    version="0.230812",
+    version="0.230819",
     description="Pytigon",
     author="Sławomir Chołaj",
     author_email="slawomir.cholaj@gmail.com",
