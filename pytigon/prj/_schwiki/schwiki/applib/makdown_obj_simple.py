@@ -52,10 +52,14 @@ class ImgForm(forms.Form):
 
 
 class ImgObjRenderer(BaseObjRenderer):
-
     @staticmethod
     def get_info():
-        return { "name": "img", "title": "Image", "icon": "fa fa-picture-o", "show_form": True,}
+        return {
+            "name": "img",
+            "title": "Image",
+            "icon": "fa fa-picture-o",
+            "show_form": True,
+        }
 
     def get_edit_form(self):
         return ImgForm
@@ -126,7 +130,7 @@ class ImgObjRenderer(BaseObjRenderer):
             if scale > 1:
                 img = img.resize(
                     (int(img.size[0] / scale), int(img.size[1] / scale)),
-                    Image.ANTIALIAS,
+                    Image.LANCZOS,
                 )
                 if crop:
                     left = (img.size[0] - max_dx) / 2
@@ -183,7 +187,7 @@ class ImgObjRenderer(BaseObjRenderer):
 
         ret["component_view_type"] = component_view_type
         ret["img_view_type"] = form.cleaned_data["img_view_type"]
- 
+
         ret["jpeg"] = jpeg
         ret["quality"] = quality
         ret["json_update"] = True
@@ -193,7 +197,7 @@ class ImgObjRenderer(BaseObjRenderer):
     def gen_context(self, param, lines, output_format, parent_processor):
         context = {"param": param}
         cvt = param["component_view_type"]
-        
+
         Element = collections.namedtuple("Element", "type data css_class style")
         elements = []
         img_css_class = ""
@@ -319,10 +323,14 @@ class SvgForm(forms.Form):
 
 
 class SvgObjRenderer(BaseObjRenderer):
-
     @staticmethod
     def get_info():
-        return { "name": "svg", "title": "Svg", "icon": "fa fa-puzzle-piece", "show_form": True, }
+        return {
+            "name": "svg",
+            "title": "Svg",
+            "icon": "fa fa-puzzle-piece",
+            "show_form": True,
+        }
 
     def get_edit_form(self):
         return SvgForm
@@ -348,10 +356,14 @@ class VideoForm(forms.Form):
 
 
 class VideoObjRenderer(BaseObjRenderer):
-
     @staticmethod
     def get_info():
-        return { "name": "video", "title": "Video", "icon": "fa fa-video-camera", "show_form": True,}
+        return {
+            "name": "video",
+            "title": "Video",
+            "icon": "fa fa-video-camera",
+            "show_form": True,
+        }
 
     def get_edit_form(self):
         return VideoForm
@@ -401,11 +413,16 @@ width
 height
 """
 
-class PlotObjRenderer(BaseObjRenderer):
 
+class PlotObjRenderer(BaseObjRenderer):
     @staticmethod
     def get_info():
-        return { "name": "plot", "title": "Plot", "icon": "fa fa-line-chart", "show_form": True,}
+        return {
+            "name": "plot",
+            "title": "Plot",
+            "icon": "fa fa-line-chart",
+            "show_form": True,
+        }
 
     def get_edit_form(self):
         return PLOT_OBJ_RENDERER_FORM
@@ -418,15 +435,17 @@ register_obj_renderer("plot", PlotObjRenderer)
 
 
 class ReadMoreObjRenderer(BaseObjRenderer):
-
     @staticmethod
     def get_info():
-        return { "name": "read_more", "title": "Read more", "icon": "fa fa-eye-slash", "show_form": False,}
-    
+        return {
+            "name": "read_more",
+            "title": "Read more",
+            "icon": "fa fa-eye-slash",
+            "show_form": False,
+        }
+
     def render(self, param, lines, output_format, parent_processor):
         return "<div class='read_more'></div>"
 
 
 register_obj_renderer("read_more", ReadMoreObjRenderer)
-
-
