@@ -15,7 +15,40 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
+import datetime
+
 from pytigon_lib.schtools.tools import get_request
+from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
+
+NEW = """import datetime
+
+def new_workflow_item(workflow_item, data):
+    pass
+"""
+
+REFRESH = """import datetime
+
+def refresh_workflow_queue(workflow_type_obj):
+    pass
+"""
+
+HANDLE = """import datetime
+
+def handle_workflow_event(workflow_type_obj, event):
+    pass
+"""
+
+ACCEPT = """import datetime
+
+def accept_workflow_item(workflow_item):
+    pass
+"""
+
+REJECT = """import datetime
+
+def reject_workflow_item(workflow_item):
+    pass
+"""
 
 
 def new_workflow_item(type_name, params):
@@ -101,55 +134,106 @@ class WorkflowType(models.Model):
     def new_workflow_item(workflow_type_name, data):
         workflow_type_obj = WorkflowType.objects.filter(name=workflow_type_name).first()
         if workflow_type_obj:
-            code = workflow_type_obj.script_for_new_item
-            if workflow_type_obj.script_for_new_item:
-                exec(workflow_type_obj.script_for_new_item)
-                if "new_workflow_item" in locals():
-                    return locals()["new_workflow_item"](workflow_type_obj, data)
+            workflow_item = WorkflowItem()
+            workflow_item.workflow_type = workflow_type_obj
+            workflow_item.level = 0
+            workflow_item.creation_date = datetime.datetime.now()
+            return run_code_from_db_field(
+                f"workflowtype__new_workflow_item_{workflow_type_obj.pk}.py",
+                workflow_type_obj,
+                "new_workflow_item",
+                "new_workflow_item",
+                locals(),
+                globals(),
+                workflow_item=workflow_item,
+                data=data,
+            )
 
     @staticmethod
     def refresh_workflow_queue(workflow_type_name):
         workflow_type_obj = WorkflowType.objects.filter(name=workflow_type_name).first()
         if workflow_type_obj:
-            code = workflow_type_obj.script_for_refresh_queue
-            if workflow_type_obj.script_for_refresh_queue:
-                exec(workflow_type_obj.script_for_refresh_queue)
-                if "refresh_workflow_queue" in locals():
-                    return locals()["refresh_workflow_queue"](workflow_type_obj)
+            return run_code_from_db_field(
+                f"workflowtype__refresh_workflow_queue_{workflow_type_obj.pk}.py",
+                workflow_type_obj,
+                "refresh_workflow_queue",
+                "refresh_workflow_queue",
+                locals(),
+                globals(),
+                workflow_type_obj=workflow_type_obj,
+            )
+        return None
 
     @staticmethod
     def handle_workflow_event(workflow_type_name, event):
         workflow_type_obj = WorkflowType.objects.filter(name=workflow_type_name).first()
         if workflow_type_obj:
-            code = workflow_type_obj.script_for_handle_event
-            if workflow_type_obj.script_for_handle_event:
-                exec(workflow_type_obj.script_for_handle_event)
-                if "handle_workflow_event" in locals():
-                    return locals()["handle_workflow_event"](workflow_type_obj, event)
+            return run_code_from_db_field(
+                f"workflowtype__handle_workflow_event_{workflow_type_obj.pk}.py",
+                workflow_type_obj,
+                "handle_workflow_event",
+                "handle_workflow_event",
+                locals(),
+                globals(),
+                workflow_type_obj=workflow_type_obj,
+                event=event,
+            )
+        return None
 
     @staticmethod
     def accept_workflow_item(workflow_item):
         workflow_type_obj = workflow_item.workflow_type
         if workflow_type_obj:
-            code = workflow_type_obj.script_for_accept_item
-            if workflow_type_obj.script_for_accept_item:
-                exec(workflow_type_obj.script_for_accept_item)
-                if "accept_workflow_item" in locals():
-                    return locals()["accept_workflow_item"](
-                        workflow_type_obj, workflow_item
-                    )
+            return run_code_from_db_field(
+                f"workflowtype__accept_workflow_item_{workflow_type_obj.pk}.py",
+                workflow_type_obj,
+                "accept_workflow_item",
+                "accept_workflow_item",
+                locals(),
+                globals(),
+                workflow_item=workflow_item,
+            )
+        return None
 
     @staticmethod
     def reject_workflow_item(workflow_item):
         workflow_type_obj = workflow_item.workflow_type
         if workflow_type_obj:
-            code = workflow_type_obj.script_for_reject_item
-            if workflow_type_obj.script_for_reject_item:
-                exec(workflow_type_obj.script_for_reject_item)
-                if "reject_workflow_item" in locals():
-                    return locals()["reject_workflow_item"](
-                        workflow_type_obj, workflow_item
-                    )
+            return run_code_from_db_field(
+                f"workflowtype__reject_workflow_item_{workflow_type_obj.pk}.py",
+                workflow_type_obj,
+                "reject_workflow_item",
+                "reject_workflow_item",
+                locals(),
+                globals(),
+                workflow_item=workflow_item,
+            )
+        return None
+
+    def get_script_for_new_item_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return NEW
+
+    def get_script_for_refresh_queue_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return REFRESH
+
+    def get_script_for_handle_event_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return HANDLE
+
+    def get_script_for_accept_item_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ACCEPT
+
+    def get_script_for_reject_item_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return REJECT
 
 
 admin.site.register(WorkflowType)

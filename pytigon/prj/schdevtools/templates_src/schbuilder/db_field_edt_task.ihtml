@@ -9,9 +9,14 @@
 %% title
     .V:{{object.name}}
 
-%% edit_area_sc
+%% edit_area_sch
     table width=100%
         tr
             td
-    CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,HEIGHT=100%,,,MINHEIGHT=400,,,MINWIDTH=800,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
-        DATA...{{txt|bencode}}
+                big:::strong:::i
+                    .def {{object.get_name}}(cproxy=None, **kwargs):
+        tr
+            td
+                CTRL-STYLEDTEXT NAME=EDITOR,,,WIDTH=100%,,,height=calc(100% - top - 50),,,MINHEIGHT=300,,,SRC={{ext}},,,HREF={{base_path}}{{save_path}}
+                    DATA...{{txt|bencode}}
+

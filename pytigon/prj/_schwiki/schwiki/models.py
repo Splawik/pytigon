@@ -28,6 +28,13 @@ from pytigon_lib.schindent.indent_markdown import (
     REG_OBJ_RENDERER,
 )
 
+PUBLISH_FUN = """import datetime
+
+def publish(page, conf):
+    pass
+    
+"""
+
 
 page_type_choices = [
     ("W", "Wiki"),
@@ -345,6 +352,11 @@ class WikiConf(JSONModel):
         self.css = self.get_css()
         ret = super().save(*args, **kwargs)
         return ret
+
+    def get_publish_fun_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return PUBLISH_FUN
 
 
 admin.site.register(WikiConf)

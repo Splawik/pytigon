@@ -36,6 +36,7 @@ from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from pytigon_lib.schdjangoext.fastform import form_from_str
 from schsimplescripts.script_tools import decode_script
 from django.core.exceptions import PermissionDenied
+from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
 
 SCRIPT_TEMPLATE = """
 {%% extends 'schsimplescripts/script_form.html' %%}
@@ -69,7 +70,6 @@ SCRIPT_TEMPLATE2 = (
 
 
 def run(request, pk):
-
     script = models.Script.objects.get(pk=pk)
     form = None
     if script:
@@ -88,8 +88,6 @@ def run(request, pk):
             if not test:
                 raise PermissionDenied()
 
-        exec(script._view)
-        v = locals().get("view", None)
         form = None
         ret = {}
         show_result = False
@@ -99,21 +97,33 @@ def run(request, pk):
                 if request.method == "POST":
                     form = form_class(request.POST)
                     if form.is_valid():
-                        ret = v(request, form.cleaned_data)
+                        data = form.cleaned_data
                         show_result = True
                     else:
-                        ret = v(request, None)
+                        data = None
                         show_result = False
+
                 else:
                     form = form_class()
-                    ret = v(request, None)
+                    data = None
                     show_result = False
             else:
-                ret = v(request, None)
+                data = None
                 show_result = True
         else:
-            ret = v(request, None)
+            data = None
             show_result = True
+
+        ret = run_code_from_db_field(
+            f"script__view_{script.pk}.py",
+            script,
+            "_view",
+            "view",
+            locals(),
+            globals(),
+            request=request,
+            data=data,
+        )
 
         if type(ret) == dict and script._template:
             ret["form"] = form
@@ -141,7 +151,6 @@ def run(request, pk):
 
 
 def run_script_by_name(request, script_name):
-
     script = models.Script.objects.get(name=script_name)
     if script:
         p = reverse("row_action_scripts_run", kwargs={"pk": int(script.id)})

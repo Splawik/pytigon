@@ -46,6 +46,7 @@ from django.core.cache import cache
 from schwiki.applib import makdown_obj_simple, markdown_obj_subblocks
 from pytigon_lib.schindent.indent_markdown import get_obj_renderer
 
+from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
 
 template_start_wiki = """
 {# -*- coding: utf-8 -*- #}
@@ -217,12 +218,22 @@ def publish(request, pk):
         for page in pages:
             page.published = True
             page.save()
-            if conf.publish_fun:
-                exec(conf.publish_fun)
-                info = locals()["publish_fun"](page, conf)
-                object_list.append([page, info])
-            else:
+
+            info = run_code_from_db_field(
+                f"wikiconf__publish_fun_{conf.pk}.py",
+                conf,
+                "publish_fun",
+                "publish",
+                locals(),
+                globals(),
+                page=page,
+                conf=conf,
+            )
+
+            if info == None:
                 object_list.append([page, ""])
+            else:
+                object_list.append([page, info])
 
     pages1 = models.Page.objects.filter(
         subject=conf.subject,

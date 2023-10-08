@@ -19,6 +19,13 @@ import datetime
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from schsimplescripts.script_tools import decode_script
 
+VIEW = """import datetime
+
+def view(request, data):
+    pass
+    
+"""
+
 
 class Script(models.Model):
     class Meta:
@@ -94,6 +101,9 @@ class Script(models.Model):
             self._template = ""
 
         super(Script, self).save(*args, **kwargs)
+
+    def get__view_if_empty(self, request, template_name, ext, extra_context, target):
+        return VIEW
 
 
 admin.site.register(Script)

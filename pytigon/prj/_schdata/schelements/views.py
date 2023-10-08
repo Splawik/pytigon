@@ -38,9 +38,14 @@ from django_select2.forms import HeavySelect2Widget, ModelSelect2Widget
 from django.core.validators import int_list_validator
 from django.http import Http404
 
-from pytigon_lib.schtools.tools import content_to_function
 from pytigon_lib.schdjangoext.fastform import form_from_str
 from django.db.models import Q, F
+
+from pytigon_lib.schdjangoext.import_from_db import (
+    run_code_from_db_field,
+    get_fun_from_db_field,
+    ModuleStruct,
+)
 
 
 def year_ago():
@@ -69,21 +74,25 @@ def change_status(request, pk, action="accept"):
     if reg_status:
         if action == "accept":
             form_txt = reg_status.accept_form
-            fun = content_to_function(
-                reg_status.accept_proc,
-                "request, doc_head, reg_status, doc_type, doc_reg, doc_status, form",
-                globals_dict={
-                    "models": models,
-                },
+            # fun = content_to_function(reg_status.accept_proc, "request, doc_head, reg_status, doc_type, doc_reg, doc_status, form", globals_dict = { 'models': models ,})
+            fun = get_fun_from_db_field(
+                f"regstatus__accept_proc_{reg_status.pk}.py",
+                reg_status,
+                "accept_proc",
+                "accept",
+                locals(),
+                globals(),
             )
         else:
             form_txt = reg_status.undo_form
-            fun = content_to_function(
-                reg_status.undo_proc,
-                "request, doc_head, reg_status, doc_type, doc_reg, doc_status, form",
-                globals_dict={
-                    "models": models,
-                },
+            # fun = content_to_function(reg_status.undo_proc, "request, doc_head, reg_status, doc_type, doc_reg, doc_status, form", globals_dict = { 'models': models ,})
+            fun = get_fun_from_db_field(
+                f"regstatus__undo_proc_{reg_status.pk}.py",
+                reg_status,
+                "undo_proc",
+                "accept",
+                locals(),
+                globals(),
             )
 
         params = {

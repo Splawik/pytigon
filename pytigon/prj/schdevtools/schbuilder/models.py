@@ -29,6 +29,8 @@ from django.forms import fields as form_fields
 from django.forms import models as form_model_fields
 from pytigon_lib.schdjangoext import formfields as ext_form_fields
 
+import traceback
+
 field_default = {
     "null": False,
     "blank": False,
@@ -2124,6 +2126,9 @@ class SChTask(models.Model):
         if doc_type == "py":
             return "schbuilder/db_field_edt_task.html"
         return None
+
+    def get_name(self):
+        return self.name
 
 
 admin.site.register(SChTask)

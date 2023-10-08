@@ -157,5 +157,14 @@ class CommonGroup(JSONModel):
                                 ret.append(objs[0])
             return ret
 
+    @classmethod
+    def filter(cls, value, view=None, request=None):
+        if value:
+            id, grp = value.split("__")
+            if grp == "pk" or not id:
+                return cls.objects.filter(pk=id)
+
+        return cls.objects.all()
+
 
 admin.site.register(CommonGroup)

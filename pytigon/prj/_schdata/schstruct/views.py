@@ -39,6 +39,8 @@ from schelements.models import DocReg, DocType, DocHead, Element
 from django.db.models import F
 from schelements.views import year_ago
 
+from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
+
 
 def move_rep(request, id, to_pos="+1"):
     obj = models.Report.objects.get(pk=id)
@@ -133,10 +135,17 @@ def edit__group(request, group_id):
         if request.method == "POST":
             form = form_class(request.POST, request.FILES)
             if form.is_valid():
-                if group_def.save_fun:
-                    exec(group_def.save_fun)
-                    data = locals()["save"](form, group)
-                else:
+                data = run_code_from_db_field(
+                    f"groupdef__save_fun_{group_def.pk}.py",
+                    group_def,
+                    "save_fun",
+                    "save",
+                    locals(),
+                    globals(),
+                    form=form,
+                    obj=group,
+                )
+                if data == None:
                     data = form.cleaned_data
 
                 if not data:
@@ -155,10 +164,16 @@ def edit__group(request, group_id):
     if not request.POST:
         data = group.get_json_data()
 
-        if group_def.load_fun:
-            exec(group_def.load_fun)
-            data_form = locals()["load"](data)
-        else:
+        data_form = run_code_from_db_field(
+            f"groupdef__load_fun_{group_def.pk}.py",
+            group_def,
+            "load_fun",
+            "load",
+            locals(),
+            globals(),
+            data=data,
+        )
+        if data != None:
             data_form = data
 
         if not data:

@@ -48,6 +48,7 @@ import hashlib
 
 from os import environ
 import subprocess
+import traceback
 
 
 from django.db import transaction

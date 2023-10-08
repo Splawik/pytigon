@@ -87,6 +87,13 @@ LANGUAGES = [["en", "English"], ["pl", "Polish"]]
 LOGIN_REDIRECT_URL = "/"
 TEST_RUNNER = "django.test.runner.DiscoverRunner"
 
+if DEBUG:
+    EXECUTE_DB_CODE = "import"
+else:
+    EXECUTE_DB_CODE = (
+        "exec_and_cache"  # exec or exec_and_cache or import or import_and_cache
+    )
+EXECUTE_DB_CODE_CACHE_TIMEOUT = 900
 
 BASE_URL = "http://127.0.0.1:81"
 

@@ -43,6 +43,11 @@
             .field_edit/data,Data,data        
             .delete
 
+%% id_extra
+    {{ block.super }}
+    % if object.get_def.info_template:
+        {% subtemplate object.get_def.get_info_template %}
+    
 %% row_edit
     % form:
         

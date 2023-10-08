@@ -1,0 +1,34 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New action type"
+
+%% list_row_header
+    th..._(Name)
+    
+
+%% list_row
+    td...{{ object.name }}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+        .field_list/action_set,Actions
+        .field_edit/script_for_new_item,Script for new action
+        .field_edit/script_for_close_item,Script for close action
+        .field_edit/script_for_email_text,Script for get email action
+
+%% row_edit
+    % form:
+        .name

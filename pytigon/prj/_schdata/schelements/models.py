@@ -21,12 +21,13 @@ from django.template.loader import select_template
 import datetime
 from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
-from pytigon_lib.schtools.tools import content_to_function
 from django.db.models import Q, Sum
 from django.apps import apps
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
 from django.conf import settings
+
+from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
 
 
 def get_element_queryset():
@@ -96,6 +97,72 @@ STANDARD_STRUCTURE = {
     "C-FLD": {"title": "Config folders", "table": "Element", "app": "schelements"},
     "C-GRP": {"title": "Group of config", "table": "Element", "app": "schelements"},
 }
+
+ACCESS_FUN = """import datetime
+
+def q_for_list(request, user, profile):
+    pass
+
+def check_user_perm(dochead, user, perm, doc_type_name):
+    pass 
+    
+"""
+
+SAVE_ITEM = """import datetime
+
+def save(docitem):
+    pass
+    
+"""
+
+TO_STR = """imort datetime
+
+def to_str(obj):
+    pass
+
+"""
+
+LOAD_BASE_OBJ = """import datetime
+
+def load(data):
+    pass
+    
+"""
+
+SAVE_BASE_OBJ = """import datetime
+
+def save(form, obj):
+    pass
+    
+"""
+
+ACCEPT_PROC = """import datetime
+
+def accept(request, doc_head, reg_status, doc_type, doc_reg, doc_status, form):
+    pass
+
+"""
+
+UNDO_PROC = """import datetime
+
+def undo(request, doc_head, reg_status, doc_type, doc_reg, doc_status, form):
+    pass
+
+"""
+
+CAN_SET = """import datetime
+
+def can_set(request, doc_head):
+    pass
+
+"""
+
+CAN_UNDO = """import datetime
+
+def can_undo(request, doc_head):
+    pass
+
+"""
 
 
 account_type_choice_2 = [
@@ -831,6 +898,11 @@ class DocReg(models.Model):
         else:
             return self.name
 
+    def get_save_item_fun_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return SAVE_ITEM
+
 
 admin.site.register(DocReg)
 
@@ -1183,18 +1255,27 @@ class DocHead(JSONModel):
     def save(self, *args, **kwargs):
         if self.id:
             obj = DocHead.objects.get(pk=self.id)
-            save_fun_src = None
+            save_fun_src_obj = None
             if obj.doc_type_parent.save_head_fun:
-                save_fun_src = obj.doc_type_parent.save_head_fun
+                save_fun_src_obj = obj.doc_type_parent
             else:
                 x = obj.doc_type_parent.parent
                 while x:
                     if x.save_head_fun:
-                        save_fun_src = x.save_head_fun
+                        save_fun_src_obj = x
                         break
                     x = x.get_parent()
-            if save_fun_src:
-                content_to_function(save_fun_src, "object")(self)
+            if save_fun_src_obj:
+                run_code_from_db_field(
+                    f"dochead__save_{save_fun_src_obj.pk}.py",
+                    save_fun_src_obj,
+                    "save_head_fun",
+                    "save",
+                    locals(),
+                    globals(),
+                    dochead=self,
+                )
+                # content_to_function(save_fun_src, "object")(self)
 
         if not self.pk:
             self.date_c = datetime.datetime.now()
@@ -1234,13 +1315,17 @@ class DocHead(JSONModel):
                 setattr(parent_reg, "cached_statuses", statuses_to_cache)
             ret = []
             for status in statuses_to_cache:
-                if status.can_set_proc:
-                    data = content_to_function(
-                        status.can_set_proc, "request, doc_head"
-                    )(request, self)
-                    if data:
-                        ret.append(status)
-                else:
+                data = run_code_from_db_field(
+                    f"docregstatus__can_set_proc_{status.pk}.py",
+                    status,
+                    "can_set_proc",
+                    "can_set",
+                    locals(),
+                    globals(),
+                    request=request,
+                    doc_head=self,
+                )
+                if data == None or data:
                     ret.append(status)
             return ret
         return []
@@ -1252,14 +1337,21 @@ class DocHead(JSONModel):
             statuses = reg.docregstatus_set.filter(name=obj.status)
             if len(statuses) == 1:
                 status = statuses[0]
-                if status.can_undo_proc:
-                    data = content_to_function(
-                        status.can_undo_proc, "request, doc_head"
-                    )(request, self)
-                    if data:
-                        return True
-                    else:
-                        return False
+                data = run_code_from_db_field(
+                    f"docregstatus__can_undo_proc_{status.pk}.py",
+                    status,
+                    "can_undo_proc",
+                    "can_undo",
+                    locals(),
+                    globals(),
+                    request=request,
+                    doc_head=self,
+                )
+                if data:
+                    return True
+                elif data != None:
+                    return False
+
             if obj.status == "" or obj.status == "edit":
                 return False
             else:
@@ -1344,10 +1436,19 @@ class DocHead(JSONModel):
         def append_reg_filter(reg):
             nonlocal q, profile
             q2 = Q(doc_type_parent__parent__name=reg.name)
-            if reg.access_fun:
-                exec(reg.access_fun)
-                if "q_for_list" in locals():
-                    q2 = locals()["q_for_list"](request, request.user, profile)
+            qq = run_code_from_db_field(
+                f"dochead__q_for_list_{reg.pk}.py",
+                reg,
+                "access_fun",
+                "q_for_list",
+                locals(),
+                globals(),
+                request=request,
+                user=request.user,
+                profile=profile,
+            )
+            if qq:
+                q2 = qq
             if q2:
                 if q:
                     q = q | q2
@@ -1377,14 +1478,21 @@ class DocHead(JSONModel):
     def _check_perm(self, user, perm):
         # perm: add, change, delete, view
         reg = self.doc_type_parent.parent
-        if reg.access_fun:
-            exec(reg.access_fun)
-            if "check_user_perm" in locals():
-                return locals()["check_user_perm"](
-                    self, user, perm, self.doc_type_parent.name
-                )
-            else:
-                return True
+        check = run_code_from_db_field(
+            f"dochead__check_user_perm_{reg.pk}.py",
+            reg,
+            "access_fun",
+            "check_user_perm",
+            locals(),
+            globals(),
+            dochead=self,
+            user=user,
+            perm=perm,
+            doc_type_name=doc_type_parent.name,
+        )
+        if check != None:
+            return check
+        return True
 
     def can_change(self, user):
         return self._check_perm(user, "change")
@@ -1399,13 +1507,26 @@ class DocHead(JSONModel):
     def can_add(doc_type_name, user):
         doc_type = DocType.objects.get(name=doc_type_name)
         reg = doc_type.parent
-        if reg.access_fun:
-            exec(reg.access_fun)
-            if "check_user_perm" in locals():
-                check = locals()["check_user_perm"](None, user, "add", doc_type_name)
-                return check
-            else:
-                return True
+        check = run_code_from_db_field(
+            f"dochead__check_user_perm_{reg.pk}.py",
+            reg,
+            "access_fun",
+            "check_user_perm",
+            locals(),
+            globals(),
+            dochead=None,
+            user=user,
+            perm="add",
+            doc_type_name=doc_type_name,
+        )
+        if check != None:
+            return check
+        return True
+
+    def get_access_fun_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ACCESS_FUN
 
 
 admin.site.register(DocHead)
@@ -1632,18 +1753,26 @@ class DocItem(JSONModel):
     def save(self, *args, **kwargs):
         if self.id:
             obj = DocItem.objects.get(pk=self.id).parent
-            save_fun_src = None
+            save_fun_src_obj = None
             if obj.doc_type_parent.save_head_fun:
-                save_fun_src = obj.doc_type_parent.save_item_fun
+                save_fun_src_obj = obj.doc_type_parent
             else:
                 x = obj.doc_type_parent.parent
                 while x:
-                    if x.save_head_fun:
-                        save_fun_src = x.save_item_fun
+                    if x.save_item_fun:
+                        save_fun_src_obj = x
                         break
                     x = x.get_parent()
-            if save_fun_src:
-                exec(save_fun_src)
+            if save_fun_src_obj:
+                check = run_code_from_db_field(
+                    f"docitem__save_{save_fun_src_obj.pk}.py",
+                    save_fun_src_obj,
+                    "save_item_fun",
+                    "save",
+                    locals(),
+                    globals(),
+                    docitem=self,
+                )
 
         super().save(*args, **kwargs)
 
@@ -1878,6 +2007,26 @@ class DocRegStatus(models.Model):
             return "popup_edit"
         else:
             return "refresh_frame"
+
+    def get_accept_proc_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ACCEPT_PROC
+
+    def get_undo_proc_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return UNDO_PROC
+
+    def get_can_set_proc_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return CAN_SET
+
+    def get_can_undo_proc_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return CAN_UNDO
 
 
 admin.site.register(DocRegStatus)
@@ -2631,14 +2780,25 @@ class BaseObject(models.Model):
         blank=True,
         editable=False,
     )
+    info_template = models.TextField(
+        "Info template",
+        null=True,
+        blank=True,
+        editable=False,
+    )
 
     def to_str(self, obj):
-        if self.to_str_fun:
-            tmp = "def _to_str(self):\n" + "\n".join(
-                ["    " + pos for pos in self.to_str_fun.split("\n")]
-            )
-            exec(tmp)
-            return locals()["_to_str"](obj)
+        ret = run_code_from_db_field(
+            f"baseobject__to_str_fun_{self.pk}.py",
+            self,
+            "to_str_fun",
+            "to_str",
+            locals(),
+            globals(),
+            obj=self,
+        )
+        if ret != None:
+            return ret
         else:
             if obj.title:
                 return obj.title + " [" + self.name + "]"
@@ -2650,6 +2810,23 @@ class BaseObject(models.Model):
             return ihtml_to_html(None, self.action_template)
         else:
             return None
+
+    def get_info_template(self):
+        if self.info_template:
+            return ihtml_to_html(None, self.info_template)
+        else:
+            return None
+
+    def get_to_str_fun_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return TO_STR
+
+    def get_load_fun_if_empty(self, request, template_name, ext, extra_context, target):
+        return LOAD_BASE_OBJ
+
+    def get_save_fun_if_empty(self, request, template_name, ext, extra_context, target):
+        return SAVE_BASE_OBJ
 
 
 @receiver(post_delete, sender=Element)

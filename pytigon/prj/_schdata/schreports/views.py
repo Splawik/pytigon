@@ -38,6 +38,7 @@ from pytigon_lib.schviews import make_path
 from schelements.models import DocReg, DocType, DocHead, Element
 from django.db.models import F
 from schelements.views import year_ago
+from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
 
 
 def move_rep(request, id, to_pos="+1"):
@@ -164,11 +165,19 @@ def edit__rep(request, rep_id, rep=None):
         if request.method == "POST":
             form = form_class(request.POST, request.FILES)
             if form.is_valid():
-                if rep_def.save_fun:
-                    exec(rep_def.save_fun)
-                    data = locals()["save"](form, rep)
-                else:
+                data = run_code_from_db_field(
+                    f"reportdef__save_fun_{rep_def.pk}.py",
+                    rep_def,
+                    "save_fun",
+                    "save",
+                    locals(),
+                    globals(),
+                    form=form,
+                    obj=rep,
+                )
+                if data == None:
                     data = form.cleaned_data
+
                 if data != None:
                     rep.jsondata = data
                     rep.save()
@@ -178,11 +187,19 @@ def edit__rep(request, rep_id, rep=None):
     if not request.POST:
         data = rep.get_json_data()
 
-        if rep_def.load_fun:
-            exec(rep_def.load_fun)
-            data_form = locals()["load"](data)
-        else:
+        data_form = run_code_from_db_field(
+            f"reportdef__save_fun_{rep_def.pk}.py",
+            rep_def,
+            "load_fun",
+            "load",
+            locals(),
+            globals(),
+            data=data,
+        )
+
+        if data_form == None:
             data_form = data
+
         form = form_class(initial=data_form)
 
     t = Template(ihtml_to_html(None, rep_def.template))
@@ -286,13 +303,16 @@ def plot_service(request, **argv):
 
     if obj:
         if action == "get_config":
-            if obj.get_config:
-                tmp = "def _get_config(request_param):\n" + "\n".join(
-                    ["    " + pos for pos in obj.get_config.split("\n")]
-                )
-                exec(tmp)
-                config = locals()["_get_config"](request_param)
-            else:
+            config = run_code_from_db_field(
+                f"plot__get_config_{obj.pk}.py",
+                obj,
+                "get_config",
+                "get_config",
+                locals(),
+                globals(),
+                request_param=request_param,
+            )
+            if config == None:
                 config = {
                     "displayModeBar": False,
                     "showLink": False,
@@ -302,32 +322,44 @@ def plot_service(request, **argv):
                 }
             return config
         elif action == "get_data":
-            if obj.get_data:
-                tmp = "def _get_data(request_param):\n" + "\n".join(
-                    ["    " + pos for pos in obj.get_data.split("\n")]
-                )
-                exec(tmp)
-                data = locals()["_get_data"](request_param)
-            else:
+            data = run_code_from_db_field(
+                f"plot__get_data_{obj.pk}.py",
+                obj,
+                "get_data",
+                "get_data",
+                locals(),
+                globals(),
+                request_param=request_param,
+            )
+
+            if data == None:
                 data = {}
             return data
         elif action == "get_layout":
-            if obj.get_layout:
-                tmp = "def _get_layout(request_param):\n" + "\n".join(
-                    ["    " + pos for pos in obj.get_layout.split("\n")]
-                )
-                exec(tmp)
-                layout = locals()["_get_layout"](request_param)
-            else:
+            layout = run_code_from_db_field(
+                f"plot__get_layout_{obj.pk}.py",
+                obj,
+                "get_layout",
+                "get_layout",
+                locals(),
+                globals(),
+                request_param=request_param,
+            )
+            if layout == None:
                 layout = {}
             return layout
         elif action == "on_event":
-            if obj.on_event:
-                tmp = "def _on_event(data, request_param):\n" + "\n".join(
-                    ["    " + pos for pos in obj.on_event.split("\n")]
-                )
-                exec(tmp)
-                ret = locals()["_on_event"](param, request_param)
+            ret = run_code_from_db_field(
+                f"plot__on_event_{obj.pk}.py",
+                obj,
+                "on_event",
+                "on_event",
+                locals(),
+                globals(),
+                request_param=request_param,
+                data=param,
+            )
+            if ret != None:
                 return ret
             else:
                 return {}
@@ -378,10 +410,17 @@ def edit__group(request, group_id):
         if request.method == "POST":
             form = form_class(request.POST, request.FILES)
             if form.is_valid():
-                if group_def.save_fun:
-                    exec(group_def.save_fun)
-                    data = locals()["save"](form, group)
-                else:
+                data = run_code_from_db_field(
+                    f"groupdef__save_fun_{group_def.pk}.py",
+                    group_def,
+                    "save_fun",
+                    "save",
+                    locals(),
+                    globals(),
+                    form=form,
+                    obj=group,
+                )
+                if data == None:
                     data = form.cleaned_data
 
                 if not data:
@@ -400,11 +439,15 @@ def edit__group(request, group_id):
     if not request.POST:
         data = group.get_json_data()
 
-        if group_def.load_fun:
-            exec(group_def.load_fun)
-            data_form = locals()["load"](data)
-        else:
-            data_form = data
+        data_form = run_code_from_db_field(
+            f"groupdef__save_fun_{group_def.pk}.py",
+            group_def,
+            "load_fun",
+            "load",
+            locals(),
+            globals(),
+            data=data,
+        )
 
         if not data:
             data = {}

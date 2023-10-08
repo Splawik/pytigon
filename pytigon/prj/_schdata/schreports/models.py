@@ -26,6 +26,61 @@ from django.db.models import Max, Min
 from schelements.models import *
 
 
+GET_CONFIG = """import datetime
+
+def get_config(request_param):
+    config = {
+        'displayModeBar': False, 
+        'showLink': False, 
+        'displaylogo': True, 
+        'scrollZoom': False, 
+        'modeBarButtonsToRemove': ['sendDataToCloud'],
+        'staticPlot': True,
+    }
+    return config
+
+"""
+
+GET_DATA = """import datetime
+
+def get_data(request_param):
+    return {
+        'data': [
+            {
+            'x': ['giraffes', 'orangutans', 'monkeys'],
+            'y': [20, 14, 23],
+            'type': 'bar',
+            }
+        ],
+        'events': ['click', 'hover=>plotly/plotly-status/',]
+    }
+
+"""
+
+GET_LAYOUT = """import datetime
+
+def get_layout(request_param):
+    pass
+
+"""
+
+ON_EVENT = """import datetime
+
+def on_event(request_param, data):
+    ret = {
+        'function': 'react',
+        'data': [
+            {
+                'x': ['giraffes', 'monkeys'],
+                'y': [20, 23],
+                'type': 'bar',
+            }
+        ],
+    }
+    return ret
+"""
+
+
 class ReportDef(schelements.models.BaseObject):
     """
     Declaration:
@@ -96,6 +151,7 @@ class ReportDef(schelements.models.BaseObject):
                     "load_fun": self.load_fun,
                     "to_str_fun": self.to_str_fun,
                     "action_template": self.action_template,
+                    "info_template": self.info_template,
                     "doc_type": self.doc_type,
                 },
             ],
@@ -123,6 +179,7 @@ class ReportDef(schelements.models.BaseObject):
                 obj.load_fun = obj_param["load_fun"]
                 obj.to_str_fun = obj_param["to_str_fun"]
                 obj.action_template = obj_param["action_template"]
+                obj.unfo_template = obj_param["info_template"]
                 obj.doc_type = obj_param["doc_type"]
                 obj.save()
             print("PASTE: ", data)
@@ -294,6 +351,22 @@ class Plot(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_get_config_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return GET_CONFIG
+
+    def get_get_data_if_empty(self, request, template_name, ext, extra_context, target):
+        return GET_DATA
+
+    def get_get_layout_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return GET_LAYOUT
+
+    def get_on_event_if_empty(self, request, template_name, ext, extra_context, target):
+        return ON_EVENT
 
 
 admin.site.register(Plot)
