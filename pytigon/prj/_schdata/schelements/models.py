@@ -1488,7 +1488,7 @@ class DocHead(JSONModel):
             dochead=self,
             user=user,
             perm=perm,
-            doc_type_name=doc_type_parent.name,
+            doc_type_name=self.doc_type_parent.name,
         )
         if check != None:
             return check
@@ -2795,7 +2795,7 @@ class BaseObject(models.Model):
             "to_str",
             locals(),
             globals(),
-            obj=self,
+            object=self,
         )
         if ret != None:
             return ret

@@ -143,7 +143,7 @@ def edit__group(request, group_id):
                     locals(),
                     globals(),
                     form=form,
-                    obj=group,
+                    object=group,
                 )
                 if data == None:
                     data = form.cleaned_data
