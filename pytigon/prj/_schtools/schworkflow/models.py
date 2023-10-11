@@ -141,7 +141,7 @@ class WorkflowType(models.Model):
             return run_code_from_db_field(
                 f"workflowtype__new_workflow_item_{workflow_type_obj.pk}.py",
                 workflow_type_obj,
-                "new_workflow_item",
+                "script_for_new_item",
                 "new_workflow_item",
                 locals(),
                 globals(),
@@ -156,7 +156,7 @@ class WorkflowType(models.Model):
             return run_code_from_db_field(
                 f"workflowtype__refresh_workflow_queue_{workflow_type_obj.pk}.py",
                 workflow_type_obj,
-                "refresh_workflow_queue",
+                "script_for_refresh_queue",
                 "refresh_workflow_queue",
                 locals(),
                 globals(),
@@ -171,7 +171,7 @@ class WorkflowType(models.Model):
             return run_code_from_db_field(
                 f"workflowtype__handle_workflow_event_{workflow_type_obj.pk}.py",
                 workflow_type_obj,
-                "handle_workflow_event",
+                "script_for_handle_event",
                 "handle_workflow_event",
                 locals(),
                 globals(),
@@ -187,7 +187,7 @@ class WorkflowType(models.Model):
             return run_code_from_db_field(
                 f"workflowtype__accept_workflow_item_{workflow_type_obj.pk}.py",
                 workflow_type_obj,
-                "accept_workflow_item",
+                "script_for_accept_item",
                 "accept_workflow_item",
                 locals(),
                 globals(),
@@ -202,7 +202,7 @@ class WorkflowType(models.Model):
             return run_code_from_db_field(
                 f"workflowtype__reject_workflow_item_{workflow_type_obj.pk}.py",
                 workflow_type_obj,
-                "reject_workflow_item",
+                "script_for_reject_item",
                 "reject_workflow_item",
                 locals(),
                 globals(),

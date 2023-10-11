@@ -80,7 +80,7 @@ class ActionType(models.Model):
             return run_code_from_db_field(
                 f"actiontype__new_action_item_{action_type_obj.pk}.py",
                 action_type_obj,
-                "new_action_item",
+                "script_for_new_item",
                 "new_action_item",
                 locals(),
                 globals(),
@@ -94,7 +94,7 @@ class ActionType(models.Model):
         return run_code_from_db_field(
             f"actiontype__close_action_{action_type_obj.pk}.py",
             action_type_obj,
-            "close_action",
+            "script_for_close_item",
             "close_action",
             locals(),
             globals(),
@@ -107,7 +107,7 @@ class ActionType(models.Model):
         return run_code_from_db_field(
             f"actiontype__email_text_{action_type_obj.pk}.py",
             action_type_obj,
-            "email_text",
+            "script_for_email_text",
             "email_text",
             locals(),
             globals(),

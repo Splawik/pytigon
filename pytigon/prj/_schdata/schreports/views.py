@@ -173,7 +173,7 @@ def edit__rep(request, rep_id, rep=None):
                     locals(),
                     globals(),
                     form=form,
-                    object=rep,
+                    obj=rep,
                 )
                 if data == None:
                     data = form.cleaned_data
@@ -418,7 +418,7 @@ def edit__group(request, group_id):
                     locals(),
                     globals(),
                     form=form,
-                    object=group,
+                    obj=group,
                 )
                 if data == None:
                     data = form.cleaned_data
