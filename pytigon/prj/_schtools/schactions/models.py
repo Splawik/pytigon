@@ -78,7 +78,7 @@ class ActionType(models.Model):
             action.start_date = datetime.now()
             action.group = "default"
             return run_code_from_db_field(
-                f"actiontype__new_action_item_{action_type_obj.pk}.py",
+                f"actiontype__new_action_item_{action_type_obj.name}.py",
                 action_type_obj,
                 "script_for_new_item",
                 "new_action_item",
@@ -92,7 +92,7 @@ class ActionType(models.Model):
     def close_action(action):
         action_type_obj = action.parent
         return run_code_from_db_field(
-            f"actiontype__close_action_{action_type_obj.pk}.py",
+            f"actiontype__close_action_{action_type_obj.name}.py",
             action_type_obj,
             "script_for_close_item",
             "close_action",
@@ -105,7 +105,7 @@ class ActionType(models.Model):
     def email_text(action, email_type):
         action_type_obj = action.parent
         return run_code_from_db_field(
-            f"actiontype__email_text_{action_type_obj.pk}.py",
+            f"actiontype__email_text_{action_type_obj.name}.py",
             action_type_obj,
             "script_for_email_text",
             "email_text",

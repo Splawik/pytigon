@@ -139,7 +139,7 @@ class WorkflowType(models.Model):
             workflow_item.level = 0
             workflow_item.creation_date = datetime.datetime.now()
             return run_code_from_db_field(
-                f"workflowtype__new_workflow_item_{workflow_type_obj.pk}.py",
+                f"workflowtype__new_workflow_item_{workflow_type_obj.name}.py",
                 workflow_type_obj,
                 "script_for_new_item",
                 "new_workflow_item",
@@ -154,7 +154,7 @@ class WorkflowType(models.Model):
         workflow_type_obj = WorkflowType.objects.filter(name=workflow_type_name).first()
         if workflow_type_obj:
             return run_code_from_db_field(
-                f"workflowtype__refresh_workflow_queue_{workflow_type_obj.pk}.py",
+                f"workflowtype__refresh_workflow_queue_{workflow_type_obj.name}.py",
                 workflow_type_obj,
                 "script_for_refresh_queue",
                 "refresh_workflow_queue",
@@ -169,7 +169,7 @@ class WorkflowType(models.Model):
         workflow_type_obj = WorkflowType.objects.filter(name=workflow_type_name).first()
         if workflow_type_obj:
             return run_code_from_db_field(
-                f"workflowtype__handle_workflow_event_{workflow_type_obj.pk}.py",
+                f"workflowtype__handle_workflow_event_{workflow_type_obj.name}.py",
                 workflow_type_obj,
                 "script_for_handle_event",
                 "handle_workflow_event",
@@ -185,7 +185,7 @@ class WorkflowType(models.Model):
         workflow_type_obj = workflow_item.workflow_type
         if workflow_type_obj:
             return run_code_from_db_field(
-                f"workflowtype__accept_workflow_item_{workflow_type_obj.pk}.py",
+                f"workflowtype__accept_workflow_item_{workflow_type_obj.name}.py",
                 workflow_type_obj,
                 "script_for_accept_item",
                 "accept_workflow_item",
@@ -200,7 +200,7 @@ class WorkflowType(models.Model):
         workflow_type_obj = workflow_item.workflow_type
         if workflow_type_obj:
             return run_code_from_db_field(
-                f"workflowtype__reject_workflow_item_{workflow_type_obj.pk}.py",
+                f"workflowtype__reject_workflow_item_{workflow_type_obj.name}.py",
                 workflow_type_obj,
                 "script_for_reject_item",
                 "reject_workflow_item",
