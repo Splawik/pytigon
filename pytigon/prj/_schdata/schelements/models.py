@@ -2795,7 +2795,7 @@ class BaseObject(models.Model):
             "to_str",
             locals(),
             globals(),
-            obj=self,
+            obj=obj,
         )
         if ret != None:
             return ret
