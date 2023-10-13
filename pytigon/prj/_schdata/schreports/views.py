@@ -304,7 +304,7 @@ def plot_service(request, **argv):
     if obj:
         if action == "get_config":
             config = run_code_from_db_field(
-                f"plot__get_config_{obj.pk}.py",
+                f"plot__get_config_{obj.name}_{obj.group}.py",
                 obj,
                 "get_config",
                 "get_config",
@@ -323,7 +323,7 @@ def plot_service(request, **argv):
             return config
         elif action == "get_data":
             data = run_code_from_db_field(
-                f"plot__get_data_{obj.pk}.py",
+                f"plot__get_data_{obj.name}_{obj.group}.py",
                 obj,
                 "get_data",
                 "get_data",
@@ -337,7 +337,7 @@ def plot_service(request, **argv):
             return data
         elif action == "get_layout":
             layout = run_code_from_db_field(
-                f"plot__get_layout_{obj.pk}.py",
+                f"plot__get_layout_{obj.name}_{obj.group}.py",
                 obj,
                 "get_layout",
                 "get_layout",
@@ -350,7 +350,7 @@ def plot_service(request, **argv):
             return layout
         elif action == "on_event":
             ret = run_code_from_db_field(
-                f"plot__on_event_{obj.pk}.py",
+                f"plot__on_event_{obj.name}_{obj.group}.py",
                 obj,
                 "on_event",
                 "on_event",

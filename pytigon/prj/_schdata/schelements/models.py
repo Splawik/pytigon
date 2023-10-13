@@ -115,7 +115,7 @@ def save(docitem):
     
 """
 
-TO_STR = """imort datetime
+TO_STR = """import datetime
 
 def to_str(obj):
     pass
