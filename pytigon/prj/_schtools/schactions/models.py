@@ -18,23 +18,28 @@ from pytigon_lib.schhtml.htmltools import superstrip
 from datetime import datetime
 from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
 
-NEW = """import datetime
-
-def new_action_item(action, data):
-    pass
-"""
-
-CLOSE = """import datetime
-
-def close_action(ction):
-    pass
+NEW = """#Example: 
+#import datetime
+#
+#def new_action_item(action, data):
+#    pass
 
 """
 
-EMAIL = """import datetime
+CLOSE = """#Example: 
+#import datetime
+#
+#def close_action(ction):
+#    pass
 
-def email_text(action, email_type):
-    pass
+"""
+
+EMAIL = """#Example: 
+#import datetime
+#
+#def email_text(action, email_type):
+#    pass
+
 """
 
 

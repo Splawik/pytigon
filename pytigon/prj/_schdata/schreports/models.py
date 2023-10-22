@@ -26,58 +26,63 @@ from django.db.models import Max, Min
 from schelements.models import *
 
 
-GET_CONFIG = """import datetime
-
-def get_config(request_param):
-    config = {
-        'displayModeBar': False, 
-        'showLink': False, 
-        'displaylogo': True, 
-        'scrollZoom': False, 
-        'modeBarButtonsToRemove': ['sendDataToCloud'],
-        'staticPlot': True,
-    }
-    return config
-
-"""
-
-GET_DATA = """import datetime
-
-def get_data(request_param):
-    return {
-        'data': [
-            {
-            'x': ['giraffes', 'orangutans', 'monkeys'],
-            'y': [20, 14, 23],
-            'type': 'bar',
-            }
-        ],
-        'events': ['click', 'hover=>plotly/plotly-status/',]
-    }
+GET_CONFIG = """#Example: 
+#import datetime
+#
+#def get_config(request_param):
+#    config = {
+#        'displayModeBar': False, 
+#        'showLink': False, 
+#        'displaylogo': True, 
+#        'scrollZoom': False, 
+#        'modeBarButtonsToRemove': ['sendDataToCloud'],
+#        'staticPlot': True,
+#    }
+#    return config
 
 """
 
-GET_LAYOUT = """import datetime
-
-def get_layout(request_param):
-    pass
+GET_DATA = """#Example: 
+#import datetime
+#
+#def get_data(request_param):
+#    return {
+#        'data': [
+#            {
+#            'x': ['giraffes', 'orangutans', 'monkeys'],
+#            'y': [20, 14, 23],
+#            'type': 'bar',
+#            }
+#        ],
+#        'events': ['click', 'hover=>plotly/plotly-status/',]
+#    }
 
 """
 
-ON_EVENT = """import datetime
+GET_LAYOUT = """#Example: 
+#import datetime
+#
+#def get_layout(request_param):
+#    pass
 
-def on_event(request_param, data):
-    ret = {
-        'function': 'react',
-        'data': [
-            {
-                'x': ['giraffes', 'monkeys'],
-                'y': [20, 23],
-                'type': 'bar',
-            }
-        ],
-    }
-    return ret
+"""
+
+ON_EVENT = """#Example: 
+#import datetime
+#
+#def on_event(request_param, data):
+#    ret = {
+#        'function': 'react',
+#        'data': [
+#            {
+#                'x': ['giraffes', 'monkeys'],
+#                'y': [20, 23],
+#                'type': 'bar',
+#            }
+#        ],
+#    }
+#    return ret
+
 """
 
 

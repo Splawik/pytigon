@@ -28,6 +28,7 @@ from django.db.models.signals import post_delete
 from django.conf import settings
 
 from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
+from pytigon_lib.schdjangoext.fastform import FAST_FORM_EXAMPLE
 
 
 def get_element_queryset():
@@ -98,71 +99,107 @@ STANDARD_STRUCTURE = {
     "C-GRP": {"title": "Group of config", "table": "Element", "app": "schelements"},
 }
 
-ACCESS_FUN = """import datetime
-
-def q_for_list(request, user, profile):
-    pass
-
-def check_user_perm(dochead, user, perm, doc_type_name):
-    pass 
+ACCESS_FUN = """#import datetime
+#
+#def q_for_list(request, user, profile):
+#    pass
+#
+#def check_user_perm(dochead, user, perm, doc_type_name):
+#    pass 
     
 """
 
-SAVE_ITEM = """import datetime
-
-def save(docitem):
-    pass
+SAVE_ITEM = """#import datetime
+#
+#def save(docitem):
+#    pass
     
 """
 
-TO_STR = """import datetime
-
-def to_str(obj):
-    pass
-
-"""
-
-LOAD_BASE_OBJ = """import datetime
-
-def load(data):
-    pass
+SAVE_HEAD = """#import datetime
+#
+#def save(dochead):
+#    pass
     
 """
 
-SAVE_BASE_OBJ = """import datetime
 
-def save(form, obj):
-    pass
+TO_STR = """#Example: 
+#import datetime
+#
+#def to_str(obj):
+#    pass
+
+"""
+
+LOAD_BASE_OBJ = """#Example: 
+#import datetime
+#
+#def load(data):
+#    pass
     
 """
 
-ACCEPT_PROC = """import datetime
+SAVE_BASE_OBJ = """#Example: 
+#import datetime
+#
+#def save(form, obj):
+#    pass
+    
+"""
 
-def accept(request, doc_head, reg_status, doc_type, doc_reg, doc_status, form):
-    pass
+ACCEPT_PROC = """#Example: 
+#import datetime
+#
+#def accept(request, doc_head, reg_status, doc_type, doc_reg, doc_status, form):
+#    pass
 
 """
 
-UNDO_PROC = """import datetime
-
-def undo(request, doc_head, reg_status, doc_type, doc_reg, doc_status, form):
-    pass
-
-"""
-
-CAN_SET = """import datetime
-
-def can_set(request, doc_head):
-    pass
+UNDO_PROC = """#Example: 
+#import datetime
+#
+#def undo(request, doc_head, reg_status, doc_type, doc_reg, doc_status, form):
+#    pass
 
 """
 
-CAN_UNDO = """import datetime
-
-def can_undo(request, doc_head):
-    pass
+CAN_SET = """#Example: 
+#import datetime
+#
+#def can_set(request, doc_head):
+#    pass
 
 """
+
+CAN_UNDO = """#Example: 
+#import datetime
+#
+#def can_undo(request, doc_head):
+#    pass
+
+"""
+
+HEAD_TEMPLATE = """#Example:
+#% extends "schelements/dochead.html"
+#
+#% load exfiltry
+#% load exsyntax
+
+"""
+
+HEAD_FORM = "\n".join(("#" + item for item in FAST_FORM_EXAMPLE.split("\n")))
+
+
+ITEM_TEMPLATE = """#Example:
+#% extends "schelements/docitem.html"
+#
+#% load exfiltry
+#% load exsyntax
+
+"""
+
+ITEM_FORM = HEAD_FORM
 
 
 account_type_choice_2 = [
@@ -898,10 +935,40 @@ class DocReg(models.Model):
         else:
             return self.name
 
+    def get_save_head_fun_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return SAVE_HEAD
+
     def get_save_item_fun_if_empty(
         self, request, template_name, ext, extra_context, target
     ):
         return SAVE_ITEM
+
+    def get_head_form_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return HEAD_FORM
+
+    def get_item_form_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ITEM_FORM
+
+    def get_head_template_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return HEAD_TEMPLATE
+
+    def get_item_template_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ITEM_TEMPLATE
+
+    def get_access_fun_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ACCESS_FUN
 
 
 admin.site.register(DocReg)
@@ -1522,11 +1589,6 @@ class DocHead(JSONModel):
         if check != None:
             return check
         return True
-
-    def get_access_fun_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
-        return ACCESS_FUN
 
 
 admin.site.register(DocHead)

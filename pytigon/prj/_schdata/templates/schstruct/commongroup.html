@@ -54,6 +54,12 @@
                 {% endrow_actions %}
         {% endif %}
 {% endblock %}
+{% block id_extra %}
+        {{ block.super }}
+        {% if object.get_def.info_template %}
+                {% subtemplate object.get_def.get_info_template %}
+        {% endif %}
+{% endblock %}
 {% block row_edit %}
         {% form %}
         {% endform %}

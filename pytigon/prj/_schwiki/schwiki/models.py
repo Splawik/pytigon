@@ -28,10 +28,11 @@ from pytigon_lib.schindent.indent_markdown import (
     REG_OBJ_RENDERER,
 )
 
-PUBLISH_FUN = """import datetime
-
-def publish(page, conf):
-    pass
+PUBLISH_FUN = """#Example: 
+#import datetime
+#
+#def publish(page, conf):
+#    pass
     
 """
 

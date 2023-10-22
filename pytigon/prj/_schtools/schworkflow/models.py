@@ -20,34 +20,44 @@ import datetime
 from pytigon_lib.schtools.tools import get_request
 from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
 
-NEW = """import datetime
+NEW = """#Example: 
+#import datetime
+#
+#def new_workflow_item(workflow_item, data):
+#    pass
 
-def new_workflow_item(workflow_item, data):
-    pass
 """
 
-REFRESH = """import datetime
+REFRESH = """#Example: 
+#import datetime
+#
+#def refresh_workflow_queue(workflow_type_obj):
+#    pass
 
-def refresh_workflow_queue(workflow_type_obj):
-    pass
 """
 
-HANDLE = """import datetime
+HANDLE = """#Example: 
+#import datetime
+#
+#def handle_workflow_event(workflow_type_obj, event):
+#    pass
 
-def handle_workflow_event(workflow_type_obj, event):
-    pass
 """
 
-ACCEPT = """import datetime
+ACCEPT = """#Example: 
+#import datetime
+#
+#def accept_workflow_item(workflow_item):
+#    pass
 
-def accept_workflow_item(workflow_item):
-    pass
 """
 
-REJECT = """import datetime
+REJECT = """#Example: 
+#import datetime
+#
+#def reject_workflow_item(workflow_item):
+#    pass
 
-def reject_workflow_item(workflow_item):
-    pass
 """
 
 
