@@ -6,7 +6,7 @@
 
     %% widget_content
         % if standard_web_browser:
-            div class=inline_frame ajax-region ajax-frame auto-frame ajax-link,,,href={{href}},,,width=100%,,,height={{height}}
+            div class=inline_frame ajax-region ajax-frame auto-frame ajax-link,,,href={{href}},,,style=width:100%;height:{{height}}
         % else
             CTRL-HTML name={{id}},,,src={{path}}{{href}},,,width=100%,,,height={{height}}
 

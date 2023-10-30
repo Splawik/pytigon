@@ -36,6 +36,7 @@
     % row_actions:
         .edit
         .field_edit/declaration,Declaration,declaration
+        .field_edit/template_src,Template src,template_src 
         .field_edit/template,Template,template
         .field_edit/to_html_rec,To html row,to_html_rec
         .field_edit/save_fun,Save function,save_fun

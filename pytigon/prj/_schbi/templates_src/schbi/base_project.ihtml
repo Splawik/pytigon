@@ -1,4 +1,4 @@
-% extends "only_content.html"|translate:lang
+% extends "forms/form.html"
 
 % load exfiltry
 % load exsyntax
@@ -10,7 +10,7 @@
         div class=row mb-1
             div class=col
                 % if form:
-                    ptig-form src={{base_path}}bi/project_view/{{bi_prj.name}}/
+                    ptig-form src={{base_path}}schbi/project_view/{{bi_prj.name}}/
                         %% bi_prj_form
                             % inline_form:
         div class=row flex-grow-1
@@ -22,4 +22,4 @@
                  
                 div class=tab-content auto-refresh flex-grow-1,,,id=nav-tabContent,,,style=overflow-x:hidden
                     % for page in bi_prj.page_set.all:
-                        div href={{base_path}}bi/page_view/{{page.id}}/,,,class=auto-frame ajax-frame ajax-link ajax-region tab-pane {% if forloop.first %}show active{% endif %},,, id=nav-{{bi_prj.name}}-{{page.id}}-content,,,role=tabpanel,,,tabindex=0,,,auto-refresh-target=.bi_chart
+                        div href={{base_path}}schbi/page_view/{{page.id}}/,,,class=auto-frame ajax-frame ajax-link ajax-region tab-pane {% if forloop.first %}show active{% endif %},,, id=nav-{{bi_prj.name}}-{{page.id}}-content,,,role=tabpanel,,,tabindex=0,,,auto-refresh-target=.bi_chart

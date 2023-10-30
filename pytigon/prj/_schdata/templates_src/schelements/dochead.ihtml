@@ -75,6 +75,8 @@
 %% row_edit
     %% dochead_edit
         % form:
+
+%% row_edit_footer   
     % if object.id:
         %% docitem_list
             % frame table_path|append_str:object.id|append_str:"/docitem_set/-/form/sublist/?only_content=1" "200px"

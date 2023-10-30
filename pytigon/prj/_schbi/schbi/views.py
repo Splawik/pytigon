@@ -98,7 +98,7 @@ def project_view(request, prj_name):
     if prj.template:
         t = Template(ihtml_to_html(None, prj.template))
     else:
-        template = '% extends "bi/base_project.html"\n'
+        template = '% extends "schbi/base_project.html"\n'
         t = Template(ihtml_to_html(None, template))
 
     data = {}
@@ -166,7 +166,7 @@ def page_view(request, page_id):
     if page.template:
         t = Template(ihtml_to_html(None, page.template))
     else:
-        template = '% extends "bi/base_page.html"\n'
+        template = '% extends "schbi/base_page.html"\n'
         t = Template(ihtml_to_html(None, template))
 
     data = {}
@@ -248,7 +248,7 @@ def chart_view(request, chart_id):
     if chart.template:
         t = Template(ihtml_to_html(None, chart.template))
     else:
-        template = '% extends "bi/base_chart.html"\n'
+        template = '% extends "schbi/base_chart.html"\n'
         t = Template(ihtml_to_html(None, template))
 
     data = {}

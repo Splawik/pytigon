@@ -268,13 +268,13 @@
             <div id="{{item_info.app_name}}" class="tab-pane tab-tab active" role="tabpanel">
 
     % if item_info.url|is_menu_checked:request.get_full_path:
-        a href={{base_path}}{{item_info.url}}?fragment=page,,,class=btn btn-warning shadow-none {{btn_size}} btn-raised menu-href ladda-button,,,target=_parent,,,data-style=zoom-in,,,{{item_info.description}}
+        a href={{base_path}}{{item_info.url|append_get_param:"fragment=page"}},,,class=btn btn-warning shadow-none {{btn_size}} btn-raised menu-href ladda-button,,,target=_parent,,,data-style=zoom-in,,,{{item_info.description}}
             %if item_info.icon:
                 {% icon item_info.icon|append_str:" fa-lg" %}
 
             {{item_info.description}}
     % else
-        a href={{base_path}}{{item_info.url}}?fragment=page,,,class=btn btn-light shadow-none {{btn_size}} menu-href ladda-button,,,data-style=zoom-in,,,target=_parent,,,title={{item_info.description}}
+        a href={{base_path}}{{item_info.url|append_get_param:"fragment=page"}},,,class=btn btn-light shadow-none {{btn_size}} menu-href ladda-button,,,data-style=zoom-in,,,target=_parent,,,title={{item_info.description}}
             % if item_info.icon:
                 % if standard_web_browser:
                     {% icon item_info.icon|append_str:" fa-lg tablet_menu_icon" width=22 %}

@@ -182,6 +182,7 @@ def edit__group(request, group_id):
         data_form["title"] = group.title
         form = form_class(initial=data_form)
 
+    # t = Template(ihtml_to_html(None, group_def.template))
     t = Template(ihtml_to_html(None, group_def.template))
     c = RequestContext(request, {"form": form, "group": group, "group_def": group_def})
 

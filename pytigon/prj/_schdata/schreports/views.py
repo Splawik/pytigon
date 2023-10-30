@@ -202,7 +202,8 @@ def edit__rep(request, rep_id, rep=None):
 
         form = form_class(initial=data_form)
 
-    t = Template(ihtml_to_html(None, rep_def.template))
+    # t = Template(ihtml_to_html(None, rep_def.template))
+    t = Template(rep_def.template)
     c = RequestContext(request, {"form": form, "rep": rep, "rep_def": rep_def})
 
     return HttpResponse(t.render(c))
@@ -455,7 +456,8 @@ def edit__group(request, group_id):
         data_form["title"] = group.title
         form = form_class(initial=data_form)
 
-    t = Template(ihtml_to_html(None, group_def.template))
+    # t = Template(ihtml_to_html(None, group_def.template))
+    t = Template(group_def.template)
     c = RequestContext(request, {"form": form, "group": group, "group_def": group_def})
 
     return HttpResponse(t.render(c))

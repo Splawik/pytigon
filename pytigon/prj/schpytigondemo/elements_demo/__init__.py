@@ -11,5 +11,11 @@ Urls = (
         None,
         """png://actions/bookmark-new.png""",
     ),
+    (
+        "../schelements/table/DocHead/demo/form/docheadlist/?version=elements_demo__calendar",
+        _("Demo document - calendar"),
+        None,
+        """""",
+    ),
 )
 UserParam = {}

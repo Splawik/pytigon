@@ -162,18 +162,79 @@ class DemoDocHead(schelements.models.DocHead):
 
         ordering = ["id"]
 
-    date_from = models.DateField(
+    date_from = models.DateTimeField(
         "Date from",
         null=True,
         blank=True,
         editable=True,
     )
-    date_to = models.DateField(
+    date_to = models.DateTimeField(
         "Date to",
         null=True,
         blank=True,
         editable=True,
     )
+    test = models.CharField("Test", null=True, blank=True, editable=True, max_length=64)
+
+    @classmethod
+    def table_action(cls, list_view, request, data):
+        if "action" in data:
+            if data["action"] == "calendar_events":
+
+                def all_day(date1, date2):
+                    if (
+                        date1
+                        == datetime.datetime.combine(date1.date(), datetime.time.min)
+                        and date1 + datetime.timedelta(1) == date2
+                    ):
+                        return True
+                    else:
+                        return False
+
+                queryset = list_view.get_queryset()
+                if "date" in data:
+                    queryset = queryset.filter(
+                        date=datetime.datetime.fromisoformat(data["date"])
+                    )
+                else:
+                    if "start" in data:
+                        queryset = queryset.filter(
+                            date_from__gte=datetime.datetime.fromisoformat(
+                                data["start"]
+                            )
+                        )
+                    if "end" in data:
+                        queryset = queryset.filter(
+                            date_to__lte=datetime.datetime.fromisoformat(data["end"])
+                        )
+                return schjson.json_dumps(
+                    [
+                        {
+                            "resourceId": 1,
+                            "color": "#FE6B64",
+                            "id": obj.pk,
+                            "title": obj.description,
+                            "start": obj.date_from.isoformat(),
+                            "end": obj.date_to.isoformat(),
+                            "allDay": all_day(obj.date_from, obj.date_to),
+                        }
+                        for obj in queryset
+                    ]
+                )
+            if data["action"] == "calendar_change_event":
+                pk = data["id"]
+                date_from = data["start"]
+                date_to = data["end"]
+                tab = list_view.get_queryset().filter(pk=pk)
+                if len(tab) > 0:
+                    obj = tab[0]
+                    if date_from:
+                        obj.date_from = datetime.datetime.fromisoformat(date_from)
+                    if date_to:
+                        obj.date_to = datetime.datetime.fromisoformat(date_to)
+                    obj.save()
+                    return {"OK": True}
+        return None
 
 
 admin.site.register(DemoDocHead)
@@ -244,6 +305,8 @@ class DemoDocItem(schelements.models.DocItem):
                 return schjson.json_dumps(
                     [
                         {
+                            "resourceId": 1,
+                            "color": "#FE6B64",
                             "id": obj.pk,
                             "title": obj.description,
                             "start": obj.date_from.isoformat(),

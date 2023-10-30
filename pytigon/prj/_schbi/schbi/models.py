@@ -26,6 +26,22 @@ import os.path as os_path
 PROJECTS_DATA = {}
 PROJECTS_DATA_VERSION = {}
 
+REFRESH_DATA = """
+
+"""
+
+FORM = """
+
+"""
+
+VIEW = """
+
+"""
+
+TEMPLATE = """
+
+"""
+
 
 menu_icon_size_choice = [
     ("0", "small"),
@@ -138,6 +154,20 @@ class Project(JSONModel):
 
     def get_data(self):
         return PROJECTS_DATA[self.name]
+
+    def get_refresh_data_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return REFRESH_DATA
+
+    def get_form_if_empty(self, request, template_name, ext, extra_context, target):
+        return FORM
+
+    def get_view_if_empty(self, request, template_name, ext, extra_context, target):
+        return VIEW
+
+    def get_template_if_empty(self, request, template_name, ext, extra_context, target):
+        return TEMPLATE
 
 
 admin.site.register(Project)

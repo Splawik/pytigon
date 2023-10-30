@@ -90,7 +90,7 @@ def change_status(request, pk, action="accept"):
                 f"regstatus__undo_proc_{reg_status.pk}.py",
                 reg_status,
                 "undo_proc",
-                "accept",
+                "undo",
                 locals(),
                 globals(),
             )

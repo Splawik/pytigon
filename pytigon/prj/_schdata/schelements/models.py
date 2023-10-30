@@ -29,6 +29,7 @@ from django.conf import settings
 
 from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
 from pytigon_lib.schdjangoext.fastform import FAST_FORM_EXAMPLE
+from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 
 
 def get_element_queryset():
@@ -136,7 +137,7 @@ LOAD_BASE_OBJ = """#Example:
 #import datetime
 #
 #def load(data):
-#    pass
+#    return data
     
 """
 
@@ -144,7 +145,7 @@ SAVE_BASE_OBJ = """#Example:
 #import datetime
 #
 #def save(form, obj):
-#    pass
+#    return form.cleaned_data
     
 """
 
@@ -188,8 +189,6 @@ HEAD_TEMPLATE = """#Example:
 
 """
 
-HEAD_FORM = "\n".join(("#" + item for item in FAST_FORM_EXAMPLE.split("\n")))
-
 
 ITEM_TEMPLATE = """#Example:
 #% extends "schelements/docitem.html"
@@ -199,7 +198,65 @@ ITEM_TEMPLATE = """#Example:
 
 """
 
+TEMPLATE_SRC = """#Example:
+% extends "forms/edit_form.html"
+
+% load exfiltry
+% load exsyntax
+% load subreport
+
+%% row_edit_form
+    % form:
+
+"""
+
+ACTION_TEMPLATE = """#Example
+#% load exfiltry
+#% load exsyntax
+"""
+
+INFO_TEMPLATE = """#Example
+#% load exfiltry
+#% load exsyntax
+"""
+
+
+TO_STR = """#Example
+#import datetime
+#
+#def to_str(obj):
+#    return obj.name
+"""
+
+ON_DELETE = """#Example
+#import datetime
+#
+#def on_delete(obj, request, view):
+#    pass
+"""
+
+ACTION = """#Example
+#import datetime
+#
+#def action(obj, argv):
+#    pass
+"""
+
+TO_HTML_REC = """#header
+#
+#body
+#    {{ object.opis }}
+#
+#footer
+#
+
+"""
+
+HEAD_FORM = "\n".join(("#" + item for item in FAST_FORM_EXAMPLE.split("\n")))
 ITEM_FORM = HEAD_FORM
+DECLARATION = ITEM_FORM
+ACCEPT_FORM = ITEM_FORM
+UNDO_FORM = ITEM_FORM
 
 
 account_type_choice_2 = [
@@ -1169,7 +1226,10 @@ class DocHead(JSONModel):
     )
 
     def __str__(self):
-        return self.doc_type_parent.name + ":" + self.number
+        if self.number:
+            return self.doc_type_parent.name + ":" + self.number
+        else:
+            return self.doc_type_parent.name + ":"
 
     @classmethod
     def get_documents_for_reg(cls, value):
@@ -1211,37 +1271,46 @@ class DocHead(JSONModel):
     def template_for_list(view, model, context, doc_type):
         if doc_type in ("html", "json") and "filter" in context:
             tmp = DocReg.objects.filter(name=context["filter"].replace("_", "/"))
+            x = tmp[0]
             reg = tmp.first()
             if len(tmp) == 1:
                 names = []
-                if reg and reg.head_template:
-                    names.append("db/DocReg-%d-head_template.html" % reg.id)
-
-                x = tmp[0]
-                while x:
+                if "version" in context and context["version"]:
+                    v = context["version"]
+                    if "__" in v:
+                        app, version = v.split("__", 1)
+                    else:
+                        app = x.app
+                        version = v
                     names.append(
                         (
-                            x.app
+                            app
                             + "/"
                             + x.name.replace("/", "_")
-                            + "_dochead_list.html"
+                            + "_dochead_list_"
+                            + version
+                            + ".html"
                         ).lower()
                     )
-                    x = x.get_parent()
+                    if reg and reg.head_template:
+                        names.append("db/DocReg-%d-head_template.html" % reg.id)
+                else:
+                    if reg and reg.head_template:
+                        names.append("db/DocReg-%d-head_template.html" % reg.id)
 
-                if "target" in view.kwargs and "calendar" in view.kwargs["target"]:
-                    names2 = []
-                    for name in names:
-                        names2.append(
-                            name.replace(".html", "_" + view.kwargs["target"] + ".html")
+                    while x:
+                        names.append(
+                            (
+                                x.app
+                                + "/"
+                                + x.name.replace("/", "_")
+                                + "_dochead_list.html"
+                            ).lower()
                         )
-                    names = names2
+                        x = x.get_parent()
 
-                # template = select_template(names)
                 names.append(view.template_name)
                 return names
-                # if template:
-                #    return template
 
         return None
 
@@ -1256,51 +1325,72 @@ class DocHead(JSONModel):
                 else:
                     obj = DocHead.objects.get(pk=self.id)
                     reg = obj.doc_type_parent.parent
+
                 names = []
+                if "version" in context and context["version"]:
+                    v = context["version"]
+                    if "__" in v:
+                        app, version = v.split("__", 1)
+                    else:
+                        app = reg.app
+                        version = v
+                    names.append(
+                        (
+                            app
+                            + "/"
+                            + reg.name.replace("/", "_")
+                            + "_dochead_edit_"
+                            + version
+                            + ".html"
+                        ).lower()
+                    )
+                    if reg.head_template:
+                        names.append("db/DocReg-%d-head_template.html" % reg.id)
+                else:
+                    if reg.head_template:
+                        names.append("db/DocReg-%d-head_template.html" % reg.id)
 
-                if reg.head_template:
-                    names.append("db/DocReg-%d-head_template.html" % reg.id)
-
-                names.append(
-                    "%s/%s" % (self._meta.app_label, self._meta.model.__name__)
-                )
-                if obj:
+                    names.append(
+                        "%s/%s" % (self._meta.app_label, self._meta.model.__name__)
+                    )
+                    if obj:
+                        names.append(
+                            (
+                                reg.app
+                                + "/"
+                                + obj.doc_type_parent.name
+                                + "_dochead_edit.html"
+                            ).lower()
+                        )
+                    else:
+                        names.append(
+                            (
+                                reg.app + "/" + doc_type.name + "_dochead_edit.html"
+                            ).lower()
+                        )
                     names.append(
                         (
                             reg.app
                             + "/"
-                            + obj.doc_type_parent.name
+                            + reg.name.replace("/", "_")
                             + "_dochead_edit.html"
                         ).lower()
                     )
-                else:
-                    names.append(
-                        (reg.app + "/" + doc_type.name + "_dochead_edit.html").lower()
-                    )
-                names.append(
-                    (
-                        reg.app
-                        + "/"
-                        + reg.name.replace("/", "_")
-                        + "_dochead_edit.html"
-                    ).lower()
-                )
-                x = reg.get_parent()
-                while x:
-                    names.append(
-                        (
-                            x.app
-                            + "/"
-                            + x.name.replace("/", "_")
-                            + "_dochead_edit.html"
-                        ).lower()
-                    )
-                    x = x.get_parent()
-                names.append(context["view"].template_name)
+
+                    x = reg.get_parent()
+                    while x:
+                        names.append(
+                            (
+                                x.app
+                                + "/"
+                                + x.name.replace("/", "_")
+                                + "_dochead_edit.html"
+                            ).lower()
+                        )
+                        x = x.get_parent()
+                    names.append(context["view"].template_name)
+
                 return names
-                # template = select_template(names)
-                # if template:
-                #    return template
             except:
                 return None
         return None
@@ -1711,32 +1801,66 @@ class DocItem(JSONModel):
                 dochead = DocHead.objects.get(pk=parent_pk)
                 reg = dochead.doc_type_parent.parent
                 names = []
-                if reg.item_template:
-                    names.append("db/DocReg-%d-item_template.html" % reg.id)
-                names.append(
-                    (
-                        reg.app
-                        + "/"
-                        + dochead.doc_type_parent.name
-                        + "_docitem_list.html"
-                    ).lower()
-                )
-                names.append(
-                    (
-                        reg.app
-                        + "/"
-                        + reg.name.replace("/", "_")
-                        + "_docitem_list.html"
-                    ).lower()
-                )
-
-                x = reg.get_parent()
-                while x:
+                if "version" in context and context["version"]:
+                    v = context["version"]
+                    if "__" in v:
+                        app, version = v.split("__", 1)
+                    else:
+                        app = reg.app
+                        version = v
                     names.append(
-                        x.app + "/" + x.name.replace("/", "_") + "_docitem_list.html"
+                        (
+                            app
+                            + "/"
+                            + dochead.doc_type_parent.name
+                            + "_docitem_list_"
+                            + version
+                            + ".html"
+                        ).lower()
                     )
-                    x = x.get_parent()
-                names.append(view.template_name)
+                    names.append(
+                        (
+                            app
+                            + "/"
+                            + dochead.doc_type_parent.parent.name
+                            + "_docitem_list_"
+                            + version
+                            + ".html"
+                        ).lower()
+                    )
+                    if reg.item_template:
+                        names.append("db/DocReg-%d-item_template.html" % reg.id)
+                else:
+                    if reg.item_template:
+                        names.append("db/DocReg-%d-item_template.html" % reg.id)
+
+                    names.append(
+                        (
+                            reg.app
+                            + "/"
+                            + dochead.doc_type_parent.name
+                            + "_docitem_list.html"
+                        ).lower()
+                    )
+                    names.append(
+                        (
+                            reg.app
+                            + "/"
+                            + reg.name.replace("/", "_")
+                            + "_docitem_list.html"
+                        ).lower()
+                    )
+
+                    x = reg.get_parent()
+                    while x:
+                        names.append(
+                            x.app
+                            + "/"
+                            + x.name.replace("/", "_")
+                            + "_docitem_list.html"
+                        )
+                        x = x.get_parent()
+                    names.append(view.template_name)
                 return names
 
         return None
@@ -1750,32 +1874,70 @@ class DocItem(JSONModel):
                 dochead = context["view"].object.parent
 
             reg = dochead.doc_type_parent.parent
+            doc = dochead.doc_type_parent
             names = []
-            if reg.item_template:
-                names.append("db/DocReg-%d-item_template.html" % reg.id)
-            names.append(
-                (
-                    reg.app
-                    + "/"
-                    + dochead.doc_type_parent.parent.name
-                    + "_docitem_edit.html"
-                ).lower()
-            )
-            names.append(
-                (
-                    reg.app + "/" + reg.name.replace("/", "_") + "_docitem_edit.html"
-                ).lower()
-            )
-            x = reg.get_parent()
-            while x:
-                names.append(
-                    x.app + "/" + x.name.replace("/", "_") + "_docitem_edit.html"
-                )
-                x = x.get_parent()
 
-            names.append(
-                context["view"].template_name.replace(reg.app + "/", "schelements/")
-            )
+            if "version" in context and context["version"]:
+                v = context["version"]
+                if "__" in v:
+                    app, version = v.split("__", 1)
+                else:
+                    app = reg.app
+                    version = v
+
+                names.append(
+                    (
+                        app
+                        + "/"
+                        + doc.name.replace("/", "_")
+                        + "_docitem_edit_"
+                        + version
+                        + ".html"
+                    ).lower()
+                )
+                names.append(
+                    (
+                        app
+                        + "/"
+                        + reg.name.replace("/", "_")
+                        + "_docitem_edit_"
+                        + version
+                        + ".html"
+                    ).lower()
+                )
+                if reg.item_template:
+                    names.append("db/DocReg-%d-item_template.html" % reg.id)
+            else:
+                if reg.item_template:
+                    names.append("db/DocReg-%d-item_template.html" % reg.id)
+
+                names.append(
+                    (
+                        reg.app
+                        + "/"
+                        + doc.name.replace("/", "_")
+                        + "_docitem_edit.html"
+                    ).lower()
+                )
+                names.append(
+                    (
+                        reg.app
+                        + "/"
+                        + reg.name.replace("/", "_")
+                        + "_docitem_edit.html"
+                    ).lower()
+                )
+
+                x = reg.get_parent()
+                while x:
+                    names.append(
+                        x.app + "/" + x.name.replace("/", "_") + "_docitem_edit.html"
+                    )
+                    x = x.get_parent()
+
+                names.append(
+                    context["view"].template_name.replace(reg.app + "/", "schelements/")
+                )
             return names
         return None
 
@@ -2089,6 +2251,16 @@ class DocRegStatus(models.Model):
         self, request, template_name, ext, extra_context, target
     ):
         return CAN_UNDO
+
+    def get_accept_form_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ACCEPT_FORM
+
+    def get_undo_form_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return UNDO_FORM
 
 
 admin.site.register(DocRegStatus)
@@ -2848,6 +3020,23 @@ class BaseObject(models.Model):
         blank=True,
         editable=False,
     )
+    on_delete_fun = models.TextField(
+        "Fnction called when deleting an object",
+        null=True,
+        blank=True,
+        editable=False,
+    )
+    action_fun = models.TextField(
+        "Additional actions",
+        null=True,
+        blank=True,
+        editable=False,
+    )
+
+    def save(self, *argi, **argv):
+        if self.template_src:
+            self.template = ihtml_to_html(None, self.template_src)
+        super().save(*argi, **argv)
 
     def to_str(self, obj):
         ret = run_code_from_db_field(
@@ -2879,16 +3068,71 @@ class BaseObject(models.Model):
         else:
             return None
 
+    def on_delete(self, request, view):
+        run_code_from_db_field(
+            f"baseobject__on_delete_{self.pk}.py",
+            self,
+            "on_delete_fun",
+            "on_delete",
+            locals(),
+            globals(),
+            obj=self,
+            request=request,
+            view=view,
+        )
+
+    def action(self, action_name, argv):
+        return run_code_from_db_field(
+            f"baseobject__action_{self.pk}.py",
+            self,
+            "action_fun",
+            "action",
+            locals(),
+            globals(),
+            obj=self,
+            argv=argv,
+        )
+
+    def get_declaration_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return DECLARATION
+
     def get_to_str_fun_if_empty(
         self, request, template_name, ext, extra_context, target
     ):
         return TO_STR
+
+    def get_to_html_rec_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return TO_HTML_REC
+
+    def get_template_src_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return TEMPLATE_SRC
 
     def get_load_fun_if_empty(self, request, template_name, ext, extra_context, target):
         return LOAD_BASE_OBJ
 
     def get_save_fun_if_empty(self, request, template_name, ext, extra_context, target):
         return SAVE_BASE_OBJ
+
+    def get_action_template_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ACTION_TEMPLATE
+
+    def get_on_delete_fun_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ON_DELETE
+
+    def get_action_fun_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ACTION
 
 
 @receiver(post_delete, sender=Element)

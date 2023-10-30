@@ -1,16 +1,16 @@
-% extends "only_content.html"|translate:lang
+% extends "forms/form.html"
 
 % load exfiltry
 % load exsyntax
 % load static
 
 %% content
-    div class=ajax-region ajax-link,,,href={{base_path}}bi/chart_view/{{chart.id}}/
+    div class=ajax-region ajax-link,,,href={{base_path}}schbi/chart_view/{{chart.id}}/
         div class=row m-1
             div class=card p-1
                 % if form:
                     div class=col
-                        ptig-form src={{base_path}}bi/chart_view/{{chart.id}}/
+                        ptig-form src={{base_path}}schbi/chart_view/{{chart.id}}/
                             %% bi_chart_form
                                 % inline_form:
                 div class=col

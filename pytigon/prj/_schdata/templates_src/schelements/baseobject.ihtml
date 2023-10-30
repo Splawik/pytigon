@@ -1,0 +1,63 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "<<new_row_title>>"
+    % list_action "<<action>>" "<<action_description>>"
+
+%% list_row_header
+    th..._(Application)
+    th..._(Name)
+    th..._(Description)
+    th..._(Declaration)
+    th..._(Template source)
+    th..._(Template)
+    th..._(Convert fields to html)
+    th..._(Save function)
+    th..._(Load function)
+    th..._(Object to str function)
+    th..._(Action template)
+    th..._(Info template)
+    
+
+%% list_row
+    td...{{ object.app }}
+    td...{{ object.name }}
+    td...{{ object.description }}
+    td...{{ object.declaration }}
+    td...{{ object.template_src }}
+    td...{{ object.template }}
+    td...{{ object.to_html_rec }}
+    td...{{ object.save_fun }}
+    td...{{ object.load_fun }}
+    td...{{ object.to_str_fun }}
+    td...{{ object.action_template }}
+    td...{{ object.info_template }}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+        .field_edit/declaration,<description>
+        .field_edit/template_src,<description>
+        .field_edit/template,<description>
+        .field_edit/to_html_rec,<description>
+        .field_edit/save_fun,<description>
+        .field_edit/load_fun,<description>
+        .field_edit/to_str_fun,<description>
+        .field_edit/action_template,<description>
+        .field_edit/info_template,<description>
+        .<<action_name>>,<<description>>
+
+%% row_edit
+    % form:
+        .app,name,description,declaration,template_src,template,to_html_rec,save_fun,load_fun,to_str_fun,action_template,info_template

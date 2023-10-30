@@ -53,7 +53,7 @@
                                                                 <ul class="treeview-menu sidebar-submenu">
                                                         {% endifchanged %}
                                                         <li>
-                                                                <a href="{{base_path}}{{item_info.url}}?fragment=page" class="menu-href ladda-button" target="_parent" data-bs-toggle="tooltip" title="{{item_info.description}}">
+                                                                <a href="{{base_path}}{{item_info.url|append_get_param:"fragment=page"}}" class="menu-href ladda-button" target="_parent" data-bs-toggle="tooltip" title="{{item_info.description}}">
                                                                         {% if item_info.icon|last_elem:"<=" %}
                                                                                 {% if standard_web_browser %}
                                                                                         {% icon item_info.icon|last_elem:"<="|append_str:" fa-lg tablet_menu_icon" width=22 %}
@@ -118,7 +118,7 @@
                                                                 {% endif %}
                                                         {% endifchanged %}
                                                         <li>
-                                                                <a href="{{base_path}}{{item_info.url}}?fragment=page" class="menu-href ladda-button" target="_parent" data-bs-toggle="tooltip" title="{{item_info.description}}">
+                                                                <a href="{{base_path}}{{item_info.url|append_get_param:"fragment=page"}}" class="menu-href ladda-button" target="_parent" data-bs-toggle="tooltip" title="{{item_info.description}}">
                                                                         {% if item_info.icon|last_elem:"<=" %}
                                                                                 {% if standard_web_browser %}
                                                                                         {% icon item_info.icon|last_elem:"<="|append_str:" fa-lg tablet_menu_icon" width=22 %}

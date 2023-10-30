@@ -28,7 +28,7 @@
                 {{item_info.app_name}}
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
 
-    a class=menu-href dropdown-item,,,href={{base_path}}{{item_info.url}}?fragment=page,,,target=_parent...{{item_info.description}}
+    a class=menu-href dropdown-item,,,href={{base_path}}{{item_info.url|append_get_param:"fragment=page"}},,,target=_parent...{{item_info.description}}
 
   % if forloop.last
         </div></li>
