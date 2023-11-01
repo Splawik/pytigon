@@ -84,7 +84,11 @@ try {
             } else if (_pyfunc_truthy(component.hasAttribute("href-edit"))) {
                 href = _pymeth_replace.call(component.getAttribute("href-edit"), "{id}", _pyfunc_str(eventObj.id));
                 _callback = (function flx__callback (data) {
-                    on_popup_edit_new(info.el, get_elem_from_string(data), href, null, null);
+                    if (_pyfunc_truthy((_pyfunc_truthy(component.hasAttribute("href-edit-target"))) && ((_pyfunc_op_contains(component.getAttribute("href-edit-target"), ["_parent", "_top2"]))))) {
+                        on_new_tab(info.el, get_elem_from_string(data), href, null, null);
+                    } else {
+                        on_popup_edit_new(info.el, get_elem_from_string(data), href, null, null);
+                    }
                     return null;
                 }).bind(this);
 

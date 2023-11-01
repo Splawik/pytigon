@@ -2860,6 +2860,7 @@ on_new_tab = function flx_on_new_tab (target_element, data_element, new_url, par
     return (get_menu().on_menu_href)(target_element, data_element2, title, title_alt, new_url);
 };
 
+window.on_new_tab = on_new_tab;
 on_replace_app = function flx_on_replace_app (target_element, data_element, new_url, param, event) {
     var wrapper;
     if (_pyfunc_truthy(window.PUSH_STATE)) {

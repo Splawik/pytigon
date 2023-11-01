@@ -7,12 +7,8 @@
 %% list_page
     % with "elements_demo.models:DemoDocHead"|import_var as DemoDocHead:
         ptig-event-calendar toolbar-buttons=resourceTimeGridDay,resourceTimeGridWeek,listWeek,,,resources=1:all;,,,href={{base_path}}elements_demo/table/DemoDocHead/-/form/table_action/,,,href-edit={{base_path}}schelements/table/DocHead/{id}/edit/?version=elements_demo__calendar&only_content=1,,,href-new={{base_path}}schelements/table/DocHead/demo_doc/add/?date_from={start}&date_to={end},,,width=100%,,,height=100%
-
+    
 %% row_edit
-    % comment:
-        % form:
-    % if object.id:
-        %% docitem_list
-            % frame table_path|append_str:object.id|append_str:"/docitem_set/-/calendar/sublist/?version=elements_demo__calendar&only_content=1" "500px"
-    % else:
-        <button type="button" class="btn btn-warning" target="refresh_frame" rettype="RETURN_HTML_ERROR" data-region="subframe" get-param="redirect='1'" style="width:100%"> << Expand >> </button>
+
+%% docitem_list
+    % frame table_path|append_str:object.id|append_str:"/docitem_set/-/calendar/sublist/?version=elements_demo__calendar&only_content=1" "500px"

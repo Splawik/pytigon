@@ -8,16 +8,8 @@
         {% endwith %}
 {% endblock %}
 {% block row_edit %}
-        {% comment %}
-                {% form %}
-                {% endform %}
-        {% endcomment %}
-        {% if object.id %}
-                {% block docitem_list %}
-                        {% frame table_path|append_str:object.id|append_str:"/docitem_set/-/calendar/sublist/?version=elements_demo__calendar&only_content=1" "500px" %}
-                {% endblock %}
-          {% else %}
-                <button type="button" class="btn btn-warning" target="refresh_frame" rettype="RETURN_HTML_ERROR" data-region="subframe" get-param="redirect='1'" style="width:100%"> << Expand >> </button>
-        {% endif %}
+{% endblock %}
+{% block docitem_list %}
+        {% frame table_path|append_str:object.id|append_str:"/docitem_set/-/calendar/sublist/?version=elements_demo__calendar&only_content=1" "500px" %}
 {% endblock %}
 

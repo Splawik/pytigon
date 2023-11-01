@@ -1,8 +1,8 @@
-% extends "schelements/dochead.html"
+% extends "schelements/docitem.html"
 
 % load exfiltry
 % load exsyntax
 
 %% list_page
     % with "elements_demo.models:DemoDocItem"|import_var as DemoDocItem:
-        ptig-event-calendar toolbar-buttons=resourceTimeGridDay,resourceTimeGridWeek,listWeek,,,resources=1:all;,,,href={{base_path}}elements_demo/table/DemoDocItem/-/form/table_action/,,,href-edit={{base_path}}schelements/table/DocHead/{{parent.pk}}/docitem_set/{id}/edit/?only_content=1,,,href-new={{base_path}}schelements/table/DocHead/{{parent.pk}}/docitem_set/demo/add/?x1=demo&date_from={start}&date_to={end},,,width=100%,,,height=100%
+        ptig-event-calendar toolbar-buttons=resourceTimeGridDay,resourceTimeGridWeek,listWeek,,,resources=1:all;,,,href={{base_path}}schelements/table/DocHead/{{parent.pk}}/docitem_set/-/form/table_action/?only_content=1&fragment=page-content,,,href-edit={{base_path}}schelements/table/DocHead/{{parent.pk}}/docitem_set/{id}/edit/?only_content=1,,,href-new={{base_path}}schelements/table/DocHead/{{parent.pk}}/docitem_set/demo/add/?x1=demo&date_from={start}&date_to={end},,,width=100%,,,height=100%

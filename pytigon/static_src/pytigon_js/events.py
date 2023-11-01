@@ -606,6 +606,9 @@ def on_new_tab(target_element, data_element, new_url, param, event):
     )
 
 
+window.on_new_tab = on_new_tab
+
+
 def on_replace_app(target_element, data_element, new_url, param, event):
     if window.PUSH_STATE:
         history_push_state("", window.BASE_PATH)

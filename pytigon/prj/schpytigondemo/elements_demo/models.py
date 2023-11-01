@@ -286,7 +286,10 @@ class DemoDocItem(schelements.models.DocItem):
                     else:
                         return False
 
-                queryset = list_view.get_queryset()
+                queryset = DemoDocItem.objects.filter(
+                    parent=list_view.kwargs["parent_pk"]
+                )
+
                 if "date" in data:
                     queryset = queryset.filter(
                         date=datetime.datetime.fromisoformat(data["date"])
@@ -320,7 +323,7 @@ class DemoDocItem(schelements.models.DocItem):
                 pk = data["id"]
                 date_from = data["start"]
                 date_to = data["end"]
-                tab = list_view.get_queryset().filter(pk=pk)
+                tab = DemoDocItem.objects.filter(pk=pk)
                 if len(tab) > 0:
                     obj = tab[0]
                     if date_from:
