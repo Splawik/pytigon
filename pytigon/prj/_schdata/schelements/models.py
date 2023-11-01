@@ -238,7 +238,7 @@ ON_DELETE = """#Example
 ACTION = """#Example
 #import datetime
 #
-#def action(obj, argv):
+#def action(obj, action_name argv):
 #    pass
 """
 
@@ -1428,8 +1428,6 @@ class DocHead(JSONModel):
                     save_fun_src_obj,
                     "save_head_fun",
                     "save",
-                    locals(),
-                    globals(),
                     dochead=self,
                 )
                 # content_to_function(save_fun_src, "object")(self)
@@ -1477,8 +1475,6 @@ class DocHead(JSONModel):
                     status,
                     "can_set_proc",
                     "can_set",
-                    locals(),
-                    globals(),
                     request=request,
                     doc_head=self,
                 )
@@ -1499,8 +1495,6 @@ class DocHead(JSONModel):
                     status,
                     "can_undo_proc",
                     "can_undo",
-                    locals(),
-                    globals(),
                     request=request,
                     doc_head=self,
                 )
@@ -1598,8 +1592,6 @@ class DocHead(JSONModel):
                 reg,
                 "access_fun",
                 "q_for_list",
-                locals(),
-                globals(),
                 request=request,
                 user=request.user,
                 profile=profile,
@@ -1640,8 +1632,6 @@ class DocHead(JSONModel):
             reg,
             "access_fun",
             "check_user_perm",
-            locals(),
-            globals(),
             dochead=self,
             user=user,
             perm=perm,
@@ -1669,8 +1659,6 @@ class DocHead(JSONModel):
             reg,
             "access_fun",
             "check_user_perm",
-            locals(),
-            globals(),
             dochead=None,
             user=user,
             perm="add",
@@ -1993,8 +1981,6 @@ class DocItem(JSONModel):
                     save_fun_src_obj,
                     "save_item_fun",
                     "save",
-                    locals(),
-                    globals(),
                     docitem=self,
                 )
 
@@ -3044,8 +3030,6 @@ class BaseObject(models.Model):
             self,
             "to_str_fun",
             "to_str",
-            locals(),
-            globals(),
             obj=obj,
         )
         if ret != None:
@@ -3068,28 +3052,25 @@ class BaseObject(models.Model):
         else:
             return None
 
-    def on_delete(self, request, view):
+    def on_delete(self, obj, request, view):
         run_code_from_db_field(
             f"baseobject__on_delete_{self.pk}.py",
             self,
             "on_delete_fun",
             "on_delete",
-            locals(),
-            globals(),
-            obj=self,
+            obj=obj,
             request=request,
             view=view,
         )
 
-    def action(self, action_name, argv):
+    def action(self, obj, action_name, argv):
         return run_code_from_db_field(
             f"baseobject__action_{self.pk}.py",
             self,
             "action_fun",
             "action",
-            locals(),
-            globals(),
-            obj=self,
+            obj=obj,
+            action_name=action_name,
             argv=argv,
         )
 

@@ -66,12 +66,9 @@ def project_view(request, prj_name):
         request.session[session_key] = {}
 
     if prj.form:
-        form_class = form_from_str(
-            prj.form, globals_dict=globals(), locals_dict=locals()
-        )
+        form_class = form_from_str(prj.form)
         if request.method == "POST":
             json_data = json.loads(request.body)
-            print("XXXXXXX: ", json_data)
             modified = False
             for key, value in json_data.items():
                 if key in ("name", "new_value"):
@@ -108,8 +105,6 @@ def project_view(request, prj_name):
             prj,
             "view",
             "view",
-            locals_dict=locals(),
-            globals_dict=globals(),
             request=request,
             module=ModuleStruct(globals(), locals()),
             prj=prj,
@@ -176,8 +171,6 @@ def page_view(request, page_id):
             page,
             "view",
             "view",
-            locals_dict=locals(),
-            globals_dict=globals(),
             request=request,
             module=ModuleStruct(globals(), locals()),
             page=page,
@@ -258,8 +251,6 @@ def chart_view(request, chart_id):
             chart,
             "view",
             "view",
-            locals_dict=locals(),
-            globals_dict=globals(),
             request=request,
             module=ModuleStruct(globals(), locals()),
             chart=chart,

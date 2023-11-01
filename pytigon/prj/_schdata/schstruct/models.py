@@ -166,5 +166,15 @@ class CommonGroup(JSONModel):
 
         return cls.objects.all()
 
+    def on_delete(self, request, view):
+        gdef = self.get_def()
+        if gdef:
+            return gdef.on_delete(self, request, view)
+
+    def action(self, action_name, argv):
+        gdef = self.get_def()
+        if gdef:
+            return gdef.action(self, action_name, argv)
+
 
 admin.site.register(CommonGroup)

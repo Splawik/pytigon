@@ -119,8 +119,6 @@ def run(request, pk):
             script,
             "_view",
             "view",
-            locals(),
-            globals(),
             request=request,
             data=data,
         )

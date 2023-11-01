@@ -87,8 +87,6 @@ class ActionType(models.Model):
                 action_type_obj,
                 "script_for_new_item",
                 "new_action_item",
-                locals(),
-                globals(),
                 action=action,
                 data=data,
             )
@@ -101,8 +99,6 @@ class ActionType(models.Model):
             action_type_obj,
             "script_for_close_item",
             "close_action",
-            locals(),
-            globals(),
             action=action,
         )
 
@@ -114,8 +110,6 @@ class ActionType(models.Model):
             action_type_obj,
             "script_for_email_text",
             "email_text",
-            locals(),
-            globals(),
             action=action,
             email_type=email_type,
         )

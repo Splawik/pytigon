@@ -224,8 +224,6 @@ def publish(request, pk):
                 conf,
                 "publish_fun",
                 "publish",
-                locals(),
-                globals(),
                 page=page,
                 conf=conf,
             )

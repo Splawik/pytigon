@@ -140,8 +140,6 @@ def edit__group(request, group_id):
                     group_def,
                     "save_fun",
                     "save",
-                    locals(),
-                    globals(),
                     form=form,
                     obj=group,
                 )
@@ -169,8 +167,6 @@ def edit__group(request, group_id):
             group_def,
             "load_fun",
             "load",
-            locals(),
-            globals(),
             data=data,
         )
         if data != None:

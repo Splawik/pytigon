@@ -287,8 +287,6 @@ def refresh_data(refresh_type):
                 prj,
                 "refresh_data",
                 "refresh_data",
-                locals_dict=locals(),
-                globals_dict=globals(),
                 module=ModuleStruct(globals(), locals()),
                 prj=prj,
                 refresh_type=refresh_type,

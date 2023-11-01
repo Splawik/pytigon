@@ -153,8 +153,6 @@ class WorkflowType(models.Model):
                 workflow_type_obj,
                 "script_for_new_item",
                 "new_workflow_item",
-                locals(),
-                globals(),
                 workflow_item=workflow_item,
                 data=data,
             )
@@ -168,8 +166,6 @@ class WorkflowType(models.Model):
                 workflow_type_obj,
                 "script_for_refresh_queue",
                 "refresh_workflow_queue",
-                locals(),
-                globals(),
                 workflow_type_obj=workflow_type_obj,
             )
         return None
@@ -183,8 +179,6 @@ class WorkflowType(models.Model):
                 workflow_type_obj,
                 "script_for_handle_event",
                 "handle_workflow_event",
-                locals(),
-                globals(),
                 workflow_type_obj=workflow_type_obj,
                 event=event,
             )
@@ -199,8 +193,6 @@ class WorkflowType(models.Model):
                 workflow_type_obj,
                 "script_for_accept_item",
                 "accept_workflow_item",
-                locals(),
-                globals(),
                 workflow_item=workflow_item,
             )
         return None
@@ -214,8 +206,6 @@ class WorkflowType(models.Model):
                 workflow_type_obj,
                 "script_for_reject_item",
                 "reject_workflow_item",
-                locals(),
-                globals(),
                 workflow_item=workflow_item,
             )
         return None

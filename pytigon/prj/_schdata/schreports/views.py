@@ -170,8 +170,6 @@ def edit__rep(request, rep_id, rep=None):
                     rep_def,
                     "save_fun",
                     "save",
-                    locals(),
-                    globals(),
                     form=form,
                     obj=rep,
                 )
@@ -192,8 +190,6 @@ def edit__rep(request, rep_id, rep=None):
             rep_def,
             "load_fun",
             "load",
-            locals(),
-            globals(),
             data=data,
         )
 
@@ -309,8 +305,6 @@ def plot_service(request, **argv):
                 obj,
                 "get_config",
                 "get_config",
-                locals(),
-                globals(),
                 request_param=request_param,
             )
             if config == None:
@@ -328,8 +322,6 @@ def plot_service(request, **argv):
                 obj,
                 "get_data",
                 "get_data",
-                locals(),
-                globals(),
                 request_param=request_param,
             )
 
@@ -342,8 +334,6 @@ def plot_service(request, **argv):
                 obj,
                 "get_layout",
                 "get_layout",
-                locals(),
-                globals(),
                 request_param=request_param,
             )
             if layout == None:
@@ -355,8 +345,6 @@ def plot_service(request, **argv):
                 obj,
                 "on_event",
                 "on_event",
-                locals(),
-                globals(),
                 request_param=request_param,
                 data=param,
             )
@@ -416,8 +404,6 @@ def edit__group(request, group_id):
                     group_def,
                     "save_fun",
                     "save",
-                    locals(),
-                    globals(),
                     form=form,
                     obj=group,
                 )
@@ -445,8 +431,6 @@ def edit__group(request, group_id):
             group_def,
             "load_fun",
             "load",
-            locals(),
-            globals(),
             data=data,
         )
 
