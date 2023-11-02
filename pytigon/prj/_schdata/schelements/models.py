@@ -9,6 +9,7 @@ from pytigon_lib.schtools import schjson
 
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
+from django.utils import timezone
 
 import os, os.path
 import sys
@@ -975,7 +976,7 @@ class DocReg(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.update_time = datetime.datetime.now()
+        self.update_time = timezone.now()
         super().save(*args, **kwargs)
 
     def get_parent(self):
@@ -1122,6 +1123,41 @@ class DocType(models.Model):
     def __str__(self):
         return self.name
 
+    def get_save_head_fun_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return SAVE_HEAD
+
+    def get_save_item_fun_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return SAVE_ITEM
+
+    def get_head_form_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return HEAD_FORM
+
+    def get_item_form_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ITEM_FORM
+
+    def get_head_template_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return HEAD_TEMPLATE
+
+    def get_item_template_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ITEM_TEMPLATE
+
+    def get_access_fun_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return ACCESS_FUN
+
 
 admin.site.register(DocType)
 
@@ -1261,7 +1297,7 @@ class DocHead(JSONModel):
             docs = DocType.objects.filter(name=add_param)
             if len(docs) == 1:
                 self.doc_type_parent = docs[0]
-                self.date = datetime.datetime.now()
+                self.date = timezone.now()
                 self.status = "draft"
                 self.operator = request.user.username
 
@@ -1433,7 +1469,7 @@ class DocHead(JSONModel):
                 # content_to_function(save_fun_src, "object")(self)
 
         if not self.pk:
-            self.date_c = datetime.datetime.now()
+            self.date_c = timezone.now()
 
             y = "%04d" % datetime.date.today().year
             t = self.doc_type_parent.name
@@ -1956,7 +1992,7 @@ class DocItem(JSONModel):
                 return {
                     "parent": str(parent.id),
                     "order": max_nr,
-                    "date_c": datetime.datetime.now(),
+                    "date_c": timezone.now(),
                     "level": 0,
                 }
 

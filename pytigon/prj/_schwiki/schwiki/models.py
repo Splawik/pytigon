@@ -9,6 +9,7 @@ from pytigon_lib.schtools import schjson
 
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
+from django.utils import timezone
 
 import os, os.path
 import sys
@@ -160,7 +161,7 @@ class Page(JSONModel):
                     obj_to_save.jsondata = self.jsondata
                     obj_to_save.published = False
                     obj_to_save.latest = True
-                    obj_to_save.update_time = datetime.now()
+                    obj_to_save.update_time = timezone.now()
                     obj_to_save.save()
                     pages = Page.objects.filter(
                         subject=self.subject, name=self.name
@@ -180,7 +181,7 @@ class Page(JSONModel):
                     return
 
             self.operator = request.user.username
-            self.update_time = datetime.now()
+            self.update_time = timezone.now()
             self.latest = True
             if not conf_exists:
                 self.published = True

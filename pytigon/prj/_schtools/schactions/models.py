@@ -9,6 +9,7 @@ from pytigon_lib.schtools import schjson
 
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
+from django.utils import timezone
 
 import os, os.path
 import sys
@@ -80,7 +81,7 @@ class ActionType(models.Model):
         if action_type_obj:
             action = Action()
             action.action_type = action_type_obj
-            action.start_date = datetime.now()
+            action.start_date = timezone.now()
             action.group = "default"
             return run_code_from_db_field(
                 f"actiontype__new_action_item_{action_type_obj.name}.py",

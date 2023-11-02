@@ -140,7 +140,7 @@ def change_status(request, pk, action="accept"):
                             parent=doc_head, level__gte=reg_status.order
                         ).delete()
 
-                    doc_status.date = datetime.datetime.now()
+                    doc_status.date = timezone.now()
                     doc_status.operator = request.user.username
                     doc_status.save()
 

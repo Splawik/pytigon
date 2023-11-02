@@ -9,6 +9,7 @@ from pytigon_lib.schtools import schjson
 
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
+from django.utils import timezone
 
 import os, os.path
 import sys
@@ -147,7 +148,7 @@ class WorkflowType(models.Model):
             workflow_item = WorkflowItem()
             workflow_item.workflow_type = workflow_type_obj
             workflow_item.level = 0
-            workflow_item.creation_date = datetime.datetime.now()
+            workflow_item.creation_date = timezone.now()
             return run_code_from_db_field(
                 f"workflowtype__new_workflow_item_{workflow_type_obj.name}.py",
                 workflow_type_obj,

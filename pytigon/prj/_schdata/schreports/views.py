@@ -133,7 +133,7 @@ def new_rep(request, rep_type, doc_type_name):
     if len(doc_type) == 1:
         doc = DocHead()
         doc.doc_type_parent = doc_type[0]
-        doc.date = datetime.datetime.now()
+        doc.date = timezone.now()
         doc.status = "edit"
         doc.operator = request.user.username
         doc.save()
@@ -143,7 +143,7 @@ def new_rep(request, rep_type, doc_type_name):
         rep.order = 0
         rep.parent_doc = doc
         rep.report_def_name = rep_type
-        rep.date = datetime.datetime.now()
+        rep.date = timezone.now()
         rep.save()
         url = make_href("/schreports/table/Report/%d/edit__rep/" % rep.id)
         return HttpResponseRedirect(url)
@@ -211,7 +211,7 @@ def new_subrep(request, parent_rep_id, rep_type):
     rep.parent = rep_parent
     rep.order = 0
     rep.report_def_name = rep_parent.report_def_name + "/" + rep_type
-    rep.date = datetime.datetime.now()
+    rep.date = timezone.now()
     return edit__rep(request, 0, rep)
 
     # rep_parent = models.Report.objects.get(pk=parent_rep_id)

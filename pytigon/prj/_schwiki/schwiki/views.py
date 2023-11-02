@@ -147,7 +147,7 @@ def view_page(request, app_or_subject, page_path):
         page.name = page_name
         page.description = desc
         page.subject = app_or_subject
-        page.update_time = datetime.datetime.now()
+        page.update_time = timezone.now()
         page.operator = request.user.username
         page.save()
         id = page.id
