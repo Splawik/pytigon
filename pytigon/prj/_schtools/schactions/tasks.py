@@ -8,12 +8,6 @@ from queue import Empty
 from pytigon_lib.schtasks.publish import publish
 
 
-from schactions.models import Action
-from django.utils import timezone
-from django.core.mail import send_mail
-from django.conf import settings
-
-
 def deadline_exceeded(cproxy=None, **kwargs):
     actions = Action.objects.exclude(status="CLOSED").filter(
         deadline__lt=timezone.now()

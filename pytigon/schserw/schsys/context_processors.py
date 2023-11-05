@@ -465,31 +465,14 @@ class AppManager:
         if settings.THREE_LEVEL_MENU:
             return [item for item in ret if item.module_title == "main tools"]
         else:
-            return ret
+            return [item for item in ret if item.module_title != "Config"]
 
     def get_not_main_tools_app_items_width_perm(self, prj=settings.PRJ_NAME):
         ret = self.get_app_items_width_perm(prj)
         if settings.THREE_LEVEL_MENU:
-            print("-------------------------------------------------------------")
-            print(
-                [
-                    (item.module_title, item.app_title)
-                    for item in ret
-                    if item.module_title == "main tools"
-                ]
-            )
-            print("=============================================================")
-            print(
-                [
-                    (item.module_title, item.app_title)
-                    for item in ret
-                    if item.module_title != "main tools"
-                ]
-            )
-            print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
             return [item for item in ret if item.module_title != "main tools"]
         else:
-            return []
+            return [item for item in ret if item.module_title == "Config"]
 
     def login_providers(self):
         ret = []

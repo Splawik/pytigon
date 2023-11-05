@@ -88,9 +88,12 @@
                 {% endif %}
         {% endcomment %}
 {% endblock %}
+{% block dialog_type %}
+        modal-xl
+{% endblock %}
 {% block row_edit %}
         {% block dochead_edit %}
-                {% form %}
+                {% form "^/6" %}
                 {% endform %}
         {% endblock %}
 {% endblock %}

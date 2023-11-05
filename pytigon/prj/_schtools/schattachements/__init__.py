@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 
-ModuleTitle = _("attachements")
+ModuleTitle = _("Config")
 Title = _("Attachements")
 Perms = True
 Index = "None"

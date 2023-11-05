@@ -15,8 +15,6 @@ from channels.generic.websocket import (
 
 from channels.generic.http import AsyncHttpConsumer
 
-from pytigon_lib.schtasks.publish import CommunicationByCacheReceiver
-
 
 class TaskEventsConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):

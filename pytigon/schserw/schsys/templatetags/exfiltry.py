@@ -57,6 +57,12 @@ def class_name(value):
         pass
     return ret
 
+@register.filter(name="to_console")
+def to_console(value):
+    """Returns class name of value"""
+    print(value)
+    return ""
+
 
 @register.filter(name="is_private")
 def is_private(value):

@@ -72,9 +72,12 @@
             % action "decline_status"|append_str:"/"|append_str:object.status "_(Discard status:) "|append_str:object.status "fa fa-undo" target=object.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/"
 
 
+%% dialog_type
+    .modal-xl
+
 %% row_edit
     %% dochead_edit
-        % form:
+        %form "^/6":
 
 %% row_edit_footer   
     % if object.id:

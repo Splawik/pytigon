@@ -1,6 +1,6 @@
 from django.utils.translation import gettext_lazy as _
 
-ModuleTitle = _("administration")
+ModuleTitle = _("Config")
 Title = _("Administration")
 Perms = True
 Index = "None"

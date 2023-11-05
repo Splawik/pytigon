@@ -9,6 +9,7 @@ from pytigon_lib.schtools import schjson
 
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
+from django.utils import timezone
 
 import os, os.path
 import sys
@@ -848,6 +849,33 @@ class SChApp(JSONModel):
         for f in self.schfiles_set.all():
             if f.file_type == "j":
                 ret.append("../static/" + self.name + "/views/" + f.name + ".fview")
+
+        if "_schdata.schelements" in self.parent.ext_apps:
+            ret.append(
+                "../schelements/table/DocHead/[[docreg_name/form/docheadlist/?view_in=desktop"
+            )
+            ret.append(
+                "../schelements/table/DocHead/[[docreg_name]]/[[target]]/docheadlist/?view_in=desktop"
+            )
+            ret.append(
+                "../schelements/view_elements/[[element_type]]/-/-/?view_in=desktop"
+            )
+            ret.append(
+                "../schelements/view_elements/[[element_type]]/-/[[app_name]]__[[target_name]]/"
+            )
+            ret.append(
+                "../schelements/view_elements_as_tree/-/[[element_type]]/[[app_name]]__[[target_name]]/?view_in=desktop"
+            )
+
+        if "_schdata.schstruct" in self.parent.ext_apps:
+            ret.append(
+                "../schstruct/list_group_by_tag/[[element_type]]/[[app_name]]__[[target_name]]/?view_in=desktop"
+            )
+
+        if "_schtools.schworkflow" in self.parent.ext_apps:
+            ret.append(
+                "../schworkflow/table/WorkflowItem//[app_name]__[[taable_name]]__0__[[filter]]/form__[[target]]/sublist/?fragment=page"
+            )
 
         return ret
 

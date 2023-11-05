@@ -17,5 +17,11 @@ Urls = (
         None,
         """""",
     ),
+    (
+        "../schelements/table/DocHead/test/form/docheadlist/?view_in=desktop",
+        _("Test type document"),
+        None,
+        """png://actions/document-new.png""",
+    ),
 )
 UserParam = {}

@@ -113,15 +113,15 @@ ACCESS_FUN = """#import datetime
 
 SAVE_ITEM = """#import datetime
 #
-#def save(docitem):
-#    pass
+#def save(docitem, view, form, request):
+#    return True #True if you want to save the object else False
     
 """
 
 SAVE_HEAD = """#import datetime
 #
-#def save(dochead):
-#    pass
+#def save(dochead, view, form, request):
+#    return True #True if you want to save the object else False
     
 """
 
@@ -1445,8 +1445,35 @@ class DocHead(JSONModel):
 
         return None
 
+    def post_form(self, view, form, request):
+        obj = self
+        save_fun_src_obj = None
+        if obj.doc_type_parent.save_head_fun:
+            save_fun_src_obj = obj.doc_type_parent
+        else:
+            x = obj.doc_type_parent.parent
+            while x:
+                if x.save_head_fun:
+                    save_fun_src_obj = x
+                    break
+                x = x.get_parent()
+        if save_fun_src_obj:
+            ret = run_code_from_db_field(
+                f"dochead__save_{save_fun_src_obj.pk}.py",
+                save_fun_src_obj,
+                "save_head_fun",
+                "save",
+                dochead=self,
+                view=view,
+                form=form,
+                request=request,
+            )
+            return ret
+        return True
+
     def save(self, *args, **kwargs):
-        if self.id:
+        # if self.id:
+        if False:
             obj = DocHead.objects.get(pk=self.id)
             save_fun_src_obj = None
             if obj.doc_type_parent.save_head_fun:
@@ -1577,9 +1604,13 @@ class DocHead(JSONModel):
                 object_list = DocType.objects.filter(name=t)
                 if len(object_list):
                     t = object_list[0].parent.name
-                return ContentType.objects.get(
-                    model=t.lower() + "dochead"
-                ).model_class()()
+
+                c = ContentType.objects.filter(model=t.lower() + "dochead").first()
+                if c:
+                    return c.model_class()()
+                else:
+                    return DocHead()
+
             else:
                 t = self.doc_type_parent.parent.name
                 name = t.lower() + "dochead"
@@ -1998,8 +2029,35 @@ class DocItem(JSONModel):
 
         return None
 
+    def post_form(self, view, form, request):
+        obj = self.parent
+        save_fun_src_obj = None
+        if obj.doc_type_parent.save_item_fun:
+            save_fun_src_obj = obj.doc_type_parent
+        else:
+            x = obj.doc_type_parent.parent
+            while x:
+                if x.save_item_fun:
+                    save_fun_src_obj = x
+                    break
+                x = x.get_parent()
+        if save_fun_src_obj:
+            ret = check = run_code_from_db_field(
+                f"docitem__save_{save_fun_src_obj.pk}.py",
+                save_fun_src_obj,
+                "save_item_fun",
+                "save",
+                docitem=self,
+                view=view,
+                form=form,
+                request=request,
+            )
+            return ret
+        return True
+
     def save(self, *args, **kwargs):
-        if self.id:
+        # if self.id:
+        if False:
             obj = DocItem.objects.get(pk=self.id).parent
             save_fun_src_obj = None
             if obj.doc_type_parent.save_head_fun:
