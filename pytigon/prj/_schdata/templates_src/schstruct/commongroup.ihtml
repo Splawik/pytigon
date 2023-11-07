@@ -24,7 +24,7 @@
             % if tab:
                 ._(New): 
                 % for pos in tab:
-                    % new_row_inline pos.description "" "" "" "" table_path|append_str:"../../new_group/"|append_str:pos.name|append_str:"/"|append_str:parent_pk|append_str:"/"
+                    % new_row_inline pos.description "" "" "" "" table_path|append_str:"../../new_group/"|append_str:pos.name|append_str:"/"|append_str:parent_pk|append_str:"/?after_close=refresh"
 
 %% list_row_header
     th...Title

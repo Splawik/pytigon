@@ -2,7 +2,7 @@
 {% load exsyntax %}
 {% block action_widget_content %}
         {% if standard_web_browser %}
-                <a href="{{action.url|safe}}{% if version %}?version={{version}}{% endif %}" class="{% block action_class %}{% endblock %}{{action.tag_class}}" title="{{action.title}}" target="{{action.target}}" name="{{action.name}}" {{action.attrs|safe}}>
+                <a href="{% if version %}{{action.url|append_get_param:"version="|append_str:version|safe}}{% else %}{{action.url|safe}}{% endif %}" class="{% block action_class %}{% endblock %}{{action.tag_class}}" title="{{action.title}}" target="{{action.target}}" name="{{action.name}}" {{action.attrs|safe}}>
                         {% if browser_type == 'mobile' %}
                                 {% if not action.icon_name %}
                                         {{action.title}}

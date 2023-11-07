@@ -16,6 +16,7 @@ APPS = [
     "log_demo",
     "desktop_demo",
     "interfaces",
+    "schpytigondemo_config",
     "_schwiki.schwiki",
     "_schtools.schsimplescripts",
     "_schtools.schlog",

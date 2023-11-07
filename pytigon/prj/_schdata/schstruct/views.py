@@ -42,6 +42,68 @@ from schelements.views import year_ago
 from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
 
 
+def edit_group(request, group):
+    group_def = models.CommonGroupDef.objects.get(name=group.group_def_name)
+
+    if group_def.declaration:
+        form_class = form_from_str(group_def.declaration)
+    else:
+        return HttpResponse("ERROR")
+
+    if request.POST or request.FILES:
+        if request.method == "POST":
+            form = form_class(request.POST, request.FILES)
+            if form.is_valid():
+                data = run_code_from_db_field(
+                    f"groupdef__save_fun_{group_def.pk}.py",
+                    group_def,
+                    "save_fun",
+                    "save",
+                    form=form,
+                    obj=group,
+                )
+                if data == None:
+                    data = form.cleaned_data
+
+                if not data:
+                    data = {}
+
+                if "title" in data:
+                    group.title = data["title"]
+                    del data["title"]
+                group.jsondata = data
+                # group._data = data
+                # group._data['json_update'] = True
+                group.save()
+                url = make_path("ok")
+                return HttpResponseRedirect(url)
+
+    if not request.POST:
+        data = group.get_json_data()
+
+        data_form = run_code_from_db_field(
+            f"groupdef__load_fun_{group_def.pk}.py",
+            group_def,
+            "load_fun",
+            "load",
+            data=data,
+        )
+        if data != None:
+            data_form = data
+
+        if not data:
+            data = {}
+
+        data_form["title"] = group.title
+        form = form_class(initial=data_form)
+
+    # t = Template(ihtml_to_html(None, group_def.template))
+    t = Template(group_def.template)
+    c = RequestContext(request, {"form": form, "group": group, "group_def": group_def})
+
+    return HttpResponse(t.render(c))
+
+
 def move_rep(request, id, to_pos="+1"):
     obj = models.Report.objects.get(pk=id)
     url = make_path("ok")
@@ -112,18 +174,22 @@ def new_group(request, group_type, parent_id):
         group.gp_group_def_name = group_type
 
     group.group_def_name = group_type
-    group.save()
+    # group.save()
 
     if not group.gparent:
         group.gparent = group
-        group.save()
+        # group.save()
 
-    url = make_href("/schstruct/table/CommonGroup/%d/edit__group/" % group.id)
-    return HttpResponseRedirect(url)
+    return edit_group(request, group)
+
+    # url = make_href("/schstruct/table/CommonGroup/%d/edit__group/?after_close=refresh" % group.id)
+    # return HttpResponseRedirect(url)
 
 
 def edit__group(request, group_id):
     group = models.CommonGroup.objects.get(pk=group_id)
+    return edit_group(request, group)
+
     group_def = models.CommonGroupDef.objects.get(name=group.group_def_name)
 
     if group_def.declaration:
@@ -179,7 +245,7 @@ def edit__group(request, group_id):
         form = form_class(initial=data_form)
 
     # t = Template(ihtml_to_html(None, group_def.template))
-    t = Template(ihtml_to_html(None, group_def.template))
+    t = Template(group_def.template)
     c = RequestContext(request, {"form": form, "group": group, "group_def": group_def})
 
     return HttpResponse(t.render(c))

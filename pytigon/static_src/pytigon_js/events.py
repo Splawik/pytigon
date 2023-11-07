@@ -373,13 +373,19 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
         inline_maximize(data_element)
 
     def on_hidden(self, event):
-        nonlocal target_element
+        nonlocal target_element, url
         region = get_ajax_region(
             target_element, target_element.getAttribute("data-region")
         )
         if region:
             obj = region.querySelector(".plug")
             obj.remove()
+
+            if 'after_close=' in url:
+                x = url.split("after_close=")[1]
+                if x.startswith('refresh'):
+                    window.refresh_ajax_frame(region)
+        
         return False
 
     dialog = dialog_slot.firstElementChild
@@ -513,10 +519,16 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
     mount_html(content, data_element)
 
     def on_hidden(self, event):
-        nonlocal region
+        nonlocal region, url
         obj = region.querySelector(".plug")
         if obj:
             obj.remove()
+
+        if 'after_close=' in url:
+            x = url.split("after_close=")[1]
+            if x.startswith('refresh'):
+                window.refresh_ajax_frame(region)
+    
         return False
 
     if window.hasOwnProperty("bootstrap"):

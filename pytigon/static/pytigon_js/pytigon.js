@@ -2662,11 +2662,17 @@ _on_inline = function flx__on_inline (target_element, data_element, url, param, 
         inline_maximize(data_element);
     }
     on_hidden = function (event) {
-        var obj, region;
+        var obj, region, x;
         region = get_ajax_region(target_element, target_element.getAttribute("data-region"));
         if (_pyfunc_truthy(region)) {
             obj = region.querySelector(".plug");
             obj.remove();
+            if (_pyfunc_op_contains("after_close=", url)) {
+                x = _pymeth_split.call(url, "after_close=")[1];
+                if (_pymeth_startswith.call(x, "refresh")) {
+                    window.refresh_ajax_frame(region);
+                }
+            }
         }
         return false;
     };
@@ -2779,10 +2785,16 @@ _on_popup = function flx__on_popup (target_element, data_element, url, param, ev
     content = dialog_slot.querySelector("div.dialog-data");
     mount_html(content, data_element);
     on_hidden = function (event) {
-        var obj;
+        var obj, x;
         obj = region.querySelector(".plug");
         if (_pyfunc_truthy(obj)) {
             obj.remove();
+        }
+        if (_pyfunc_op_contains("after_close=", url)) {
+            x = _pymeth_split.call(url, "after_close=")[1];
+            if (_pymeth_startswith.call(x, "refresh")) {
+                window.refresh_ajax_frame(region);
+            }
         }
         return false;
     };
