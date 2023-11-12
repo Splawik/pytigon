@@ -7,3 +7,7 @@ from . import views
 urlpatterns = []
 
 gen = generic_table_start(urlpatterns, "schpytigondemo_config", views)
+
+
+gen.standard("Company", _("Company"), _("Companies"))
+gen.standard("Product", _("Product"), _("Products"))

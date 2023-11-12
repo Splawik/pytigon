@@ -858,13 +858,22 @@ class SChApp(JSONModel):
                 "../schelements/table/DocHead/[[docreg_name]]/[[target]]/docheadlist/?view_in=desktop"
             )
             ret.append(
-                "../schelements/view_elements/[[element_type]]/-/-/?view_in=desktop"
+                "../schelements/view_elements/[[element_code]]/[[element_type]]/-/?view_in=desktop"
             )
             ret.append(
-                "../schelements/view_elements/[[element_type]]/-/[[app_name]]__[[target_name]]/"
+                "../schelements/view_elements/[[element_code or -]]/[[element_type or -]]/[[app_name]]__[[target_name]]/"
             )
             ret.append(
-                "../schelements/view_elements_as_tree/-/[[element_type]]/[[app_name]]__[[target_name]]/?view_in=desktop"
+                "../schelements/view_elements_as_tree/[[element_code or -]]/[[element_type or -]]/-/?view_in=desktop"
+            )
+            ret.append(
+                "../schelements/view_elements_as_tree/[[element_code or -]]/[[element_type or -]]/[[app_name]]__[[target_name]]/?view_in=desktop"
+            )
+            ret.append(
+                "../schelements/view_elements_of_type/[[element_type or -]]/-/?view_in=desktop"
+            )
+            ret.append(
+                "../schelements/view_elements_of_type/[[element_type or -]]/[[app_name]]__[[target_name]]/?view_in=desktop"
             )
 
         if "_schdata.schstruct" in self.parent.ext_apps:

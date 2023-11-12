@@ -170,13 +170,17 @@ def new_row_base(
     tag_class="",
     url="",
 ):
-    if url:
+    if url and not url.startswith('+'):
         url2 = url
     else:
         if "vtype" in context and context["vtype"] == "tree":
             url2 = "{tp}%s/this/{x1}/add/" % context["parent_pk"]
         else:
             url2 = "{tp}{x1}/add/"
+
+        if url:
+            url2 += url[1:]
+
 
         if action == "new_row/-":
             if (
@@ -249,18 +253,20 @@ def row_related_list(
         table = table_name
     else:
         app, table = table_name.split("/")
-    if url:
+    if url and not url.startswith("+"):
         url2 = url
     else:
         if version:
             version = "__" + version
         if filter:
-            url2 = "{bp}" + f"{app}/table/{table}//{filter}/form{version}/sublist/"
+            url2 = "{bp}" + f"{app}/table/{table}//{filter}/form{version}/sublist/" 
         else:
             url2 = (
                 "{bp}"
                 + f"{app}/table/{table}/{context['object'].id}/-/form{version}/sublist/"
             )
+        if url:
+            url2 += url[1:]
     ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url2)
     return ret
 
@@ -938,10 +944,13 @@ def editable_base(context, name, title, url):
 
 @register.simple_tag(takes_context=True)
 def editable(context, name, title="", url=None):
-    if url:
+    if url and not url.startswith('+'):
         url2 = url
     else:
         url2 = "../../../{oid}/{field_name}/editable/editor/"
+        if url:
+            url2 += url[1:]
+
     return mark_safe(editable_base(context, name, title, url2))
 
 

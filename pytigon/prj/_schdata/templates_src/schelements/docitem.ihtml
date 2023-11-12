@@ -22,6 +22,10 @@
 
 %% scroll
 
+%% list_content_header_first_row
+
+%% list_content_header_second_row
+
 %% list_content_actions
     % with parent.doc_type_parent.parent.name|lower as reg_name:
         % with reg_name|append_str:"docitem" as doc_name:
@@ -30,7 +34,7 @@
                     % new_row "_(New document item)" action=action 
             % else
                 % new_row "_(New document item)" 
-
+    
 %% list_row_header
     th..._(order)
     th..._(description)

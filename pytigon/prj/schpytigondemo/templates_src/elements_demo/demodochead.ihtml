@@ -9,9 +9,6 @@
 
 %% scroll
 
-%% list_content_actions
-    % new_row "<<new_row_title>>"
-    % list_action "<<action>>" "<<action_description>>"
 
 %% list_row_header
     th..._(Date from)
@@ -22,12 +19,6 @@
     td...{{ object.date_from }}
     td...{{ object.date_to }}
     
-
-%% list_row_actions
-    % row_actions:
-        .edit
-        .delete
-        .<<action_name>>,<<description>>
 
 %% row_edit
     % form:

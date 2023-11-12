@@ -15,6 +15,8 @@ import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
+import schmasterdata.models
+
 
 import django
 from django.db import models
@@ -74,7 +76,6 @@ from django.utils.timezone import make_aware
 
 import schelements.models
 import schprofile.models
-import school.models
 
 
 from schtools.models import Parameter
@@ -83,11 +84,20 @@ from schtools.models import Parameter
 
 STRUCTURE = {
     "ROOT": {"next": ["O-COM", "I-GRP", "I-GRP-D", "C-GRP"]},
+    "O-COM": {
+        "next": [
+            "O-EMP",
+        ],
+        "title": "Company",
+        "table": "Company",
+        "app": "schpytigondemo_config",
+    },
+    "I-PRD": {"title": "Product", "table": "Product", "app": "schpytigondemo_config"},
 }
 
 for pos in STRUCTURE:
     if not "app" in STRUCTURE[pos]:
-        STRUCTURE[pos]["app"] = "schpytigondemo"
+        STRUCTURE[pos]["app"] = "schpytigondemo_config"
     if "next" in STRUCTURE[pos]:
         STRUCTURE[pos]["next"].append("O-GRP")
 
@@ -158,16 +168,14 @@ class DemoElement:
 
 extend_class(schelements.models.Element, DemoElement)
 
-schelements.models.Element.add_type("O-CUS-S", "Owner/Customer/Student")
-schelements.models.Element.add_type("O-SUP-T", "Owner/Supplier/Teacher")
-
-schelements.models.Element.add_type("I-DEV-C", "Item/Device/Computer")
-schelements.models.Element.add_type("I-DEV-M", "Item/Device/Monitor")
-schelements.models.Element.add_type("I-DEV-P", "Item/Device/Printer")
-schelements.models.Element.add_type("I-DEV-H", "Item/Device/Phone")
-schelements.models.Element.add_type("I-DEV-O", "Item/Device/Other")
-
-schelements.models.Element.add_type("I-GRP-D", "Item/Group/Device")
+# schelements.models.Element.add_type("O-CUS-S","Owner/Customer/Student")
+# schelements.models.Element.add_type("O-SUP-T", "Owner/Supplier/Teacher")
+# schelements.models.Element.add_type("I-DEV-C", "Item/Device/Computer")
+# schelements.models.Element.add_type("I-DEV-M", "Item/Device/Monitor")
+# schelements.models.Element.add_type("I-DEV-P", "Item/Device/Printer")
+# schelements.models.Element.add_type("I-DEV-H", "Item/Device/Phone")
+# schelements.models.Element.add_type("I-DEV-O", "Item/Device/Other")
+# schelements.models.Element.add_type("I-GRP-D", "Item/Group/Device")
 
 
 def get_element_queryset():
@@ -205,7 +213,7 @@ class DemoDocHead:
         return True
 
 
-extend_class(schelements.models.DocHead, SchoolDocHead)
+extend_class(schelements.models.DocHead, DemoDocHead)
 
 
 class DemoDocItem:
@@ -221,7 +229,7 @@ class DemoDocItem:
         return True
 
 
-extend_class(schelements.models.DocItem, SchoolDocItem)
+extend_class(schelements.models.DocItem, DemoDocItem)
 
 
 # Module customization: _schdata.schprofile
@@ -299,14 +307,40 @@ def add_user(user_obj, surname, name, email, user_type):
         context["user"] = user
     elif user_type in ("ADMINISTRATOR", "O-EMP"):
         add_user_to_group(user, "admins")
-        send_message(
-            "Welcome to the program " + settings.PRJ_TITLE,
-            "school/message_initial_admin.html",
-            settings.DEFAULT_FROM_EMAIL,
-            (email,),
-            None,
-            context,
-        )
+        # send_message(
+        #    "Welcome to the program " + settings.PRJ_TITLE,
+        #    "school/message_initial_admin.html",
+        #    settings.DEFAULT_FROM_EMAIL,
+        #    (email,),
+        #    None,
+        #    context,
+        # )
+
+
+class Company(schmasterdata.models.StandardCompany):
+    class Meta:
+        verbose_name = _("Company")
+        verbose_name_plural = _("Companies")
+        default_permissions = ("add", "change", "delete", "list")
+        app_label = "schpytigondemo_config"
+
+        ordering = ["id"]
+
+
+admin.site.register(Company)
+
+
+class Product(schmasterdata.models.StandardProduct):
+    class Meta:
+        verbose_name = _("Product")
+        verbose_name_plural = _("Products")
+        default_permissions = ("add", "change", "delete", "list")
+        app_label = "schpytigondemo_config"
+
+        ordering = ["id"]
+
+
+admin.site.register(Product)
 
 
 def define_access_rules(user, rules):

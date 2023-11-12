@@ -80,8 +80,6 @@ def change_status(request, pk, action="accept"):
                 reg_status,
                 "accept_proc",
                 "accept",
-                locals(),
-                globals(),
             )
         else:
             form_txt = reg_status.undo_form
@@ -91,8 +89,6 @@ def change_status(request, pk, action="accept"):
                 reg_status,
                 "undo_proc",
                 "undo",
-                locals(),
-                globals(),
             )
 
         params = {

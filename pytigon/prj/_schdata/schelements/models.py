@@ -1306,10 +1306,10 @@ class DocHead(JSONModel):
     @staticmethod
     def template_for_list(view, model, context, doc_type):
         if doc_type in ("html", "json") and "filter" in context:
-            tmp = DocReg.objects.filter(name=context["filter"].replace("_", "/"))
-            x = tmp[0]
-            reg = tmp.first()
-            if len(tmp) == 1:
+            reg = DocReg.objects.filter(
+                name=context["filter"].replace("_", "/")
+            ).first()
+            if reg:
                 names = []
                 if "version" in context and context["version"]:
                     v = context["version"]
@@ -1333,7 +1333,7 @@ class DocHead(JSONModel):
                 else:
                     if reg and reg.head_template:
                         names.append("db/DocReg-%d-head_template.html" % reg.id)
-
+                    x = reg
                     while x:
                         names.append(
                             (

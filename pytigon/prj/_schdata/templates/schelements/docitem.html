@@ -22,6 +22,10 @@
 {% endblock %}
 {% block scroll %}
 {% endblock %}
+{% block list_content_header_first_row %}
+{% endblock %}
+{% block list_content_header_second_row %}
+{% endblock %}
 {% block list_content_actions %}
         {% with parent.doc_type_parent.parent.name|lower as reg_name %}
                 {% with reg_name|append_str:"docitem" as doc_name %}

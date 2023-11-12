@@ -23,5 +23,23 @@ Urls = (
         None,
         """png://actions/document-new.png""",
     ),
+    (
+        "../schelements/view_elements_as_tree/C1/-/-/?view_in=desktop",
+        _("Company 1"),
+        None,
+        """png://actions/edit-paste.png""",
+    ),
+    (
+        "../schelements/view_elements/WHITE_COLLAR/-/-/?view_in=desktop",
+        _("White-collar workers"),
+        None,
+        """png://emotes/face-monkey.png""",
+    ),
+    (
+        "../schelements/view_elements/-/O-EMP/-/?view_in=desktop",
+        _("Employes"),
+        None,
+        """png://emotes/face-glasses.png""",
+    ),
 )
 UserParam = {}
