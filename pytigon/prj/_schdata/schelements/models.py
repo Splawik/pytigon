@@ -1316,13 +1316,13 @@ class DocHead(JSONModel):
                     if "__" in v:
                         app, version = v.split("__", 1)
                     else:
-                        app = x.app
+                        app = reg.app
                         version = v
                     names.append(
                         (
                             app
                             + "/"
-                            + x.name.replace("/", "_")
+                            + reg.name.replace("/", "_")
                             + "_dochead_list_"
                             + version
                             + ".html"
