@@ -1,0 +1,5 @@
+% if is_checked:
+    img class=checkbox,,,src=file:///static/fonts/fork-awesome/fonts/32x32/check.png
+% else:
+    img class=checkbox,,,src=file:///static/fonts/fork-awesome/fonts/32x32/square-o.png
+&nbsp;&nbsp;{{title|safe}}

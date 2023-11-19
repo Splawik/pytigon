@@ -1530,3 +1530,4 @@ def modify(parser, token):
 @register.simple_tag(takes_context=True)
 def show_context(context):
     return str(context)
+

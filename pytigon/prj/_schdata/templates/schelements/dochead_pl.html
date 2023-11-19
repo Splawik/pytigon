@@ -67,7 +67,11 @@
                 {% if vs %}
                         {% for row in vs %}
                                 {% if row.order > object.get_reg_status.order %}
-                                        {% action "approve_status"|append_str:"/"|append_str:row.name row.description row.icon target=row.get_accept_target url=table_path|append_str:"{id}/action/approve/" %}
+                                        {% if row.for_accept_template %}
+                                                {% subtemplate row.for_accept_template %}
+                                          {% else %}
+                                                {% action "approve_status"|append_str:"/"|append_str:row.name row.description row.icon target=row.get_accept_target url=table_path|append_str:"{id}/action/approve/" %}
+                                        {% endif %}
                                 {% endif %}
                         {% endfor %}
                 {% endif %}
@@ -76,7 +80,11 @@
                 {% if vs %}
                         {% for row in vs %}
                                 {% if row.order < object.get_reg_status.order %}
-                                        {% action "decline_status"|append_str:"/"|append_str:row.name "Back to status:"|append_str:row.name row.icon target=row.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
+                                        {% if row.for_undo_template %}
+                                                {% subtemplate row.for_undo_template %}
+                                          {% else %}
+                                                {% action "decline_status"|append_str:"/"|append_str:row.name "Back to status:"|append_str:row.name row.icon target=row.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
+                                        {% endif %}
                                 {% endif %}
                         {% endfor %}
                 {% endif %}

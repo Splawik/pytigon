@@ -1,0 +1,39 @@
+% load exfiltry
+% load exsyntax
+
+div class=form-group
+    %% header_new_button
+        div class=row
+            div class=tr d-inline
+                % new_row "+ "|append_str:rep_def.description "" "" "" "-" "{{base_path}}schreports/new_subrep/"|append_str:parent_rep.id|append_str:"/"|append_str:rep_type|append_str:"/"            
+    
+    div class=row
+        %% header
+        
+        % for object in reports:
+            div class={% block subreport_item_width %}col-1{% endblock %},,,style=position:relative;display:inline-block;
+                %% rep_line
+                div class=fab,,,style=transform:scale(0.5); -webkit-transform:scale(0.5); -moz-transform:scale(0.5); -o-transform:scale(0.5); margin-left: -40px;
+                    nav class=menu
+                        input type=checkbox,,,href=#,,,class=menu-open,,,name=menu-open,,,id=menu-open-subrep-{{forloop.counter0}}
+                        label class=menu-open-button,,,for=menu-open-subrep-{{forloop.counter0}},,,draggable=true,,,ondrop=subreport_drop(event,'{{base_path}}');,,,ondragstart=subreport_dragstart(event);,,,ondragenter=subreport_ondragenter(event);,,,ondragleave=subreport_ondragleave(event);,,,ondragover=subreport_ondragover(event);,,,name={{object.id}}
+                            h4...{{forloop.counter}}
+                            span class=fa fa-bars fa-3x
+                            
+                        a class=menu-item,,,data-inline=,,,true,,,href={{base_path}}schreports/table/Report/{{object.id}}/action/move_up/,,,name=move_up,,,title=Move up,,,target=refresh_frame
+                            i class=fa fa-hand-o-left fa-2x
+
+                        a class=menu-item bg-primary popup,,,href={{base_path}}schreports/table/Report/{{object.id}}/edit__rep/,,,name=update/inline,,,title=update,,,target=popup_edit
+                            i class=fa fa-pencil-square-o fa-2x
+                            
+                        a class=menu-item bg-danger popup,,,href={{base_path}}schreports/table/Report/{{object.id}}/delete/,,,name=delete,,,title=delete,,,target=popup_delete
+                            i class=fa fa-trash-o fa-2x
+                                                                                            
+                        a class=menu-item,,,data-inline=true,,,href={{base_path}}schreports/table/Report/{{object.id}}/action/move_down/,,,name=move_down,,,title=Move down,,,target=refresh_frame
+                            i class=fa fa-hand-o-right fa-2x
+        %% footer
+        
+    %% footer_new_button
+        div class=row
+            div class=tr d-inline new-subreport
+                % new_row "+ "|append_str:rep_def.description "" "" "" "-" "{{base_path}}schreports/new_subrep/"|append_str:parent_rep.id|append_str:"/"|append_str:rep_type|append_str:"/"            

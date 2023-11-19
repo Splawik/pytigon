@@ -111,10 +111,11 @@ def change_status(request, pk, action="accept"):
             if (not form) or form.is_valid():
                 doc_status = models.DocHeadStatus()
                 doc_status.parent = doc_head
+                callback = None
 
                 try:
                     with transaction.atomic():
-                        errors = fun(
+                        ret = fun(
                             request,
                             doc_head,
                             reg_status,
@@ -123,6 +124,13 @@ def change_status(request, pk, action="accept"):
                             doc_status,
                             form,
                         )
+                        if type(ret) == dict and "errors" in ret:
+                            errors = ret["errors"]
+                            if "callback" in ret:
+                                callback = ret["callback"]
+                        else:
+                            errors = ret
+
                 except ValueError as err:
                     errors = err.args
 
@@ -139,10 +147,12 @@ def change_status(request, pk, action="accept"):
                     doc_status.date = timezone.now()
                     doc_status.operator = request.user.username
                     doc_status.save()
-
-                    return actions.update_row_ok(
-                        request, int(doc_head.id), str(doc_head)
-                    )
+                    if callback:
+                        return callback()
+                    else:
+                        return actions.update_row_ok(
+                            request, int(doc_head.id), str(doc_head)
+                        )
                 else:
                     return {
                         "errors": errors,

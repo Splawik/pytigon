@@ -1391,7 +1391,7 @@ GlobalBus.prototype.unregister = function (component) {
 window.GlobalBus = GlobalBus;
 export {set_state, DefineWebComponent, GlobalBus};
 
-var MOUNT_INIT_FUN, _on_shown_bs_tab, _refresh_page, ajax_load, auto_frame_init, auto_refresh_tab, create_onloadeddata, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, init_select2_ctrl, mount_html, moveelement_init, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init, set_select2_value;
+var MOUNT_INIT_FUN, _on_shown_bs_tab, _refresh_page, ajax_load, auto_frame_init, auto_refresh_tab, create_onloadeddata, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, get_click_on_focus_fun, get_refresh_on_focus_fun, init_select2_ctrl, mount_html, moveelement_init, on_focus_action, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init, set_select2_value;
 data_type = function flx_data_type (data_or_html) {
     var meta_list, pos, stub1_seq, stub2_itr;
     if (_pyfunc_truthy(data_or_html)) {
@@ -1562,14 +1562,59 @@ auto_refresh_tab = function flx_auto_refresh_tab (dest_elem) {
 };
 
 register_mount_fun(auto_refresh_tab);
+get_click_on_focus_fun = function flx_get_click_on_focus_fun (element) {
+    var _click;
+    _click = (function flx__click (event) {
+        if ((!_pyfunc_truthy(document.hidden))) {
+            element.click();
+        }
+        return null;
+    }).bind(this);
+
+    return _click;
+};
+
+get_refresh_on_focus_fun = function flx_get_refresh_on_focus_fun (element) {
+    var _refresh;
+    _refresh = (function flx__refresh (event) {
+        if ((!_pyfunc_truthy(document.hidden))) {
+            refresh_ajax_frame(element);
+        }
+        return null;
+    }).bind(this);
+
+    return _refresh;
+};
+
+on_focus_action = function flx_on_focus_action (dest_elem) {
+    var elem, fun, item_list, stub15_seq, stub16_itr;
+    item_list = Array.prototype.slice.call(dest_elem.querySelectorAll(".on-focus-action"));
+    stub15_seq = item_list;
+    if ((typeof stub15_seq === "object") && (!Array.isArray(stub15_seq))) { stub15_seq = Object.keys(stub15_seq);}
+    for (stub16_itr = 0; stub16_itr < stub15_seq.length; stub16_itr += 1) {
+        elem = stub15_seq[stub16_itr];
+        fun = null;
+        if (_pyfunc_truthy(elem.classList.contains("on-focus-action-click"))) {
+            fun = get_click_on_focus_fun(elem);
+        } else if (_pyfunc_truthy(elem.classList.contains("on-focus-action-refresh"))) {
+            fun = get_refresh_on_focus_fun(elem);
+        }
+        if (_pyfunc_truthy(fun)) {
+            window.addEventListener("visibilitychange", fun);
+        }
+    }
+    return null;
+};
+
+register_mount_fun(on_focus_action);
 moveelement_init = function flx_moveelement_init (dest_elem) {
-    var _on_remove, data_position, elem2, obj, objs, parent, stub17_seq, stub18_itr;
+    var _on_remove, data_position, elem2, obj, objs, parent, stub19_seq, stub20_itr;
     objs = Array.prototype.slice.call(dest_elem.querySelectorAll(".move-element"));
     if (_pyfunc_truthy(objs)) {
-        stub17_seq = objs;
-        if ((typeof stub17_seq === "object") && (!Array.isArray(stub17_seq))) { stub17_seq = Object.keys(stub17_seq);}
-        for (stub18_itr = 0; stub18_itr < stub17_seq.length; stub18_itr += 1) {
-            obj = stub17_seq[stub18_itr];
+        stub19_seq = objs;
+        if ((typeof stub19_seq === "object") && (!Array.isArray(stub19_seq))) { stub19_seq = Object.keys(stub19_seq);}
+        for (stub20_itr = 0; stub20_itr < stub19_seq.length; stub20_itr += 1) {
+            obj = stub19_seq[stub20_itr];
             if (_pyfunc_truthy(obj.hasAttribute("data-position"))) {
                 _pymeth_remove.call(obj.classList, "move-element");
                 data_position = obj.getAttribute("data-position");
@@ -1580,11 +1625,11 @@ moveelement_init = function flx_moveelement_init (dest_elem) {
                 }
                 if (_pyfunc_truthy(_pymeth_endswith.call(data_position, ":class"))) {
                     _on_remove = (function flx__on_remove () {
-                        var c, stub15_seq, stub16_itr;
-                        stub15_seq = Array.prototype.slice.call(obj.classList);
-                        if ((typeof stub15_seq === "object") && (!Array.isArray(stub15_seq))) { stub15_seq = Object.keys(stub15_seq);}
-                        for (stub16_itr = 0; stub16_itr < stub15_seq.length; stub16_itr += 1) {
-                            c = stub15_seq[stub16_itr];
+                        var c, stub17_seq, stub18_itr;
+                        stub17_seq = Array.prototype.slice.call(obj.classList);
+                        if ((typeof stub17_seq === "object") && (!Array.isArray(stub17_seq))) { stub17_seq = Object.keys(stub17_seq);}
+                        for (stub18_itr = 0; stub18_itr < stub17_seq.length; stub18_itr += 1) {
+                            c = stub17_seq[stub18_itr];
                             _pymeth_remove.call(elem2.classList, c);
                         }
                         return null;
@@ -1650,13 +1695,13 @@ init_select2_ctrl = function () {
 };
 
 select2_init = function flx_select2_init (dest_elem) {
-    var control, controls, modal, stub19_seq, stub20_itr;
+    var control, controls, modal, stub21_seq, stub22_itr;
     controls = Array.prototype.slice.call(dest_elem.querySelectorAll(".django-select2"));
     if (_pyfunc_truthy(controls)) {
-        stub19_seq = controls;
-        if ((typeof stub19_seq === "object") && (!Array.isArray(stub19_seq))) { stub19_seq = Object.keys(stub19_seq);}
-        for (stub20_itr = 0; stub20_itr < stub19_seq.length; stub20_itr += 1) {
-            control = stub19_seq[stub20_itr];
+        stub21_seq = controls;
+        if ((typeof stub21_seq === "object") && (!Array.isArray(stub21_seq))) { stub21_seq = Object.keys(stub21_seq);}
+        for (stub22_itr = 0; stub22_itr < stub21_seq.length; stub22_itr += 1) {
+            control = stub21_seq[stub22_itr];
             modal = control.closest(".modal");
             if (_pyfunc_truthy(modal)) {
                 (jQuery(control).djangoSelect2)(({minimumInputLength: 0, placeholder: "Select an option", dropdownParent: jQuery(modal)}));
@@ -1674,7 +1719,7 @@ select2_init = function flx_select2_init (dest_elem) {
 
 register_mount_fun(select2_init);
 select_combo_init = function flx_select_combo_init (dest_elem) {
-    var elem, on_change, on_change_element, select_ctrl_list, stub21_seq, stub22_itr;
+    var elem, on_change, on_change_element, select_ctrl_list, stub23_seq, stub24_itr;
     select_ctrl_list = Array.prototype.slice.call(dest_elem.querySelectorAll(".select_combo"));
     on_change_element = (function flx_on_change_element (element) {
         var _onload, evt, next_element, next_elements, region, src;
@@ -1725,10 +1770,10 @@ select_combo_init = function flx_select_combo_init (dest_elem) {
         return on_change_element(element);
     }).bind(this);
 
-    stub21_seq = select_ctrl_list;
-    if ((typeof stub21_seq === "object") && (!Array.isArray(stub21_seq))) { stub21_seq = Object.keys(stub21_seq);}
-    for (stub22_itr = 0; stub22_itr < stub21_seq.length; stub22_itr += 1) {
-        elem = stub21_seq[stub22_itr];
+    stub23_seq = select_ctrl_list;
+    if ((typeof stub23_seq === "object") && (!Array.isArray(stub23_seq))) { stub23_seq = Object.keys(stub23_seq);}
+    for (stub24_itr = 0; stub24_itr < stub23_seq.length; stub24_itr += 1) {
+        elem = stub23_seq[stub24_itr];
         if (_pyfunc_truthy(elem.hasAttribute("data-rel-name"))) {
             elem.addEventListener("change", on_change);
         }
@@ -1780,7 +1825,7 @@ get_ajax_region = function flx_get_ajax_region (element, region_name, strict_mod
 
 window.get_ajax_region = get_ajax_region;
 get_ajax_link = function flx_get_ajax_link (element, region_name, strict_mode) {
-    var link, link_list, region, stub23_seq, stub24_itr;
+    var link, link_list, region, stub25_seq, stub26_itr;
     region_name = (region_name === undefined) ? null: region_name;
     strict_mode = (strict_mode === undefined) ? false: strict_mode;
     if (((_pyfunc_truthy(element.classList.contains("ajax-link"))) && ((((!_pyfunc_truthy(region_name))) || (_pyfunc_op_equals(element.getAttribute("data-region"), region_name)))))) {
@@ -1792,10 +1837,10 @@ get_ajax_link = function flx_get_ajax_link (element, region_name, strict_mode) {
             return region;
         } else if (_pyfunc_truthy(region_name)) {
             link_list = Array.prototype.slice.call(region.querySelectorAll((".ajax-link[data-region='" + region_name) + "']"));
-            stub23_seq = link_list;
-            if ((typeof stub23_seq === "object") && (!Array.isArray(stub23_seq))) { stub23_seq = Object.keys(stub23_seq);}
-            for (stub24_itr = 0; stub24_itr < stub23_seq.length; stub24_itr += 1) {
-                link = stub23_seq[stub24_itr];
+            stub25_seq = link_list;
+            if ((typeof stub25_seq === "object") && (!Array.isArray(stub25_seq))) { stub25_seq = Object.keys(stub25_seq);}
+            for (stub26_itr = 0; stub26_itr < stub25_seq.length; stub26_itr += 1) {
+                link = stub25_seq[stub26_itr];
                 if ((_pyfunc_op_equals((link.closest((".ajax-region[data-region='" + region_name) + "']")), region))) {
                     return link;
                 }
@@ -1815,7 +1860,7 @@ get_ajax_link = function flx_get_ajax_link (element, region_name, strict_mode) {
 
 window.get_ajax_link = get_ajax_link;
 get_ajax_frame = function flx_get_ajax_frame (element, region_name, strict_mode) {
-    var f, frame_list, region, stub25_seq, stub26_itr;
+    var f, frame_list, region, stub27_seq, stub28_itr;
     region_name = (region_name === undefined) ? null: region_name;
     strict_mode = (strict_mode === undefined) ? false: strict_mode;
     region = get_ajax_region(element, region_name, strict_mode);
@@ -1824,10 +1869,10 @@ get_ajax_frame = function flx_get_ajax_frame (element, region_name, strict_mode)
             return region;
         } else if (_pyfunc_truthy(region_name)) {
             frame_list = Array.prototype.slice.call(region.querySelectorAll((".ajax-frame[data-region='" + region_name) + "']"));
-            stub25_seq = frame_list;
-            if ((typeof stub25_seq === "object") && (!Array.isArray(stub25_seq))) { stub25_seq = Object.keys(stub25_seq);}
-            for (stub26_itr = 0; stub26_itr < stub25_seq.length; stub26_itr += 1) {
-                f = stub25_seq[stub26_itr];
+            stub27_seq = frame_list;
+            if ((typeof stub27_seq === "object") && (!Array.isArray(stub27_seq))) { stub27_seq = Object.keys(stub27_seq);}
+            for (stub28_itr = 0; stub28_itr < stub27_seq.length; stub28_itr += 1) {
+                f = stub27_seq[stub28_itr];
                 if ((_pyfunc_op_equals((f.closest((".ajax-region[data-region='" + region_name) + "']")), region))) {
                     return f;
                 }
@@ -2020,7 +2065,7 @@ ajax_load = function flx_ajax_load (element, url, complete) {
 };
 
 window.ajax_load = ajax_load;
-export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, auto_refresh_tab, moveelement_init, set_select2_value, create_onloadeddata, init_select2_ctrl, select2_init, select_combo_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
+export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, auto_refresh_tab, get_click_on_focus_fun, get_refresh_on_focus_fun, on_focus_action, moveelement_init, set_select2_value, create_onloadeddata, init_select2_ctrl, select2_init, select_combo_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
 
 var INIT_DB_STRUCT, SYNC_STRUCT, _MSIE, _MSIE2, _UA, get_list_from_table, get_table, init_db, init_sync, on_sys_sync, open_database, sync_and_run;
 INIT_DB_STRUCT = null;

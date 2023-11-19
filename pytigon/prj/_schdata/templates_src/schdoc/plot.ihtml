@@ -1,0 +1,47 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New plot"
+
+%% list_row_header
+    th..._(name)
+    th..._(group)
+    th..._(permission)
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.group}}
+    td...{{object.permission}}
+
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .field_edit/get_config,Get config,get_config
+        .field_edit/get_data,Get data,get_data
+        .field_edit/get_layout,Get layout,get_layout
+        .field_edit/on_event,On event,on_event
+        .delete
+
+%% row_edit
+    % form:

@@ -3,6 +3,7 @@ APPS = [
     "schreports",
     "schprofile",
     "schstruct",
+    "schdoc",
     "_schtools.schtools",
 ]
 APPS_EXT = []

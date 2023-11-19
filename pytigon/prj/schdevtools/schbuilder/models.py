@@ -875,6 +875,9 @@ class SChApp(JSONModel):
             ret.append(
                 "../schelements/view_elements_of_type/[[element_type or -]]/[[app_name]]__[[target_name]]/?view_in=desktop"
             )
+            ret.append(
+                "../schstruct/list_group_by_tag/[[tag]]/[[app_name]]__[[target_name]]/?view_in=desktop"
+            )
 
         if "_schdata.schstruct" in self.parent.ext_apps:
             ret.append(
@@ -1926,7 +1929,10 @@ class SChAppMenu(models.Model):
         if self.url_type in [None, "-"]:
             return ""
         else:
-            return "?view_in=" + self.url_type
+            if "?" in self.url:
+                return "&view_in=" + self.url_type
+            else:
+                return "?view_in=" + self.url_type
 
     def clean_url(self):
         return self.url.replace("$", "")

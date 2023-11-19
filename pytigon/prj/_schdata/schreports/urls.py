@@ -55,24 +55,6 @@ urlpatterns = [
         {},
         name="schreports_plot_service",
     ),
-    re_path(
-        "new_group/(?P<group_type>\w+)/(?P<parent_id>\d+)/$",
-        views.new_group,
-        {},
-        name="schreports_new_group",
-    ),
-    re_path(
-        "table/CommonGroup/(?P<group_id>\d+)/edit__group/$",
-        views.edit__group,
-        {},
-        name="schreports_edit__group",
-    ),
-    re_path(
-        "list_group_by_tag/(?P<group_tag>\w+)/$",
-        views.list_group_by_tag,
-        {},
-        name="schreports_list_group_by_tag",
-    ),
 ]
 
 gen = generic_table_start(urlpatterns, "schreports", views)

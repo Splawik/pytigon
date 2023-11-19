@@ -1,0 +1,48 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New report definition"
+    ptig-paste href=../table_action/
+    
+%% list_row_header
+    th..._(name)
+    th..._(description)
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.description}}
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .field_edit/declaration,Declaration,declaration
+        .field_edit/template_src,Template src,template_src 
+        .field_edit/template,Template,template
+        .field_edit/to_html_rec,To html row,to_html_rec
+        .field_edit/save_fun,Save function,save_fun
+        .field_edit/load_fun,Load function,load_fun
+        .delete
+
+%% row_edit
+    % form:
+        .app,name,description,doc_type

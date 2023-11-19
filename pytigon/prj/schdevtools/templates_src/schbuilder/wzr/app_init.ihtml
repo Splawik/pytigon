@@ -6,6 +6,6 @@ Title = _('{{app.title}}')
 Perms = {{app.perms|safe}}
 Index = '{{app.index}}'
 Urls  = ({% for item in app.schappmenu_set.all %}
-    ('{{item.clean_url}}{{item.get_url_type_ext}}',_('{{item.name}}'),{{item.get_perms|safe}},"""{{item.get_icon|none_to_empty|safe}}{% if item.not_standard_icon_size %}?size={{item.icon_size}}{% endif %}"""),{% endfor %}
+    ('{{item.clean_url|safe}}{{item.get_url_type_ext|safe}}',_('{{item.name}}'),{{item.get_perms|safe}},"""{{item.get_icon|none_to_empty|safe}}{% if item.not_standard_icon_size %}?size={{item.icon_size}}{% endif %}"""),{% endfor %}
 )
 UserParam = {{user_param|safe}}

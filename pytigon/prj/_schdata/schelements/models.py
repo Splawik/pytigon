@@ -27,6 +27,7 @@ from django.apps import apps
 from django.dispatch import receiver
 from django.db.models.signals import post_delete
 from django.conf import settings
+from django.template import Template, Context
 
 from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
 from pytigon_lib.schdjangoext.fastform import FAST_FORM_EXAMPLE
@@ -2280,6 +2281,18 @@ class DocRegStatus(models.Model):
     )
     undo_form = models.TextField(
         "Form for undo",
+        null=True,
+        blank=True,
+        editable=False,
+    )
+    for_accept_template = models.TextField(
+        "Template for accept",
+        null=True,
+        blank=True,
+        editable=False,
+    )
+    for_undo_template = models.TextField(
+        "Template for undo",
         null=True,
         blank=True,
         editable=False,

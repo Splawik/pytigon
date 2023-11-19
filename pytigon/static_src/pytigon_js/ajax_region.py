@@ -186,6 +186,36 @@ def auto_refresh_tab(dest_elem):
 
 register_mount_fun(auto_refresh_tab)
 
+def get_click_on_focus_fun(element):
+    def _click(event):
+        nonlocal element
+        if not document.hidden:
+            element.click()
+    return _click
+
+def get_refresh_on_focus_fun(element):
+    def _refresh(event):
+        nonlocal element
+        if not document.hidden:
+            refresh_ajax_frame(element)
+    return _refresh
+
+
+def on_focus_action(dest_elem):
+    item_list = Array.prototype.slice.call(
+        dest_elem.querySelectorAll(".on-focus-action")
+    )
+    for elem in item_list:
+        fun = None
+        if elem.classList.contains("on-focus-action-click"):
+            fun = get_click_on_focus_fun(elem)     
+        elif elem.classList.contains("on-focus-action-refresh"):
+            fun = get_refresh_on_focus_fun(elem)
+        if fun:
+            window.addEventListener("visibilitychange", fun)
+
+register_mount_fun(on_focus_action)
+
 
 def moveelement_init(dest_elem):
     objs = Array.prototype.slice.call(dest_elem.querySelectorAll(".move-element"))

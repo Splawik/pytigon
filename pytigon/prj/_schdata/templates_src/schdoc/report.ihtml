@@ -1,0 +1,50 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    script language=python
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    % with table_type='simple':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions    
+    div class=tr d-inline
+        _(New): 
+        % for pos in object_list.model.get_rep_types:        
+            % new_row_inline pos "" "" "" "" "{{base_path}}schreports/new_rep/"|append_str:pos|append_str:"/0/?after_close=refresh" 
+
+%% list_row_header
+    th..._(Report type)
+    th..._(Date)
+
+%% list_row
+    td...{{object.report_def_name}}
+    td...{{object.date|isoformat}}
+
+%% list_row_actions
+    % row_actions:
+        .edit-inline,_(Update),,,,,{{base_path}}schreports/table/Report/{id}/edit__rep/        
+        .pdf
+        .odf        
+        .field_edit/data,Data,data        
+        .delete
+        
+%% row_edit
+    % form:
+        "parent", "parent_field_name", "order", "report_def_name", "date"
+
+%% dialog_type
+    .modal-max
