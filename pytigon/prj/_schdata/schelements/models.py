@@ -1319,16 +1319,28 @@ class DocHead(JSONModel):
                     else:
                         app = reg.app
                         version = v
-                    names.append(
-                        (
-                            app
-                            + "/"
-                            + reg.name.replace("/", "_")
-                            + "_dochead_list_"
-                            + version
-                            + ".html"
-                        ).lower()
-                    )
+                    if version:
+                        names.append(
+                            (
+                                app
+                                + "/"
+                                + reg.name.replace("/", "_")
+                                + "_dochead_list_"
+                                + version
+                                + ".html"
+                            ).lower()
+                        )
+                    else:
+                        names.append(
+                            (
+                                app
+                                + "/"
+                                + reg.name.replace("/", "_")
+                                + "_dochead_list"
+                                + ".html"
+                            ).lower()
+                        )
+
                     if reg and reg.head_template:
                         names.append("db/DocReg-%d-head_template.html" % reg.id)
                 else:

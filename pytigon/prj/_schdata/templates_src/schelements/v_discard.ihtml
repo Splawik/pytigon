@@ -1,4 +1,4 @@
-% extends 'only_content.html'
+% extends 'forms/form.html'
 % load exfiltry
 % load exsyntax
 
