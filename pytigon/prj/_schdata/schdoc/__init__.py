@@ -1,7 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 
 ModuleTitle = _("Config")
-Title = _("Reports")
+Title = _("Nested documents")
 Perms = True
 Index = "None"
 Urls = (

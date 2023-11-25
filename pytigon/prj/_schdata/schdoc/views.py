@@ -114,23 +114,23 @@ def view__filterformdoc(request, *argi, **argv):
 
 def new_doc(request, doc_type, doc_type_name):
     # new_doc/(?P<doc_type>\w+)/(?P<doc_type_name>\w+)/$
-    doc_type = DocType.objects.filter(name=doc_type_name)
-    if len(doc_type) == 1:
+    dochead_type = DocType.objects.filter(name=doc_type_name)
+    if len(dochead_type) == 1:
         doc = DocHead()
-        doc.doc_type_parent = doc_type[0]
+        doc.doc_type_parent = dochead_type[0]
         doc.date = timezone.now()
         doc.status = "edit"
         doc.operator = request.user.username
         doc.save()
 
-        doc = models.Doc()
-        doc.parent = None
-        doc.order = 0
-        doc.parent_doc = doc
-        doc.doc_def_name = doc_type
-        doc.date = timezone.now()
-        doc.save()
-        url = make_href("/schdoc/table/Doc/%d/edit__doc/" % doc.id)
+        doc2 = models.Doc()
+        doc2.parent = None
+        doc2.order = 0
+        doc2.parent_doc = doc
+        doc2.doc_def_name = doc_type
+        doc2.date = timezone.now()
+        doc2.save()
+        url = make_href("/schdoc/table/Doc/%d/edit__doc/" % doc2.id)
         return HttpResponseRedirect(url)
     else:
         return HttpResponse("Error - document type: %s doesn't exists" % doc_type_name)
@@ -139,7 +139,7 @@ def new_doc(request, doc_type, doc_type_name):
 def edit__doc(request, doc_id, doc=None):
     if doc == None:
         doc = models.Doc.objects.get(pk=doc_id)
-    doc_def = models.Doc.objects.get(name=doc.doc_def_name)
+    doc_def = models.DocDef.objects.get(name=doc.doc_def_name)
 
     if doc_def.declaration:
         form_class = form_from_str(doc_def.declaration)
@@ -187,8 +187,8 @@ def edit__doc(request, doc_id, doc=None):
 
 
 def new_subdoc(request, parent_doc_id, doc_type):
-    doc_parent = models.Report.objects.get(pk=parent_doc_id)
-    doc = models.Report()
+    doc_parent = models.Doc.objects.get(pk=parent_doc_id)
+    doc = models.Doc()
     doc.parent = doc_parent
     doc.order = 0
     doc.doc_def_name = doc_parent.doc_def_name + "/" + doc_type
@@ -207,7 +207,7 @@ def edit_subdoc(request, parent_doc_id, doc_type, view_type):
     cdict["parent_doc_def"] = parent_doc_def
     cdict["doc_type"] = doc_type
     cdict["view_type"] = view_type
-    cdict["documents"] = parent_rep.getsubdocs(doc_type)
+    cdict["documents"] = parent_doc.getsubdocs(doc_type)
     cdict["doc_def"] = doc_def
 
     txt = ihtml_to_html(None, doc_def.to_html_rec)
@@ -231,7 +231,7 @@ def edit__doc2(request, dochead_id):
         new_url = make_href("/schdoc/table/Doc/%d/edit__doc/" % docs[0].id)
         return HttpResponseRedirect(new_url)
     else:
-        return HttpResponse("Error - report doesn't exist")
+        return HttpResponse("Error - document doesn't exist")
 
 
 def repaction(request, dochead_id, doc_action):

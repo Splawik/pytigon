@@ -104,7 +104,7 @@ def change_status(request, pk, action="accept"):
 
         if (not form_class) or request.POST:
             if form_class:
-                form = form_class(request.GET, request.POST)
+                form = form_class(request.POST)
             else:
                 form = None
 

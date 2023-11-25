@@ -765,6 +765,13 @@ class Element(TreeModel):
                 buttons = self._get_new_buttons(obj.type)
             else:
                 buttons = self._get_new_buttons("ROOT")
+
+            buttons2 = self._get_new_buttons(self.type)
+
+            for b in buttons2:
+                if not b in buttons:
+                    buttons.append(b)
+
             if self.description and "(" in self.description and ")" in self.description:
                 items = self.description.split("(")[1].split(")")[0]
                 s = Element.get_structure()
@@ -886,6 +893,12 @@ class Element(TreeModel):
         if ret:
             ret = self.can_view(user)
         return ret
+
+    @classmethod
+    def table_action(cls, list_view, request, data):
+        return standard_table_action(
+            cls, list_view, request, data, ["copy", "paste", "delete"]
+        )
 
     objects = ElementManager()
 
@@ -1201,6 +1214,7 @@ class DocHead(JSONModel):
         editable=False,
         verbose_name="Parent element",
         db_index=True,
+        select2=True,
     )
     number = models.CharField(
         "Document number",
@@ -1444,13 +1458,25 @@ class DocHead(JSONModel):
                 return None
         return None
 
-    def get_form_source(self):
+    def old_get_form_source(self):
         if self.id:
             obj = DocHead.objects.get(pk=self.id)
             if obj.doc_type_parent.head_form:
                 return obj.doc_type_parent.head_form
 
             x = obj.doc_type_parent.parent
+            while x:
+                if x.head_form:
+                    return x.head_form
+                x = x.get_parent()
+
+        return None
+
+    def get_form_source(self):
+        if self.doc_type_parent:
+            if self.doc_type_parent.head_form:
+                return self.doc_type_parent.head_form
+            x = self.doc_type_parent.parent
             while x:
                 if x.head_form:
                     return x.head_form
@@ -2140,7 +2166,7 @@ class DocItem(JSONModel):
                 target,
                 account,
                 element,
-                classifier1valu,
+                classifier1value,
                 classifier2value,
                 classifier3value,
                 "*",
@@ -2803,6 +2829,15 @@ class AccountState(models.Model):
             ret = eval(s)
             if not ret:
                 raise ValueError(error_txt)
+        elif self.parent.type2 == "V":
+            if self.debit - self.credit < 0:
+                raise ValueError("The state cannot be less than zero")
+        elif self.parent.type2 == "I":
+            if self.debit - self.credit > 0:
+                raise ValueError("The state cannot be greater than zero")
+        elif self.parent.type2 == "D":
+            if self.debit - self.credit < 0:
+                raise ValueError("The state cannot be less than zero")
         if self.debit == self.credit:
             self.zero_balance = True
         else:

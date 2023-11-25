@@ -30,7 +30,7 @@ def inclusion_tag(file_name):
     return dec
 
 @inclusion_tag('schdoc/subdoc.html')
-def subrep(context, name, type):
+def subdoc(context, name, type):
     doc = context['doc']
     doc_def = context['doc_def']
     url = make_href("/schdoc/edit_subdoc/%d/%s/%s/" % (doc.id, name, type))
