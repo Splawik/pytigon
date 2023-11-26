@@ -110,8 +110,8 @@ INLINE_BASE = """
                         </button>
                     </div>
                 </div>
-                <div class='modal-body ajax-region ajax-frame d-flex flex-column win-content table-and-details' data-region='page' href='{href}'>
-                    <div class="ajax-region ajax-frame table-without-details d-flex flex-grow-1 flex-column" data-region="page-content">
+                <div class='modal-body ajax-region ajax-frame ajax-link d-flex flex-column win-content table-and-details' data-region='page' href='{href}'>
+                    <div class="ajax-region ajax-frame ajax-link table-without-details d-flex flex-grow-1 flex-column" data-region="page-content" href='{href}'>
                         <div class='dialog-data ajax-frame d-flex flex-column flex-grow-1' data-region='error'></div>
                     </div>
                 </div>

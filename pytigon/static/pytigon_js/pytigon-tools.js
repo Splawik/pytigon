@@ -520,6 +520,9 @@ function define_custom_element(tag, shadow, options) {
         if ("init" in options) options["init"](this);
         this.attributes_init();
       }
+      else {
+        if ("template" in options) this.innerHTML = options["template"];
+      }
       if (this.global_state_actions) {
         window.GLOBAL_BUS.register(this);
       }
@@ -563,7 +566,7 @@ function define_custom_element(tag, shadow, options) {
 
     connectedCallback() {
       if (!shadow) {
-        if ("template" in options) this.innerHTML = options["template"];
+        //if ("template" in options) this.innerHTML = options["template"];
         this.root = this;
         if (this.state) {
           let state = this.state;

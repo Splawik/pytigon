@@ -29,6 +29,7 @@ from django.db.models.signals import post_delete
 from django.conf import settings
 from django.template import Template, Context
 
+from pytigon_lib.schviews.actions import new_row_ok, update_row_ok
 from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
 from pytigon_lib.schdjangoext.fastform import FAST_FORM_EXAMPLE
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
@@ -2392,6 +2393,70 @@ class DocRegStatus(models.Model):
         self, request, template_name, ext, extra_context, target
     ):
         return UNDO_FORM
+
+    def copy_to_clipboard(self):
+        return {
+            "action": "paste_from_clipboard",
+            "table": "DocRegStatus",
+            "objects": [
+                {
+                    "order": self.order,
+                    "name": self.name,
+                    "description": self.description,
+                    "icon": self.icon,
+                    "accept_proc": self.accept_proc,
+                    "undo_proc": self.undo_proc,
+                    "can_set_proc": self.can_set_proc,
+                    "can_undo_proc": self.can_undo_proc,
+                    "accept_form": self.accept_form,
+                    "undo_form": self.undo_form,
+                    "for_accept_template": self.for_accept_template,
+                    "for_undo_template": self.for_undo_template,
+                },
+            ],
+        }
+
+    @classmethod
+    def table_action(cls, list_view, request, data):
+        print("TABLE_ACTION", data)
+        if (
+            "action" in data
+            and data["action"] == "paste_from_clipboard"
+            and "table" in data
+            and data["table"] == "DocRegStatus"
+        ):
+            print("X1: ", data)
+            try:
+                parent_pk = int(list_view.kwargs["parent_pk"])
+            except:
+                parent_pk = -1
+            if parent_pk >= 0:
+                obj = None
+                object_list = data["objects"]
+                for obj_param in object_list:
+                    obj = DocRegStatus()
+                    obj.parent_id = parent_pk
+                    obj.order = obj_param["order"]
+                    obj.name = "COPY: " + obj_param["name"]
+                    obj.description = obj_param["description"]
+                    obj.icon = obj_param["icon"]
+                    obj.accept_proc = obj_param["accept_proc"]
+                    obj.undo_proc = obj_param["undo_proc"]
+                    obj.can_set_proc = obj_param["can_set_proc"]
+                    obj.can_undo_proc = obj_param["can_undo_proc"]
+                    obj.accept_form = obj_param["accept_form"]
+                    obj.undo_form = obj_param["undo_form"]
+                    obj.for_accept_template = obj_param["for_accept_template"]
+                    obj.for_undo_template = obj_param["for_undo_template"]
+
+                    obj.save()
+                if obj:
+                    return new_row_ok(request, int(obj.id), str(obj))
+                # print("PASTE: ", data)
+            return True
+        return standard_table_action(
+            cls, list_view, request, data, ["copy", "paste", "delete"]
+        )
 
 
 admin.site.register(DocRegStatus)

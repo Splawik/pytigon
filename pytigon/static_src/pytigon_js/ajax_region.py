@@ -428,17 +428,52 @@ def datatable_init(dest_elem):
 register_mount_fun(datatable_init)
 register_mount_fun(process_resize)
 
+def _valid_region_element(element, class_name, region_name=None):
+    if not region_name:
+        return True
+    if element.hasAttribute("data-region"):
+        x = element.getAttribute("data-region")
+        if region_name == x:
+            return True
+        if "(" + region_name + ")" in x:
+            return True
+        if "(" + class_name + ":" + region_name + ")" in x:
+            return True
+    return False
+
+def _get_region_elements_inside(element, class_name, region_name=None):
+    item_list = Array.prototype.slice.call(element.querySelectorAll("."+class_name))
+    ret = []
+    for item in item_list:
+        if item.classList.contains("ajax-region"):
+            if _valid_region_element(item, class_name, region_name):
+                ret.append(item)
+        else:
+            if not region_name:
+                ret.append(item)
+        return ret
+
+def _get_region_element_closest(element, class_name, region_name=None):
+    item = element.closest("." + class_name)
+    if not region_name:
+        return item
+    while item:
+        if _valid_region_element(item, class_name, region_name):
+            return ret
+        ret = ret.parentElement
+        if ret != None:
+            ret = ret.closest("." + class_name)
+    return None
+
 
 def get_ajax_region(element, region_name=None, strict_mode=False):
-    if element.classList.contains("ajax-region") and (
-        (not region_name) or element.getAttribute("data-region") == region_name
-    ):
+    if element.classList.contains("ajax-region") and _valid_region_element(element, "ajax-region", region_name):
         return element
     else:
         if region_name:
             ret = element.closest(".ajax-region")
             while ret:
-                if ret.getAttribute("data-region") == region_name:
+                if _valid_region_element(ret, "ajax-region", region_name):
                     return ret
                 ret = ret.parentElement
                 if ret != None:
@@ -455,34 +490,18 @@ window.get_ajax_region = get_ajax_region
 
 
 def get_ajax_link(element, region_name=None, strict_mode=False):
-    if element.classList.contains("ajax-link") and (
-        (not region_name) or element.getAttribute("data-region") == region_name
-    ):
+    if element.classList.contains("ajax-link") and _valid_region_element(element, "ajax-link", region_name):
         return element
     region = get_ajax_region(element, region_name, strict_mode)
     if region != None:
-        if region.classList.contains("ajax-link"):
+        if region.classList.contains("ajax-link") and _valid_region_element(region, "ajax-link", region_name):
             return region
         else:
             if region_name:
-                # link = region.querySelector(
-                #    ".ajax-link[data-region='" + region_name + "']"
-                # )
-                # if link != None:
-                #    return link
-
-                link_list = Array.prototype.slice.call(
-                    region.querySelectorAll(
-                        ".ajax-link[data-region='" + region_name + "']"
-                    )
-                )
+                link_list = _get_region_elements_inside(region, "ajax-link", region_name)
                 for link in link_list:
-                    if (
-                        link.closest(".ajax-region[data-region='" + region_name + "']")
-                        == region
-                    ):
+                    if (_get_region_element_closest(link, "ajax-region", region_name) == region):
                         return link
-                return None
             else:
                 return region.querySelector(".ajax-link")
     if region_name and not strict_mode:
@@ -497,31 +516,14 @@ window.get_ajax_link = get_ajax_link
 def get_ajax_frame(element, region_name=None, strict_mode=False):
     region = get_ajax_region(element, region_name, strict_mode)
     if region != None:
-        if region.classList.contains("ajax-frame") and (
-            (not region_name) or region.getAttribute("data-region") == region_name
-        ):
+        if region.classList.contains("ajax-frame") and _valid_region_element(region, "ajax-frame", region_name):
             return region
         else:
             if region_name:
-                # frame = region.querySelector(
-                #    ".ajax-frame[data-region='" + region_name + "']"
-                #
-                # if frame != None:
-                #    return frame
-
-                frame_list = Array.prototype.slice.call(
-                    region.querySelectorAll(
-                        ".ajax-frame[data-region='" + region_name + "']"
-                    )
-                )
+                frame_list = _get_region_elements_inside(region, "ajax-frame", region_name)
                 for f in frame_list:
-                    if (
-                        f.closest(".ajax-region[data-region='" + region_name + "']")
-                        == region
-                    ):
+                    if (_get_region_element_closest(f, "ajax-region", region_name)  == region):
                         return f
-                return None
-
             else:
                 return region.querySelector(".ajax-frame")
     if region_name and not strict_mode:

@@ -16,7 +16,7 @@ MODAL_INFO = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", INFO_FOOTER);
 MODAL_DELETE = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", DELETE_FOOTER);
 MODAL_ERROR = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", ERROR_FOOTER);
 INLINE = "\n    <div class=\"dialog-data\"></div>\n";
-INLINE_BASE = _pymeth_replace.call((("\n<div class='inline-dialog-frame'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class=\"modal-content ajax-region inline-content\" data-region=\"error\">\n            <div class='modal-content2 d-flex flex-column' style='min-height: 50vh;'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <div class='dialog-buttons>\n                        <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                            <span class='fa fa-window-minimize'></span> \n                        </button> \n                        <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                            <span class='fa fa-window-maximize'></span> \n                        </button> \n                        <button type='button' class='close btn btn-light btn-transparent shadow-none ptig-btn-close' aria-label='Close'>\n                            <span class='fa fa-times'></span>\n                        </button>\n                    </div>\n                </div>\n                <div class='modal-body ajax-region ajax-frame d-flex flex-column win-content table-and-details' data-region='page' href='{href}'>\n                    <div class=\"ajax-region ajax-frame table-without-details d-flex flex-grow-1 flex-column\" data-region=\"page-content\">\n                        <div class='dialog-data ajax-frame d-flex flex-column flex-grow-1' data-region='error'></div>\n                    </div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
+INLINE_BASE = _pymeth_replace.call((("\n<div class='inline-dialog-frame'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class=\"modal-content ajax-region inline-content\" data-region=\"error\">\n            <div class='modal-content2 d-flex flex-column' style='min-height: 50vh;'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <div class='dialog-buttons>\n                        <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                            <span class='fa fa-window-minimize'></span> \n                        </button> \n                        <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                            <span class='fa fa-window-maximize'></span> \n                        </button> \n                        <button type='button' class='close btn btn-light btn-transparent shadow-none ptig-btn-close' aria-label='Close'>\n                            <span class='fa fa-times'></span>\n                        </button>\n                    </div>\n                </div>\n                <div class='modal-body ajax-region ajax-frame ajax-link d-flex flex-column win-content table-and-details' data-region='page' href='{href}'>\n                    <div class=\"ajax-region ajax-frame ajax-link table-without-details d-flex flex-grow-1 flex-column\" data-region=\"page-content\" href='{href}'>\n                        <div class='dialog-data ajax-frame d-flex flex-column flex-grow-1' data-region='error'></div>\n                    </div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
 INLINE_DELETE_BASE = _pymeth_replace.call("\n<div style='position:relative;z-index:1001;'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class='modal-content'>\n            <div class='modal-header'>\n                <h4 class='modal-title'>{title}</h4>\n                <div>\n                    <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                        <span class='fa fa-window-minimize'></span> \n                    </button> \n                    <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                        <span class='fa fa-window-maximize'></span> \n                    </button> \n                    <button type='button' class='close btn-close shadow-none ptig-btn-close' aria-label='Close'></button>\n                </div>\n            </div>\n            <div class='modal-body'>\n                <div class='dialog-data ajax-frame' data-region='error'></div>\n            </div>\n            <div class='modal-footer'>\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n", "Close", _CLOSE);
 INLINE_EDIT = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", EDIT_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_INFO = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", INFO_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
@@ -1391,7 +1391,7 @@ GlobalBus.prototype.unregister = function (component) {
 window.GlobalBus = GlobalBus;
 export {set_state, DefineWebComponent, GlobalBus};
 
-var MOUNT_INIT_FUN, _on_shown_bs_tab, _refresh_page, ajax_load, auto_frame_init, auto_refresh_tab, create_onloadeddata, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, get_click_on_focus_fun, get_refresh_on_focus_fun, init_select2_ctrl, mount_html, moveelement_init, on_focus_action, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init, set_select2_value;
+var MOUNT_INIT_FUN, _get_region_element_closest, _get_region_elements_inside, _on_shown_bs_tab, _refresh_page, _valid_region_element, ajax_load, auto_frame_init, auto_refresh_tab, create_onloadeddata, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, get_click_on_focus_fun, get_refresh_on_focus_fun, init_select2_ctrl, mount_html, moveelement_init, on_focus_action, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init, set_select2_value;
 data_type = function flx_data_type (data_or_html) {
     var meta_list, pos, stub1_seq, stub2_itr;
     if (_pyfunc_truthy(data_or_html)) {
@@ -1795,16 +1795,77 @@ datatable_init = function flx_datatable_init (dest_elem) {
 
 register_mount_fun(datatable_init);
 register_mount_fun(process_resize);
+_valid_region_element = function flx__valid_region_element (element, class_name, region_name) {
+    var x;
+    region_name = (region_name === undefined) ? null: region_name;
+    if ((!_pyfunc_truthy(region_name))) {
+        return true;
+    }
+    if (_pyfunc_truthy(element.hasAttribute("data-region"))) {
+        x = element.getAttribute("data-region");
+        if (_pyfunc_op_equals(region_name, x)) {
+            return true;
+        }
+        if ((_pyfunc_op_contains((("(" + region_name) + ")"), x))) {
+            return true;
+        }
+        if ((_pyfunc_op_contains((((("(" + class_name) + ":") + region_name) + ")"), x))) {
+            return true;
+        }
+    }
+    return false;
+};
+
+_get_region_elements_inside = function flx__get_region_elements_inside (element, class_name, region_name) {
+    var item, item_list, ret, stub25_seq, stub26_itr;
+    region_name = (region_name === undefined) ? null: region_name;
+    item_list = Array.prototype.slice.call(element.querySelectorAll("." + class_name));
+    ret = [];
+    stub25_seq = item_list;
+    if ((typeof stub25_seq === "object") && (!Array.isArray(stub25_seq))) { stub25_seq = Object.keys(stub25_seq);}
+    for (stub26_itr = 0; stub26_itr < stub25_seq.length; stub26_itr += 1) {
+        item = stub25_seq[stub26_itr];
+        if (_pyfunc_truthy(item.classList.contains("ajax-region"))) {
+            if (_pyfunc_truthy(_valid_region_element(item, class_name, region_name))) {
+                _pymeth_append.call(ret, item);
+            }
+        } else if ((!_pyfunc_truthy(region_name))) {
+            _pymeth_append.call(ret, item);
+        }
+        return ret;
+    }
+    return null;
+};
+
+_get_region_element_closest = function flx__get_region_element_closest (element, class_name, region_name) {
+    var item, ret;
+    region_name = (region_name === undefined) ? null: region_name;
+    item = element.closest("." + class_name);
+    if ((!_pyfunc_truthy(region_name))) {
+        return item;
+    }
+    while (item) {
+        if (_pyfunc_truthy(_valid_region_element(item, class_name, region_name))) {
+            return ret;
+        }
+        ret = ret.parentElement;
+        if ((!_pyfunc_op_equals(ret, null))) {
+            ret = ret.closest("." + class_name);
+        }
+    }
+    return null;
+};
+
 get_ajax_region = function flx_get_ajax_region (element, region_name, strict_mode) {
     var ret;
     region_name = (region_name === undefined) ? null: region_name;
     strict_mode = (strict_mode === undefined) ? false: strict_mode;
-    if (((_pyfunc_truthy(element.classList.contains("ajax-region"))) && ((((!_pyfunc_truthy(region_name))) || (_pyfunc_op_equals(element.getAttribute("data-region"), region_name)))))) {
+    if (_pyfunc_truthy((_pyfunc_truthy(element.classList.contains("ajax-region"))) && (_pyfunc_truthy(_valid_region_element(element, "ajax-region", region_name))))) {
         return element;
     } else if (_pyfunc_truthy(region_name)) {
         ret = element.closest(".ajax-region");
         while (ret) {
-            if ((_pyfunc_op_equals(ret.getAttribute("data-region"), region_name))) {
+            if (_pyfunc_truthy(_valid_region_element(ret, "ajax-region", region_name))) {
                 return ret;
             }
             ret = ret.parentElement;
@@ -1825,27 +1886,26 @@ get_ajax_region = function flx_get_ajax_region (element, region_name, strict_mod
 
 window.get_ajax_region = get_ajax_region;
 get_ajax_link = function flx_get_ajax_link (element, region_name, strict_mode) {
-    var link, link_list, region, stub25_seq, stub26_itr;
+    var link, link_list, region, stub27_seq, stub28_itr;
     region_name = (region_name === undefined) ? null: region_name;
     strict_mode = (strict_mode === undefined) ? false: strict_mode;
-    if (((_pyfunc_truthy(element.classList.contains("ajax-link"))) && ((((!_pyfunc_truthy(region_name))) || (_pyfunc_op_equals(element.getAttribute("data-region"), region_name)))))) {
+    if (_pyfunc_truthy((_pyfunc_truthy(element.classList.contains("ajax-link"))) && (_pyfunc_truthy(_valid_region_element(element, "ajax-link", region_name))))) {
         return element;
     }
     region = get_ajax_region(element, region_name, strict_mode);
     if ((!_pyfunc_op_equals(region, null))) {
-        if (_pyfunc_truthy(region.classList.contains("ajax-link"))) {
+        if (_pyfunc_truthy((_pyfunc_truthy(region.classList.contains("ajax-link"))) && (_pyfunc_truthy(_valid_region_element(region, "ajax-link", region_name))))) {
             return region;
         } else if (_pyfunc_truthy(region_name)) {
-            link_list = Array.prototype.slice.call(region.querySelectorAll((".ajax-link[data-region='" + region_name) + "']"));
-            stub25_seq = link_list;
-            if ((typeof stub25_seq === "object") && (!Array.isArray(stub25_seq))) { stub25_seq = Object.keys(stub25_seq);}
-            for (stub26_itr = 0; stub26_itr < stub25_seq.length; stub26_itr += 1) {
-                link = stub25_seq[stub26_itr];
-                if ((_pyfunc_op_equals((link.closest((".ajax-region[data-region='" + region_name) + "']")), region))) {
+            link_list = _get_region_elements_inside(region, "ajax-link", region_name);
+            stub27_seq = link_list;
+            if ((typeof stub27_seq === "object") && (!Array.isArray(stub27_seq))) { stub27_seq = Object.keys(stub27_seq);}
+            for (stub28_itr = 0; stub28_itr < stub27_seq.length; stub28_itr += 1) {
+                link = stub27_seq[stub28_itr];
+                if ((_pyfunc_op_equals(_get_region_element_closest(link, "ajax-region", region_name), region))) {
                     return link;
                 }
             }
-            return null;
         } else {
             return region.querySelector(".ajax-link");
         }
@@ -1860,24 +1920,23 @@ get_ajax_link = function flx_get_ajax_link (element, region_name, strict_mode) {
 
 window.get_ajax_link = get_ajax_link;
 get_ajax_frame = function flx_get_ajax_frame (element, region_name, strict_mode) {
-    var f, frame_list, region, stub27_seq, stub28_itr;
+    var f, frame_list, region, stub29_seq, stub30_itr;
     region_name = (region_name === undefined) ? null: region_name;
     strict_mode = (strict_mode === undefined) ? false: strict_mode;
     region = get_ajax_region(element, region_name, strict_mode);
     if ((!_pyfunc_op_equals(region, null))) {
-        if (((_pyfunc_truthy(region.classList.contains("ajax-frame"))) && ((((!_pyfunc_truthy(region_name))) || (_pyfunc_op_equals(region.getAttribute("data-region"), region_name)))))) {
+        if (_pyfunc_truthy((_pyfunc_truthy(region.classList.contains("ajax-frame"))) && (_pyfunc_truthy(_valid_region_element(region, "ajax-frame", region_name))))) {
             return region;
         } else if (_pyfunc_truthy(region_name)) {
-            frame_list = Array.prototype.slice.call(region.querySelectorAll((".ajax-frame[data-region='" + region_name) + "']"));
-            stub27_seq = frame_list;
-            if ((typeof stub27_seq === "object") && (!Array.isArray(stub27_seq))) { stub27_seq = Object.keys(stub27_seq);}
-            for (stub28_itr = 0; stub28_itr < stub27_seq.length; stub28_itr += 1) {
-                f = stub27_seq[stub28_itr];
-                if ((_pyfunc_op_equals((f.closest((".ajax-region[data-region='" + region_name) + "']")), region))) {
+            frame_list = _get_region_elements_inside(region, "ajax-frame", region_name);
+            stub29_seq = frame_list;
+            if ((typeof stub29_seq === "object") && (!Array.isArray(stub29_seq))) { stub29_seq = Object.keys(stub29_seq);}
+            for (stub30_itr = 0; stub30_itr < stub29_seq.length; stub30_itr += 1) {
+                f = stub29_seq[stub30_itr];
+                if ((_pyfunc_op_equals(_get_region_element_closest(f, "ajax-region", region_name), region))) {
                     return f;
                 }
             }
-            return null;
         } else {
             return region.querySelector(".ajax-frame");
         }

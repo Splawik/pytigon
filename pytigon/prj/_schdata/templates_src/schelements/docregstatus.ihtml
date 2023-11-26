@@ -16,13 +16,14 @@
             return href
 
 %% all
-    %with table_type='simple':
+    %with table_type='scrolled':
         {{ block.super }}
 
 %% scroll
 
 %% list_content_actions
     % new_row "_(New status)"
+    ptig-paste href={{table_path_and_filter}}form/table_action/
 
 %% list_row_header
     th..._(Order)

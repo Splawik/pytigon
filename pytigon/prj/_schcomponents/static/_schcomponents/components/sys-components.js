@@ -183,7 +183,7 @@ try {
 stub13_context = (new DefineWebComponent("ptig-paste", false));
 comp = stub13_context.__enter__();
 try {
-    comp.options["template"] = '<a class=\"btn btn_size btn-light shadow-none\" title=\"Paste\" target=\"null\" data-region=\"table\" data-bind=\":onclick\">Paste</a>\n' +
+    comp.options["template"] = '<a class=\"btn btn_size btn-light shadow-none\" title=\"Paste\" target=\"refresh_frame\" data-region=\"page-content\" data-bind=\":onclick\">Paste</a>\n' +
     '\n' +
     '';
     comp.options["attributes"] = ({href: null, onclick: null});
@@ -195,11 +195,11 @@ try {
             _send_text = (function flx__send_text (text) {
                 var _complete;
                 _complete = (function flx__complete () {
-                    refresh_ajax_frame(component, "table");
+                    refresh_ajax_frame(component, "page-content");
                     return null;
                 }).bind(this);
 
-                ajax_post(component.getAttribute("href"), text, _complete, null, "application/json");
+                ajax_post(component.getAttribute("href"), text, _complete, null, null, "application/json");
                 return null;
             }).bind(this);
 
