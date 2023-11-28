@@ -778,7 +778,7 @@ _OPERATOR = (">>", "<<", ">", "(", ")")
 
 
 def send_to_dom(html_text, base_elem):
-    nonlocal _OPERATOR
+    global _OPERATOR
     for operator in _OPERATOR:
         if "===" + operator in html_text:
             x = html_text.split("===" + operator)

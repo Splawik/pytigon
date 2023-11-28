@@ -5,19 +5,19 @@ _CANCEL = gettext("Cancel");
 _CLOSE = gettext("Close");
 _COPY_TO_CLIP = gettext("Copy to clipboard");
 MODAL = "\n    <div class=\"dialog-data\"></div>\n";
-MODAL_BASE = _pymeth_replace.call(("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n                <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"container-fluid ajax-region ajax-frame win-content form-and-details\" data-region='page' href='{href}'>\n                    <div class=\"ajax-region ajax-frame form-without-details d-flex flex-grow-1 flex-column\" data-region=\"page-content\">\n                        <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n"), "Close", _CLOSE);
-MODAL_DELETE_BASE = _pymeth_replace.call(("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"modal-dialog\" role=\"document\">\n        <div class=\"modal-header\">\n            <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n            <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"container-fluid\">\n                <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            {{modal_footer}}\n        </div>\n    </div>\n</div>\n"), "Close", _CLOSE);
-EDIT_FOOTER = _pymeth_replace.call((" \n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-primary\" target=\"refresh_frame\">OK</button>\n"), "Cancel", _CANCEL);
+MODAL_BASE = _pymeth_replace.call((("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"ajax-region modal-dialog\" role=\"document\" data-region='(page)(page-content)'>\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n                <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"container-fluid ajax-frame ajax-link win-content form-and-details\" data-region='page' href='{href}'>\n                    <div class=\"form-without-details d-flex flex-grow-1 flex-column\">\n                        <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
+MODAL_DELETE_BASE = _pymeth_replace.call((("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"ajax-region modal-dialog\" role=\"document\" data-region='(page)(page-content)'>\n        <div class=\"modal-header\">\n            <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n            <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"container-fluid\">\n                <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            {{modal_footer}}\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
+EDIT_FOOTER = _pymeth_replace.call((" \n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-primary\" data-region=\"page-content\" target=\"refresh_frame\">OK</button>\n"), "Cancel", _CANCEL);
 INFO_FOOTER = _pymeth_replace.call(((_pymeth_replace.call(("\n<button type = \"button\" class =\"btn btn-info copy_to_clipboard\">Copy to clipboard</button>\n<button type = \"button\" class =\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Close</button>\n"), "Copy to clipboard", _COPY_TO_CLIP))), "Close", _CLOSE);
-DELETE_FOOTER = _pymeth_replace.call(("\n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-danger\" target=\"refresh_frame\">OK</button>\n"), "Cancel", _CANCEL);
+DELETE_FOOTER = _pymeth_replace.call(("\n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-danger\" data-region=\"page-content\" target=\"refresh_frame\">OK</button>\n"), "Cancel", _CANCEL);
 ERROR_FOOTER = _pymeth_replace.call(("\n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Close</button>\n"), "Close", _CLOSE);
 MODAL_EDIT = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", EDIT_FOOTER);
 MODAL_INFO = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", INFO_FOOTER);
 MODAL_DELETE = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", DELETE_FOOTER);
 MODAL_ERROR = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", ERROR_FOOTER);
 INLINE = "\n    <div class=\"dialog-data\"></div>\n";
-INLINE_BASE = _pymeth_replace.call((("\n<div class='inline-dialog-frame'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class=\"modal-content ajax-region inline-content\" data-region=\"error\">\n            <div class='modal-content2 d-flex flex-column' style='min-height: 50vh;'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <div class='dialog-buttons>\n                        <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                            <span class='fa fa-window-minimize'></span> \n                        </button> \n                        <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                            <span class='fa fa-window-maximize'></span> \n                        </button> \n                        <button type='button' class='close btn btn-light btn-transparent shadow-none ptig-btn-close' aria-label='Close'>\n                            <span class='fa fa-times'></span>\n                        </button>\n                    </div>\n                </div>\n                <div class='modal-body ajax-region ajax-frame ajax-link d-flex flex-column win-content table-and-details' data-region='page' href='{href}'>\n                    <div class=\"ajax-region ajax-frame ajax-link table-without-details d-flex flex-grow-1 flex-column\" data-region=\"page-content\" href='{href}'>\n                        <div class='dialog-data ajax-frame d-flex flex-column flex-grow-1' data-region='error'></div>\n                    </div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
-INLINE_DELETE_BASE = _pymeth_replace.call("\n<div style='position:relative;z-index:1001;'>\n    <div class='dark_background'></div>\n    <div class='modal-dialog modal-dialog-inline' role='document'>\n        <div class='modal-content'>\n            <div class='modal-header'>\n                <h4 class='modal-title'>{title}</h4>\n                <div>\n                    <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                        <span class='fa fa-window-minimize'></span> \n                    </button> \n                    <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                        <span class='fa fa-window-maximize'></span> \n                    </button> \n                    <button type='button' class='close btn-close shadow-none ptig-btn-close' aria-label='Close'></button>\n                </div>\n            </div>\n            <div class='modal-body'>\n                <div class='dialog-data ajax-frame' data-region='error'></div>\n            </div>\n            <div class='modal-footer'>\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n", "Close", _CLOSE);
+INLINE_BASE = _pymeth_replace.call((("\n<div class='inline-dialog-frame'>\n    <div class='dark_background'></div>\n    <div class='ajax-region modal-dialog modal-dialog-inline' role='document' data-region='(page)(page-content)'>\n        <div class=\"modal-content ajax-region inline-content\" data-region=\"error\">\n            <div class='modal-content2 d-flex flex-column' style='min-height: 50vh;'>\n                <div class='modal-header'>\n                    <h4 class='modal-title'>{title}</h4>\n                    <div class='dialog-buttons>\n                        <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                            <span class='fa fa-window-minimize'></span> \n                        </button> \n                        <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                            <span class='fa fa-window-maximize'></span> \n                        </button> \n                        <button type='button' class='close btn btn-light btn-transparent shadow-none ptig-btn-close' aria-label='Close'>\n                            <span class='fa fa-times'></span>\n                        </button>\n                    </div>\n                </div>\n                <div class='modal-body ajax-frame ajax-link d-flex flex-column win-content table-and-details' data-region='page' href='{href}'>\n                    <div class=\"table-without-details d-flex flex-grow-1 flex-column\">\n                        <div class='dialog-data ajax-frame d-flex flex-column flex-grow-1' data-region='error'></div>\n                    </div>\n                </div>\n                <div class='modal-footer'>\n                    {{modal_footer}}\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
+INLINE_DELETE_BASE = _pymeth_replace.call("\n<div style='position:relative;z-index:1001;'>\n    <div class='dark_background'></div>\n    <div class='ajax-region modal-dialog modal-dialog-inline' role='document' data-region='(page)(page-content)'>\n        <div class='modal-content'>\n            <div class='modal-header'>\n                <h4 class='modal-title'>{title}</h4>\n                <div>\n                    <button type='button' class='btn btn-light btn-transparent minimize' onclick='inline_minimize(this)' style='display:none;'> \n                        <span class='fa fa-window-minimize'></span> \n                    </button> \n                    <button type='button' class='btn btn-light btn-transparent maximize' onclick='inline_maximize(this);return false;'> \n                        <span class='fa fa-window-maximize'></span> \n                    </button> \n                    <button type='button' class='close btn-close shadow-none ptig-btn-close' aria-label='Close'></button>\n                </div>\n            </div>\n            <div class='modal-body'>\n                <div class='dialog-data ajax-frame' data-region='error'></div>\n            </div>\n            <div class='modal-footer'>\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n", "Close", _CLOSE);
 INLINE_EDIT = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", EDIT_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_INFO = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", INFO_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_DELETE = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", DELETE_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
@@ -1825,16 +1825,15 @@ _get_region_elements_inside = function flx__get_region_elements_inside (element,
     if ((typeof stub25_seq === "object") && (!Array.isArray(stub25_seq))) { stub25_seq = Object.keys(stub25_seq);}
     for (stub26_itr = 0; stub26_itr < stub25_seq.length; stub26_itr += 1) {
         item = stub25_seq[stub26_itr];
-        if (_pyfunc_truthy(item.classList.contains("ajax-region"))) {
+        if (_pyfunc_truthy(item.classList.contains(class_name))) {
             if (_pyfunc_truthy(_valid_region_element(item, class_name, region_name))) {
                 _pymeth_append.call(ret, item);
             }
         } else if ((!_pyfunc_truthy(region_name))) {
             _pymeth_append.call(ret, item);
         }
-        return ret;
     }
-    return null;
+    return ret;
 };
 
 _get_region_element_closest = function flx__get_region_element_closest (element, class_name, region_name) {
@@ -1898,6 +1897,9 @@ get_ajax_link = function flx_get_ajax_link (element, region_name, strict_mode) {
             return region;
         } else if (_pyfunc_truthy(region_name)) {
             link_list = _get_region_elements_inside(region, "ajax-link", region_name);
+            if ((link_list.length == 1)) {
+                return link_list[0];
+            }
             stub27_seq = link_list;
             if ((typeof stub27_seq === "object") && (!Array.isArray(stub27_seq))) { stub27_seq = Object.keys(stub27_seq);}
             for (stub28_itr = 0; stub28_itr < stub27_seq.length; stub28_itr += 1) {
@@ -1905,6 +1907,9 @@ get_ajax_link = function flx_get_ajax_link (element, region_name, strict_mode) {
                 if ((_pyfunc_op_equals(_get_region_element_closest(link, "ajax-region", region_name), region))) {
                     return link;
                 }
+            }
+            if ((link_list.length > 0)) {
+                return link_list[0];
             }
         } else {
             return region.querySelector(".ajax-link");
@@ -1929,6 +1934,9 @@ get_ajax_frame = function flx_get_ajax_frame (element, region_name, strict_mode)
             return region;
         } else if (_pyfunc_truthy(region_name)) {
             frame_list = _get_region_elements_inside(region, "ajax-frame", region_name);
+            if ((frame_list.length == 1)) {
+                return frame_list[0];
+            }
             stub29_seq = frame_list;
             if ((typeof stub29_seq === "object") && (!Array.isArray(stub29_seq))) { stub29_seq = Object.keys(stub29_seq);}
             for (stub30_itr = 0; stub30_itr < stub29_seq.length; stub30_itr += 1) {
@@ -1936,6 +1944,9 @@ get_ajax_frame = function flx_get_ajax_frame (element, region_name, strict_mode)
                 if ((_pyfunc_op_equals(_get_region_element_closest(f, "ajax-region", region_name), region))) {
                     return f;
                 }
+            }
+            if ((frame_list.length > 0)) {
+                return frame_list[0];
             }
         } else {
             return region.querySelector(".ajax-frame");
@@ -2012,7 +2023,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
                 elem = element;
             }
             callback();
-            return refresh_ajax_frame(elem, region_name, null, null, callback_on_error, data);
+            return refresh_ajax_frame(elem, "", null, null, callback_on_error, data);
         } else if (_pyfunc_op_equals(dt, "$$RETURN_RELOAD")) {
             if (_pyfunc_op_equals(region_name, "error")) {
                 ret = mount_html(frame, data, link);
@@ -3009,10 +3020,7 @@ refresh_frame = function flx_refresh_frame (target_element, data_element, new_ur
     } else {
         data_region2 = target_element.getAttribute("data-region");
     }
-    region = get_ajax_region(target_element, data_region2);
-    if ((((!_pyfunc_op_equals(data_region2, "error"))) && ((_pyfunc_op_equals(region.getAttribute("data-region"), "error"))))) {
-        region = get_ajax_region(region.parentElement, data_region2);
-    }
+    region = get_ajax_region(get_ajax_region(target_element, "page").parentElement, data_region2);
     dialog = null;
     aside = target_element.closest(".plug");
     if ((_pyfunc_truthy(aside) && (_pyfunc_truthy(region.contains(aside))))) {

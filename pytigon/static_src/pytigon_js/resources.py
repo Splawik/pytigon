@@ -8,15 +8,15 @@ MODAL = """
 
 MODAL_BASE = """
 <div class="dialog-form modal" role="dialog" title="{title}">
-    <div class="modal-dialog" role="document">
+    <div class="ajax-region modal-dialog" role="document" data-region='(page)(page-content)'>
         <div class="modal-content ajax-region" data-region="error">
             <div class="modal-header">
                 <h5 class="modal-title" id="ModalLabel">{title}</h5>
                 <button type="button" class="close btn-close" data-dismiss='modal' data-bs-dismiss='modal' aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="container-fluid ajax-region ajax-frame win-content form-and-details" data-region='page' href='{href}'>
-                    <div class="ajax-region ajax-frame form-without-details d-flex flex-grow-1 flex-column" data-region="page-content">
+                <div class="container-fluid ajax-frame ajax-link win-content form-and-details" data-region='page' href='{href}'>
+                    <div class="form-without-details d-flex flex-grow-1 flex-column">
                         <div class="dialog-data ajax-frame" data-region="error"></div>
                     </div>
                 </div>
@@ -33,7 +33,7 @@ MODAL_BASE = """
 
 MODAL_DELETE_BASE = """
 <div class="dialog-form modal" role="dialog" title="{title}">
-    <div class="modal-dialog" role="document">
+    <div class="ajax-region modal-dialog" role="document" data-region='(page)(page-content)'>
         <div class="modal-header">
             <h5 class="modal-title" id="ModalLabel">{title}</h5>
             <button type="button" class="close btn-close" data-dismiss='modal' data-bs-dismiss='modal' aria-label="Close"></button>
@@ -54,7 +54,7 @@ MODAL_DELETE_BASE = """
 
 EDIT_FOOTER = """ 
 <button type="button" class="btn btn-secondary ptig-btn-close" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>
-<button type="button" class="btn btn-primary" target="refresh_frame">OK</button>
+<button type="button" class="btn btn-primary" data-region="page-content" target="refresh_frame">OK</button>
 """.replace(
     "Cancel", _CANCEL
 )
@@ -70,7 +70,7 @@ INFO_FOOTER = """
 
 DELETE_FOOTER = """
 <button type="button" class="btn btn-secondary ptig-btn-close" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>
-<button type="button" class="btn btn-danger" target="refresh_frame">OK</button>
+<button type="button" class="btn btn-danger" data-region="page-content" target="refresh_frame">OK</button>
 """.replace(
     "Cancel", _CANCEL
 )
@@ -93,7 +93,7 @@ INLINE = """
 INLINE_BASE = """
 <div class='inline-dialog-frame'>
     <div class='dark_background'></div>
-    <div class='modal-dialog modal-dialog-inline' role='document'>
+    <div class='ajax-region modal-dialog modal-dialog-inline' role='document' data-region='(page)(page-content)'>
         <div class="modal-content ajax-region inline-content" data-region="error">
             <div class='modal-content2 d-flex flex-column' style='min-height: 50vh;'>
                 <div class='modal-header'>
@@ -110,8 +110,8 @@ INLINE_BASE = """
                         </button>
                     </div>
                 </div>
-                <div class='modal-body ajax-region ajax-frame ajax-link d-flex flex-column win-content table-and-details' data-region='page' href='{href}'>
-                    <div class="ajax-region ajax-frame ajax-link table-without-details d-flex flex-grow-1 flex-column" data-region="page-content" href='{href}'>
+                <div class='modal-body ajax-frame ajax-link d-flex flex-column win-content table-and-details' data-region='page' href='{href}'>
+                    <div class="table-without-details d-flex flex-grow-1 flex-column">
                         <div class='dialog-data ajax-frame d-flex flex-column flex-grow-1' data-region='error'></div>
                     </div>
                 </div>
@@ -129,7 +129,7 @@ INLINE_BASE = """
 INLINE_DELETE_BASE = """
 <div style='position:relative;z-index:1001;'>
     <div class='dark_background'></div>
-    <div class='modal-dialog modal-dialog-inline' role='document'>
+    <div class='ajax-region modal-dialog modal-dialog-inline' role='document' data-region='(page)(page-content)'>
         <div class='modal-content'>
             <div class='modal-header'>
                 <h4 class='modal-title'>{title}</h4>

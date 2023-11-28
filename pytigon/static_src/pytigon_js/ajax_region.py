@@ -445,13 +445,13 @@ def _get_region_elements_inside(element, class_name, region_name=None):
     item_list = Array.prototype.slice.call(element.querySelectorAll("."+class_name))
     ret = []
     for item in item_list:
-        if item.classList.contains("ajax-region"):
+        if item.classList.contains(class_name):
             if _valid_region_element(item, class_name, region_name):
                 ret.append(item)
         else:
             if not region_name:
                 ret.append(item)
-        return ret
+    return ret
 
 def _get_region_element_closest(element, class_name, region_name=None):
     item = element.closest("." + class_name)
@@ -499,9 +499,13 @@ def get_ajax_link(element, region_name=None, strict_mode=False):
         else:
             if region_name:
                 link_list = _get_region_elements_inside(region, "ajax-link", region_name)
+                if len(link_list) == 1:
+                    return link_list[0]
                 for link in link_list:
                     if (_get_region_element_closest(link, "ajax-region", region_name) == region):
                         return link
+                if len(link_list) > 0:
+                    return link_list[0]
             else:
                 return region.querySelector(".ajax-link")
     if region_name and not strict_mode:
@@ -521,9 +525,13 @@ def get_ajax_frame(element, region_name=None, strict_mode=False):
         else:
             if region_name:
                 frame_list = _get_region_elements_inside(region, "ajax-frame", region_name)
+                if len(frame_list) == 1:
+                    return frame_list[0]
                 for f in frame_list:
                     if (_get_region_element_closest(f, "ajax-region", region_name)  == region):
                         return f
+                if len(frame_list) > 0:
+                    return frame_list[0]
             else:
                 return region.querySelector(".ajax-frame")
     if region_name and not strict_mode:
@@ -613,8 +621,11 @@ def refresh_ajax_frame(
                     elem = element
                 callback()
                 return refresh_ajax_frame(
-                    elem, region_name, None, None, callback_on_error, data
+                    elem, "", None, None, callback_on_error, data
                 )
+                #return refresh_ajax_frame(
+                #    get_ajax_region(elem, "page").parentElement, "", None, None, callback_on_error, data
+                #)
             elif dt == "$$RETURN_RELOAD":
                 if region_name == "error":
                     ret = mount_html(frame, data, link)

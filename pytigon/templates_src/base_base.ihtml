@@ -102,6 +102,7 @@
 
     % if not form_ext and show_form
         %% dialog_start
+            <div class="ajax-region ajax-frame" data-region="page-content">
         % if form_delete or form_info
             % if standard_web_browser:
                 <div id="Dialog">
@@ -130,7 +131,7 @@
                             set-field element=#ModalLabelInfo,,,title={{title}}
             % else:
                 %% form_delete
-                    form method=post,,,action={% block form_delete_action %}{{request.path}}{% endblock %},,,class=ajax-link,,,id=DialogFormDelete,,,name=DialogFormDelete
+                    form method=post,,,action={% block form_delete_action %}{{request.path}}{% endblock %},,,class=ajax-link,,,id=DialogFormDelete,,,name=DialogFormDelete,,,data-region=page-content
                         % csrf_token
                         %% form_delete_content
                             h4..._(Delete the item)?
@@ -185,6 +186,7 @@
                     set-field element=#ModalLabel,,,title={{title}}
 
         %% dialog_end
+            </div>
     % else:
         % if form_grid:
         % else:
@@ -199,7 +201,7 @@
         <div class="page-content content">
 
     %% list_page_start
-        % if table_type:
+        % if table_type == 'NIGDY':
             <div class="ajax-region ajax-frame table-and-details d-flex flex-column" data-region="page">
         % else:
             <div class="table-and-details d-flex flex-column">
@@ -323,7 +325,7 @@
                 
                 % if standard_web_browser == 1 or standard_web_browser == 2 or "page" in fragment or "table" in fragment:
                     % if table_type == 'datatable':
-                        <div class="ajax-frame ajax-link ajax-region" data-region="table-content" onloadeddata="table_loadeddata(event);">
+                        <div class="ajax-frame ajax-region" data-region="table-content" onloadeddata="table_loadeddata(event);">
                     % else:
                         % if table_type == 'scrolled' or not table_type:
                             <div class="tbl_scroll ajax-link" data-region="table-content" style="overflow-y:auto;height:100%" href="{{request.path}}">

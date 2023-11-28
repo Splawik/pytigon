@@ -656,9 +656,11 @@ def refresh_frame(
         data_region2 = target_element.getAttribute("data-region")
     # if not data_region2:
     #    data_region2 = data_region
-    region = get_ajax_region(target_element, data_region2)
-    if data_region2 != "error" and region.getAttribute("data-region") == "error":
-        region = get_ajax_region(region.parentElement, data_region2)
+    #region = get_ajax_region(target_element, data_region2)
+    region = get_ajax_region(get_ajax_region(target_element, "page").parentElement, data_region2)
+    
+    #if data_region2 != "error" and region.getAttribute("data-region") == "error":
+    #    region = get_ajax_region(region.parentElement, data_region2)
 
     dialog = None
     aside = target_element.closest(".plug")

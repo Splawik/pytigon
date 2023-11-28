@@ -143,7 +143,9 @@
                 <section class="body-body d-flex flex-column">
         {% endblock %}
         {% if not form_ext and show_form %}
-                {% block dialog_start %}{% endblock %}
+                {% block dialog_start %}
+                        <div class="ajax-region ajax-frame" data-region="page-content">
+                {% endblock %}
                 {% if form_delete or form_info %}
                         {% if standard_web_browser %}
                                 <div id="Dialog">
@@ -186,7 +188,7 @@
                                 {% endif %}
                           {% else %}
                                 {% block form_delete %}
-                                        <form method="post" action="{% block form_delete_action %}{{request.path}}{% endblock %}" class="ajax-link" id="DialogFormDelete" name="DialogFormDelete">
+                                        <form method="post" action="{% block form_delete_action %}{{request.path}}{% endblock %}" class="ajax-link" id="DialogFormDelete" name="DialogFormDelete" data-region="page-content">
                                                 {% csrf_token %}
                                                 {% block form_delete_content %}
                                                         <h4>Delete the item?</h4>
@@ -270,7 +272,9 @@
                                 {% endif %}
                         {% endif %}
                 {% endif %}
-                {% block dialog_end %}{% endblock %}
+                {% block dialog_end %}
+                        </div>
+                {% endblock %}
           {% else %}
                 {% if form_grid %}
                   {% else %}
@@ -286,7 +290,7 @@
                 <div class="page-content content">
         {% endif %}
         {% block list_page_start %}
-                {% if table_type %}
+                {% if table_type == 'NIGDY' %}
                         <div class="ajax-region ajax-frame table-and-details d-flex flex-column" data-region="page">
                   {% else %}
                         <div class="table-and-details d-flex flex-column">
@@ -478,7 +482,7 @@
                                 {% endif %}
                                 {% if standard_web_browser == 1 or standard_web_browser == 2 or "page" in fragment or "table" in fragment %}
                                         {% if table_type == 'datatable' %}
-                                                <div class="ajax-frame ajax-link ajax-region" data-region="table-content" onloadeddata="table_loadeddata(event);">
+                                                <div class="ajax-frame ajax-region" data-region="table-content" onloadeddata="table_loadeddata(event);">
                                           {% else %}
                                                 {% if table_type == 'scrolled' or not table_type %}
                                                         <div class="tbl_scroll ajax-link" data-region="table-content" style="overflow-y:auto;height:100%" href="{{request.path}}">

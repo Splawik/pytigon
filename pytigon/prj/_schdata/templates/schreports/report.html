@@ -25,7 +25,7 @@
         <div class="tr d-inline">
                 New:
                 {% for pos in object_list.model.get_rep_types %}
-                        {% new_row_inline pos "" "" "" "" "{{base_path}}schreports/new_rep/"|append_str:pos|append_str:"/0/" %}
+                        {% new_row_inline pos "" "" "" "" "{{base_path}}schreports/new_rep/"|append_str:pos|append_str:"/0/?after_close=refresh" %}
                 {% endfor %}
         </div>
 {% endblock %}
