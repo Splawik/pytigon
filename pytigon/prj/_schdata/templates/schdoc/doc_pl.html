@@ -1,0 +1,61 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with table_type='simple' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        <div class="tr d-inline">
+                New:
+                {% for pos in object_list.model.get_doc_types %}
+                        {% new_row_inline pos "" "" "" "" "{{base_path}}schdoc/new_doc/"|append_str:pos|append_str:"/0/?after_close=refresh" %}
+                {% endfor %}
+        </div>
+{% endblock %}
+{% block list_row_header %}
+        <th>Report type</th>
+        <th>
+        Date
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.doc_def_name}}</td>
+        <td>
+        {{object.date|isoformat}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit-inline,Update,,,,,{{base_path}}schdoc/table/Doc/{id}/edit__doc/
+                pdf
+                odf
+                field_edit/data,Data,data
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                "parent", "parent_field_name", "order", "doc_def_name", "date"
+        {% endform %}
+{% endblock %}
+{% block dialog_type %}
+        modal-max
+{% endblock %}
+

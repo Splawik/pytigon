@@ -1,0 +1,58 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New report definition" %}
+        <ptig-paste href="../table_action/">
+        </ptig-paste>
+{% endblock %}
+{% block list_row_header %}
+        <th>name</th>
+        <th>
+        description
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+        <td>
+        {{object.description}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                field_edit/declaration,Declaration,declaration
+                field_edit/template_src,Template src,template_src
+                field_edit/template,Template,template
+                field_edit/to_html_rec,To html row,to_html_rec
+                field_edit/save_fun,Save function,save_fun
+                field_edit/load_fun,Load function,load_fun
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                app,name,description,doc_type
+        {% endform %}
+{% endblock %}
+
