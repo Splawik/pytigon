@@ -1,7 +1,0 @@
-% extends "schattachements/attachement.html"
-
-% load exfiltry
-% load exsyntax
-
-%% related_workflow
-    % row_related_list "schworkflow/WorkflowItem" title="Workflow" filter="tables_demo__Example1User__{{object.id}}__default" icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'"  version=version

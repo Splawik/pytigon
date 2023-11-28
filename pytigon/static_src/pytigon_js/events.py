@@ -641,7 +641,7 @@ def on_replace_app(target_element, data_element, new_url, param, event):
     return wrapper
 
 
-def refresh_frame(
+def close_frame(
     target_element, data_element, new_url, param, event, data_region=None
 ):
     f = target_element.getAttribute("data-link")
@@ -654,14 +654,9 @@ def refresh_frame(
         data_region2 = data_region
     else:
         data_region2 = target_element.getAttribute("data-region")
-    # if not data_region2:
-    #    data_region2 = data_region
-    #region = get_ajax_region(target_element, data_region2)
+    
     region = get_ajax_region(get_ajax_region(target_element, "page").parentElement, data_region2)
     
-    #if data_region2 != "error" and region.getAttribute("data-region") == "error":
-    #    region = get_ajax_region(region.parentElement, data_region2)
-
     dialog = None
     aside = target_element.closest(".plug")
     if aside and region.contains(aside):
@@ -688,6 +683,26 @@ def refresh_frame(
     return refresh_ajax_frame(
         target_element, data_region2, data_element2, _callback, _callback_on_error
     )
+
+
+def refresh_frame(
+    target_element, data_element, new_url, param, event, data_region=None
+):
+    f = target_element.getAttribute("data-link")
+    if f:
+        data_element2 = super_query_selector(data_element, f)
+    else:
+        data_element2 = data_element
+
+    if data_region:
+        data_region2 = data_region
+    else:
+        data_region2 = target_element.getAttribute("data-region")
+    
+    return refresh_ajax_frame(
+        target_element, data_region2, data_element2
+    )
+
 
 
 def refresh_page(target_element, data_element, new_url, param, event):
@@ -778,6 +793,7 @@ EVENT_CLICK_TAB = [
     ("_self", "*", True, False, refresh_page),
     ("_parent", "*", True, False, on_new_tab),
     ("refresh_frame", "*", True, False, refresh_frame),
+    ("close_frame", "*", True, False, close_frame),
     ("refresh_page", "*", True, False, refresh_page),
     ("refresh_app", "*", False, False, refresh_app),
     ("message", "*", False, False, on_message),

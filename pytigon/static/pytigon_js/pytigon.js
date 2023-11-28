@@ -7,9 +7,9 @@ _COPY_TO_CLIP = gettext("Copy to clipboard");
 MODAL = "\n    <div class=\"dialog-data\"></div>\n";
 MODAL_BASE = _pymeth_replace.call((("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"ajax-region modal-dialog\" role=\"document\" data-region='(page)(page-content)'>\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n                <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"container-fluid ajax-frame ajax-link win-content form-and-details\" data-region='page' href='{href}'>\n                    <div class=\"form-without-details d-flex flex-grow-1 flex-column\">\n                        <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
 MODAL_DELETE_BASE = _pymeth_replace.call((("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"ajax-region modal-dialog\" role=\"document\" data-region='(page)(page-content)'>\n        <div class=\"modal-header\">\n            <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n            <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"container-fluid\">\n                <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            {{modal_footer}}\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
-EDIT_FOOTER = _pymeth_replace.call((" \n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-primary\" data-region=\"page-content\" target=\"refresh_frame\">OK</button>\n"), "Cancel", _CANCEL);
+EDIT_FOOTER = _pymeth_replace.call((" \n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-primary\" data-region=\"page-content\" target=\"close_frame\">OK</button>\n"), "Cancel", _CANCEL);
 INFO_FOOTER = _pymeth_replace.call(((_pymeth_replace.call(("\n<button type = \"button\" class =\"btn btn-info copy_to_clipboard\">Copy to clipboard</button>\n<button type = \"button\" class =\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Close</button>\n"), "Copy to clipboard", _COPY_TO_CLIP))), "Close", _CLOSE);
-DELETE_FOOTER = _pymeth_replace.call(("\n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-danger\" data-region=\"page-content\" target=\"refresh_frame\">OK</button>\n"), "Cancel", _CANCEL);
+DELETE_FOOTER = _pymeth_replace.call(("\n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>\n<button type=\"button\" class=\"btn btn-danger\" data-region=\"page-content\" target=\"close_frame\">OK</button>\n"), "Cancel", _CANCEL);
 ERROR_FOOTER = _pymeth_replace.call(("\n<button type=\"button\" class=\"btn btn-secondary ptig-btn-close\" data-dismiss='modal' data-bs-dismiss='modal'>Close</button>\n"), "Close", _CLOSE);
 MODAL_EDIT = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", EDIT_FOOTER);
 MODAL_INFO = _pymeth_replace.call(MODAL_BASE, "{{modal_footer}}", INFO_FOOTER);
@@ -2384,7 +2384,7 @@ sync_and_run = function flx_sync_and_run (tbl, fun) {
 window.sync_and_run = sync_and_run;
 export {init_db, open_database, get_table, get_list_from_table, on_sys_sync, init_sync, sync_and_run};
 
-var EVENT_CLICK_TAB, EVENT_TAB, REGISTERED_EVENT_TYPES, _chcek_element, _get_click_event_from_tab, _get_scrolled_parent, _get_title, _get_value, _on_inline, _on_menu_click, _on_popup, create_event_handler, on_click_default_action, on_global_event, on_inline, on_inline_delete, on_inline_edit_new, on_inline_error, on_inline_info, on_message, on_new_tab, on_popup, on_popup_delete, on_popup_edit_new, on_popup_error, on_popup_info, on_replace_app, on_resize, only_get, process_href, refresh_app, refresh_frame, refresh_page, register_global_event;
+var EVENT_CLICK_TAB, EVENT_TAB, REGISTERED_EVENT_TYPES, _chcek_element, _get_click_event_from_tab, _get_scrolled_parent, _get_title, _get_value, _on_inline, _on_menu_click, _on_popup, close_frame, create_event_handler, on_click_default_action, on_global_event, on_inline, on_inline_delete, on_inline_edit_new, on_inline_error, on_inline_info, on_message, on_new_tab, on_popup, on_popup_delete, on_popup_edit_new, on_popup_error, on_popup_info, on_replace_app, on_resize, only_get, process_href, refresh_app, refresh_frame, refresh_page, register_global_event;
 EVENT_TAB = [];
 REGISTERED_EVENT_TYPES = [];
 _chcek_element = function flx__chcek_element (element, selector) {
@@ -3006,7 +3006,7 @@ on_replace_app = function flx_on_replace_app (target_element, data_element, new_
     return wrapper;
 };
 
-refresh_frame = function flx_refresh_frame (target_element, data_element, new_url, param, event, data_region) {
+close_frame = function flx_close_frame (target_element, data_element, new_url, param, event, data_region) {
     var _callback, _callback_on_error, aside, data_element2, data_region2, dialog, f, region;
     data_region = (data_region === undefined) ? null: data_region;
     f = target_element.getAttribute("data-link");
@@ -3052,6 +3052,23 @@ refresh_frame = function flx_refresh_frame (target_element, data_element, new_ur
     return refresh_ajax_frame(target_element, data_region2, data_element2, _callback, _callback_on_error);
 };
 
+refresh_frame = function flx_refresh_frame (target_element, data_element, new_url, param, event, data_region) {
+    var data_element2, data_region2, f;
+    data_region = (data_region === undefined) ? null: data_region;
+    f = target_element.getAttribute("data-link");
+    if (_pyfunc_truthy(f)) {
+        data_element2 = super_query_selector(data_element, f);
+    } else {
+        data_element2 = data_element;
+    }
+    if (_pyfunc_truthy(data_region)) {
+        data_region2 = data_region;
+    } else {
+        data_region2 = target_element.getAttribute("data-region");
+    }
+    return refresh_ajax_frame(target_element, data_region2, data_element2);
+};
+
 refresh_page = function flx_refresh_page (target_element, data_element, new_url, param, event) {
     return refresh_frame(target_element, data_element, new_url, param, event, "page-content");
 };
@@ -3087,14 +3104,14 @@ on_message = function flx_on_message (target_element, data_element, new_url, par
     return null;
 };
 
-EVENT_CLICK_TAB = [["inline", "*", true, false, on_inline], ["inline_edit", "*", true, false, on_inline_edit_new], ["inline_info", "*", true, false, on_inline_info], ["inline_delete", "*", true, false, on_inline_delete], ["inline_error", "*", true, false, on_inline_error], ["popup", "*", true, false, on_popup], ["popup_edit", "*", true, false, on_popup_edit_new], ["popup_info", "*", true, false, on_popup_info], ["popup_delete", "*", true, false, on_popup_delete], ["popup_error", "*", true, false, on_popup_error], ["_top", "*", false, false, on_replace_app], ["_top2", "*", true, false, on_new_tab], ["_self", "*", true, false, refresh_page], ["_parent", "*", true, false, on_new_tab], ["refresh_frame", "*", true, false, refresh_frame], ["refresh_page", "*", true, false, refresh_page], ["refresh_app", "*", false, false, refresh_app], ["message", "*", false, false, on_message], ["null", "*", false, false, only_get]];
+EVENT_CLICK_TAB = [["inline", "*", true, false, on_inline], ["inline_edit", "*", true, false, on_inline_edit_new], ["inline_info", "*", true, false, on_inline_info], ["inline_delete", "*", true, false, on_inline_delete], ["inline_error", "*", true, false, on_inline_error], ["popup", "*", true, false, on_popup], ["popup_edit", "*", true, false, on_popup_edit_new], ["popup_info", "*", true, false, on_popup_info], ["popup_delete", "*", true, false, on_popup_delete], ["popup_error", "*", true, false, on_popup_error], ["_top", "*", false, false, on_replace_app], ["_top2", "*", true, false, on_new_tab], ["_self", "*", true, false, refresh_page], ["_parent", "*", true, false, on_new_tab], ["refresh_frame", "*", true, false, refresh_frame], ["close_frame", "*", true, false, close_frame], ["refresh_page", "*", true, false, refresh_page], ["refresh_app", "*", false, false, refresh_app], ["message", "*", false, false, on_message], ["null", "*", false, false, only_get]];
 on_resize = function (event) {
     process_resize(document.body);
     return null;
 };
 
 window.addEventListener("resize", on_resize);
-export {on_global_event, register_global_event, process_href, on_click_default_action, create_event_handler, on_inline, on_inline_edit_new, on_inline_info, on_inline_delete, on_inline_error, on_popup, on_popup_edit_new, on_popup_info, on_popup_delete, on_popup_error, on_new_tab, on_replace_app, refresh_frame, refresh_page, refresh_app, only_get, on_message, on_resize};
+export {on_global_event, register_global_event, process_href, on_click_default_action, create_event_handler, on_inline, on_inline_edit_new, on_inline_info, on_inline_delete, on_inline_error, on_popup, on_popup_edit_new, on_popup_info, on_popup_delete, on_popup_error, on_new_tab, on_replace_app, close_frame, refresh_frame, refresh_page, refresh_app, only_get, on_message, on_resize};
 
 var install_service_worker, service_worker_and_indexedDB_test;
 install_service_worker = function flx_install_service_worker () {

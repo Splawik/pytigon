@@ -54,7 +54,7 @@ MODAL_DELETE_BASE = """
 
 EDIT_FOOTER = """ 
 <button type="button" class="btn btn-secondary ptig-btn-close" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>
-<button type="button" class="btn btn-primary" data-region="page-content" target="refresh_frame">OK</button>
+<button type="button" class="btn btn-primary" data-region="page-content" target="close_frame">OK</button>
 """.replace(
     "Cancel", _CANCEL
 )
@@ -70,7 +70,7 @@ INFO_FOOTER = """
 
 DELETE_FOOTER = """
 <button type="button" class="btn btn-secondary ptig-btn-close" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>
-<button type="button" class="btn btn-danger" data-region="page-content" target="refresh_frame">OK</button>
+<button type="button" class="btn btn-danger" data-region="page-content" target="close_frame">OK</button>
 """.replace(
     "Cancel", _CANCEL
 )

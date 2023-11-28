@@ -8,10 +8,6 @@
 {% endblock %}
 {% block scroll %}
 {% endblock %}
-{% block list_content_actions %}
-        {% new_row "<<new_row_title>>" %}
-        {% list_action "<<action>>" "<<action_description>>" %}
-{% endblock %}
 {% block list_row_header %}
         <th>Priority</th>
         <th>Date from</th>
@@ -25,13 +21,6 @@
         <td>
         {{ object.date_to }}
         </td>
-{% endblock %}
-{% block list_row_actions %}
-        {% row_actions %}
-                edit
-                delete
-                <<action_name>>,<<description>>
-        {% endrow_actions %}
 {% endblock %}
 {% block row_edit %}
         {% form %}
