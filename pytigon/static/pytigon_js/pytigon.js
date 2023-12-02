@@ -2640,7 +2640,7 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
             }
             if ((_pyfunc_truthy(new_target) && ((!_pyfunc_op_equals(new_target, target))))) {
                 stub9_ = _get_click_event_from_tab(target_element, new_target, url);
-                new_callback = stub9_[0];new_url = stub9_[1];
+                new_url = stub9_[0];new_callback = stub9_[1];
                 element = new_callback(target_element, data_element, new_url, param, event);
             } else {
                 element = callback(target_element, data_element, url, param, event);
@@ -3430,11 +3430,11 @@ datetable_set_height = function flx_datetable_set_height (element) {
 datatable_refresh = function flx_datatable_refresh (element) {
     var region;
     if (_pyfunc_truthy(element.classList.contains("tabsort"))) {
-        (jQuery(element).bootstrapTable)("refresh");
+        (jQuery(element).bootstrapTable)("refresh", ({silent: true}));
     } else {
         region = get_ajax_region(element, "table");
         if ((!_pyfunc_op_equals(region, null))) {
-            ((_pymeth_find.call(jQuery(region), "table[name=tabsort].datatable")).bootstrapTable)("refresh");
+            ((_pymeth_find.call(jQuery(region), "table[name=tabsort].datatable")).bootstrapTable)("refresh", ({silent: true}));
         }
     }
     return null;
@@ -3522,7 +3522,7 @@ datatable_ajax = function flx_datatable_ajax (params) {
 };
 
 init_table = function flx_init_table (table, table_type) {
-    var _handle_toolbar_expand, _process_resize, btn, icons, init_bootstrap_table, onCheck, onLoadSuccess, onPostHeader, onRefresh, panel, panel2, queryParams, table_panel;
+    var _handle_toolbar_expand, _on_column_resize_stop, _process_resize, btn, icons, init_bootstrap_table, onCheck, onLoadSuccess, onPostHeader, onRefresh, panel, panel2, queryParams, table_panel;
     if (_pyfunc_op_equals(table_type, "datatable")) {
         if (_pyfunc_truthy(table.hasClass("multiple-select"))) {
             ((_pymeth_find.call(((_pymeth_find.call(jQuery(table), "tr:first"))), "th:first")).before)("<th data-field='state' data-checkbox='true' data-visible='true'></th>");
@@ -3627,6 +3627,12 @@ init_table = function flx_init_table (table, table_type) {
         };
 
         table.on("post-body.bs.table", init_bootstrap_table);
+        _on_column_resize_stop = (function flx__on_column_resize_stop (event) {
+            datetable_set_height(table);
+            return null;
+        }).bind(this);
+
+        table.on("column:resize:stop", _on_column_resize_stop);
         table_panel = (jQuery(table).closest)("div.win-content");
         btn = (_pymeth_find.call(table_panel, ".tabsort-toolbar-expand").first)();
         if (_pyfunc_truthy(btn)) {
@@ -3669,7 +3675,7 @@ table_loadeddata = function flx_table_loadeddata (event) {
     if (_pyfunc_truthy(_pyfunc_getattr(event, "data"))) {
         dt = data_type(event.data);
         if (_pyfunc_op_contains(dt, ["$$RETURN_REFRESH_PARENT", "$$RETURN_REFRESH"])) {
-            ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh");
+            ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh", ({silent: true}));
         } else if (_pyfunc_op_equals(dt, "$$RETURN_ERROR")) {
             refresh_ajax_frame((_pyfunc_truthy(event.srcElement))? (event.srcElement) : (event.data_source), "error", event.data);
         } else if (_pyfunc_op_equals(dt, "$$RETURN_HTML_ERROR")) {
@@ -3728,12 +3734,12 @@ table_loadeddata = function flx_table_loadeddata (event) {
                                 if (_pyfunc_truthy(row)) {
                                     datatable.bootstrapTable("updateByUniqueId", ({id: id2, row: d["rows"][0]}));
                                 } else {
-                                    datatable.bootstrapTable("refresh");
+                                    datatable.bootstrapTable("refresh", ({silent: true}));
                                 }
                             }
                         } catch(err_7) {
                             {
-                                datatable.bootstrapTable("refresh");
+                                datatable.bootstrapTable("refresh", ({silent: true}));
                             }
                         }
                         return null;
@@ -3746,14 +3752,14 @@ table_loadeddata = function flx_table_loadeddata (event) {
                 {
                 }
             }
-            ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh");
+            ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh", ({silent: true}));
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_OK"])) {
-            ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh");
+            ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh", ({silent: true}));
         } else {
             refresh_ajax_frame((_pyfunc_truthy(event.srcElement))? (event.srcElement) : (event.data_source), "page", event.data);
         }
     } else {
-        ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh");
+        ((_pymeth_find.call(jQuery(event.target), "table[name=tabsort].datatable")).bootstrapTable)("refresh", ({silent: true}));
     }
     return null;
 };
@@ -3784,7 +3790,7 @@ datatable_action = function flx_datatable_action (btn, action) {
                 return null;
             }
         }
-        (jQuery(datatable).bootstrapTable)("refresh");
+        (jQuery(datatable).bootstrapTable)("refresh", ({silent: true}));
         return null;
     }).bind(this);
 

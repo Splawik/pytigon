@@ -37,6 +37,7 @@ jquery_plugins/unique-element-id: https://github.com/jamierumbelow/jquery.unique
 jquery_plugins/sidebar-menu: https://github.com/huang-x-h/sidebar-menu
 jquery_plugins/jquery-treegrid http://maxazan.github.io/jquery-treegrid/
 jquery_plugins/fullcalendar: https://github.com/fullcalendar/fullcalendar
+jquery_plugins/jquery-resizable-columns: https://github.com/dobtco/jquery-resizable-columns
 
 bootstrap: https://getbootstrap.com/
 

@@ -40,6 +40,7 @@
         {% jscript_link 'jquery_plugins/perfect-scrollbar/js/perfect-scrollbar.min.js' %}
         {% jscript_link 'jquery_plugins/jquery-treegrid/js/jquery.treegrid.min.js' %}
         {% jscript_link 'jquery_plugins/daterangepicker/daterangepicker.js' %}
+        {% jscript_link 'jquery_plugins/jquery-resizable-columns/jquery.resizableColumns.min.js' %}
 
         %% bootstrap_js
             {% jscript_link 'bootstrap/js/bootstrap.bundle.js' %}
@@ -48,6 +49,7 @@
         {% jscript_link 'bootstrap_plugins/bootstrap-table/bootstrap-table-locale-all.min.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/mobile/bootstrap-table-mobile.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/auto-refresh/bootstrap-table-auto-refresh.min.js' %}
+        {% jscript_link 'bootstrap_plugins/bootstrap-table/extensions/resizable/bootstrap-table-resizable.min.js' %}
         {% jscript_link 'bootstrap_plugins/bootstrap5-editable/js/bootstrap-editable.min.js' %}
 
 
@@ -138,6 +140,7 @@
         {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}
         {% css_link 'jquery_plugins/jquery-treegrid/css/jquery.treegrid.css' %}
         {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
+        {% css_link 'jquery_plugins/jquery-resizable-columns/jquery.resizableColumns.css' %}
 
         {{ form.media.css }}
         {% css_link 'bootstrap_plugins/select2-bootstrap-5-theme/select2-bootstrap-5-theme.css' %}
@@ -353,6 +356,7 @@
         .data-pagination="true"
         .data-page-size="64"
         .data-page-list="[64]"
+        
         .data-search="true"
         .data-multiple-select-row="true"
         .data-sortable="{% if sort %}true{% else %}false{% endif %}"
@@ -372,6 +376,7 @@
         .data-buttons="datatable_buttons"
         {% if not_multiple_select %}data-click-to-select="false"{% else %}data-click-to-select="true"{% endif %}
         .data-mobile-responsive="true"
+        .data-resizable="true"
         {% if table_subtype and table_subtype == 'table_with_details' %}data-autoselect="true"{% endif %}
     % else:
         .class="tabsort table table-hover table-sm table-striped table-bordered {%if get %}table_get{% endif %}"

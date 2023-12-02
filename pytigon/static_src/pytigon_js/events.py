@@ -238,7 +238,7 @@ def on_click_default_action(event, target_element):
             else:
                 new_target = None
             if new_target and new_target != target:
-                new_callback, new_url = _get_click_event_from_tab(
+                new_url, new_callback = _get_click_event_from_tab(
                     target_element, new_target, url
                 )
                 element = new_callback(

@@ -79,12 +79,12 @@ def datetable_set_height(element):
 
 def datatable_refresh(element):
     if element.classList.contains("tabsort"):
-        jQuery(element).bootstrapTable("refresh")
+        jQuery(element).bootstrapTable("refresh", {"silent": True})
     else:
         region = get_ajax_region(element, "table")
         if region != None:
             jQuery(region).find("table[name=tabsort].datatable").bootstrapTable(
-                "refresh"
+                "refresh", {"silent": True}
             )
 
 
@@ -284,6 +284,12 @@ def init_table(table, table_type):
             table.find("a.editable").on("hidden", on_hidden_editable)
 
         table.on("post-body.bs.table", init_bootstrap_table)
+        
+        def _on_column_resize_stop(event):
+            nonlocal table
+            datetable_set_height(table)
+
+        table.on("column:resize:stop", _on_column_resize_stop)
 
         # table_panel = jQuery(table).closest(".content")
         table_panel = jQuery(table).closest("div.win-content")
@@ -325,7 +331,7 @@ def table_loadeddata(event):
         dt = data_type(event.data)
         if dt in ("$$RETURN_REFRESH_PARENT", "$$RETURN_REFRESH"):
             jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
-                "refresh"
+                "refresh", {"silent": True}
             )
         elif dt == "$$RETURN_ERROR":
             refresh_ajax_frame(
@@ -405,9 +411,9 @@ def table_loadeddata(event):
                                         {"id": id2, "row": d["rows"][0]},
                                     )
                                 else:
-                                    datatable.bootstrapTable("refresh")
+                                    datatable.bootstrapTable("refresh", {"silent": True})
                         except:
-                            datatable.bootstrapTable("refresh")
+                            datatable.bootstrapTable("refresh", {"silent": True})
 
                     ajax_get(url, _update)
                     return
@@ -415,11 +421,11 @@ def table_loadeddata(event):
                 pass
 
             jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
-                "refresh"
+                "refresh", {"silent": True}
             )
         elif dt in ("$$RETURN_OK",):
             jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
-                "refresh"
+                "refresh", {"silent": True}
             )
         else:
             refresh_ajax_frame(
@@ -429,7 +435,7 @@ def table_loadeddata(event):
             )
     else:
         jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(
-            "refresh"
+            "refresh", {"silent": True}
         )
 
 
@@ -458,7 +464,7 @@ def datatable_action(btn, action):
         if "RETURN_ACTION" in data:
             if data["RETURN_ACTION"] == None:
                 return
-        jQuery(datatable).bootstrapTable("refresh")
+        jQuery(datatable).bootstrapTable("refresh", {"silent": True})
 
     ajax_json(url + "?pks=" + pk_list_str, {"action": action}, _callback)
 
