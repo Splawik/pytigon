@@ -8,13 +8,13 @@ Urls = (
     (
         "table/ActionType/-/form/list/",
         _("Action types"),
-        None,
+        "admin_actiontype",
         """png://categories/applications-system.png""",
     ),
     (
         "table/Action/-/form/list/",
         _("Action"),
-        None,
+        "admin_action",
         """png://apps/office-calendar.png""",
     ),
 )

@@ -3499,7 +3499,6 @@ datatable_ajax = function flx_datatable_ajax (params) {
         _on_post_data = (function flx__on_post_data (data) {
             var d2;
             d2 = JSON.parse(data);
-            console.log("POST:" + " " + data);
             success(d2);
             return null;
         }).bind(this);
@@ -3511,7 +3510,6 @@ datatable_ajax = function flx_datatable_ajax (params) {
         _on_get_data = (function flx__on_get_data (data) {
             var d2;
             d2 = JSON.parse(data);
-            console.log("GET:" + " " + data);
             success(d2);
             return null;
         }).bind(this);
@@ -3712,7 +3710,6 @@ table_loadeddata = function flx_table_loadeddata (event) {
                     }
                 }
                 if (_pyfunc_truthy(url)) {
-                    console.log(url);
                     if (_pyfunc_op_contains("?", url)) {
                         url = _pyfunc_op_add(url, "&json=1&pk=" + _pyfunc_str(pk));
                     } else {

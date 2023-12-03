@@ -4,5 +4,5 @@ ModuleTitle = _("Config")
 Title = _("Log")
 Perms = True
 Index = "None"
-Urls = ()
+Urls = (("table/Log/-/form/list/", _("Logs"), "admin_log", """fa://users.png"""),)
 UserParam = {}

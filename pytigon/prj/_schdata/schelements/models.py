@@ -1043,6 +1043,71 @@ class DocReg(models.Model):
     ):
         return ACCESS_FUN
 
+    def copy_to_clipboard(self):
+        object_list = self.docregstatus_set.all()
+        return {
+            "action": "paste_from_clipboard",
+            "table": "DocReg",
+            "objects": [
+                {
+                    "app": self.app,
+                    "name": self.name,
+                    "group": self.group,
+                    "description": self.description,
+                    "head_form": self.head_form,
+                    "head_template": self.head_template,
+                    "item_form": self.item_form,
+                    "item_template": self.item_template,
+                    "save_head_fun": self.save_head_fun,
+                    "save_item_fun": self.save_item_fun,
+                    "access_fun": self.access_fun,
+                    "statuses": [obj.copy_to_clipboard() for obj in object_list],
+                },
+            ],
+        }
+
+    @classmethod
+    def table_action(cls, list_view, request, data):
+        if (
+            "action" in data
+            and data["action"] == "paste_from_clipboard"
+            and "table" in data
+            and data["table"] == "DocReg"
+        ):
+
+            class _LV:
+                pass
+
+            obj = None
+            object_list = data["objects"]
+            for obj_param in object_list:
+                obj = DocReg()
+                obj.app = obj_param["app"]
+                obj.name = "COPY: " + obj_param["name"]
+                obj.group = obj_param["group"]
+                obj.description = obj_param["description"]
+                obj.head_form = obj_param["head_form"]
+                obj.head_template = obj_param["head_template"]
+                obj.item_form = obj_param["item_form"]
+                obj.item_template = obj_param["item_template"]
+                obj.save_head_fun = obj_param["save_head_fun"]
+                obj.save_item_fun = obj_param["save_item_fun"]
+                obj.access_fun = obj_param["access_fun"]
+                obj.save()
+
+                lv = _LV()
+                lv.kwargs = {"parent_pk": obj.id}
+                for status in obj_param["statuses"]:
+                    DocRegStatus.table_action(lv, request, status)
+
+            if obj:
+                return new_row_ok(request, int(obj.id), str(obj))
+            return True
+
+        return standard_table_action(
+            cls, list_view, request, data, ["copy", "paste", "delete"]
+        )
+
 
 admin.site.register(DocReg)
 

@@ -134,7 +134,6 @@ def datatable_ajax(params):
 
         def _on_post_data(data):
             d2 = JSON.parse(data)
-            print("POST:", data)
             success(d2)
 
         ajax_post(url, form, _on_post_data)
@@ -145,7 +144,6 @@ def datatable_ajax(params):
 
         def _on_get_data(data):
             d2 = JSON.parse(data)
-            print("GET:", data)
             success(d2)
 
         ajax_get(url, _on_get_data)
@@ -385,7 +383,6 @@ def table_loadeddata(event):
                     elif link.hasAttribute("src"):
                         url = link.getAttribute("src")
                 if url:
-                    print(url)
                     if "?" in url:
                         url += "&json=1&pk=" + str(pk)
                     else:

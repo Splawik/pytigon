@@ -15,7 +15,7 @@
 </script>
 {% endblock %}
 {% block all %}
-        {% with table_type='datatable' %}
+        {% with table_type='datatable' table_subtype='table_with_details' table_details_height="40vh" %}
                 {{ block.super }}
         {% endwith %}
 {% endblock %}
@@ -54,6 +54,7 @@
         {% row_actions %}
                 field_list/docitem_set,Document items,fa fa-lg fa-plus/fa fa-list-ol
         {% endrow_actions %}
+        {% row_related_list "schlog/Log" title="Operation log" filter="schelements__DocHead__{{object.id}}__default" icon_name="fa fa-lg fa-street-view" tag_class="+class='btn-info'" version="schelements__" %}
         {{ block.super }}
 {% endblock %}
 {% block list_row_actions %}
@@ -65,12 +66,12 @@
         {% endif %}
         {% with object|args:request|call:"get_visible_statuses" as vs %}
                 {% if vs %}
-                        {% for row in vs %}
+                        {% for row in vs reversed %}
                                 {% if row.order > object.get_reg_status.order %}
                                         {% if row.for_accept_template %}
                                                 {% subtemplate row.for_accept_template %}
                                           {% else %}
-                                                {% action "approve_status"|append_str:"/"|append_str:row.name row.description row.icon target=row.get_accept_target url=table_path|append_str:"{id}/action/approve/" %}
+                                                {% action "approve_status"|append_str:"/"|append_str:row.name row.description row.icon|first_elem target=row.get_accept_target url=table_path|append_str:"{id}/action/approve/" %}
                                         {% endif %}
                                 {% endif %}
                         {% endfor %}
@@ -78,12 +79,12 @@
         {% endwith %}
         {% with object|args:request|call:"get_visible_statuses" as vs %}
                 {% if vs %}
-                        {% for row in vs %}
+                        {% for row in vs reversed %}
                                 {% if row.order < object.get_reg_status.order %}
                                         {% if row.for_undo_template %}
                                                 {% subtemplate row.for_undo_template %}
                                           {% else %}
-                                                {% action "decline_status"|append_str:"/"|append_str:row.name "Back to status:"|append_str:row.name row.icon target=row.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
+                                                {% action "decline_status"|append_str:"/"|append_str:row.name "Back to status:"|append_str:row.name row.icon|last_elem target=row.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
                                         {% endif %}
                                 {% endif %}
                         {% endfor %}
@@ -94,6 +95,15 @@
                         {% action "decline_status"|append_str:"/"|append_str:object.status "Discard status: "|append_str:object.status "fa fa-undo" target=object.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
                 {% endif %}
         {% endcomment %}
+{% endblock %}
+{% block list_page_footer %}
+        {% row_details %}
+                *Items:schelements/table/DocHead/[[table_row_pk]]/docitem_set/-/form/sublist/
+                (schlog)Logs:schlog/table/Log//schelements__DocHead__[[table_row_pk]]__default/form__schelements__/sublist/
+                (schattachements)Attachements:schattachements/table/Attachement//schelements__DocHead__[[table_row_pk]]__default/form__schattachements__/sublist/
+                (schworkflow)Acceptances:schworkflow/table/WorkflowItem//schelements__DocHead__[[table_row_pk]]__default/form__schworkflow__/sublist/
+                (schcomments)Comments:schcomments/table/Comment//schelements__DocHead__[[table_row_pk]]__default/form__schcomments__/sublist/
+        {% endrow_details %}
 {% endblock %}
 {% block dialog_type %}
         modal-xl

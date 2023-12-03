@@ -141,7 +141,8 @@ def change_status(request, pk, action="accept"):
 
                     if action != "accept":
                         models.DocItem.objects.filter(
-                            parent=doc_head, level__gte=reg_status.order
+                            parent=doc_head,
+                            level__gt=reg_status.order if reg_status.order >= 0 else 0,
                         ).delete()
 
                     doc_status.date = timezone.now()

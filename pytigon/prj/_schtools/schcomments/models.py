@@ -27,6 +27,10 @@ class Comment(JSONModel):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_comment", "Can administer comments"),
+        ]
+
     application = models.CharField(
         "Application",
         null=True,
@@ -45,7 +49,7 @@ class Comment(JSONModel):
         "Parent id",
         null=True,
         blank=True,
-        editable=True,
+        editable=False,
         db_index=True,
     )
     comment = models.TextField(
@@ -59,7 +63,7 @@ class Comment(JSONModel):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
-        editable=True,
+        editable=False,
         verbose_name="Sender",
         related_name="comment_sender_set",
     )
@@ -76,7 +80,7 @@ class Comment(JSONModel):
         "Recipients", null=True, blank=True, editable=True, max_length=256
     )
     time = models.DateTimeField(
-        "Time", null=True, blank=True, editable=True, auto_now_add=True
+        "Time", null=True, blank=True, editable=False, auto_now_add=True
     )
 
     @classmethod
@@ -100,6 +104,11 @@ class Comment(JSONModel):
                 "parent_id": 0,
                 "group": "default",
             }
+
+    def save_from_request(self, request, view_type, param):
+        if not self.sender:
+            self.sender = request.user
+        super().save()
 
 
 admin.site.register(Comment)

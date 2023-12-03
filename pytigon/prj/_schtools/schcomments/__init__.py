@@ -4,5 +4,12 @@ ModuleTitle = _("Config")
 Title = _("Comments")
 Perms = True
 Index = "None"
-Urls = ()
+Urls = (
+    (
+        "table/Comment/-/form/list/",
+        _("Comments"),
+        "admin_comment",
+        """fa://question.png""",
+    ),
+)
 UserParam = {}

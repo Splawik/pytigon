@@ -1424,11 +1424,22 @@ class RowDetailsNode(Node):
             item = item.strip()
             if ":" in item:
                 title, url = item.split(":", 1)
-                if title.startswith("*") and not test:
-                    title_url_tab.append([title[1:], url, True])
-                    test = True
-                else:
-                    title_url_tab.append([title, url, False])
+                default = False
+                perm = None
+                if title.startswith("*"):
+                    title = title[1:]
+                    default = True
+                if title.startswith('(') and ')' in title:
+                    perm, title = title.split(")", 1)
+                    perm = perm[1:]
+
+                if perm == None or ('perms' in context and hasattr(context['perms'], "user") and context['perms'].user.has_perm(perm)):
+                    if default and not test:
+                        title_url_tab.append([title, url, True])
+                        test = True
+                    else:
+                        title_url_tab.append([title, url, False])
+        
         if not test and len(title_url_tab) > 0:
             title_url_tab[0][2] = True
 

@@ -53,6 +53,10 @@ class ActionType(models.Model):
 
         ordering = ["id"]
 
+        permissions = [
+            ("admin_actiontype", "Can administer action types"),
+        ]
+
     name = models.CharField(
         "Name", null=False, blank=False, editable=True, db_index=True, max_length=64
     )
@@ -142,6 +146,10 @@ class Action(JSONModel):
         app_label = "schactions"
 
         ordering = ["id"]
+
+        permissions = [
+            ("admin_action", "Can administer actions"),
+        ]
 
     action_type = ext_models.PtigForeignKey(
         ActionType,

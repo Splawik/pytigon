@@ -17,14 +17,14 @@
     th..._(Sender)
     th..._(Recipient)
     th..._(Recipient)
-    th..._(Time}
+    th..._(Time)
 
 %% list_row
     td...{{ object.comment }}
     td...{{ object.sender }}
     td...{{ object.recipient }}
     td...{{ object.recipients }}
-    td...{{ object.time }}
+    td...{{ object.time|isoformat }}
 
 %% list_row_actions
     % row_actions:

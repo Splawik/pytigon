@@ -5,31 +5,41 @@
 
 %% all
     % with table_type='datatable':
-        {% block.super %}
+        {{ block.super }}
 
 %% scroll
 
 %% list_row_header
-    th..._(Application)
-    th..._(Table)
-    th..._(Group)
-    th..._(Parent id)
-    th..._(Date)
+    % if vtype != "sublist":
+        th..._(Application) {{target}}
+        th..._(Table)
+        th..._(Group)
+        th..._(Parent id)
+    th..._(Date) {{type}}
     th..._(Description)
     th..._(Operator)
-    th..._(Operator id)
+    % if vtype != "sublist":
+        th..._(Operator id)
     
-
 %% list_row
-    td...{% object.application %}
-    td...{% object.table %}
-    td...{% object.group %}
-    td...{% object.parent_id %}
-    td...{% object.date %}
-    td...{% object.description %}
-    td...{% object.operator %}
-    td...{% object.operator_id %}
-    
+    % if vtype != "sublist":
+        td...{{object.application }}
+        td...{{ object.table }}
+        td...{{ object.group }}
+        td...{{ object.parent_id }}
+    td...{{ object.date|isoformat }}
+    td...{{ object.description }}
+    td...{{ object.operator }}
+    % if vtype != "sublist":
+        td...{{ object.operator_id }}
+        
+%% list_row_header_end
+    % if vtype != "sublist" or target == "json":
+        {{ block.super }}
+
+%% list_row_end2
+    % if vtype != "sublist":
+        {{ block.super }}
 
 %% list_row_actions
     % row_actions:

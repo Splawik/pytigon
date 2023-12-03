@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 % extends "forms/form.html"
 
 % load exfiltry
@@ -23,6 +22,7 @@
 
 %% list_content_actions
     % new_row _("New document register")
+    ptig-paste href={{table_path_and_filter}}form/table_action/
 
 %% list_row_header
     th..._(name)
