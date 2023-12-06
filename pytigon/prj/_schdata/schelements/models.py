@@ -363,13 +363,6 @@ class Element(TreeModel):
     description = models.CharField(
         "Description", null=True, blank=True, editable=True, max_length=256
     )
-    amount = models.IntegerField(
-        "Amount",
-        null=True,
-        blank=True,
-        editable=True,
-        default=1,
-    )
     grand_parent1 = ext_models.PtigForeignKey(
         "self",
         on_delete=models.CASCADE,
@@ -1901,14 +1894,13 @@ class DocItem(JSONModel):
         verbose_name="Item",
         db_index=True,
     )
-    amount = models.DecimalField(
-        "Amount", null=True, blank=True, editable=True, max_digits=16, decimal_places=2
-    )
-    alt_amount = models.DecimalField(
-        "Amount", null=True, blank=True, editable=True, max_digits=16, decimal_places=2
-    )
-    alt_unit = models.CharField(
-        "Alternate unit", null=True, blank=True, editable=True, max_length=32
+    qty = models.DecimalField(
+        "Quantity",
+        null=True,
+        blank=True,
+        editable=True,
+        max_digits=16,
+        decimal_places=2,
     )
     description = models.CharField(
         "Description", null=True, blank=True, editable=True, max_length=255
@@ -2217,7 +2209,7 @@ class DocItem(JSONModel):
         account_name,
         description,
         sign,
-        amount,
+        qty,
         element,
         classifier1value=None,
         classifier2value=None,
@@ -2243,7 +2235,7 @@ class DocItem(JSONModel):
                 .annotate(csum=Sum("credit"), dsum=sum("debit"))
                 .order_by("subcode")
             )
-            a = amount
+            a = qty
             ret = []
             for s in subcode_sum:
                 subcode2 = s["subcode"]
@@ -2306,7 +2298,7 @@ class DocItem(JSONModel):
             account_operation.payment = payment
             account_operation.account_state = object
             account_operation.sign = sign
-            account_operation.amount = amount
+            account_operation.qty = qty
             account_operation.enabled = False
             if save:
                 account_operation.save()
@@ -3044,8 +3036,8 @@ class AccountOperation(models.Model):
         blank=False,
         editable=True,
     )
-    amount = models.DecimalField(
-        "Amount",
+    qty = models.DecimalField(
+        "Quantity",
         null=False,
         blank=False,
         editable=True,
@@ -3175,9 +3167,9 @@ class AccountOperation(models.Model):
         if not self.enabled:
             self.enabled = True
             if self.sign > 0:
-                self.update_accounts_state(0, self.amount)
+                self.update_accounts_state(0, self.qty)
             else:
-                self.update_accounts_state(self.amount, 0)
+                self.update_accounts_state(self.qty, 0)
             self.save()
             ret = True
         return ret
@@ -3194,9 +3186,9 @@ class AccountOperation(models.Model):
         if self.enabled:
             self.enabled = False
             if self.sign > 0:
-                self.update_accounts_state(0, -1 * self.amount)
+                self.update_accounts_state(0, -1 * self.qty)
             else:
-                self.update_accounts_state(-1 * self.amount, 0)
+                self.update_accounts_state(-1 * self.qty, 0)
             self.save()
             ret = True
         return ret

@@ -42,17 +42,17 @@
 {% block list_row_header %}
         <th>order</th>
         <th>description</th>
-        <th>amount</th>
+        <th>item</th>
         <th>
-        level
+        quantity
         </th>
 {% endblock %}
 {% block list_row %}
         <td>{{object.order}}</td>
         <td>{{object.description}}</td>
-        <td>{{object.amount}}</td>
+        <td>{{object.item}}</td>
         <td>
-        {{object.level}}
+        {{object.qty}}
         </td>
 {% endblock %}
 {% block id_extra %}

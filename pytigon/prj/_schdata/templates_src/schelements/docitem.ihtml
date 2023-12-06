@@ -38,14 +38,14 @@
 %% list_row_header
     th..._(order)
     th..._(description)
-    th..._(amount)
-    th..._(level)
+    th..._(item)
+    th..._(quantity)
 
 %% list_row
     td...{{object.order}}
     td...{{object.description}}
-    td...{{object.amount}}
-    td...{{object.level}}
+    td...{{object.item}}
+    td...{{object.qty}}
 
 
 %% id_extra

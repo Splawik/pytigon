@@ -158,12 +158,16 @@ class CommonGroup(JSONModel):
                                 ret.append(objs[0])
             return ret
 
-    @classmethod
+    classmethod
+
     def filter(cls, value, view=None, request=None):
         if value:
-            id, grp = value.split("__")
-            if grp == "pk" or not id:
-                return cls.objects.filter(pk=id)
+            if "__" in value:
+                id, grp = value.split("__")
+                if grp == "pk" or not id:
+                    return cls.objects.filter(pk=id)
+            else:
+                return cls.objects.filter(group_def_name=value)
 
         return cls.objects.all()
 

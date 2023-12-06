@@ -30,7 +30,7 @@
     th..._(Payment)
     th..._(Account state)
     th..._(Sign)
-    th..._(Amount)
+    th..._(Quantity)
 
 %% list_row
     td...{{object.date}}
@@ -38,7 +38,7 @@
     td...{{object.payment}}
     td...{{object.account_state}}
     td...{{object.sign}}
-    td...{{object.amount}}
+    td...{{object.qty}}
 
 %% list_row_actions
     % row_actions:
@@ -53,6 +53,6 @@
             div class=row
                 % get_table_row form.account_state search_fields="parent__name__icontains"
     % form:
-        .sign,amount
+        .sign,qty
 
         
