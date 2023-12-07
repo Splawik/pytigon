@@ -2022,7 +2022,9 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
             } else {
                 elem = element;
             }
-            callback();
+            if (_pyfunc_truthy(callback)) {
+                callback();
+            }
             return refresh_ajax_frame(elem, "", null, null, callback_on_error, data);
         } else if (_pyfunc_op_equals(dt, "$$RETURN_RELOAD")) {
             if (_pyfunc_op_equals(region_name, "error")) {

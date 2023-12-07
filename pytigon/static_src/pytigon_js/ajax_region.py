@@ -619,7 +619,8 @@ def refresh_ajax_frame(
                     # elem = get_ajax_frame(region.closest(".plug"), None)
                 else:
                     elem = element
-                callback()
+                if callback:
+                    callback()
                 return refresh_ajax_frame(
                     elem, "", None, None, callback_on_error, data
                 )

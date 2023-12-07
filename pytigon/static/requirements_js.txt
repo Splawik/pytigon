@@ -20,7 +20,7 @@ vanillajs_plugins/icheck-material-1.0.1: https://github.com/bantikyan/icheck-mat
 vanillajs_plugins/nunjucks: https://mozilla.github.io/nunjucks/api.html
 vanillajs_plugins/graphql: https://github.com/f/graphql.js
 vanillajs_plugins/pouchdb: https://pouchdb.com
-
+vanillajs_plugins/htmx: https://htmx.org
 
 
 jquery: https://github.com/jquery/jquery
