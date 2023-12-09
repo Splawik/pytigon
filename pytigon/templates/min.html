@@ -1,0 +1,27 @@
+{% extends 'base0.html' %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block head_start %}
+        <script language="javascript">
+                window.BASE_PATH = '{{base_path}}';
+        </script>
+        {% jscript_link 'pytigon_js/pytigon-tools.js' %}
+{% endblock %}
+{% block css_links %}
+        {% block botstrap_css %}
+                {% if settings.BOOTSTRAP_TEMPLATE %}
+                        {% css_link 'themes/'|add:settings.BOOTSTRAP_TEMPLATE|add:'/bootstrap.min.css' %}
+                  {% else %}
+                        {% css_link 'bootstrap/css/bootstrap.min.css' %}
+                {% endif %}
+        {% endblock %}
+{% endblock %}
+{% block body %}
+        {% block content %}
+        {% endblock %}
+        {% jscript_link 'pytigon_js/py_runtime.js' %}
+        {% jscript_link 'system/idiomorph.min.js' %}
+        {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
+        {% module_link 'pytigon_js/pytigon.min.js' %}
+{% endblock %}
+

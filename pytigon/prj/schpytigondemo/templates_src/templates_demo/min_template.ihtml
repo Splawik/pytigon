@@ -1,0 +1,8 @@
+% extends 'min.html'
+
+%% content
+    div class=ajax-region
+        h1...TEST
+        a href={{base_path}}templates_demo/min_template2/,,,target=refresh_frame
+            .CLICK
+        div class=ajax-frame

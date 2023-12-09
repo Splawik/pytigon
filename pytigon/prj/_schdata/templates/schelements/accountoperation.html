@@ -32,7 +32,7 @@
         <th>Account state</th>
         <th>Sign</th>
         <th>
-        Amount
+        Quantity
         </th>
 {% endblock %}
 {% block list_row %}
@@ -42,7 +42,7 @@
         <td>{{object.account_state}}</td>
         <td>{{object.sign}}</td>
         <td>
-        {{object.amount}}
+        {{object.qty}}
         </td>
 {% endblock %}
 {% block list_row_actions %}
@@ -63,7 +63,7 @@
                 </div>
         {% endcomment %}
         {% form %}
-                sign,amount
+                sign,qty
         {% endform %}
 {% endblock %}
 

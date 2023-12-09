@@ -145,8 +145,8 @@ window.mount_html = mount_html
 
 
 def selectpicker_init(dest_elem):
-    jQuery(dest_elem).find(".selectpicker").selectpicker()
-
+    if hasattr(jQuery.fn, "selectpicker"):
+        jQuery(dest_elem).find(".selectpicker").selectpicker()
 
 register_mount_fun(selectpicker_init)
 
@@ -422,7 +422,8 @@ def datatable_init(dest_elem):
     tbl = jQuery(dest_elem).find(".tabsort")
     if tbl.length > 0:
         init_table(tbl, table_type)
-    jQuery(dest_elem).find(".tree").treegrid()
+    if hasattr(jQuery.fn, "treegrid"):
+        jQuery(dest_elem).find(".tree").treegrid()
 
 
 register_mount_fun(datatable_init)

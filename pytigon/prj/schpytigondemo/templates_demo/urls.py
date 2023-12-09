@@ -12,6 +12,17 @@ urlpatterns = [
         TemplateView.as_view(template_name="templates_demo/example_template.html"),
         {},
     ),
+    path(
+        "min_template/",
+        TemplateView.as_view(template_name="templates_demo/min_template.html"),
+        {},
+    ),
+    path(
+        "min_template2/",
+        TemplateView.as_view(template_name="templates_demo/min_template2.html"),
+        {},
+    ),
+    path("min/", TemplateView.as_view(template_name="templates_demo/min.html"), {}),
 ]
 
 gen = generic_table_start(urlpatterns, "templates_demo", views)

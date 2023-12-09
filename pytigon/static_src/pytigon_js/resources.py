@@ -1,6 +1,11 @@
-_CANCEL = gettext("Cancel")
-_CLOSE = gettext("Close")
-_COPY_TO_CLIP = gettext("Copy to clipboard")
+if hasattr(window, "gettext"):
+    _CANCEL = gettext("Cancel")
+    _CLOSE = gettext("Close")
+    _COPY_TO_CLIP = gettext("Copy to clipboard")
+else:
+    _CANCEL = "Cancel"
+    _CLOSE = "Close"
+    _COPY_TO_CLIP = "Copy to clipboard"
 
 MODAL = """
     <div class="dialog-data"></div>

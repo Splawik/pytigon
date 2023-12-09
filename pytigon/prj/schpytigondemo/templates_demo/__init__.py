@@ -18,5 +18,6 @@ Urls = (
         """png://mimetypes/x-office-spreadsheet.png""",
     ),
     ("odf/", _("odf template"), None, """png://mimetypes/x-office-spreadsheet.png"""),
+    ("min/", _("Minimal page"), None, """png://actions/media-playback-stop.png"""),
 )
 UserParam = {}

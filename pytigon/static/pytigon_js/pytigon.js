@@ -1,9 +1,15 @@
 
 
 var DELETE_FOOTER, EDIT_FOOTER, ERROR_FOOTER, INFO_FOOTER, INLINE, INLINE_BASE, INLINE_DELETE, INLINE_DELETE_BASE, INLINE_EDIT, INLINE_ERROR, INLINE_INFO, MODAL, MODAL_BASE, MODAL_DELETE, MODAL_DELETE_BASE, MODAL_EDIT, MODAL_ERROR, MODAL_INFO, _CANCEL, _CLOSE, _COPY_TO_CLIP;
-_CANCEL = gettext("Cancel");
-_CLOSE = gettext("Close");
-_COPY_TO_CLIP = gettext("Copy to clipboard");
+if (_pyfunc_hasattr(window, "gettext")) {
+    _CANCEL = gettext("Cancel");
+    _CLOSE = gettext("Close");
+    _COPY_TO_CLIP = gettext("Copy to clipboard");
+} else {
+    _CANCEL = "Cancel";
+    _CLOSE = "Close";
+    _COPY_TO_CLIP = "Copy to clipboard";
+}
 MODAL = "\n    <div class=\"dialog-data\"></div>\n";
 MODAL_BASE = _pymeth_replace.call((("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"ajax-region modal-dialog\" role=\"document\" data-region='(page)(page-content)'>\n        <div class=\"modal-content ajax-region\" data-region=\"error\">\n            <div class=\"modal-header\">\n                <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n                <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n            </div>\n            <div class=\"modal-body\">\n                <div class=\"container-fluid ajax-frame ajax-link win-content form-and-details\" data-region='page' href='{href}'>\n                    <div class=\"form-without-details d-flex flex-grow-1 flex-column\">\n                        <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n                    </div>\n                </div>\n            </div>\n            <div class=\"modal-footer\">\n                {{modal_footer}}\n            </div>\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
 MODAL_DELETE_BASE = _pymeth_replace.call((("\n<div class=\"dialog-form modal\" role=\"dialog\" title=\"{title}\">\n    <div class=\"ajax-region modal-dialog\" role=\"document\" data-region='(page)(page-content)'>\n        <div class=\"modal-header\">\n            <h5 class=\"modal-title\" id=\"ModalLabel\">{title}</h5>\n            <button type=\"button\" class=\"close btn-close\" data-dismiss='modal' data-bs-dismiss='modal' aria-label=\"Close\"></button>\n        </div>\n        <div class=\"modal-body\">\n            <div class=\"container-fluid\">\n                <div class=\"dialog-data ajax-frame\" data-region=\"error\"></div>\n            </div>\n        </div>\n        <div class=\"modal-footer\">\n            {{modal_footer}}\n        </div>\n    </div>\n</div>\n")), "Close", _CLOSE);
@@ -1509,7 +1515,9 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
 
 window.mount_html = mount_html;
 selectpicker_init = function flx_selectpicker_init (dest_elem) {
-    ((_pymeth_find.call(jQuery(dest_elem), ".selectpicker")).selectpicker)();
+    if (_pyfunc_hasattr(jQuery.fn, "selectpicker")) {
+        ((_pymeth_find.call(jQuery(dest_elem), ".selectpicker")).selectpicker)();
+    }
     return null;
 };
 
@@ -1789,7 +1797,9 @@ datatable_init = function flx_datatable_init (dest_elem) {
     if ((tbl.length > 0)) {
         init_table(tbl, table_type);
     }
-    ((_pymeth_find.call(jQuery(dest_elem), ".tree")).treegrid)();
+    if (_pyfunc_hasattr(jQuery.fn, "treegrid")) {
+        ((_pymeth_find.call(jQuery(dest_elem), ".tree")).treegrid)();
+    }
     return null;
 };
 

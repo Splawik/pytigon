@@ -158,8 +158,7 @@ class CommonGroup(JSONModel):
                                 ret.append(objs[0])
             return ret
 
-    classmethod
-
+    @classmethod
     def filter(cls, value, view=None, request=None):
         if value:
             if "__" in value:

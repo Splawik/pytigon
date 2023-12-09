@@ -2783,7 +2783,11 @@ class AccountState(models.Model):
     )
 
     def __str__(self):
-        s = self.target.name + "/" + self.parent.name
+        if self.target and self.parent:
+            s = self.target.name + "/" + self.parent.name
+        else:
+            s = "/"
+
         if self.classifier1value:
             s += "/" + classifier1value
         if self.classifier2value:
@@ -2951,15 +2955,25 @@ class AccountState(models.Model):
             ret = eval(s)
             if not ret:
                 raise ValueError(error_txt)
+
         elif self.parent.type2 == "V":
-            if self.debit - self.credit < 0:
-                raise ValueError("The state cannot be less than zero")
+            if self.credit - self.debit < 0:
+                raise ValueError(
+                    "The balance of the account with the number '%s' cannot be less than zero"
+                    % self.parent.name
+                )
         elif self.parent.type2 == "I":
-            if self.debit - self.credit > 0:
-                raise ValueError("The state cannot be greater than zero")
+            if self.credit - self.debit > 0:
+                raise ValueError(
+                    "The balance of the account with the number '%s' cannot be greater than zero"
+                    % self.parent.name
+                )
         elif self.parent.type2 == "D":
-            if self.debit - self.credit < 0:
-                raise ValueError("The state cannot be less than zero")
+            if self.credit - self.debit < 0:
+                raise ValueError(
+                    "The balance of the account with the number '%s' cannot be less than zero"
+                    % self.parent.name
+                )
         if self.debit == self.credit:
             self.zero_balance = True
         else:
