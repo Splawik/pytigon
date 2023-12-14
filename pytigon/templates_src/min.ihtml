@@ -4,22 +4,26 @@
 % load exsyntax
 
 %% head_start
-    script language=javascript
-        .window.BASE_PATH = '{{base_path}}';
-    {% jscript_link 'pytigon_js/pytigon-tools.js' %}
+    % if fragment != 'content':
+        script language=javascript
+            .window.BASE_PATH = '{{base_path}}';
+        {% jscript_link 'pytigon_js/pytigon-tools.js' %}
 
 %% css_links
     %% botstrap_css
-        % if settings.BOOTSTRAP_TEMPLATE:
-            {% css_link 'themes/'|add:settings.BOOTSTRAP_TEMPLATE|add:'/bootstrap.min.css' %}
-        % else:
-            {% css_link 'bootstrap/css/bootstrap.min.css' %}
+        % if fragment != 'content':
+            % if settings.BOOTSTRAP_TEMPLATE:
+                {% css_link 'themes/'|add:settings.BOOTSTRAP_TEMPLATE|add:'/bootstrap.min.css' %}
+            % else:
+                {% css_link 'bootstrap/css/bootstrap.min.css' %}
 
 %% body
     %% content
-
-    {% jscript_link 'pytigon_js/py_runtime.js' %}
-    {% jscript_link 'system/idiomorph.min.js' %}
-    {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
-    
-    {% module_link 'pytigon_js/pytigon.min.js' %}
+   
+    % if fragment != 'content':
+        {% jscript_link 'pytigon_js/py_runtime.min.js' %}
+        {% jscript_link 'system/idiomorph.min.js' %}
+        {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
+        {% jscript_link 'vanillajs_plugins/cookie/js.cookie.js' %}
+       
+        {% module_link 'pytigon_js/pytigon.min.js' %}

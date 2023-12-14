@@ -50,7 +50,7 @@
 
 %% id_extra
     % row_actions:
-        .field_list-parent/accountoperation_set,Account operations,fa fa-lg fa-plus/fa fa-list-ol
+        .field_list-parent/accountoperation_set,Account operations,fa fa-lg fa-plus/fa fa-list-ol,url=+?fragment=page
     {{ block.super }}
 
 %% list_row_actions

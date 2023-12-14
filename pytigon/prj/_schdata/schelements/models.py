@@ -2290,7 +2290,7 @@ class DocItem(JSONModel):
                 object.period = period
                 object.debit = 0
                 object.credit = 0
-                object.agregate = False
+                object.aggregate = False
                 object.save()
             account_operation = AccountOperation()
             account_operation.parent = self
@@ -2786,7 +2786,7 @@ class AccountState(models.Model):
         if self.target and self.parent:
             s = self.target.name + "/" + self.parent.name
         else:
-            s = "/"
+            s = ""
 
         if self.classifier1value:
             s += "/" + classifier1value
@@ -2834,7 +2834,7 @@ class AccountState(models.Model):
             else:
                 return None
 
-        if elementt != None:
+        if element != None:
             if isinstance(element, int):
                 object_list = object_list.filter(element__id=element)
             elif isinstance(element, Element):
@@ -2849,9 +2849,9 @@ class AccountState(models.Model):
         if classifier1value != None:
             if isinstance(classifier1value, int):
                 object_list = object_list.filter(classifier1value__id=classifier1value)
-            elif isinstance(classifier, Element):
+            elif isinstance(classifier1value, Element):
                 object_list = object_list.filter(classifier1value=classifier1value)
-            elif isinstance(classifier, str):
+            elif isinstance(classifier1value, str):
                 object_list = object_list.filter(
                     classifier1value__code=classifier1value
                 )
@@ -2863,9 +2863,9 @@ class AccountState(models.Model):
         if classifier2value != None:
             if isinstance(classifier2value, int):
                 object_list = object_list.filter(classifier2value__id=classifier2value)
-            elif isinstance(classifier, Element):
+            elif isinstance(classifier2value, Element):
                 object_list = object_list.filter(classifier2value=classifier2value)
-            elif isinstance(classifier, str):
+            elif isinstance(classifier2value, str):
                 object_list = object_list.filter(
                     classifier2value__code=classifier2value
                 )
@@ -2877,9 +2877,9 @@ class AccountState(models.Model):
         if classifier3value != None:
             if isinstance(classifier3value, int):
                 object_list = object_list.filter(classifier3value__id=classifier3value)
-            elif isinstance(classifier, Element):
+            elif isinstance(classifier3value, Element):
                 object_list = object_list.filter(classifier3value=classifier3value)
-            elif isinstance(classifier, str):
+            elif isinstance(classifier3value, str):
                 object_list = object_list.filter(
                     classifier3value__code=classifier3value
                 )
@@ -2978,6 +2978,18 @@ class AccountState(models.Model):
             self.zero_balance = True
         else:
             self.zero_balance = False
+
+        self.aggregate = True
+        if (
+            self.parent.type1 == "A"
+            and self.classifier1value != "*"
+            and self.classifier2value != "*"
+            and self.classifier2value != "*"
+            and self.subcode != "*"
+            and not self.period
+        ):
+            self.aggregate = False
+
         super().save(*args, **kwargs)
 
 
@@ -3126,7 +3138,6 @@ class AccountOperation(models.Model):
             obj.period = period
             obj.subcode = subcode
             obj.element = element
-            obj.aggregate = True
             obj.debit = 0
             obj.credit = 0
             obj.save()

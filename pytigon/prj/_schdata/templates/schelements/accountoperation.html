@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "forms/form.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
@@ -25,10 +24,17 @@
 {% block list_content_actions %}
         {% new_row "New account operation" %}
 {% endblock %}
+{% block id_extra %}
+        {{ block.super }}
+        {% if not object.enabled %}
+                <move-attr target-tag="tr" class="table-dark">
+                </move-attr>
+        {% endif %}
+{% endblock %}
 {% block list_row_header %}
         <th>Date</th>
         <th>Description</th>
-        <th>Payment</th>
+        <th>Name of payment</th>
         <th>Account state</th>
         <th>Sign</th>
         <th>
@@ -36,9 +42,9 @@
         </th>
 {% endblock %}
 {% block list_row %}
-        <td>{{object.date}}</td>
-        <td>{{object.description}}</td>
-        <td>{{object.payment}}</td>
+        <td>{{object.date|isoformat}}</td>
+        <td>{{object.description|none_to_empty}}</td>
+        <td>{{object.payment|none_to_empty}}</td>
         <td>{{object.account_state}}</td>
         <td>{{object.sign}}</td>
         <td>

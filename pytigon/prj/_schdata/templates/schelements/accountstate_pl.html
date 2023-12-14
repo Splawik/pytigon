@@ -33,6 +33,7 @@
         <th>Period</th>
         <th>debit</th>
         <th>credit</th>
+        <th>balance</th>
         <th>element</th>
         <th>classifier1value</th>
         <th>classifier2value</th>
@@ -48,6 +49,7 @@
         <td>{{object.period|none_to_empty}}</td>
         <td>{{object.debit}}</td>
         <td>{{object.credit}}</td>
+        <td>{{object.credit|fsubtract:object.debit}}</td>
         <td>{{object.element}}</td>
         <td>{{object.classifier1value|none_to_empty}}</td>
         <td>{{object.classifier2value|none_to_empty}}</td>

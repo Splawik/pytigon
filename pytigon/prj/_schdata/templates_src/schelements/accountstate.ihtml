@@ -32,6 +32,7 @@
     th..._(Period)
     th..._(debit)
     th..._(credit)
+    th..._(balance)
     th..._(element)
     th..._(classifier1value)
     th..._(classifier2value)
@@ -45,6 +46,7 @@
     td...{{object.period|none_to_empty}}
     td...{{object.debit}}
     td...{{object.credit}}
+    td...{{object.credit|fsubtract:object.debit}}
     td...{{object.element}}
     td...{{object.classifier1value|none_to_empty}}
     td...{{object.classifier2value|none_to_empty}}
