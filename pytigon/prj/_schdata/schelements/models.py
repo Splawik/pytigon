@@ -1281,7 +1281,7 @@ class DocHead(JSONModel):
         blank=True,
         editable=True,
         db_index=True,
-        max_length=32,
+        max_length=64,
     )
     date_c = models.DateTimeField(
         "Creation date",
@@ -2214,97 +2214,35 @@ class DocItem(JSONModel):
         classifier1value=None,
         classifier2value=None,
         classifier3value=None,
-        subcode=None,
+        subcode="",
         payment=None,
         save=True,
     ):
-        if subcode == "*":
-            account = Account.objects.get(name=account_name)
-            object_list = AccountState.get_account_state(
-                target,
-                account,
-                element,
-                classifier1value,
-                classifier2value,
-                classifier3value,
-                "*",
-                None,
-            )
-            subcode_sum = (
-                object_list.values("subcode")
-                .annotate(csum=Sum("credit"), dsum=sum("debit"))
-                .order_by("subcode")
-            )
-            a = qty
-            ret = []
-            for s in subcode_sum:
-                subcode2 = s["subcode"]
-                c = s["credit"]
-                d = s["debit"]
-                b = d - s
-                if b > a:
-                    a2 = a
-                    a = 0
-                else:
-                    a2 = b
-                    a -= b
-                x = self.new_account_operation(
-                    target,
-                    account_name,
-                    description,
-                    sign,
-                    a2,
-                    element,
-                    classifier1value,
-                    classifier2value,
-                    classifier3value,
-                    subcode2,
-                    payment,
-                    save,
-                )
-                ret.append(x)
-                if a == 0:
-                    return ret
-        else:
-            account = Account.objects.get(name=account_name)
-            period = self.get_period()
-            object_list = AccountState.objects.filter(
-                parent=account,
-                element=element,
-                target=target,
-                classifier1value=classifier1value,
-                classifier2value=classifier2value,
-                classifier3value=classifier3value,
-                period=period,
-            )
-            if object_list.count() > 0:
-                object = object_list[0]
-            else:
-                object = AccountState()
-                object.parent = account
-                object.element = element
-                object.target = target
-                object.classifier1value = classifier1value
-                object.classifier2value = classifier2value
-                object.classifier3value = classifier3value
-                object.period = period
-                object.debit = 0
-                object.credit = 0
-                object.aggregate = False
-                object.save()
-            account_operation = AccountOperation()
-            account_operation.parent = self
-            account_operation.description = description
-            account_operation.payment = payment
-            account_operation.account_state = object
-            account_operation.sign = sign
-            account_operation.qty = qty
-            account_operation.enabled = False
-            if save:
-                account_operation.save()
-            return [
-                account_operation,
-            ]
+        account_state = AccountState.get_or_create_account_state(
+            account_name,
+            subcode,
+            target,
+            classifier1value=classifier1value,
+            classifier2value=classifier2value,
+            classifier3value=classifier3value,
+            period="",
+            element=element,
+            aggregate=False,
+        )
+
+        account_operation = AccountOperation()
+        account_operation.parent = self
+        account_operation.description = description
+        account_operation.payment = payment
+        account_operation.account_state = account_state
+        account_operation.sign = sign
+        account_operation.qty = qty
+        account_operation.enabled = False
+        if save:
+            account_operation.save()
+        return [
+            account_operation,
+        ]
 
 
 admin.site.register(DocItem)
@@ -2577,6 +2515,9 @@ class Account(TreeModel):
         permissions = [
             ("admin_account", "Can administer accounts"),
         ]
+        ordering = [
+            "name",
+        ]
 
     parent = ext_models.PtigTreeForeignKey(
         "self",
@@ -2658,14 +2599,7 @@ class Account(TreeModel):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        x = self
-        ret = self.name
-        while x.parent:
-            x = x.parent
-            ret = x.name + "/" + ret
-        ret += ": "
-        ret += self.description
-        return ret
+        return self.name + ": " + self.description
 
 
 admin.site.register(Account)
@@ -2682,6 +2616,13 @@ class AccountState(models.Model):
 
         permissions = [
             ("admin_accountstatus", "Can administer account statuses"),
+        ]
+        ordering = [
+            "parent__name",
+            "subcode",
+            "period",
+            "target__name",
+            "element__name",
         ]
 
     parent = models.ForeignKey(
@@ -2760,7 +2701,7 @@ class AccountState(models.Model):
         decimal_places=2,
     )
     zero_balance = models.BooleanField(
-        "None",
+        "Balance is zero",
         null=True,
         blank=True,
         editable=True,
@@ -2783,156 +2724,221 @@ class AccountState(models.Model):
     )
 
     def __str__(self):
-        if self.target and self.parent:
-            s = self.target.name + "/" + self.parent.name
-        else:
-            s = ""
+        s = self.parent.name
 
-        if self.classifier1value:
-            s += "/" + classifier1value
-        if self.classifier2value:
-            s += "/" + classifier2value
-        if self.classifier3value:
-            s += "/" + classifier3value
         if self.subcode:
-            s += self.subcode
-        s += "(" + self.element.name + ")"
+            s += "-" + self.subcode
+
+        if (
+            self.target
+            or self.classifier1value
+            or self.classifier2value
+            or self.classifier3value
+        ):
+            s += "/"
+        else:
+            s += " [" + self.element.name + "]"
+            return s
+
+        if self.target and self.parent:
+            s += self.target.name
+
+        if self.classifier1value or self.classifier2value or self.classifier3value:
+            if self.classifier1value:
+                s += ":" + classifier1value.name
+            else:
+                s += ":"
+            if self.classifier2value:
+                s += ":" + classifier2value.name
+            else:
+                s += ":"
+            if self.classifier3value:
+                s += ":" + classifier3value.name
+            else:
+                s += ":"
+        s += " [" + self.element.name + "]"
         return s
 
     @staticmethod
-    def get_account_state(
+    def get_account_states(
+        account,
+        subcode="",
         target=None,
-        account=None,
-        element=None,
         classifier1value=None,
         classifier2value=None,
         classifier3value=None,
-        subcode=None,
-        period=None,
+        period="",
+        element=None,
+        aggregate=False,
         q=None,
     ):
-        object_list = AccountState.objects.all()
-        if target != None:
-            if isinstance(target, int):
-                object_list = object_list.filter(target__id=target)
-            elif isinstance(target, Element):
-                object_list = object_list.filter(target=target)
-            elif isinstance(target, str):
-                object_list = object_list.filter(target__code=target)
-            else:
-                return None
-        else:
-            object_list = object_list.filter(target__isnull=True)
+        if type(account) == str:
+            account = Account.objects.get(name=account)
 
-        if account != None:
-            if isinstance(target, int):
-                object_list = object_list.filter(parent__id=account)
-            elif isinstance(target, Account):
-                object_list = object_list.filter(parent=account)
-            elif isinstance(target, str):
-                object_list = object_list.filter(parent__name=account)
-            else:
-                return None
+        objs = AccountState.objects.filter(
+            parent=account,
+            subcode=subcode,
+            element=element,
+            classifier1value=classifier1value,
+            classifier2value=classifier2value,
+            classifier3value=classifier3value,
+            period=period,
+            aggregate=aggregate,
+        )
 
-        if element != None:
-            if isinstance(element, int):
-                object_list = object_list.filter(element__id=element)
-            elif isinstance(element, Element):
-                object_list = object_list.filter(element=element)
-            elif isinstance(target, str):
-                object_list = object_list.filter(element__code=element)
-            else:
-                return None
+        if target:
+            objs = objs.filter(target=target)
         else:
-            object_list = object_list.filter(element__isnull=True)
+            objs = objs.filter(target__isnull=True)
 
-        if classifier1value != None:
-            if isinstance(classifier1value, int):
-                object_list = object_list.filter(classifier1value__id=classifier1value)
-            elif isinstance(classifier1value, Element):
-                object_list = object_list.filter(classifier1value=classifier1value)
-            elif isinstance(classifier1value, str):
-                object_list = object_list.filter(
-                    classifier1value__code=classifier1value
-                )
-            else:
-                return None
-        else:
-            object_list = object_list.filter(classifier1value__isnull=True)
-
-        if classifier2value != None:
-            if isinstance(classifier2value, int):
-                object_list = object_list.filter(classifier2value__id=classifier2value)
-            elif isinstance(classifier2value, Element):
-                object_list = object_list.filter(classifier2value=classifier2value)
-            elif isinstance(classifier2value, str):
-                object_list = object_list.filter(
-                    classifier2value__code=classifier2value
-                )
-            else:
-                return None
-        else:
-            object_list = object_list.filter(classifier2value__isnull=True)
-
-        if classifier3value != None:
-            if isinstance(classifier3value, int):
-                object_list = object_list.filter(classifier3value__id=classifier3value)
-            elif isinstance(classifier3value, Element):
-                object_list = object_list.filter(classifier3value=classifier3value)
-            elif isinstance(classifier3value, str):
-                object_list = object_list.filter(
-                    classifier3value__code=classifier3value
-                )
-            else:
-                return None
-        else:
-            object_list = object_list.filter(classifier3value__isnull=True)
-
-        if subcode:
-            object_list = object_list.filter(subcode=subcode)
-        else:
-            object_list = object_list.filter(
-                Q(subcode__isnull=True) | Q(subcode__exact="")
-            )
-
-        if period:
-            object_list = object_list.filter(period=period)
-        else:
-            object_list = object_list.filter(
-                Q(period__isnull=True) | Q(period__exact="")
-            )
+        if element:
+            objs = objs.filter(element=element)
 
         if q:
-            object_list = object_list.filter(q)
+            objs = objs.filter(q)
 
-        return object_list
+        return objs
 
     @staticmethod
-    def get_balance(
+    def get_or_create_account_state(
+        account,
+        subcode="",
         target=None,
-        account=None,
-        element=None,
         classifier1value=None,
         classifier2value=None,
         classifier3value=None,
-        subcode=None,
-        period=None,
-        q=None,
+        period="",
+        element=None,
+        aggregate=False,
     ):
-        ret = AccountState.get_account_state(
-            target,
+        if type(account) == str:
+            account = Account.objects.get(name=account)
+
+        objs = AccountState.get_account_states(
             account,
-            element,
+            subcode,
+            target,
             classifier1value,
             classifier2value,
             classifier3value,
-            subcode,
             period,
+            element,
+            aggregate,
+        )
+
+        if objs.count() > 0:
+            return objs[0]
+        else:
+            obj = AccountState()
+            obj.parent = account
+            obj.target = target
+            obj.classifier1value = classifier1value
+            obj.classifier2value = classifier2value
+            obj.classifier3value = classifier3value
+            obj.period = period
+            obj.subcode = subcode
+            obj.element = element
+            obj.debit = 0
+            obj.credit = 0
+            obj.zero_balance = True
+            obj.aggregate = aggregate
+            obj.date_c = timezone.now()
+            obj.save()
+            return obj
+
+    @staticmethod
+    def get_balance(
+        account,
+        subcode="",
+        target=None,
+        classifier1value=None,
+        classifier2value=None,
+        classifier3value=None,
+        period=None,
+        element=None,
+        aggregate=False,
+        q=None,
+    ):
+        ret = AccountState.get_account_states(
+            account,
+            subcode,
+            target,
+            classifier1value,
+            classifier2value,
+            classifier3value,
+            period,
+            element,
+            aggregate,
             q,
         )
         result = ret.aggregate(Sum("credit"), Sum("debit"))
         result["balance__sum"] = result["debit__sum"] - result["credit__sum"]
         return result
+
+    def update_state(self, debit, credit, period):
+        self.debit += debit
+        self.credit += credit
+
+        if self.target:
+            targets = [self.target, None]
+        else:
+            targets = [
+                None,
+            ]
+
+        classifier1values = [
+            self.classifier1value,
+        ]
+        if self.classifier1value:
+            classifier1values.append(None)
+        classifier2values = [
+            self.classifier2value,
+        ]
+        if self.classifier2value:
+            classifier2values.append(None)
+        classifier3values = [
+            self.classifier3value,
+        ]
+        if self.classifier3value:
+            classifier3values.append(None)
+        periods = (None, period)
+
+        tab = []
+        parent = self.parent
+        while parent:
+            if len(tab) == 0:
+                if self.subcode:
+                    tab.append((parent, self.subcode))
+                    tab.append((parent, None))
+                else:
+                    tab.append((parent, None))
+            else:
+                tab.append((parent, None))
+            parent = parent.parent
+
+        first = True
+        for account, subcode in tab:
+            for target in targets:
+                for classifier1value in classifier1values:
+                    for classifier2value in classifier2values:
+                        for classifier3value in classifier3values:
+                            for period in periods:
+                                state = self.get_or_create_account_state(
+                                    account,
+                                    subcode,
+                                    target,
+                                    classifier1value,
+                                    classifier2value,
+                                    classifier3value,
+                                    period,
+                                    self.element,
+                                    True,
+                                )
+                                state.debit += debit
+                                state.credit += credit
+                                state.save()
+                                first = False
+        self.save()
 
     def save(self, *args, **kwargs):
         if self.parent.correctness_rule:
@@ -2979,16 +2985,9 @@ class AccountState(models.Model):
         else:
             self.zero_balance = False
 
-        self.aggregate = True
-        if (
-            self.parent.type1 == "A"
-            and self.classifier1value != "*"
-            and self.classifier2value != "*"
-            and self.classifier2value != "*"
-            and self.subcode != "*"
-            and not self.period
-        ):
-            self.aggregate = False
+        # self.aggregate = True
+        # if self.parent.type1 == "A" and self.classifier1value != '*' and self.classifier2value != '*' and self.classifier2value != '*' and self.subcode != '*' and  not self.period:
+        #    self.aggregate = False
 
         super().save(*args, **kwargs)
 
@@ -3082,109 +3081,8 @@ class AccountOperation(models.Model):
     def __str__(self):
         return self.description
 
-    def get_or_create_account_state(
-        self,
-        target,
-        account,
-        element,
-        classifier1,
-        classifier2,
-        classifier3,
-        subcode,
-        period,
-    ):
-        objs = AccountState.objects.filter(
-            parent=account, element=element, subcode=subcode, period=period
-        )
-        if target:
-            objs = objs.filter(target=target)
-        else:
-            objs = objs.filter(target__isnull=True)
-
-        if classifier1:
-            objs = objs.filter(classifier1value=classifier1)
-        else:
-            objs = objs.filter(classifier1value__isnull=True)
-
-        if classifier2:
-            objs = objs.filter(classifier2value=classifier2)
-        else:
-            objs = objs.filter(classifier2value__isnull=True)
-
-        if classifier3:
-            objs = objs.filter(classifier3value=classifier3)
-        else:
-            objs = objs.filter(classifier3value__isnull=True)
-
-        if subcode:
-            objs = objs.filter(subcode=subcode)
-        else:
-            objs = objs.filter(Q(subcode__isnull=True) | Q(subcode__exact=""))
-
-        if period:
-            objs = objs.filter(period=period)
-        else:
-            objs = objs.filter(Q(period__isnull=True) | Q(period__exact=""))
-
-        if objs.count() > 0:
-            return objs[0]
-        else:
-            obj = AccountState()
-            obj.parent = account
-            obj.target = target
-            obj.classifier1value = classifier1
-            obj.classifier2value = classifier2
-            obj.classifier3value = classifier3
-            obj.period = period
-            obj.subcode = subcode
-            obj.element = element
-            obj.debit = 0
-            obj.credit = 0
-            obj.save()
-            return obj
-
-    def _update_account_state(self, account, state, debit, credit, with_subcode):
-        targets = (state.target, None) if state.target else (None,)
-        classifier1values = (
-            (state.classifier1value, None) if state.classifier1value else (None,)
-        )
-        classifier2values = (
-            (state.classifier2value, None) if state.classifier2value else (None,)
-        )
-        classifier3values = (
-            (state.classifier3value, None) if state.classifier3value else (None,)
-        )
-        periods = (state.period, None) if state.period else (None,)
-        subcodes = (state.subcode, None) if state.subcode and with_subcode else (None,)
-
-        for target in targets:
-            for classifier1value in classifier1values:
-                for classifier2value in classifier2values:
-                    for classifier3value in classifier3values:
-                        for period in periods:
-                            for subcode in subcodes:
-                                state = self.get_or_create_account_state(
-                                    target,
-                                    account,
-                                    state.element,
-                                    classifier1value,
-                                    classifier2value,
-                                    classifier3value,
-                                    subcode,
-                                    period,
-                                )
-                                state.debit += debit
-                                state.credit += credit
-                                state.save()
-
     def update_accounts_state(self, debit, credit):
-        state = self.account_state
-        account = state.parent
-        self._update_account_state(account, state, debit, credit, True)
-        account = account.parent
-        while account:
-            self._update_account_state(account, state, debit, credit, False)
-            account = account.parent
+        self.account_state.update_state(debit, credit, self.parent.get_period())
 
     def confirm(self):
         ret = False

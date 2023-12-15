@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 % extends "forms/tree.html"
 
 % load exfiltry
@@ -47,24 +46,25 @@
 
 
 %% all
-    %with table_type='datatable' title="Accounts":
+    % with table_type='datatable' title="Accounts":
         {{ block.super }}
 
 
+%% id_extra_tree
+    {% view_row object object.name %}
+        
 %% list_row_header
+    th..._(Description)
     th..._(Type 1)
     th..._(Type 2)
-    th..._(Name)
-    th..._(Description)
     th..._(Classifier 1)
     th..._(Classifier 2)
     th..._(Classifier 3)
 
 %% list_row
+    td...{{object.description}}
     td...{{object.type1}}
     td...{{object.type2}}
-    td...{{object.name}}
-    td...{{object.description}}
     td...{{object.root_classifier1|none_to_empty}}
     td...{{object.root_classifier2|none_to_empty}}
     td...{{object.root_classifier3|none_to_empty}}

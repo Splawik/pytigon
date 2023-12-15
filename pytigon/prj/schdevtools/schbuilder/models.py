@@ -2341,3 +2341,10 @@ tmp = [
 ]
 for pos in tmp:
     Field_CHOICES.append((pos, pos))
+tmp = [
+    pos
+    for pos in dir(models.fields)
+    if (pos.endswith("Field") and pos != "Field") or pos.endswith("Key")
+]
+for pos in tmp:
+    Field_CHOICES.append((pos, pos))

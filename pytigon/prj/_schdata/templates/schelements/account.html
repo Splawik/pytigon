@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "forms/tree.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
@@ -55,11 +54,13 @@
                 {{ block.super }}
         {% endwith %}
 {% endblock %}
+{% block id_extra_tree %}
+        {% view_row object object.name %}
+{% endblock %}
 {% block list_row_header %}
+        <th>Description</th>
         <th>Type 1</th>
         <th>Type 2</th>
-        <th>Name</th>
-        <th>Description</th>
         <th>Classifier 1</th>
         <th>Classifier 2</th>
         <th>
@@ -67,10 +68,9 @@
         </th>
 {% endblock %}
 {% block list_row %}
+        <td>{{object.description}}</td>
         <td>{{object.type1}}</td>
         <td>{{object.type2}}</td>
-        <td>{{object.name}}</td>
-        <td>{{object.description}}</td>
         <td>{{object.root_classifier1|none_to_empty}}</td>
         <td>{{object.root_classifier2|none_to_empty}}</td>
         <td>

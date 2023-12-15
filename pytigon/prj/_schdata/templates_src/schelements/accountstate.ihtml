@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 % extends "forms/form.html"
 
 % load exfiltry
@@ -25,32 +24,21 @@
     % new_row _("Account state")
 
 %% list_row_header
-    th..._(Account)
-    th..._(Subcode)
+    th..._(Name)
     th..._(Account name)
-    th..._(Target)
     th..._(Period)
-    th..._(debit)
-    th..._(credit)
-    th..._(balance)
-    th..._(element)
-    th..._(classifier1value)
-    th..._(classifier2value)
-    th..._(classifier3value)
+    th data-align=right..._(debit)
+    th data-align=right..._(credit)
+    th data-align=right..._(balance)
 
 %% list_row
-    td...{{object.parent.name}}
-    td...{{object.subcode|none_to_empty}}
+    td...{{object}}
     td...{{object.parent}}
-    td...{{object.target|none_to_empty}}
     td...{{object.period|none_to_empty}}
     td...{{object.debit}}
     td...{{object.credit}}
-    td...{{object.credit|fsubtract:object.debit}}
-    td...{{object.element}}
-    td...{{object.classifier1value|none_to_empty}}
-    td...{{object.classifier2value|none_to_empty}}
-    td...{{object.classifier3value|none_to_empty}}
+    td
+        strong...{{object.credit|fsubtract:object.debit}}
 
 %% list_row_actions
     % row_actions:

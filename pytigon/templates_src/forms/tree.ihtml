@@ -107,8 +107,9 @@
                         % else:
                             a href={{table_path_and_base_filter}}{{object.id}}/{{kwargs.target|replace:"json|form"}}/{{ro}}{{gtree}}/,,,target=_self,,,class=button btn,,,name=+
                                 +
-    % if standard_web_browser:
-        {{ block.super }}
+    %% id_extra_tree
+        % if standard_web_browser:
+            {{ block.super }}
 
 %% tabsort_parameters_block2
     % with not_multiple_select=0 sort=0:

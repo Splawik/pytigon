@@ -151,9 +151,11 @@
                         {% endwith %}
                 {% endif %}
         {% endif %}
-        {% if standard_web_browser %}
-                {{ block.super }}
-        {% endif %}
+        {% block id_extra_tree %}
+                {% if standard_web_browser %}
+                        {{ block.super }}
+                {% endif %}
+        {% endblock %}
 {% endblock %}
 {% block tabsort_parameters_block2 %}
         {% with not_multiple_select=0 sort=0 %}

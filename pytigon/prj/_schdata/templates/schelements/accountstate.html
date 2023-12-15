@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 {% extends "forms/form.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
@@ -26,35 +25,25 @@
         {% new_row "Account state" %}
 {% endblock %}
 {% block list_row_header %}
-        <th>Account</th>
-        <th>Subcode</th>
+        <th>Name</th>
         <th>Account name</th>
-        <th>Target</th>
         <th>Period</th>
-        <th>debit</th>
-        <th>credit</th>
-        <th>balance</th>
-        <th>element</th>
-        <th>classifier1value</th>
-        <th>classifier2value</th>
-        <th>
-        classifier3value
+        <th data-align="right">debit</th>
+        <th data-align="right">credit</th>
+        <th data-align="right">
+        balance
         </th>
 {% endblock %}
 {% block list_row %}
-        <td>{{object.parent.name}}</td>
-        <td>{{object.subcode|none_to_empty}}</td>
+        <td>{{object}}</td>
         <td>{{object.parent}}</td>
-        <td>{{object.target|none_to_empty}}</td>
         <td>{{object.period|none_to_empty}}</td>
         <td>{{object.debit}}</td>
         <td>{{object.credit}}</td>
-        <td>{{object.credit|fsubtract:object.debit}}</td>
-        <td>{{object.element}}</td>
-        <td>{{object.classifier1value|none_to_empty}}</td>
-        <td>{{object.classifier2value|none_to_empty}}</td>
         <td>
-        {{object.classifier3value|none_to_empty}}
+                <strong>
+                {{object.credit|fsubtract:object.debit}}
+                </strong>
         </td>
 {% endblock %}
 {% block list_row_actions %}

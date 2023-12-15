@@ -270,6 +270,7 @@ class _FilterFormAccountState(forms.Form):
     analytical = forms.BooleanField(
         label=_("Analytical"),
         required=False,
+        initial=True,
     )
 
     def process(self, request, queryset=None):
@@ -279,18 +280,21 @@ class _FilterFormAccountState(forms.Form):
         if not self.is_bound:
             return queryset
 
-        if self.data["account_target"]:
-            queryset = queryset.filter(target__id=int(self.data["account_target"][0]))
-        if self.cleaned_data["account"]:
-            pass
-        if self.cleaned_data["classifier1"]:
-            pass
-        if self.cleaned_data["classifier2"]:
-            pass
-        if self.cleaned_data["classifier3"]:
-            pass
-        if self.cleaned_data["subcode"]:
-            pass
+        if False:
+            if self.data["account_target"]:
+                queryset = queryset.filter(
+                    target__id=int(self.data["account_target"][0])
+                )
+            if self.cleaned_data["account"]:
+                pass
+            if self.cleaned_data["classifier1"]:
+                pass
+            if self.cleaned_data["classifier2"]:
+                pass
+            if self.cleaned_data["classifier3"]:
+                pass
+            if self.cleaned_data["subcode"]:
+                pass
 
         if self.cleaned_data["period"]:
             if self.cleaned_data["period"] == "*":
@@ -308,6 +312,8 @@ class _FilterFormAccountState(forms.Form):
 
         if self.cleaned_data["analytical"]:
             queryset = queryset.filter(aggregate=False)
+        else:
+            queryset = queryset.filter(aggregate=True)
 
         return queryset
 
