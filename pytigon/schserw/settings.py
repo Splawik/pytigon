@@ -298,6 +298,8 @@ try:
     AUTHENTICATION_BACKENDS.append(
         "allauth.account.auth_backends.AuthenticationBackend"
     )
+    MIDDLEWARE.append("allauth.account.middleware.AccountMiddleware")
+
 except:
     ALLAUTH = False
 

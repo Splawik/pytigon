@@ -133,22 +133,15 @@ class Profile(models.Model):
 
     def get_active_variant_description(self):
         request = get_request()
-        print("A1")
         ret = request.session.get("active_variant", None)
-        print("A2")
         if ret != None:
-            print("A3", ret)
             if ":" in ret:
                 return ret.split(":", 1)[0].strip()
             return None
         else:
-            print("A4")
             if self.variants:
-                print("A5")
                 x = self.variants.split("\n")[0]
-                print("A6")
                 if x:
-                    print("A7")
                     request.session["active_variant"] = x
                     return self.get_active_variant_description()
             return None
