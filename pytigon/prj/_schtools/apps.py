@@ -1,4 +1,5 @@
 APPS = [
+    "schdescriptions",
     "schcommander",
     "schsimplescripts",
     "schtools",

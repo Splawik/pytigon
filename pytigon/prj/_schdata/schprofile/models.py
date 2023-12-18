@@ -39,29 +39,6 @@ def limit_config():
 LIMIT_OWNER = OverwritableCallable(limit_owner)
 LIMIT_CONFIG = OverwritableCallable(limit_config)
 
-
-def set_active_variant(user, value):
-    pass
-
-
-def get_active_variant(user):
-    return None
-
-
-def get_active_variant_description(user):
-    return None
-
-
-def get_all_variants(user):
-    return []
-
-
-SET_ACTIVE_VARIANT = OverwritableCallable(set_active_variant)
-GET_ACTIVE_VARIANT = OverwritableCallable(get_active_variant)
-GET_ACTIVE_VARIANT_DESCRIPTION = OverwritableCallable(get_active_variant_description)
-GET_ALL_VARIANTS = OverwritableCallable(get_all_variants)
-
-
 User = get_user_model()
 
 
@@ -117,39 +94,76 @@ class Profile(models.Model):
     aliases = models.CharField(
         "Aliases", null=True, blank=True, editable=True, max_length=256
     )
+    variants = models.TextField(
+        "Variants",
+        null=True,
+        blank=True,
+        editable=True,
+    )
 
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
 
     def set_active_variant(self, value):
-        request = get_request()
-        session["active_variant"] = value
-        if request and request.user:
-            return SET_ACTIVE_VARIANT(request.user, value)
-        else:
-            return None
+        if self.variants:
+            request = get_request()
+            tab = self.variants.split("\n")
+            for row in tab:
+                if row.startswith(value):
+                    request.session["active_variant"] = row.strip()
+                    return True
+        return False
 
     def get_active_variant(self):
         request = get_request()
-        ret = session.get("active_variant", None)
+        ret = request.session.get("active_variant", None)
         if ret != None:
-            return ret
+            v = {}
+            for x in ret.split(",", 1):
+                if x and "=" in x:
+                    xx = x.split("=", 1)
+                    v[xx[0].strip()] = xx[1].strip()
+            return v
         else:
-            if request and request.user:
-                return GET_ACTIVE_VARIANT(request.user)
-            else:
-                return None
+            if self.variants:
+                x = self.variants.split("\n")[0].split(":", 1)[1]
+                if x:
+                    request.session["active_variant"] = x
+                    return self.get_active_variant()
+            return None
 
     def get_active_variant_description(self):
         request = get_request()
-        if request and request.user:
-            return GET_ACTIVE_VARIANT_DESCRIPTION(request.user)
+        print("A1")
+        ret = request.session.get("active_variant", None)
+        print("A2")
+        if ret != None:
+            print("A3", ret)
+            if ":" in ret:
+                return ret.split(":", 1)[0].strip()
+            return None
         else:
+            print("A4")
+            if self.variants:
+                print("A5")
+                x = self.variants.split("\n")[0]
+                print("A6")
+                if x:
+                    print("A7")
+                    request.session["active_variant"] = x
+                    return self.get_active_variant_description()
             return None
 
     def get_all_variants(self):
-        request = get_request()
-        if request and request.user:
-            return GET_ALL_VARIANTS(request.user)
+        if self.variants:
+            ret = [item.split(":")[0] for item in self.variants.split("\n") if item]
+            print("A9: ", ret)
+            return ret
+        else:
+            return None
+
+    def get_variant_count(self):
+        if self.variants:
+            return len([item for item in self.variants.split("\n") if item])
         else:
             return None
 

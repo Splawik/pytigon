@@ -162,7 +162,7 @@ def tbl(request, app, tab, value=None, template_name=None):
     if request.POST:
         p = request.POST.copy()
         d = {}
-        for (key, val) in list(p.items()):
+        for key, val in list(p.items()):
             if key == "csrfmiddlewaretoken":
                 d[str(key)] = val
             else:
@@ -238,8 +238,8 @@ def listdialog(request, action):
     if action == "dialog":
         c = {"value": value}
         ret = render_to_response("schsys/list.html", context=c, request=request)
-        #print("X1: ", ret)
-        #print("X2: ", ret.content)
+        # print("X1: ", ret)
+        # print("X2: ", ret.content)
         return ret
     if action == "test":
         return HttpResponse(schjson.dumps((2, None, (None,))))
@@ -467,3 +467,8 @@ def site_media_protected(request):
             return redirect_site_media_protected(request)
         else:
             return HttpResponseForbidden()
+
+
+def change_profile_variant(request, variant_name):
+    request.user.profile.set_active_variant(variant_name)
+    return HttpResponseRedirect(make_href("/"))

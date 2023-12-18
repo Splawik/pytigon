@@ -235,6 +235,22 @@
                                                                 <th>email:</th>
                                                                 <td>{{user.email}}</td>
                                                         </tr>
+                                                        {% if user.profile.get_active_variant_description %}
+                                                                <tr>
+                                                                        <th colspan="2">
+                                                                                active profile:
+                                                                                <strong>{{user.profile.get_active_variant_description}}</strong>
+                                                                                <br />
+                                                                                <br />
+                                                                                <p>switch to other profile:</p>
+                                                                                {% if user.profile.get_variant_count %}
+                                                                                        {% for variant_name in user.profile.get_all_variants %}
+                                                                                                <button type="button" class="btn {% if variant_name == user.profile.get_active_variant_description %}btn-warning{% endif %}" href="{{base_path}}schsys/change_profile_variant/{{variant_name}}/" target="_top">{{variant_name}}</button>
+                                                                                        {% endfor %}
+                                                                                {% endif %}
+                                                                        </th>
+                                                                </tr>
+                                                        {% endif %}
                                                         <tr>
                                                                 <th>last login:</th>
                                                                 <td>{{user.last_login|isoformat}}</td>

@@ -2800,6 +2800,44 @@ class AccountState(models.Model):
         return objs
 
     @staticmethod
+    def completing(
+        quantity,
+        account,
+        subcode="",
+        target=None,
+        classifier1value=None,
+        classifier2value=None,
+        classifier3value=None,
+        element=None,
+        q=None,
+    ):
+        sum = 0
+        ret_tab = []
+        object_list = (
+            AccountState.get_account_states(
+                account,
+                subcode,
+                target,
+                classifier1value,
+                classifier2value,
+                classifier3value,
+                "",
+                element,
+                False,
+                q,
+            )
+            .order_by("date_c")
+            .exclude(zero_balance=True)
+        )
+        for obj in object_list:
+            if sum + obj.credit - obj.debit <= quantity:
+                ret_tab.append((obj, obj.credit - obj.debit))
+                sum += obj.credit - obj.debit
+            else:
+                ret_tab.append((obj, quantity - sum))
+        return ret_tab
+
+    @staticmethod
     def get_or_create_account_state(
         account,
         subcode="",
@@ -3032,7 +3070,7 @@ class AccountOperation(models.Model):
         default=datetime.datetime.now,
     )
     description = models.CharField(
-        "Description", null=False, blank=False, editable=True, max_length=255
+        "Description", null=True, blank=True, editable=True, max_length=255
     )
     payment = models.CharField(
         "Name of payment",

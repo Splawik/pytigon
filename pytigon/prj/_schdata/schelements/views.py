@@ -114,22 +114,25 @@ def change_status(request, pk, action="accept"):
                 callback = None
 
                 try:
-                    with transaction.atomic():
-                        ret = fun(
-                            request,
-                            doc_head,
-                            reg_status,
-                            doc_type,
-                            doc_reg,
-                            doc_status,
-                            form,
-                        )
-                        if type(ret) == dict and "errors" in ret:
-                            errors = ret["errors"]
-                            if "callback" in ret:
-                                callback = ret["callback"]
-                        else:
-                            errors = ret
+                    if fun:
+                        with transaction.atomic():
+                            ret = fun(
+                                request,
+                                doc_head,
+                                reg_status,
+                                doc_type,
+                                doc_reg,
+                                doc_status,
+                                form,
+                            )
+                            if type(ret) == dict and "errors" in ret:
+                                errors = ret["errors"]
+                                if "callback" in ret:
+                                    callback = ret["callback"]
+                            else:
+                                errors = ret
+                    else:
+                        errors = None
 
                 except ValueError as err:
                     errors = err.args
@@ -237,24 +240,8 @@ class _FilterFormAccountState(forms.Form):
         search_fields=["name__istartswith"],
         attrs={"data-minimum-input-length": 0},
     )
-    account = ext_form_fields.ModelSelect2Field(
-        label=_("Account"),
-        required=False,
-        queryset=models.Account.objects.all(),
-        search_fields=["name__istartswith"],
-        attrs={"data-minimum-input-length": 0},
-    )
-    classifier1 = forms.CharField(
-        label=_("Classifier 1"), required=False, max_length=None, min_length=None
-    )
-    classifier2 = forms.CharField(
-        label=_("Classifier 2"), required=False, max_length=None, min_length=None
-    )
-    classifier3 = forms.CharField(
-        label=_("classifier3"), required=False, max_length=None, min_length=None
-    )
-    subcode = forms.CharField(
-        label=_("Subcode"), required=False, max_length=None, min_length=None
+    account = forms.CharField(
+        label=_("Account"), required=False, max_length=None, min_length=None
     )
     period = forms.CharField(
         label=_("Period"), required=False, max_length=None, min_length=None
@@ -280,21 +267,39 @@ class _FilterFormAccountState(forms.Form):
         if not self.is_bound:
             return queryset
 
-        if False:
-            if self.data["account_target"]:
+        if self.data["account_target"]:
+            queryset = queryset.filter(target__id=int(self.data["account_target"][0]))
+        if self.cleaned_data["account"]:
+            # account: 201-1/target:classifier1_name:classifier2_name:classifier3_name [element_name]
+            x = self.cleaned_data["account"].split("/")
+
+            if x[0].endswith("*"):
+                queryset = queryset.filter(parent__name__startswith=x[0][:-1])
+            elif "-" in x[0]:
+                y = x[0].rsplit("-", 1)
                 queryset = queryset.filter(
-                    target__id=int(self.data["account_target"][0])
+                    Q(parent__name=x[0]) | (Q(parent__name=y[0]) & Q(subcode=y[1]))
                 )
-            if self.cleaned_data["account"]:
-                pass
-            if self.cleaned_data["classifier1"]:
-                pass
-            if self.cleaned_data["classifier2"]:
-                pass
-            if self.cleaned_data["classifier3"]:
-                pass
-            if self.cleaned_data["subcode"]:
-                pass
+            else:
+                queryset = queryset.filter(parent__name=x[0])
+            if len(x) > 1 and x[1]:
+                if "[" in x[1]:
+                    z = x[1].split("[")
+                    y = z[0].strip().split(":")
+                    queryset = queryset.filter(element__code=z[1].split("]")[0])
+                else:
+                    y = x[1].split(":")
+                if y[0]:
+                    queryset = queryset.filter(target__code=y[0])
+                if len(y) > 1:
+                    if y[1]:
+                        queryset = queryset.filter(classifier1value__code=y[1])
+                if len(y) > 2:
+                    if y[2]:
+                        queryset = queryset.filter(classifier1value__code=y[2])
+                if len(y) > 3:
+                    if y[3]:
+                        queryset = queryset.filter(classifier1value__code=y[3])
 
         if self.cleaned_data["period"]:
             if self.cleaned_data["period"] == "*":
