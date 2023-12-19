@@ -302,6 +302,7 @@ try:
         MIDDLEWARE.append("allauth.account.middleware.AccountMiddleware")
     else:
         ALLAUTH = False
+        INSTALLED_APPS.append("nosocial")
 except:
     ALLAUTH = False
 

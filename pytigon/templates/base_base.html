@@ -469,16 +469,18 @@
                                 {% endif %}
                         {% endblock %}
                         {% block list_table_start %}
-                                {% if table_type == 'datatable' %}
-                                        <div class="tableframe flex-grow-1 d-flex flex-row" data-actions="{% block data_actions %}delete/Delete selected rows{% endblock %}">
-                                  {% else %}
-                                        <div class="tableframe flex-grow-1 d-flex flex-row">
-                                {% endif %}
-                                <div class="d-flex flex-column flex-grow-1" style="position:relative;margin-right:4px;">
-                                <div class="tabsort_panel d-flex flex-column flex-grow-1" table-details="{% if table_details_height %}0{% endif %}">
-                                {% if table_subtype and table_subtype == 'table_with_details' %}
-                                        <input type="hidden" name="table_row_pk" value="[[ERROR]]">
-                                        </input>
+                                {% if standard_web_browser %}
+                                        {% if table_type == 'datatable' %}
+                                                <div class="tableframe flex-grow-1 d-flex flex-row" data-actions="{% block data_actions %}delete/Delete selected rows{% endblock %}">
+                                          {% else %}
+                                                <div class="tableframe flex-grow-1 d-flex flex-row">
+                                        {% endif %}
+                                        <div class="d-flex flex-column flex-grow-1" style="position:relative;margin-right:4px;">
+                                        <div class="tabsort_panel d-flex flex-column flex-grow-1" table-details="{% if table_details_height %}0{% endif %}">
+                                        {% if table_subtype and table_subtype == 'table_with_details' %}
+                                                <input type="hidden" name="table_row_pk" value="[[ERROR]]">
+                                                </input>
+                                        {% endif %}
                                 {% endif %}
                                 {% if standard_web_browser == 1 or standard_web_browser == 2 or "page" in fragment or "table" in fragment %}
                                         {% if table_type == 'datatable' %}
@@ -569,9 +571,11 @@
                                 {% if standard_web_browser == 1 or standard_web_browser == 2 or "page" in fragment or "table" in fragment %}
                                         </div>
                                 {% endif %}
-                                </div>
-                                </div>
-                                </div>
+                                {% if standard_web_browser %}
+                                        </div>
+                                        </div>
+                                        </div>
+                                {% endif %}
                         {% endblock %}
                         {% block list_table_footer %}
                         {% endblock %}

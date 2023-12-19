@@ -188,6 +188,11 @@ def apppack():
     return ret
 
 
+def get_field_choices():
+    global Field_CHOICES
+    return Field_CHOICES
+
+
 Field_CHOICES = [
     ("PtigForeignKey", "PtigForeignKey!"),
     ("PtigManyToManyField", "PtigManyToManyField!"),
@@ -1120,7 +1125,7 @@ class SChField(models.Model):
         null=False,
         blank=False,
         editable=True,
-        choices=Field_CHOICES,
+        choices=get_field_choices,
         max_length=64,
     )
     null = models.BooleanField(
@@ -2337,13 +2342,6 @@ admin.site.register(SChChannelConsumer)
 tmp = [
     pos
     for pos in dir(models)
-    if (pos.endswith("Field") and pos != "Field") or pos.endswith("Key")
-]
-for pos in tmp:
-    Field_CHOICES.append((pos, pos))
-tmp = [
-    pos
-    for pos in dir(models.fields)
     if (pos.endswith("Field") and pos != "Field") or pos.endswith("Key")
 ]
 for pos in tmp:
