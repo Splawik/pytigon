@@ -148,9 +148,7 @@ class Profile(models.Model):
 
     def get_all_variants(self):
         if self.variants:
-            ret = [item.split(":")[0] for item in self.variants.split("\n") if item]
-            print("A9: ", ret)
-            return ret
+            return [item.split(":")[0] for item in self.variants.split("\n") if item]
         else:
             return None
 
