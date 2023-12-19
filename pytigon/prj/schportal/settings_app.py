@@ -62,7 +62,6 @@ INSTALLED_APPS.append("allauth.socialaccount.providers.google")
 INSTALLED_APPS.append("allauth.socialaccount.providers.facebook")
 INSTALLED_APPS.append("allauth.socialaccount.providers.github")
 INSTALLED_APPS.append("allauth.socialaccount.providers.microsoft")
-INSTALLED_APPS.append("allauth.socialaccount.providers.azure")
 INSTALLED_APPS.append("allauth.socialaccount.providers.okta")
 INSTALLED_APPS.append("allauth.socialaccount.providers.openid")
 INSTALLED_APPS.append("allauth.socialaccount.providers.windowslive")
@@ -180,7 +179,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.07.18 07:55:28"
+GEN_TIME = "2023.12.19 15:25:00"
 
 
 for key, value in os.environ.items():

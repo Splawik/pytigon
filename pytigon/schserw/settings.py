@@ -289,17 +289,19 @@ except:
     LOGVIEWER = False
 
 try:
-    import allauth
+    if ENV("ALLAUTH"):
+        import allauth
 
-    ALLAUTH = True
-    INSTALLED_APPS.append("allauth")
-    INSTALLED_APPS.append("allauth.account")
-    INSTALLED_APPS.append("allauth.socialaccount")
-    AUTHENTICATION_BACKENDS.append(
-        "allauth.account.auth_backends.AuthenticationBackend"
-    )
-    MIDDLEWARE.append("allauth.account.middleware.AccountMiddleware")
-
+        ALLAUTH = True
+        INSTALLED_APPS.append("allauth")
+        INSTALLED_APPS.append("allauth.account")
+        INSTALLED_APPS.append("allauth.socialaccount")
+        AUTHENTICATION_BACKENDS.append(
+            "allauth.account.auth_backends.AuthenticationBackend"
+        )
+        MIDDLEWARE.append("allauth.account.middleware.AccountMiddleware")
+    else:
+        ALLAUTH = False
 except:
     ALLAUTH = False
 
