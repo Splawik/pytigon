@@ -302,7 +302,7 @@ try:
         MIDDLEWARE.append("allauth.account.middleware.AccountMiddleware")
     else:
         ALLAUTH = False
-        INSTALLED_APPS.append("nosocial")
+        INSTALLED_APPS.append("pytigon.schserw.nosocial")
 except:
     ALLAUTH = False
 
