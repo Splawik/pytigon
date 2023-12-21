@@ -57,6 +57,7 @@ def class_name(value):
         pass
     return ret
 
+
 @register.filter(name="to_console")
 def to_console(value):
     """Returns class name of value"""
@@ -982,12 +983,13 @@ def append_suffix(value, s):
         else:
             return value + str(s)
 
+
 @register.filter(name="remove_suffix")
 def remove_suffix(value, s):
     if s == None or s == "":
         return value
     else:
         if value.endswith(s):
-            return value[:-len(s)]
+            return value[: -len(s)]
         else:
             return value

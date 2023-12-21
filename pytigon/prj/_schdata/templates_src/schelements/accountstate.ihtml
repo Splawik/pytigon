@@ -22,6 +22,7 @@
 
 %% list_content_actions
     % new_row _("Account state")
+    % list_action "refresh_account_states" _("Refresh account states") target="refresh_frame"
 
 %% list_row_header
     th..._(Name)

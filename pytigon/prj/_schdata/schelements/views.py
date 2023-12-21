@@ -446,3 +446,12 @@ def view_elements_of_type(request, type, template):
             request.get_full_path(),
         )
     return HttpResponseRedirect(href)
+
+
+def refresh_account_states(request):
+    models.AccountState.objects.all().update(debit=0, credit=0, zero_balance=True)
+    for operation in models.AccountOperation.objects.filter(enabled=True):
+        operation.enabled = False
+        operation.save()
+        operation.confirm()
+    return actions.refresh(request)

@@ -2203,6 +2203,33 @@ class DocItem(JSONModel):
     def get_period(self):
         return "%04d-%02d" % (self.parent.date.year, self.parent.date.month)
 
+    def new_account_operations(
+        self,
+        account_states_and_qty,
+        description,
+        sign,
+        payment=None,
+        save=True,
+        transfer=False,
+    ):
+        account_operations = []
+        for account_state, qty in account_states_and_qty:
+            account_operation = AccountOperation()
+            account_operation.parent = self
+            account_operation.description = description
+            account_operation.payment = payment
+            account_operation.account_state = account_state
+            account_operation.sign = sign
+            account_operation.qty = qty
+            account_operation.enabled = transfer
+
+            account_operations.append(account_operation)
+
+            if save:
+                account_operation.save()
+
+        return account_operations
+
     def new_account_operation(
         self,
         target,
@@ -2229,20 +2256,51 @@ class DocItem(JSONModel):
             element=element,
             aggregate=False,
         )
+        return self.new_account_operations(
+            ((account_state, qty),), description, sign, payment, save
+        )
 
-        account_operation = AccountOperation()
-        account_operation.parent = self
-        account_operation.description = description
-        account_operation.payment = payment
-        account_operation.account_state = account_state
-        account_operation.sign = sign
-        account_operation.qty = qty
-        account_operation.enabled = False
-        if save:
+    def move_account_operation(
+        self,
+        docitem_src,
+        account_name,
+        description=None,
+        payment=None,
+        percent=100,
+        update_docitem=False,
+        update_dest=False,
+    ):
+        sum = 0
+        account_operations = []
+        for account_operation in docitem_src.accountoperation_set.filter(
+            account_state__parent__name=account_name
+        ):
+            qty = account_operation.qty * percent / 100
+            sum += qty
+            account_operation.qty -= qty
+            if update_dest:
+                account_operation2 = self.accountoperation_set.filter(
+                    account_state=account_operation.account_state
+                ).first()
+                if account_operation2:
+                    account_operation2.qty += qty
+                    account_operation2.save()
+                    account_operations.append(account_operation2)
+            else:
+                account_operations.extend(
+                    self.new_account_operations(
+                        ((account_operation.account_state, qty),),
+                        description if description else account_operation.description,
+                        account_operation.sign,
+                        payment,
+                        transfer=True,
+                    )
+                )
             account_operation.save()
-        return [
-            account_operation,
-        ]
+        if update_docitem:
+            docitem_src.qty -= sum
+            docitem_src.save()
+        return account_operations
 
 
 admin.site.register(DocItem)
@@ -2810,6 +2868,7 @@ class AccountState(models.Model):
         classifier3value=None,
         element=None,
         q=None,
+        only_all=True,
     ):
         sum = 0
         ret_tab = []
@@ -2830,12 +2889,16 @@ class AccountState(models.Model):
             .exclude(zero_balance=True)
         )
         for obj in object_list:
-            if sum + obj.credit - obj.debit <= quantity:
+            if sum + obj.credit - obj.debit < quantity:
                 ret_tab.append((obj, obj.credit - obj.debit))
                 sum += obj.credit - obj.debit
             else:
                 ret_tab.append((obj, quantity - sum))
-        return ret_tab
+                return ret_tab
+        if only_all:
+            return None
+        else:
+            return ret_tab
 
     @staticmethod
     def get_or_create_account_state(

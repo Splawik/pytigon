@@ -23,6 +23,7 @@
 {% endblock %}
 {% block list_content_actions %}
         {% new_row "Account state" %}
+        {% list_action "refresh_account_states" "Refresh account states" target="refresh_frame" %}
 {% endblock %}
 {% block list_row_header %}
         <th>Name</th>

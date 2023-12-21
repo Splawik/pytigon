@@ -49,6 +49,9 @@ urlpatterns = [
         {},
         name="schelements_view_elements_of_type",
     ),
+    gen_tab_action(
+        "AccountState", "refresh_account_states", views.refresh_account_states
+    ),
 ]
 
 gen = generic_table_start(urlpatterns, "schelements", views)
