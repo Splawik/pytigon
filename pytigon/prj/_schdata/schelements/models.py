@@ -1833,6 +1833,19 @@ class DocHead(JSONModel):
             return check
         return True
 
+    def log(self, log_class, request, description, save=True):
+        obj = log_class()
+        obj.application = "schelements"
+        obj.table = "DocHead"
+        obj.group = "default"
+        obj.parent_id = self.id
+        obj.description = description
+        obj.operator_id = request.user.id
+        obj.operator = request.user.username
+        if save:
+            obj.save()
+        return obj
+
 
 admin.site.register(DocHead)
 
@@ -2268,19 +2281,20 @@ class DocItem(JSONModel):
         payment=None,
         percent=100,
         update_docitem=False,
-        update_dest=False,
+        update_docitem_src=False,
+        update_account_states=False,
     ):
         sum = 0
         account_operations = []
         for account_operation in docitem_src.accountoperation_set.filter(
-            account_state__parent__name=account_name
+            account_state__parent__name=account_name, enabled=True
         ):
             qty = account_operation.qty * percent / 100
             sum += qty
             account_operation.qty -= qty
-            if update_dest:
+            if update_account_states:
                 account_operation2 = self.accountoperation_set.filter(
-                    account_state=account_operation.account_state
+                    account_state=account_operation.account_state, enabled=True
                 ).first()
                 if account_operation2:
                     account_operation2.qty += qty
@@ -2297,9 +2311,14 @@ class DocItem(JSONModel):
                     )
                 )
             account_operation.save()
-        if update_docitem:
+
+        if update_docitem_src:
             docitem_src.qty -= sum
             docitem_src.save()
+        if update_docitem:
+            self.qty += sum
+            self.save()
+
         return account_operations
 
 
@@ -2392,18 +2411,6 @@ class DocRegStatus(models.Model):
 
     def __str__(self):
         return self.name
-
-    def get_editor_header(self, field_name):
-        if field_name == "can_set_proc":
-            return "def can_set_proc(request, doc_head):"
-        elif field_name == "can_undo_proc":
-            return "def can_undo_proc(request, doc_head):"
-        elif field_name == "accept_proc":
-            return "def accept_proc(request, doc_head, reg_status, doc_type, doc_reg, form):"
-        elif field_name == "undo_proc":
-            return (
-                "def undo_proc(request, doc_head, reg_status, doc_type, doc_reg, form):"
-            )
 
     def get_accept_target(self):
         if self.accept_form:
@@ -2659,6 +2666,10 @@ class Account(TreeModel):
     def __str__(self):
         return self.name + ": " + self.description
 
+    @staticmethod
+    def get(account_name):
+        return Account.objects.get(name=account_name)
+
 
 admin.site.register(Account)
 
@@ -2869,6 +2880,7 @@ class AccountState(models.Model):
         element=None,
         q=None,
         only_all=True,
+        raise_error=False,
     ):
         sum = 0
         ret_tab = []
@@ -2896,7 +2908,10 @@ class AccountState(models.Model):
                 ret_tab.append((obj, quantity - sum))
                 return ret_tab
         if only_all:
-            return None
+            if raise_error:
+                raise ValueError("Not enough quantity in stock!")
+            else:
+                return None
         else:
             return ret_tab
 
@@ -3041,6 +3056,22 @@ class AccountState(models.Model):
                                 first = False
         self.save()
 
+    def twin_state(self, account, target=0):
+        object_list = AccountState.objects.filter(
+            classifier1value=self.classifier1value,
+            classifier2value=self.classifier2value,
+            classifier3value=self.classifier3value,
+            subcode=self.subcode,
+            aggregate=self.aggregate,
+        )
+        if account:
+            if type(account) == str:
+                account = Account.objects.get(name=account)
+            object_list = object_list.filter(parent=account)
+        if target != 0:
+            object_list = object_list.filter(target=target)
+        return object_list.first()
+
     def save(self, *args, **kwargs):
         if self.parent.correctness_rule:
             x = self.parent.correctness_rule.split(":")
@@ -3180,7 +3211,10 @@ class AccountOperation(models.Model):
     )
 
     def __str__(self):
-        return self.description
+        if self.description:
+            return self.description
+        else:
+            return "Operation id: %d" % self.id
 
     def update_accounts_state(self, debit, credit):
         self.account_state.update_state(debit, credit, self.parent.get_period())
