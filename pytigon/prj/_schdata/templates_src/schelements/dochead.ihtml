@@ -15,15 +15,24 @@
             return href
 
 %% all
-    %with table_type='datatable' table_subtype='table_with_details' table_details_height="40vh":
-        {{ block.super }}
+    % if vtype == 'sublist':
+        % with table_type='datatable':
+            {{ block.super }}
+    % else:
+        % with table_type='datatable' table_subtype='table_with_details' table_details_height="40vh":
+            {{ block.super }}
 
+%% list_content_header
+   % if vtype != 'sublist':
+       {{ block.super }}
+ 
 %% scroll
 
 %% list_content_actions
-    % with object_list.model|args:filter|call:"get_documents_for_reg" as doctypes:
-        % for item in doctypes:
-            % new_row "_(New document:) "|append_str:item.name action="new_row/"|append_str:item.name url="+?after_close=refresh"
+    % if vtype != 'sublist':
+        % with object_list.model|args:filter|call:"get_documents_for_reg" as doctypes:
+            % for item in doctypes:
+                % new_row "_(New document:) "|append_str:item.name action="new_row/"|append_str:item.name url="+?after_close=refresh"
 
 %% list_row_header
     th..._(Register)
@@ -79,12 +88,15 @@
 
 
 %% list_page_footer
-    % row_details:
-        *Items:schelements/table/DocHead/[[table_row_pk]]/docitem_set/-/form/sublist/
-        (schlog)Logs:schlog/table/Log//schelements__DocHead__[[table_row_pk]]__default/form__schelements__/sublist/
-        (schattachements)Attachements:schattachements/table/Attachement//schelements__DocHead__[[table_row_pk]]__default/form__schattachements__/sublist/
-        (schworkflow)Acceptances:schworkflow/table/WorkflowItem//schelements__DocHead__[[table_row_pk]]__default/form__schworkflow__/sublist/
-        (schcomments)Comments:schcomments/table/Comment//schelements__DocHead__[[table_row_pk]]__default/form__schcomments__/sublist/
+    % if vtype != 'sublist':
+        % row_details:
+            *Items:schelements/table/DocHead/[[table_row_pk]]/docitem_set/-/form/sublist/
+            (schelements)Sources:schelements/table/DocHead//_parents_[[table_row_pk]]/form/sublist/
+            (schelements)Dependence:schelements/table/DocHead//_children_[[table_row_pk]]/form/sublist/
+            (schlog)Logs:schlog/table/Log//schelements__DocHead__[[table_row_pk]]__default/form__schelements__/sublist/
+            (schattachements)Attachements:schattachements/table/Attachement//schelements__DocHead__[[table_row_pk]]__default/form__schattachements__/sublist/
+            (schworkflow)Acceptances:schworkflow/table/WorkflowItem//schelements__DocHead__[[table_row_pk]]__default/form__schworkflow__/sublist/
+            (schcomments)Comments:schcomments/table/Comment//schelements__DocHead__[[table_row_pk]]__default/form__schcomments__/sublist/
 
 %% dialog_type
     .modal-xl

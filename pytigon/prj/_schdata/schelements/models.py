@@ -1255,6 +1255,7 @@ class DocHead(JSONModel):
         editable=False,
         verbose_name="Parents",
         db_index=True,
+        symmetrical=False,
     )
     doc_type_parent = ext_models.PtigHiddenForeignKey(
         DocType,
@@ -1360,6 +1361,14 @@ class DocHead(JSONModel):
             i = value.replace("_pk_", "")
             x = cls.objects.filter(parent_element__pk=int(i))
             return x
+        elif value and value.startswith("_children_"):
+            i = value.replace("_children_", "")
+            x = cls.objects.filter(parents__pk=int(i))
+            return x
+        elif value and value.startswith("_parents_"):
+            i = value.replace("_parents_", "")
+            obj = cls.objects.get(pk=int(i))
+            return obj.parents.all()
         elif value:
             rej = value.replace("_", "/")
             return cls.objects.filter(doc_type_parent__parent__name=rej)
