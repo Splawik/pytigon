@@ -58,6 +58,14 @@ def year_ago():
 
 
 def change_status(request, pk, action="accept"):
+    action_name = request.GET.get("x1", "")
+    doc_head = models.DocHead.objects.get(pk=pk)
+    return doc_head.change_status(
+        action_name, action, request.POST, request, request.user.username
+    )
+
+
+def __change_status(request, pk, action="accept"):
     doc_head = models.DocHead.objects.get(pk=pk)
     doc_type = doc_head.doc_type_parent
     doc_reg = doc_type.parent
@@ -74,7 +82,6 @@ def change_status(request, pk, action="accept"):
     if reg_status:
         if action == "accept":
             form_txt = reg_status.accept_form
-            # fun = content_to_function(reg_status.accept_proc, "request, doc_head, reg_status, doc_type, doc_reg, doc_status, form", globals_dict = { 'models': models ,})
             fun = get_fun_from_db_field(
                 f"regstatus__accept_proc_{reg_status.pk}.py",
                 reg_status,
@@ -83,7 +90,6 @@ def change_status(request, pk, action="accept"):
             )
         else:
             form_txt = reg_status.undo_form
-            # fun = content_to_function(reg_status.undo_proc, "request, doc_head, reg_status, doc_type, doc_reg, doc_status, form", globals_dict = { 'models': models ,})
             fun = get_fun_from_db_field(
                 f"regstatus__undo_proc_{reg_status.pk}.py",
                 reg_status,
@@ -112,6 +118,7 @@ def change_status(request, pk, action="accept"):
                 doc_status = models.DocHeadStatus()
                 doc_status.parent = doc_head
                 callback = None
+                new_status = None
 
                 try:
                     if fun:
@@ -129,6 +136,8 @@ def change_status(request, pk, action="accept"):
                                 errors = ret["errors"]
                                 if "callback" in ret:
                                     callback = ret["callback"]
+                                if "status" in ret:
+                                    new_status = ret["status"]
                             else:
                                 errors = ret
                     else:
@@ -138,7 +147,14 @@ def change_status(request, pk, action="accept"):
                     errors = err.args
 
                 if not errors:
-                    if action_name and action_name != doc_head.status:
+                    if new_status:
+                        doc_head.status = action_name
+                        doc_head.save()
+                    elif (
+                        action_name
+                        and action_name[:1] != "_"
+                        and action_name != doc_head.status
+                    ):
                         doc_head.status = action_name
                         doc_head.save()
 

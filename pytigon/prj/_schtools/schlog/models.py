@@ -70,7 +70,7 @@ class Log(models.Model):
         null=True,
         blank=True,
         editable=False,
-        default=datetime.now,
+        default=timezone.now,
     )
     description = models.CharField(
         "Description", null=True, blank=True, editable=False, max_length=256

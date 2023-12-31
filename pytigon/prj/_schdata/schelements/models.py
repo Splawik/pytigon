@@ -31,8 +31,16 @@ from django.template import Template, Context
 
 from pytigon_lib.schviews.actions import new_row_ok, update_row_ok
 from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
-from pytigon_lib.schdjangoext.fastform import FAST_FORM_EXAMPLE
+from pytigon_lib.schdjangoext.fastform import form_from_str, FAST_FORM_EXAMPLE
+
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
+from pytigon_lib.schdjangoext.import_from_db import (
+    run_code_from_db_field,
+    get_fun_from_db_field,
+    ModuleStruct,
+)
+
+from pytigon_lib.schviews import actions
 
 
 def get_element_queryset():
@@ -524,7 +532,7 @@ class Element(TreeModel):
     def get_name(self):
         return self.name
 
-    def _get_parent_elem(element_type):
+    def _get_parent_elem(self, element_type):
         tab = self.parents()
         for pos in tab:
             if pos.type == element_type:
@@ -1138,6 +1146,7 @@ class DocType(models.Model):
         null=True,
         blank=True,
         editable=True,
+        default=False,
         db_index=True,
     )
     head_form = models.TextField(
@@ -1191,6 +1200,9 @@ class DocType(models.Model):
         blank=False,
         editable=True,
         auto_now_add=True,
+    )
+    correction_name = models.CharField(
+        "Correction name", null=True, blank=True, editable=True, max_length=16
     )
 
     def __str__(self):
@@ -1289,7 +1301,7 @@ class DocHead(JSONModel):
         null=False,
         blank=False,
         editable=False,
-        default=datetime.datetime.now,
+        default=timezone.now,
     )
     date = models.DateField(
         "Date",
@@ -1306,7 +1318,13 @@ class DocHead(JSONModel):
         "Comments", null=True, blank=True, editable=True, max_length=256
     )
     status = models.CharField(
-        "Status", null=True, blank=True, editable=False, db_index=True, max_length=16
+        "Status",
+        null=True,
+        blank=True,
+        editable=False,
+        default="draft",
+        db_index=True,
+        max_length=16,
     )
     operator = models.CharField(
         "Operator", null=True, blank=True, editable=False, max_length=32
@@ -1334,6 +1352,23 @@ class DocHead(JSONModel):
         editable=True,
         db_index=True,
         max_length=16,
+    )
+    corrected = models.BooleanField(
+        "Corrected",
+        null=False,
+        blank=False,
+        editable=False,
+        default=False,
+    )
+    corrected_dochead = models.ForeignKey(
+        "self",
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        editable=True,
+        verbose_name="Corrected dochead",
+        db_index=True,
+        related_name="correction",
     )
 
     def __str__(self):
@@ -1579,29 +1614,6 @@ class DocHead(JSONModel):
         return True
 
     def save(self, *args, **kwargs):
-        # if self.id:
-        if False:
-            obj = DocHead.objects.get(pk=self.id)
-            save_fun_src_obj = None
-            if obj.doc_type_parent.save_head_fun:
-                save_fun_src_obj = obj.doc_type_parent
-            else:
-                x = obj.doc_type_parent.parent
-                while x:
-                    if x.save_head_fun:
-                        save_fun_src_obj = x
-                        break
-                    x = x.get_parent()
-            if save_fun_src_obj:
-                run_code_from_db_field(
-                    f"dochead__save_{save_fun_src_obj.pk}.py",
-                    save_fun_src_obj,
-                    "save_head_fun",
-                    "save",
-                    dochead=self,
-                )
-                # content_to_function(save_fun_src, "object")(self)
-
         if not self.pk:
             self.date_c = timezone.now()
 
@@ -1620,6 +1632,16 @@ class DocHead(JSONModel):
             else:
                 max_num = 1
             self.number = "%s/%s/%06d" % (t, y, max_num)
+
+        if self.corrected_dochead:
+            if self.status in ("draft", ""):
+                if self.corrected_dochead.corrected:
+                    self.corrected_dochead.corrected = False
+                    self.corrected_dochead.save()
+            else:
+                if not self.corrected_dochead.corrected:
+                    self.corrected_dochead.corrected = True
+                    self.corrected_dochead.save()
 
         super().save(*args, **kwargs)
 
@@ -1855,6 +1877,214 @@ class DocHead(JSONModel):
             obj.save()
         return obj
 
+    def change_status(
+        self,
+        action_name,
+        action="accept",
+        data=None,
+        request=None,
+        operator=None,
+        batch_mode=False,
+    ):
+        doc_type = self.doc_type_parent
+        doc_reg = doc_type.parent
+        reg_status_list = DocRegStatus.objects.filter(parent=doc_reg, name=action_name)
+        if len(reg_status_list) == 1:
+            reg_status = reg_status_list[0]
+        else:
+            reg_status = None
+        form = None
+
+        if reg_status:
+            if action == "accept":
+                form_txt = reg_status.accept_form
+                fun = get_fun_from_db_field(
+                    f"regstatus__accept_proc_{reg_status.pk}.py",
+                    reg_status,
+                    "accept_proc",
+                    "accept",
+                )
+            else:
+                form_txt = reg_status.undo_form
+                fun = get_fun_from_db_field(
+                    f"regstatus__undo_proc_{reg_status.pk}.py",
+                    reg_status,
+                    "undo_proc",
+                    "undo",
+                )
+
+            params = {
+                "request": request,
+                "doc_head": self,
+                "doc_type": doc_type,
+                "doc_reg": doc_reg,
+            }
+            if form_txt:
+                form_class = form_from_str(form_txt, params)
+            else:
+                form_class = None
+
+            if (not form_class) or data != None:
+                if form_class:
+                    form = form_class(data)
+                else:
+                    form = None
+
+                if (not form) or form.is_valid():
+                    doc_status = DocHeadStatus()
+                    doc_status.parent = self
+                    callback = None
+                    new_status = None
+
+                    try:
+                        if fun:
+                            with transaction.atomic():
+                                ret = fun(
+                                    request,
+                                    self,
+                                    reg_status,
+                                    doc_type,
+                                    doc_reg,
+                                    doc_status,
+                                    form,
+                                )
+                                if type(ret) == dict and "errors" in ret:
+                                    errors = ret["errors"]
+                                    if "callback" in ret:
+                                        callback = ret["callback"]
+                                    if "status" in ret:
+                                        new_status = ret["status"]
+                                else:
+                                    errors = ret
+                        else:
+                            errors = None
+
+                    except ValueError as err:
+                        errors = err.args
+
+                    if not errors:
+                        if new_status:
+                            self.status = action_name
+                            self.save()
+                        elif (
+                            action_name
+                            and action_name[:1] != "_"
+                            and action_name != self.status
+                        ):
+                            self.status = action_name
+                            self.save()
+
+                        if action != "accept":
+                            DocItem.objects.filter(
+                                parent=self,
+                                level__gt=reg_status.order
+                                if reg_status.order >= 0
+                                else 0,
+                            ).delete()
+
+                        doc_status.date = timezone.now()
+                        if operator:
+                            doc_status.operator = operator
+                        elif not batch_mode:
+                            doc_status.operator = request.user.username
+                        doc_status.save()
+                        if callback:
+                            if batch_mode:
+                                return callback
+                            else:
+                                return callback()
+                        else:
+                            if batch_mode:
+                                return {
+                                    "errors": None,
+                                    "id": self.id,
+                                    "description": str(self),
+                                }
+                            else:
+                                return actions.update_row_ok(
+                                    request, int(self.id), str(self)
+                                )
+                    else:
+                        return {
+                            "errors": errors,
+                            "form": form,
+                            "doc_head": self,
+                            "doctype": doc_type,
+                            "doc_reg": doc_reg,
+                            "reg_status": reg_status,
+                            "action_name": action_name,
+                        }
+            if not form:
+                if form_class:
+                    form = form_class()
+                else:
+                    form = None
+                return {
+                    "error": False,
+                    "form": form,
+                    "doc_head": self,
+                    "doctype": doc_type,
+                    "doc_reg": doc_reg,
+                    "reg_status": reg_status,
+                    "action_name": action_name,
+                }
+        else:
+            return {"error": "Status %s doesn't exists" % action_name}
+
+    def copy_to(
+        self,
+        doc_head_dest,
+        doc_head_callback=None,
+        doc_item_callback=None,
+        without_items=False,
+    ):
+        doc_head_dest.doc_type_parent = self.doc_type_parent
+        doc_head_dest.parent_element = self.parent_element
+        doc_head_dest.description = self.description
+        doc_head_dest.param1 = self.param1
+        doc_head_dest.param2 = self.param2
+        doc_head_dest.param3 = self.param3
+        doc_head_dest.date_c = timezone.now()
+        doc_head_dest.date = datetime.date.today()
+        doc_head_dest.status = "draft"
+        if doc_head_callback:
+            doc_head_callback(self, doc_head_dest)
+        else:
+            doc_head_dest.save()
+        if not without_items:
+            for _item in docitem_set.all():
+                item = _item.get_derived_object()
+                item2 = type(item)()
+                item.copy_to(item2)
+                if doc_item_callback:
+                    doc_item_callback(item, item2)
+                else:
+                    item2.save()
+
+    def gen_correction(self, request):
+        if not self.doc_type_parent.correction_name:
+            return
+
+        new_obj = type(self)()
+
+        def dochead_callback(dochead_src, dochead_dest):
+            dochead_dest.doc_type_parent = DocType.objects.get(
+                name=self.doc_type_parent.correction_name
+            )
+            dochead_dest.corrected_dochead = self
+            dochead_dest.operator = request.user.username
+            dochead_dest.save()
+            dochead_dest.parents.add(self)
+
+        def docitem_callback(docitem_src, docitem_dest):
+            docitem_dest.parent = new_obj
+            docitem_dest.parent_item = docitem_src
+            docitem_dest.save()
+
+        self.copy_to(new_obj, dochead_callback, docitem_callback)
+
+        return new_obj
+
 
 admin.site.register(DocHead)
 
@@ -1965,6 +2195,14 @@ class DocItem(JSONModel):
         editable=False,
         db_index=True,
         max_length=16,
+    )
+    corrected = models.BooleanField(
+        "Corrected",
+        null=False,
+        blank=False,
+        editable=False,
+        default=False,
+        db_index=True,
     )
 
     @staticmethod
@@ -2175,29 +2413,22 @@ class DocItem(JSONModel):
         return True
 
     def save(self, *args, **kwargs):
-        # if self.id:
-        if False:
-            obj = DocItem.objects.get(pk=self.id).parent
-            save_fun_src_obj = None
-            if obj.doc_type_parent.save_head_fun:
-                save_fun_src_obj = obj.doc_type_parent
+        if self.parent.correction and self.parent_item:
+            if self.active:
+                if not self.parent_item.corrected:
+                    self.parent_item.corrected = True
+                    self.parent_item.save()
             else:
-                x = obj.doc_type_parent.parent
-                while x:
-                    if x.save_item_fun:
-                        save_fun_src_obj = x
-                        break
-                    x = x.get_parent()
-            if save_fun_src_obj:
-                check = run_code_from_db_field(
-                    f"docitem__save_{save_fun_src_obj.pk}.py",
-                    save_fun_src_obj,
-                    "save_item_fun",
-                    "save",
-                    docitem=self,
-                )
-
+                if self.parent_item.corrected:
+                    self.parent_item.corrected = False
+                    self.parent_item.save()
         super().save(*args, **kwargs)
+
+    def get_qty(self):
+        if self.parent.correction and self.parent_item:
+            return self.qty - self.parent_item.qty
+        else:
+            return self.qty
 
     def get_derived_object(self, param=None):
         t = None
@@ -2329,6 +2560,17 @@ class DocItem(JSONModel):
             self.save()
 
         return account_operations
+
+    def copy_to(self, doc_item_dest):
+        doc_item_dest.owner = self.owner
+        doc_item_dest.order = self.order
+        doc_item_dest.item = self.item
+        doc_item_dest.qty = self.qty
+        doc_item_dest.description = self.description
+        doc_item_dest.level = self.level
+        doc_item_dest.param1 = self.param1
+        doc_item_dest.param2 = self.param2
+        doc_item_dest.param3 = self.param3
 
 
 admin.site.register(DocItem)
@@ -2798,7 +3040,7 @@ class AccountState(models.Model):
         null=False,
         blank=False,
         editable=True,
-        default=datetime.datetime.now,
+        default=timezone.now,
     )
 
     def __str__(self):
@@ -2823,15 +3065,15 @@ class AccountState(models.Model):
 
         if self.classifier1value or self.classifier2value or self.classifier3value:
             if self.classifier1value:
-                s += ":" + classifier1value.name
+                s += ":" + self.classifier1value.name
             else:
                 s += ":"
             if self.classifier2value:
-                s += ":" + classifier2value.name
+                s += ":" + self.classifier2value.name
             else:
                 s += ":"
             if self.classifier3value:
-                s += ":" + classifier3value.name
+                s += ":" + self.classifier3value.name
             else:
                 s += ":"
         s += " [" + self.element.name + "]"
@@ -3170,7 +3412,7 @@ class AccountOperation(models.Model):
         null=False,
         blank=False,
         editable=False,
-        default=datetime.datetime.now,
+        default=timezone.now,
     )
     description = models.CharField(
         "Description", null=True, blank=True, editable=True, max_length=255
