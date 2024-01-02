@@ -54,6 +54,7 @@
         <th>Name</th>
         <th>Base table</th>
         <th>Proxy</th>
+        <th>Abstract</th>
         <th>Generic</th>
         <th>
         Verbose name
@@ -63,6 +64,7 @@
         <td>{{object.name}}</td>
         <td>{{object.base_table|default_if_none:""}}</td>
         <td align="center">{% if 'proxy' in object.metaclass_code %}X{% endif %}</td>
+        <td align="center">{% if 'abstract' in object.metaclass_code %}X{% endif %}</td>
         <td align="center">{% if object.generic %}X{% endif %}</td>
         <td>
         {{object.verbose_name|default_if_none:""}}

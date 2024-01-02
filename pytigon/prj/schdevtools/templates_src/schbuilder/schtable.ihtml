@@ -49,6 +49,7 @@
     th..._(Name)
     th..._(Base table)
     th..._(Proxy)
+    th..._(Abstract)
     th..._(Generic)
     th..._(Verbose name)
 
@@ -57,6 +58,7 @@
     td...{{object.name}}
     td...{{object.base_table|default_if_none:""}}
     td align=center...{% if 'proxy' in object.metaclass_code %}X{% endif %}
+    td align=center...{% if 'abstract' in object.metaclass_code %}X{% endif %}
     td align=center...{% if object.generic %}X{% endif %}
     td...{{object.verbose_name|default_if_none:""}}
 
