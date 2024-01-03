@@ -153,7 +153,11 @@
         {% endif %}
         {% block id_extra_tree %}
                 {% if standard_web_browser %}
-                        {{ block.super }}
+                        {% if get %}
+                                {% get_row object object.id %}
+                          {% else %}
+                                {% view_row object object.id %}
+                        {% endif %}
                 {% endif %}
         {% endblock %}
 {% endblock %}

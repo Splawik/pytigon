@@ -109,7 +109,10 @@
                                 +
     %% id_extra_tree
         % if standard_web_browser:
-            {{ block.super }}
+            % if get:
+                {% get_row object object.id %}
+            % else:
+                {% view_row object object.id %}
 
 %% tabsort_parameters_block2
     % with not_multiple_select=0 sort=0:
