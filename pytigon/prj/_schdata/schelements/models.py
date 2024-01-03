@@ -39,6 +39,7 @@ from pytigon_lib.schdjangoext.import_from_db import (
     get_fun_from_db_field,
     ModuleStruct,
 )
+from pytigon_lib.schtools.tools import is_in_cancan_rules
 
 from pytigon_lib.schviews import actions
 
@@ -808,7 +809,12 @@ class Element(TreeModel):
 
     @classmethod
     def filter(cls, value, view=None, request=None):
-        if hasattr(settings, "CANCAN") and settings.CANCAN and request:
+        if (
+            hasattr(settings, "CANCAN")
+            and settings.CANCAN
+            and request
+            and is_in_cancan_rules(cls, request.ability.access_rules.rules)
+        ):
             if value and value != "-":
                 return request.ability.queryset_for("view", cls).filter(type=value)
             else:
