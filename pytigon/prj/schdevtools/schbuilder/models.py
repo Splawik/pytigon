@@ -1691,7 +1691,7 @@ class SChTemplate(models.Model):
 
     def _get_table_fields(self, table):
         ret = []
-        if table:
+        if table and hasattr(table, "schfield_set"):
             for pos in table.schfield_set.all():
                 ret.append(pos)
             if table.base_table and table.base_table != None:

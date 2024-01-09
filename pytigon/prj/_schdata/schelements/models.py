@@ -70,8 +70,8 @@ class ElementManager(models.Manager):
 
 GROUP_FOR_TYPE = None
 
-STANDARD_STRUCTURE = {
-    "ROOT": {"next": ["I-GRP", "I-GRP-D", "C-GRP"]},
+STRUCTURE = {
+    "ROOT": {"next": ["I-GRP", "O-GRP", "C-GRP"]},
     "O-GRP": {"title": "Group of owners", "table": "Element", "app": "schelements"},
     "O-COM": {"title": "Companies", "table": "Element", "app": "schelements"},
     "O-DIV": {"title": "Divisions", "table": "Element", "app": "schelements"},
@@ -469,6 +469,10 @@ class Element(TreeModel):
         blank=True,
     )
 
+    @staticmethod
+    def get_structure():
+        return STRUCTURE
+
     def init_new(self, request, view, param=None):
         defaults = {"type": param}
         return defaults
@@ -497,16 +501,6 @@ class Element(TreeModel):
 
         if not self.code:
             self.code = self.gen_code()
-
-        # if hasattr(self, "get_structure"):
-        #    s = self.get_structure()
-        #    if self.type in s and 'table' in s[self.type] and 'app' in s[self.type]:
-        #        if not self.can_view_permission:
-        #            self.can_view_permission = s[self.type]['app'] + ".view_"+ s[self.type]['table'].lower()
-        #        if not self.can_change_permission:
-        #            self.can_change_permission = s[self.type]['app'] + ".change_"+ s[self.type]['table'].lower()
-        #        if not self.can_delete_permission:
-        #            self.can_delete_permission = s[self.type]['app'] + ".delete_"+ s[self.type]['table'].lower()
 
         path = self.code if self.code else ""
 
@@ -680,15 +674,18 @@ class Element(TreeModel):
         return "/schsys/treedialog/schelements/Element/%s/" % id
 
     @staticmethod
-    def add_type(type_code, type_name):
+    def add_type(type_code, type_name, title, table, app):
         global element_type_choice
         element_type_choice.append((type_code, type_name))
+        s = Element.get_structure()
+        if not type_code in s:
+            s[type_code] = {"title": title, "table": table, "app": app}
 
     def get_derived_object(self, param=None):
         t = None
         if type(self) == Element:
-            if hasattr(self, "get_structure"):
-                s = self.get_structure()
+            s = Element.get_structure()
+            if s:
                 if param and "view" in param and "add_param" in param["view"].kwargs:
                     t = param["view"].kwargs["add_param"]
                     if t == "-":
@@ -715,8 +712,8 @@ class Element(TreeModel):
 
     def template_for_object(self, view, context, doc_type):
         if self.id and doc_type in ("html", "json"):
-            if hasattr(self, "get_structure"):
-                s = self.get_structure()
+            s = Element.get_structure()
+            if s:
                 t = self.type
                 if t in s:
                     names = [
@@ -729,8 +726,8 @@ class Element(TreeModel):
     def _get_new_buttons(elem_type="ROOT"):
         buttons = []
 
-        if hasattr(Element, "get_structure"):
-            s = Element.get_structure()
+        s = Element.get_structure()
+        if s:
             if elem_type in s:
                 if "next" in s[elem_type]:
                     for item in s[elem_type]["next"]:
@@ -758,9 +755,7 @@ class Element(TreeModel):
         return Element._get_new_buttons("ROOT")
 
     def get_new_buttons(self):
-        if self.type in ("O-GRP", "I-GRP", "C-GRP") and hasattr(
-            Element, "get_structure"
-        ):
+        if self.type in ("O-GRP", "I-GRP", "C-GRP") and Element.get_structure():
             obj = self
             while obj and obj.type in ("O-GRP", "I-GRP", "C-GRP"):
                 obj = obj.parent
@@ -779,23 +774,24 @@ class Element(TreeModel):
                 items = self.description.split("(")[1].split(")")[0]
                 s = Element.get_structure()
                 for item in items.replace(",", ";").split(";"):
-                    if item and item in s:
-                        button = {}
-                        button["type"] = item
-                        if "title" in s[item]:
-                            button["title"] = s[item]["title"]
-                        else:
-                            button["title"] = item
-                        if "app" in s[item]:
-                            button["app"] = s[item]["app"]
-                        else:
-                            button["app"] = ""
-                        if "table" in s[item]:
-                            button["table"] = s[item]["table"]
-                        else:
-                            button["table"] = ""
-                        if not button in buttons:
-                            buttons.append(button)
+                    if s:
+                        if item and item in s:
+                            button = {}
+                            button["type"] = item
+                            if "title" in s[item]:
+                                button["title"] = s[item]["title"]
+                            else:
+                                button["title"] = item
+                            if "app" in s[item]:
+                                button["app"] = s[item]["app"]
+                            else:
+                                button["app"] = ""
+                            if "table" in s[item]:
+                                button["table"] = s[item]["table"]
+                            else:
+                                button["table"] = ""
+                            if not button in buttons:
+                                buttons.append(button)
                 ret = []
                 for button in buttons:
                     if button["type"] in self.description:
