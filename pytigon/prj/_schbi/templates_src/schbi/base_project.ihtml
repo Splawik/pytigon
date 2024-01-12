@@ -6,7 +6,6 @@
 
 %% content
     div class=bi_{{bi_prj.name}} d-flex flex-column,,,style=height:100%;width:calc(100% - 10px)
-        refresh-bi-charts
         div class=row mb-1
             div class=col
                 % if form:

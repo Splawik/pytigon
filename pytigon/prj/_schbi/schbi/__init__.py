@@ -45,7 +45,7 @@ def AdditionalUrls(prj_name, lang):
                 (
                     lp,
                     (
-                        "bi/project_view/" + object.name + "/",
+                        "schbi/project_view/" + object.name + "/",
                         object.description,
                         object.rights_group,
                         icon,

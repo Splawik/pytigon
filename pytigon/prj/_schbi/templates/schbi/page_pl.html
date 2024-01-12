@@ -2,7 +2,12 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% block all %}
-        {% with table_type='datatable' table_subtype='table_with_details' table_details_height="50vh" %}
+        {% comment %}
+                {% with table_type='datatable' table_subtype='table_with_details' table_details_height="50vh" %}
+                        {{ block.super }}
+                {% endwith %}
+        {% endcomment %}
+        {% with table_type='datatable' %}
                 {{ block.super }}
         {% endwith %}
 {% endblock %}
@@ -56,7 +61,7 @@
                 delete
         {% endrow_actions %}
 {% endblock %}
-{% block list_page_footer %}
+{% block list_page_footer2 %}
         {% row_details %}
                 *Charts:schbi/table/Page/[[table_row_pk]]/chart_set/-/form/sublist/?x1=chart_set
         {% endrow_details %}

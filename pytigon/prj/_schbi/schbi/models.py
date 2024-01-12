@@ -284,7 +284,7 @@ def refresh_data(refresh_type):
     try:
         for prj in Project.objects.all():
             run_code_from_db_field(
-                "bi_prj_{prj.name}_refresh_data.py",
+                f"bi_prj_{prj.name}_refresh_data.py",
                 prj,
                 "refresh_data",
                 "refresh_data",

@@ -15,7 +15,7 @@
 
 %% id_extra
     % row_actions:
-        .field_list/page_set,Pages,target=_parent,icon_name=fa fa-lg fa-level-up
+        .field_list/page_set,Pages,target=_parent,icon_name=fa fa-lg fa-level-up,url=+?fragment=page
 
 %% list_row_header
     th..._(Name)

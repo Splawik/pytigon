@@ -4,7 +4,10 @@
 % load exsyntax
 
 %% all
-    % with table_type='datatable' table_subtype='table_with_details' table_details_height="50vh":
+    % comment:
+        % with table_type='datatable' table_subtype='table_with_details' table_details_height="50vh":
+            {{ block.super }}
+    % with table_type='datatable':
         {{ block.super }}
 
 %% scroll
@@ -47,7 +50,7 @@
         .delete
 
 
-%% list_page_footer
+%% list_page_footer2
     % row_details:
         *Charts:schbi/table/Page/[[table_row_pk]]/chart_set/-/form/sublist/?x1=chart_set
 

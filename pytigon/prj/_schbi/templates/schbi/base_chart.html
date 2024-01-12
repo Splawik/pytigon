@@ -1,0 +1,28 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load static %}
+{% block content %}
+        <div class="ajax-region ajax-link" href="{{base_path}}schbi/chart_view/{{chart.id}}/">
+                <div class="row m-1">
+                        <div class="card p-1">
+                                {% if form %}
+                                        <div class="col">
+                                                <ptig-form src="{{base_path}}schbi/chart_view/{{chart.id}}/">
+                                                        {% block bi_chart_form %}
+                                                                {% inline_form %}
+                                                                {% endinline_form %}
+                                                        {% endblock %}
+                                                </ptig-form>
+                                        </div>
+                                {% endif %}
+                                <div class="col">
+                                        {% block chart %}
+                                                {{chart.name}}
+                                        {% endblock %}
+                                </div>
+                        </div>
+                </div>
+        </div>
+{% endblock %}
+

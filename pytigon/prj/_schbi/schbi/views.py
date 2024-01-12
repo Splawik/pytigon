@@ -66,7 +66,7 @@ def project_view(request, prj_name):
         request.session[session_key] = {}
 
     if prj.form:
-        form_class = form_from_str(prj.form)
+        form_class = form_from_str(prj.form, init_data={"prj": prj, "models": models})
         if request.method == "POST":
             json_data = json.loads(request.body)
             modified = False
@@ -101,7 +101,7 @@ def project_view(request, prj_name):
     data = {}
     if prj.view:
         data = run_code_from_db_field(
-            "bi_prj_{prj.name}_view.py",
+            f"bi_prj_{prj.name}_view.py",
             prj,
             "view",
             "view",
@@ -134,7 +134,6 @@ def page_view(request, page_id):
 
         if request.method == "POST":
             json_data = json.loads(request.body)
-            print("A1: ", json_data)
             modified = False
             for key, value in json_data.items():
                 if key in ("name", "new_value"):
@@ -167,7 +166,7 @@ def page_view(request, page_id):
     data = {}
     if page.view:
         data = run_code_from_db_field(
-            "bi_prj_{page.parent.name}_page_{page.name}_view.py",
+            f"bi_prj_{page.parent.name}_page_{page.name}_view.py",
             page,
             "view",
             "view",
@@ -247,7 +246,7 @@ def chart_view(request, chart_id):
     data = {}
     if chart.view:
         data = run_code_from_db_field(
-            "bi_prj_{chart.parent.parent.name}_chart_{chart.name}_view.py",
+            f"bi_prj_{chart.parent.parent.name}_chart_{chart.name}_view.py",
             chart,
             "view",
             "view",

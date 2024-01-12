@@ -1,6 +1,5 @@
 APPS = [
     "schelements",
-    "schreports",
     "schprofile",
     "schstruct",
     "schdoc",

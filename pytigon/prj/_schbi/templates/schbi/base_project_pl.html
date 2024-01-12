@@ -1,0 +1,39 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load static %}
+{% block content %}
+        <div class="bi_{{bi_prj.name}} d-flex flex-column" style="height:100%;width:calc(100% - 10px)">
+                <div class="row mb-1">
+                        <div class="col">
+                                {% if form %}
+                                        <ptig-form src="{{base_path}}schbi/project_view/{{bi_prj.name}}/">
+                                                {% block bi_prj_form %}
+                                                        {% inline_form %}
+                                                        {% endinline_form %}
+                                                {% endblock %}
+                                        </ptig-form>
+                                {% endif %}
+                        </div>
+                </div>
+                <div class="row flex-grow-1">
+                        <div class="col auto-refresh d-flex flex-column">
+                                <nav>
+                                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                                {% for page in bi_prj.page_set.all %}
+                                                        <button class="nav-link {% if forloop.first %}active{% endif %}" id="nav-{{bi_prj.name}}-{{page.id}}" data-bs-toggle="tab" data-bs-target="#nav-{{bi_prj.name}}-{{page.id}}-content" type="button" role="tab">
+                                                        {{page.name}}
+                                                        </button>
+                                                {% endfor %}
+                                        </div>
+                                </nav>
+                                <div class="tab-content auto-refresh flex-grow-1" id="nav-tabContent" style="overflow-x:hidden">
+                                        {% for page in bi_prj.page_set.all %}
+                                                <div href="{{base_path}}schbi/page_view/{{page.id}}/" class="auto-frame ajax-frame ajax-link ajax-region tab-pane {% if forloop.first %}show active{% endif %}"  id="nav-{{bi_prj.name}}-{{page.id}}-content" role="tabpanel" tabindex="0" auto-refresh-target=".bi_chart"></div>
+                                        {% endfor %}
+                                </div>
+                        </div>
+                </div>
+        </div>
+{% endblock %}
+
