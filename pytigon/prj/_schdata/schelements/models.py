@@ -707,7 +707,16 @@ class Element(TreeModel):
                             ):
                                 return self
                             model = apps.get_model(s[t]["app"], s[t]["table"])
-                            return model.objects.get(pk=self.id)
+                            try:
+                                ret = model.objects.get(pk=self.id)
+                            except:
+                                print(
+                                    "Object of type %s[%d] does'nt exists!"
+                                    % (model.__name__, self.id)
+                                )
+                                ret = self
+                            return ret
+
         return self
 
     def template_for_object(self, view, context, doc_type):
