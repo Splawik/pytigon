@@ -381,11 +381,11 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
             obj = region.querySelector(".plug")
             obj.remove()
 
-            if 'after_close=' in url:
+            if "after_close=" in url:
                 x = url.split("after_close=")[1]
-                if x.startswith('refresh'):
+                if x.startswith("refresh"):
                     window.refresh_ajax_frame(region)
-        
+
         return False
 
     dialog = dialog_slot.firstElementChild
@@ -524,11 +524,11 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
         if obj:
             obj.remove()
 
-        if 'after_close=' in url:
+        if "after_close=" in url:
             x = url.split("after_close=")[1]
-            if x.startswith('refresh'):
+            if x.startswith("refresh"):
                 window.refresh_ajax_frame(region)
-    
+
         return False
 
     if window.hasOwnProperty("bootstrap"):
@@ -641,9 +641,112 @@ def on_replace_app(target_element, data_element, new_url, param, event):
     return wrapper
 
 
-def close_frame(
-    target_element, data_element, new_url, param, event, data_region=None
-):
+def _on_subframe(frame_element, target_element, data_element, url, param, event):
+    stack_slot = document.createElement("div")
+    stack_slot.style.display = "none"
+    stack_slot.classList.add("stack-slot")
+    while frame_element.childNodes.length > 0:
+        stack_slot.appendChild(frame_element.childNodes[0])
+    mount_html(frame_element, data_element)
+    frame_element.appendChild(stack_slot)
+
+
+def on_subpage(target_element, data_element, new_url, param, event):
+    page = target_element.closest(".page")
+    return _on_subframe(page, target_element, data_element, new_url, param, event)
+
+
+window.on_subpage = on_subpage
+
+
+def on_subframe(target_element, data_element, new_url, param, event):
+    if target_element.hasAttribute("data-link"):
+        frame = super_query_selector(
+            target_element, target_element.getAttribute("data-link")
+        )
+    else:
+        frame = target_element.closest(".ajax-frame")
+    return _on_subframe(frame, target_element, data_element, new_url, param, event)
+
+
+window.on_subframe = on_subframe
+
+
+def _on_close_subpage(page, target_element, data_element, new_url, param, event):
+    if target_element.hasAttribute("subpage-count"):
+        count = int(target_element.getAttribute("subpage-count"))
+    else:
+        count = 1
+    temp_slot = document.createElement("div")
+    if page.childNodes.length > 0:
+        child = page.childNodes[page.childNodes.length - 1]
+        if (
+            (not child)
+            or (not hasattr(child, "classList"))
+            or (not child.classList.contains("stack-slot"))
+        ):
+            return
+        temp_slot.appendChild(child)
+
+    def _on_remove(index, value):
+        value.on_remove()
+
+    jQuery.each(jQuery(page).find(".call_on_remove"), _on_remove)
+
+    stack_slot = temp_slot.childNodes[0]
+    while count > 1:
+        child = stack_slot.childNodes[stack_slot.childNodes.length - 1]
+        if (
+            (not child)
+            or (not hasattr(child, "classList"))
+            or (not child.classList.contains("stack-slot"))
+        ):
+            break
+        stack_slot = child
+        count -= 1
+
+    page.innerHTML = ""
+    while stack_slot.childNodes.length > 0:
+        page.appendChild(stack_slot.childNodes[0])
+
+    return page
+
+
+def on_close_subpage(target_element, data_element, new_url, param, event):
+    page = target_element.closest(".page")
+    return _on_close_subpage(page, target_element, data_element, new_url, param, event)
+
+
+def on_close_subpage_and_refresh(target_element, data_element, new_url, param, event):
+    page = target_element.closest(".page")
+    ret = on_close_subpage(target_element, data_element, new_url, param, event)
+    window.refresh_ajax_frame(page)
+    return ret
+
+
+def on_close_subframe(target_element, data_element, new_url, param, event):
+    if target_element.hasAttribute("data-link"):
+        frame = super_query_selector(
+            target_element, target_element.getAttribute("data-link")
+        )
+    else:
+        frame = target_element.closest(".ajax-frame")
+    return _on_close_subpage(frame, target_element, data_element, new_url, param, event)
+
+
+def on_close_subframe_and_refresh(target_element, data_element, new_url, param, event):
+    if target_element.hasAttribute("data-link"):
+        frame = super_query_selector(
+            target_element, target_element.getAttribute("data-link")
+        )
+    else:
+        frame = target_element.closest(".ajax-frame")
+    ret = on_close_subframe(target_element, data_element, new_url, param, event)
+    window.refresh_ajax_frame(frame)
+    return ret
+
+
+def close_frame(target_element, data_element, new_url, param, event, data_region=None):
     f = target_element.getAttribute("data-link")
     if f:
         data_element2 = super_query_selector(data_element, f)
@@ -654,9 +757,11 @@ def close_frame(
         data_region2 = data_region
     else:
         data_region2 = target_element.getAttribute("data-region")
-    
-    region = get_ajax_region(get_ajax_region(target_element, "page").parentElement, data_region2)
-    
+
+    region = get_ajax_region(
+        get_ajax_region(target_element, "page").parentElement, data_region2
+    )
+
     dialog = None
     aside = target_element.closest(".plug")
     if aside and region.contains(aside):
@@ -698,11 +803,8 @@ def refresh_frame(
         data_region2 = data_region
     else:
         data_region2 = target_element.getAttribute("data-region")
-    
-    return refresh_ajax_frame(
-        target_element, data_region2, data_element2
-    )
 
+    return refresh_ajax_frame(target_element, data_region2, data_element2)
 
 
 def refresh_page(target_element, data_element, new_url, param, event):
@@ -760,6 +862,8 @@ def on_message(target_element, data_element, new_url, param, event):
 ## _parent: new app tab
 ## _top: replace current app window
 ## _self: replace current frame
+## page: alias to _parent
+## subpage: hide content of page an show new from response
 ## popup: new popup window
 ## popup_edit: new popup window
 ## popup_info: new popup window
@@ -792,11 +896,18 @@ EVENT_CLICK_TAB = [
     ("_top2", "*", True, False, on_new_tab),
     ("_self", "*", True, False, refresh_page),
     ("_parent", "*", True, False, on_new_tab),
+    ("page", "*", True, False, on_new_tab),
     ("refresh_frame", "*", True, False, refresh_frame),
     ("close_frame", "*", True, False, close_frame),
     ("refresh_page", "*", True, False, refresh_page),
     ("refresh_app", "*", False, False, refresh_app),
     ("message", "*", False, False, on_message),
+    ("subpage", "*", True, False, on_subpage),
+    ("subframe", "*", True, False, on_subframe),
+    ("*", "close-subpage", True, False, on_close_subpage),
+    ("*", "close-subpage-and-refresh", True, False, on_close_subpage_and_refresh),
+    ("*", "close-subframe", True, False, on_close_subframe),
+    ("*", "close-subframe-and-refresh", True, False, on_close_subframe_and_refresh),
     ("null", "*", False, False, only_get),
 ]
 

@@ -422,15 +422,25 @@ def view_elements(request, code, filter, template):
 
 
 def view_elements_as_tree(request, code, filter, template):
-    # if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
-    #    url_base = '/' + settings.URL_ROOT_FOLDER + '/'
-    # else:
-    #    url_base = '/'
-
     id = 0
 
     if code and code != "-":
+        if ":" in code:
+            t, code = code.split(":", 1)
+        else:
+            t = None
+        if "-" in code:
+            parent_code, code = code.split("-", 1)
+        else:
+            parent_code = None
+
         objs = models.Element.objects.filter(code=code)
+
+        if t != None:
+            objs = objs.filter(type=t)
+        if parent_code != None:
+            objs = objs.filter(parent__code=parent_code)
+
         if len(objs) > 0:
             id = objs[0].pk
 
@@ -440,7 +450,7 @@ def view_elements_as_tree(request, code, filter, template):
         target = "form"
 
     href2 = make_href(
-        "/schelements/table/Element/%d/%s/%s/tree/?only_content" % (id, filter, target),
+        "/schelements/table/Element/%d/%s/%s/tree/" % (id, filter, target),
         request.get_full_path(),
     )
     return HttpResponseRedirect(href2)

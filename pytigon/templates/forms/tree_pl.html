@@ -1,16 +1,6 @@
 {% extends "forms/form.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
-{% block content %}
-        {% if fragment == "page" or fragment == "all" %}
-                <input type="hidden" name="parent_filter" value="{{filter}}" />
-                <div class="container-fluid tab-pane ajax-region ajax-frame win-content" data-region="page-content">
-                        {{ block.super }}
-                </div>
-          {% else %}
-                {{ block.super }}
-        {% endif %}
-{% endblock %}
 {% block list_page_start %}
         <div class="table-and-details d-flex flex-column">
 {% endblock %}
@@ -48,9 +38,13 @@
                         {% if standard_web_browser %}
                                 <span class="tree-home">
                                         {% if parent_pk > 0 and base_filter != parent_pk|to_str %}
-                                                {% action "home-_self" "/" url=table_path_and_base_filter|append_str:'[[parent_filter]]/{{kwargs.target}}/{{gtree}}/' %}
+                                                <button type="button" class="btn btn-primary btn-sm btn-light shadow-none close-subpage" subpage-count="99">
+                                                        /
+                                                </button>
                                           {% else %}
-                                                {% action "home-_self" "/" url=table_path_and_base_filter|append_str:'[[parent_filter]]/{{kwargs.target}}/tree/' tag_class="+disabled" %}
+                                                <button type="button" class="btn btn-secondary btn-sm btn-light shadow-none close-subpage" disabled subpage-count="99">
+                                                        /
+                                                </button>
                                         {% endif %}
                                 </span>
                           {% else %}
@@ -67,7 +61,9 @@
                                         {% if not base_parent_pk %}
                                                 {% for pos in parent|get_all_model_parents reversed %}
                                                         {% if not forloop.last %}
-                                                                {% action "back-_self" pos.code url=table_path_and_base_filter|append_str:'{{pos.id}}/{{kwargs.target}}/{{gtree}}/' %}
+                                                                <button type="button" class="btn btn-primary btn-sm btn-light shadow-none close-subpage" subpage-count="{{forloop.revcounter0}}">
+                                                                        {{pos.code}}
+                                                                </button>
                                                         {% endif %}
                                                 {% endfor %}
                                         {% endif %}
@@ -91,15 +87,19 @@
                         {% if standard_web_browser %}
                                 {% with gtree=get|get_or_tree %}
                                         {% if vtype == 'tree' or vtype == 'gettree' %}
-                                                {% if parent_pk > 0 and base_filter != parent_pk|to_str %}
-                                                        {% if parent|get_all_model_parents|length > 1 %}
-                                                                {% action "back-_self" ".." url=table_path_and_base_filter|append_str:'-{{parent_pk}}/{{kwargs.target}}/{{ro}}{{gtree}}/' %}
+                                                        {% if parent_pk > 0 and base_filter != parent_pk|to_str %}
+                                                                <button type="button" class="btn btn-primary btn-light shadow-none close-subpage">
+                                                                        ..
+                                                                </button>
                                                           {% else %}
-                                                                {% action "back-_self" ".." url=table_path_and_base_filter|append_str:'[[parent_filter]]/{{kwargs.target}}/{{ro}}{{gtree}}/' %}
+                                                                <button type="button" class="btn btn-secondary btn-light shadow-none close-subpage" disabled>
+                                                                        ..
+                                                                </button>
                                                         {% endif %}
                                                   {% else %}
-                                                        {% action "back-_self" ".." url=table_path_and_base_filter|append_str:'-{{parent_pk}}/{{kwargs.target}}/{{ro}}{{gtree}}/' tag_class="+disabled" attrs="+disabled='disabled'" %}
-                                                {% endif %}
+                                                        <button type="button" class="btn btn-primary btn-light shadow-none close-subpage">
+                                                                ..
+                                                        </button>
                                         {% endif %}
                                 {% endwith %}
                                 {% id_num 'Id' %}
@@ -113,7 +113,7 @@
                         {% with gtree=get|get_or_tree %}
                                 {% if object|model_can_have_children %}
                                         {% if object|model_has_children %}
-                                                <a href="{{table_path_and_base_filter}}{{object.id}}/{{kwargs.target|replace:"json|form"}}/{{ro}}{{gtree}}/" target="_self" class="button btn btn-light shadow-none" name="+">
+                                                <a href="{{table_path_and_base_filter}}{{object.id}}/{{kwargs.target|replace:"json|form"}}/{{ro}}{{gtree}}/" target="subpage" class="button btn btn-light shadow-none" name="+">
                                                         {% icon "fa-plus fa-lg" %}
                                                 </a>
                                           {% else %}
@@ -122,7 +122,7 @@
                                                                 {% icon "fa-ban fa-lg" %}
                                                         </span>
                                                   {% else %}
-                                                        <a href="{{table_path_and_base_filter}}{{object.id}}/{{kwargs.target|replace:"json|form"}}/{{ro}}{{gtree}}/" target="_self" class="button btn" name="+">
+                                                        <a href="{{table_path_and_base_filter}}{{object.id}}/{{kwargs.target|replace:"json|form"}}/{{ro}}{{gtree}}/" target="subpage" class="button btn" name="+">
                                                                 {% icon "fa-plus-square-o fa-lg" %}
                                                         </a>
                                                 {% endif %}

@@ -148,6 +148,7 @@ def selectpicker_init(dest_elem):
     if hasattr(jQuery.fn, "selectpicker"):
         jQuery(dest_elem).find(".selectpicker").selectpicker()
 
+
 register_mount_fun(selectpicker_init)
 
 
@@ -186,18 +187,22 @@ def auto_refresh_tab(dest_elem):
 
 register_mount_fun(auto_refresh_tab)
 
+
 def get_click_on_focus_fun(element):
     def _click(event):
         nonlocal element
         if not document.hidden:
             element.click()
+
     return _click
+
 
 def get_refresh_on_focus_fun(element):
     def _refresh(event):
         nonlocal element
         if not document.hidden:
             refresh_ajax_frame(element)
+
     return _refresh
 
 
@@ -208,11 +213,12 @@ def on_focus_action(dest_elem):
     for elem in item_list:
         fun = None
         if elem.classList.contains("on-focus-action-click"):
-            fun = get_click_on_focus_fun(elem)     
+            fun = get_click_on_focus_fun(elem)
         elif elem.classList.contains("on-focus-action-refresh"):
             fun = get_refresh_on_focus_fun(elem)
         if fun:
             window.addEventListener("visibilitychange", fun)
+
 
 register_mount_fun(on_focus_action)
 
@@ -429,6 +435,7 @@ def datatable_init(dest_elem):
 register_mount_fun(datatable_init)
 register_mount_fun(process_resize)
 
+
 def _valid_region_element(element, class_name, region_name=None):
     if not region_name:
         return True
@@ -442,8 +449,9 @@ def _valid_region_element(element, class_name, region_name=None):
             return True
     return False
 
+
 def _get_region_elements_inside(element, class_name, region_name=None):
-    item_list = Array.prototype.slice.call(element.querySelectorAll("."+class_name))
+    item_list = Array.prototype.slice.call(element.querySelectorAll("." + class_name))
     ret = []
     for item in item_list:
         if item.classList.contains(class_name):
@@ -453,6 +461,7 @@ def _get_region_elements_inside(element, class_name, region_name=None):
             if not region_name:
                 ret.append(item)
     return ret
+
 
 def _get_region_element_closest(element, class_name, region_name=None):
     item = element.closest("." + class_name)
@@ -468,7 +477,9 @@ def _get_region_element_closest(element, class_name, region_name=None):
 
 
 def get_ajax_region(element, region_name=None, strict_mode=False):
-    if element.classList.contains("ajax-region") and _valid_region_element(element, "ajax-region", region_name):
+    if element.classList.contains("ajax-region") and _valid_region_element(
+        element, "ajax-region", region_name
+    ):
         return element
     else:
         if region_name:
@@ -491,19 +502,28 @@ window.get_ajax_region = get_ajax_region
 
 
 def get_ajax_link(element, region_name=None, strict_mode=False):
-    if element.classList.contains("ajax-link") and _valid_region_element(element, "ajax-link", region_name):
+    if element.classList.contains("ajax-link") and _valid_region_element(
+        element, "ajax-link", region_name
+    ):
         return element
     region = get_ajax_region(element, region_name, strict_mode)
     if region != None:
-        if region.classList.contains("ajax-link") and _valid_region_element(region, "ajax-link", region_name):
+        if region.classList.contains("ajax-link") and _valid_region_element(
+            region, "ajax-link", region_name
+        ):
             return region
         else:
             if region_name:
-                link_list = _get_region_elements_inside(region, "ajax-link", region_name)
+                link_list = _get_region_elements_inside(
+                    region, "ajax-link", region_name
+                )
                 if len(link_list) == 1:
                     return link_list[0]
                 for link in link_list:
-                    if (_get_region_element_closest(link, "ajax-region", region_name) == region):
+                    if (
+                        _get_region_element_closest(link, "ajax-region", region_name)
+                        == region
+                    ):
                         return link
                 if len(link_list) > 0:
                     return link_list[0]
@@ -521,15 +541,22 @@ window.get_ajax_link = get_ajax_link
 def get_ajax_frame(element, region_name=None, strict_mode=False):
     region = get_ajax_region(element, region_name, strict_mode)
     if region != None:
-        if region.classList.contains("ajax-frame") and _valid_region_element(region, "ajax-frame", region_name):
+        if region.classList.contains("ajax-frame") and _valid_region_element(
+            region, "ajax-frame", region_name
+        ):
             return region
         else:
             if region_name:
-                frame_list = _get_region_elements_inside(region, "ajax-frame", region_name)
+                frame_list = _get_region_elements_inside(
+                    region, "ajax-frame", region_name
+                )
                 if len(frame_list) == 1:
                     return frame_list[0]
                 for f in frame_list:
-                    if (_get_region_element_closest(f, "ajax-region", region_name)  == region):
+                    if (
+                        _get_region_element_closest(f, "ajax-region", region_name)
+                        == region
+                    ):
                         return f
                 if len(frame_list) > 0:
                     return frame_list[0]
@@ -622,12 +649,10 @@ def refresh_ajax_frame(
                     elem = element
                 if callback:
                     callback()
-                return refresh_ajax_frame(
-                    elem, "", None, None, callback_on_error, data
-                )
-                #return refresh_ajax_frame(
+                return refresh_ajax_frame(elem, "", None, None, callback_on_error, data)
+                # return refresh_ajax_frame(
                 #    get_ajax_region(elem, "page").parentElement, "", None, None, callback_on_error, data
-                #)
+                # )
             elif dt == "$$RETURN_RELOAD":
                 if region_name == "error":
                     ret = mount_html(frame, data, link)
