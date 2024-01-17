@@ -2,7 +2,7 @@ APPS = [
     "teleconference",
     "_schtools.schtools",
     "_schwiki.schwiki",
-    "_schdata.schreports",
+    "_schdata.schdoc",
     "_schcomponents.standard_components",
     "_schdata.schelements",
     "_schsetup.schadmin",

@@ -1,4 +1,4 @@
-% extends default_template
+% extends 'page.html'|translate:lang
 
 
 % load exfiltry

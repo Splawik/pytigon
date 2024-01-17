@@ -34,5 +34,4 @@ from django.utils import timezone
 
 @dict_to_template("sched/v_save.html")
 def save(request, **argv):
-
     return {}
