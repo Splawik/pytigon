@@ -32,7 +32,7 @@ with open("requirements.txt") as f:
     tmp = f.read().strip().split("\n")
     install_requires = [pos for pos in tmp if "://" not in pos]
     dependency_links = [pos for pos in tmp if "://" in pos]
-set
+
 setup(
     name="pytigon",
     version="0.240117",
