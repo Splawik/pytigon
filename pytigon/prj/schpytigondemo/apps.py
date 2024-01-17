@@ -24,7 +24,7 @@ APPS = [
     "_schtools.schtools",
     "_schtools.schattachements",
     "_schtools.schworkflow",
-    "_schdata.schreports",
+    "_schdata.schdoc",
     "_schdata.schelements",
     "_schcomponents.standard_components",
     "_schdata.schprofile",
