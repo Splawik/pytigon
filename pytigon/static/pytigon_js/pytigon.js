@@ -1454,8 +1454,9 @@ register_mount_fun = function flx_register_mount_fun (fun) {
 
 window.register_mount_fun = register_mount_fun;
 mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
-    var _on_remove, elem2, evt, fun, item, stub3_seq, stub4_itr, stub5_seq, stub6_itr, stub7_seq, stub8_itr;
+    var _on_remove, attr, elem2, evt, fun, item, obj, replace, stub3_seq, stub4_itr, stub5_seq, stub6_itr, stub7_seq, stub8_itr;
     link = (link === undefined) ? null: link;
+    replace = false;
     if (_pyfunc_op_equals(dest_elem, null)) {
         return null;
     }
@@ -1467,6 +1468,17 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
         dest_elem.dispatchEvent(evt);
         return dest_elem;
     }
+    if (_pyfunc_truthy(dest_elem.hasAttribute("data-link"))) {
+        attr = dest_elem.getAttribute("data-link");
+        if (_pyfunc_op_equals(attr, "..")) {
+            replace = true;
+        } else {
+            obj = window.super_query_selector(dest_elem, dest_elem.getAttribute("data-link"));
+            if (_pyfunc_truthy(obj)) {
+                dest_elem = obj;
+            }
+        }
+    }
     if ((!_pyfunc_op_equals(data_or_html, null))) {
         _on_remove = (function flx__on_remove (index, value) {
             value.on_remove();
@@ -1474,30 +1486,54 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
         }).bind(this);
 
         jQuery.each(_pymeth_find.call(jQuery(dest_elem), ".call_on_remove"), _on_remove);
-        if ((dest_elem.childNodes.length > 0)) {
+        if ((dest_elem.children.length > 0)) {
             elem2 = dest_elem.cloneNode();
             if ((_pyfunc_op_equals(jQuery.type(data_or_html), "string"))) {
                 elem2.innerHTML = data_or_html;
+                if (_pyfunc_truthy(replace)) {
+                    if ((elem2.children.length > 0)) {
+                        elem2 = elem2.children[0];
+                    }
+                }
             } else if ((((_pyfunc_op_equals(_pymeth_lower.call(data_or_html.tagName), "div"))) && (_pyfunc_truthy(data_or_html.classList.contains("ajax-temp-item"))))) {
-                stub3_seq = Array.prototype.slice.call(data_or_html.childNodes);
+                stub3_seq = Array.prototype.slice.call(data_or_html.children);
                 if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
                 for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
                     item = stub3_seq[stub4_itr];
-                    elem2.appendChild(item);
+                    if (_pyfunc_truthy(replace)) {
+                        elem2.replaceWith(item);
+                        break;
+                    } else {
+                        elem2.appendChild(item);
+                    }
                 }
+            } else if (_pyfunc_truthy(replace)) {
+                elem2.replaceWith(data_or_html);
             } else {
                 elem2.appendChild(data_or_html);
             }
             Idiomorph.morph(dest_elem, elem2);
         } else if ((_pyfunc_op_equals(jQuery.type(data_or_html), "string"))) {
             dest_elem.innerHTML = data_or_html;
+            if (_pyfunc_truthy(replace)) {
+                if ((dest_elem.children.length > 0)) {
+                    dest_elem.replaceWith(dest_elem.children[0]);
+                }
+            }
         } else if ((((_pyfunc_op_equals(_pymeth_lower.call(data_or_html.tagName), "div"))) && (_pyfunc_truthy(data_or_html.classList.contains("ajax-temp-item"))))) {
-            stub5_seq = Array.prototype.slice.call(data_or_html.childNodes);
+            stub5_seq = Array.prototype.slice.call(data_or_html.children);
             if ((typeof stub5_seq === "object") && (!Array.isArray(stub5_seq))) { stub5_seq = Object.keys(stub5_seq);}
             for (stub6_itr = 0; stub6_itr < stub5_seq.length; stub6_itr += 1) {
                 item = stub5_seq[stub6_itr];
-                dest_elem.appendChild(item);
+                if (_pyfunc_truthy(replace)) {
+                    dest_elem.replaceWith(item);
+                    break;
+                } else {
+                    dest_elem.appendChild(item);
+                }
             }
+        } else if (_pyfunc_truthy(replace)) {
+            dest_elem.replaceWith(data_or_html);
         } else {
             dest_elem.appendChild(data_or_html);
         }
@@ -2644,7 +2680,11 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
             loading.stop();
             loading.remove();
             data_element = get_elem_from_string(data);
-            new_target_elem = data_element.querySelector("meta[name='target']");
+            if ((_pyfunc_op_equals(data_element.nodeName, "META") && (_pyfunc_truthy(data_element.hasAttribute("name"))) && ((_pyfunc_op_equals(data_element.getAttribute("name"), "target"))))) {
+                new_target_elem = data_element;
+            } else {
+                new_target_elem = data_element.querySelector("meta[name='target']");
+            }
             if (_pyfunc_truthy(new_target_elem)) {
                 new_target = new_target_elem.getAttribute("content");
             } else {
@@ -3001,7 +3041,13 @@ on_new_tab = function flx_on_new_tab (target_element, data_element, new_url, par
 
 window.on_new_tab = on_new_tab;
 on_replace_app = function flx_on_replace_app (target_element, data_element, new_url, param, event) {
-    var wrapper;
+    var obj, objects, stub14_seq, stub15_itr, subpage, subpages, wrapper;
+    subpages = ((new URLSearchParams(window.location.search)).getAll)("subpage");
+    if (_pyfunc_truthy(subpages)) {
+        subpage = subpages[0];
+    } else {
+        subpage = null;
+    }
     if (_pyfunc_truthy(window.PUSH_STATE)) {
         history_push_state("", window.BASE_PATH);
     } else {
@@ -3015,6 +3061,20 @@ on_replace_app = function flx_on_replace_app (target_element, data_element, new_
     mount_html(wrapper, data_element.querySelector("section.body-body"), false);
     window.init_start_page();
     window.activate_menu();
+    if (_pyfunc_truthy(subpage)) {
+        objects = Array.prototype.slice.call(document.querySelectorAll("a"));
+        stub14_seq = objects;
+        if ((typeof stub14_seq === "object") && (!Array.isArray(stub14_seq))) { stub14_seq = Object.keys(stub14_seq);}
+        for (stub15_itr = 0; stub15_itr < stub14_seq.length; stub15_itr += 1) {
+            obj = stub14_seq[stub15_itr];
+            if ((_pyfunc_truthy(obj.href) && (_pyfunc_truthy(obj.classList.contains("menu-href"))))) {
+                if (_pyfunc_op_contains(subpage, obj.href)) {
+                    obj.click();
+                    break;
+                }
+            }
+        }
+    }
     return wrapper;
 };
 
@@ -3027,7 +3087,7 @@ _on_subframe = function flx__on_subframe (frame_element, target_element, data_el
         stack_slot.appendChild(frame_element.childNodes[0]);
     }
     mount_html(frame_element, data_element);
-    frame_element.appendChild(stack_slot);
+    frame_element.prepend(stack_slot);
     return null;
 };
 
@@ -3058,7 +3118,7 @@ _on_close_subpage = function flx__on_close_subpage (page, target_element, data_e
     }
     temp_slot = document.createElement("div");
     if ((page.childNodes.length > 0)) {
-        child = page.childNodes[page.childNodes.length - 1];
+        child = page.childNodes[0];
         if (_pyfunc_truthy(((!_pyfunc_truthy(child))) || ((!_pyfunc_hasattr(child, "classList"))) || (!_pyfunc_truthy(child.classList.contains("stack-slot"))))) {
             return null;
         }
@@ -3072,7 +3132,7 @@ _on_close_subpage = function flx__on_close_subpage (page, target_element, data_e
     jQuery.each(_pymeth_find.call(jQuery(page), ".call_on_remove"), _on_remove);
     stack_slot = temp_slot.childNodes[0];
     while (count > 1) {
-        child = stack_slot.childNodes[stack_slot.childNodes.length - 1];
+        child = stack_slot.childNodes[0];
         if (_pyfunc_truthy(((!_pyfunc_truthy(child))) || ((!_pyfunc_hasattr(child, "classList"))) || (!_pyfunc_truthy(child.classList.contains("stack-slot"))))) {
             break;
         }
@@ -3203,18 +3263,28 @@ on_message = function flx_on_message (target_element, data_element, new_url, par
     options = ({icon: "success", title: "Information", text: "success"});
     if (_pyfunc_truthy(target_element.hasAttribute("data-icon"))) {
         options["icon"] = target_element.getAttribute("data-icon");
+    } else if (_pyfunc_truthy(data_element.hasAttribute("data-icon"))) {
+        options["icon"] = data_element.getAttribute("data-icon");
     }
     if (_pyfunc_truthy(target_element.hasAttribute("data-title"))) {
         options["title"] = target_element.getAttribute("data-title");
+    } else if (_pyfunc_truthy(data_element.hasAttribute("data-title"))) {
+        options["title"] = data_element.getAttribute("data-title");
     }
     if (_pyfunc_truthy(target_element.hasAttribute("data-text"))) {
         options["text"] = target_element.getAttribute("data-text");
+    } else if (_pyfunc_truthy(data_element.hasAttribute("data-text"))) {
+        options["text"] = data_element.getAttribute("data-text");
     }
     if (_pyfunc_truthy(target_element.hasAttribute("data-footer"))) {
         options["footer"] = target_element.getAttribute("data-footer");
+    } else if (_pyfunc_truthy(data_element.hasAttribute("data-footer"))) {
+        options["footer"] = data_element.getAttribute("data-footer");
     }
     if (_pyfunc_truthy(target_element.hasAttribute("data-timer"))) {
         options["timer"] = target_element.getAttribute("data-timer");
+    } else if (_pyfunc_truthy(data_element.hasAttribute("data-timer"))) {
+        options["timer"] = data_element.getAttribute("data-timer");
     }
     Swal.fire(options);
     return null;

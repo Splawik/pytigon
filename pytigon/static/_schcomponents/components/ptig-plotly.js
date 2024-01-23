@@ -4,7 +4,7 @@ TEMPLATE = '        <div name=\"plotlydiv\" data-bind:style-width:width;style-he
     '\n' +
     '';
 BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins";
-BASE_PLOTLY_PATH = window.BASE_PATH + "schreports/plot_service/";
+BASE_PLOTLY_PATH = window.BASE_PATH + "schdoc/plot_service/";
 from_dict = function flx_from_dict (d, name) {
     if (_pyfunc_op_contains(name, d)) {
         return d[name];

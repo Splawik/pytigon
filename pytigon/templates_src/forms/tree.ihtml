@@ -5,7 +5,10 @@
 
 
 %% list_page_start
-    <div class="table-and-details d-flex flex-column">
+    % if table_type != 'datatable':
+        <div class="table-and-details d-flex flex-column ajax-region ajax-frame ajax-link" href="{{request.get_full_path}}" data-link="..">
+    % else:
+        <div class="table-and-details d-flex flex-column">
 
 %% list_content_title
     % if parent_pk > 0:

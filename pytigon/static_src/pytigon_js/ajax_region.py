@@ -55,6 +55,8 @@ window.register_mount_fun = register_mount_fun
 def mount_html(dest_elem, data_or_html, link=None):
     global MOUNT_INIT_FUN
 
+    replace = False
+
     if dest_elem == None:
         return None
 
@@ -70,6 +72,17 @@ def mount_html(dest_elem, data_or_html, link=None):
         dest_elem.dispatchEvent(evt)
         return dest_elem
 
+    if dest_elem.hasAttribute("data-link"):
+        attr = dest_elem.getAttribute("data-link")
+        if attr == "..":
+            replace = True
+        else:
+            obj = window.super_query_selector(
+                dest_elem, dest_elem.getAttribute("data-link")
+            )
+            if obj:
+                dest_elem = obj
+
     if data_or_html != None:
 
         def _on_remove(index, value):
@@ -77,32 +90,52 @@ def mount_html(dest_elem, data_or_html, link=None):
 
         jQuery.each(jQuery(dest_elem).find(".call_on_remove"), _on_remove)
 
-        if dest_elem.childNodes.length > 0:
+        if dest_elem.children.length > 0:
             elem2 = dest_elem.cloneNode()
             if jQuery.type(data_or_html) == "string":
                 elem2.innerHTML = data_or_html
+                if replace:
+                    if elem2.children.length > 0:
+                        elem2 = elem2.children[0]
             else:
                 if (
                     data_or_html.tagName.lower() == "div"
                     and data_or_html.classList.contains("ajax-temp-item")
                 ):
-                    for item in Array.prototype.slice.call(data_or_html.childNodes):
-                        elem2.appendChild(item)
+                    for item in Array.prototype.slice.call(data_or_html.children):
+                        if replace:
+                            elem2.replaceWith(item)
+                            break
+                        else:
+                            elem2.appendChild(item)
                 else:
-                    elem2.appendChild(data_or_html)
+                    if replace:
+                        elem2.replaceWith(data_or_html)
+                    else:
+                        elem2.appendChild(data_or_html)
             Idiomorph.morph(dest_elem, elem2)
         else:
             if jQuery.type(data_or_html) == "string":
                 dest_elem.innerHTML = data_or_html
+                if replace:
+                    if dest_elem.children.length > 0:
+                        dest_elem.replaceWith(dest_elem.children[0])
             else:
                 if (
                     data_or_html.tagName.lower() == "div"
                     and data_or_html.classList.contains("ajax-temp-item")
                 ):
-                    for item in Array.prototype.slice.call(data_or_html.childNodes):
-                        dest_elem.appendChild(item)
+                    for item in Array.prototype.slice.call(data_or_html.children):
+                        if replace:
+                            dest_elem.replaceWith(item)
+                            break
+                        else:
+                            dest_elem.appendChild(item)
                 else:
-                    dest_elem.appendChild(data_or_html)
+                    if replace:
+                        dest_elem.replaceWith(data_or_html)
+                    else:
+                        dest_elem.appendChild(data_or_html)
 
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:

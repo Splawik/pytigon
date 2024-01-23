@@ -46,7 +46,7 @@
 
 
 %% all
-    %with table_type='datatable' title="Elements":
+    %with table_type='scrolled' title="Elements":
         {{ block.super }}
 
 %% list_content_actions_new_row

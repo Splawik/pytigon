@@ -18,8 +18,11 @@
 # version: "0.1a"
 
 # from django.conf.urls import url, include
+from base64 import b64decode
+from django.utils.translation import gettext_lazy as _
+
 from django.urls import path, re_path, include
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.views import LoginView
 
 from django.views.generic import TemplateView
@@ -34,27 +37,24 @@ from pytigon_lib.schtools.tools import is_in_dicts, get_from_dicts
 
 from . import views
 
-DEFPARAM = "color_body_0_2:303030,color_body_0_5:787878, color_body_0_7:A8A8A8,color_body_0_9:D8D8D8,\
+DEFPARAM = (
+    "color_body_0_2:303030,color_body_0_5:787878, color_body_0_7:A8A8A8,color_body_0_9:D8D8D8,\
 color_body:F0F0F0,color_body_1_1:F1F1F1,color_body_1_3:F4F4F4,color_body_1_5:F7F7F7,color_body_1_8:FCFCFC,\
 color_higlight:FFFFFF,color_shadow:A0A0A0,color_background_0_5:787878,color_background_0_8:C0C0C0,\
 color_background_0_9:D8D8D8,color_background:F0F0F0,color_background_1_1:F1F1F1,\
 color_background_1_2:F3F3F3,color_background_1_5:F7F7F7,color_info:FFFFF0"
+)
 
 
 @csrf_exempt
 def sch_login(request, *argi, **argv):
     path = ""
-    path_after_error = ""
     if is_in_dicts("next", (request.POST, request.GET)):
         path = get_from_dicts("next", (request.POST, request.GET))
+        if path and path[-1] == "=":
+            path = b64decode(path.encode("utf-8")).decode("utf-8")
     if not path:
-        path = settings.URL_ROOT_FOLDER + settings.URL_ROOT_PREFIX
-    if is_in_dicts("next_after_error", (request.POST, request.GET)):
-        path_after_error = get_from_dicts(
-            "next_after_error", (request.POST, request.GET)
-        )
-    if not path_after_error:
-        path_after_error = path
+        path = make_href("/")
 
     if is_in_dicts("username", (request.POST, request.GET)):
         username = get_from_dicts("username", (request.POST, request.GET))
@@ -73,11 +73,26 @@ def sch_login(request, *argi, **argv):
                         [pos.split(":") for pos in DEFPARAM.split(",")]
                     )
                 return HttpResponseRedirect(path)
+            else:
+                if "from_pytigon" in request.GET:
+                    return HttpResponse("Error!")
+                else:
+                    title = _("Login error!")
+                    txt = _("Incorrect login name or password")
+                    return HttpResponse(
+                        '<html><head><meta name="target" content="message" data-title="%s" data-text="%s" data-icon="error"/></head></html>'
+                        % (title, txt)
+                    )
 
     if "from_pytigon" in request.GET:
         return HttpResponse("Error!")
     else:
-        return HttpResponseRedirect(path_after_error)
+        return HttpResponseRedirect(request.get_full_path())
+
+
+def sch_logout(request):
+    logout(request)
+    return HttpResponseRedirect(make_href("/"))
 
 
 urlpatterns = [
@@ -85,10 +100,7 @@ urlpatterns = [
     path("<int:id>/<str:title>/new_row_ok/", views.ret_ok, name="new_row_ok"),
     path("login/", TemplateView.as_view(template_name="schsys/app/login.html")),
     path("do_login/", sch_login),
-    path(
-        "do_logout/",
-        django.contrib.auth.views.LogoutView.as_view(next_page=make_href("/")),
-    ),
+    path("do_logout/", sch_logout),
     path("change_password/", views.change_password),
     path("change_profile_variant/<str:variant_name>/", views.change_profile_variant),
     # path('accounts/', include('allauth.urls')),

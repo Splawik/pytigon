@@ -126,17 +126,6 @@ def _get_click_event_from_tab(target_element, target, href):
         if pos[0] == "*" or pos[0] == target:
             if pos[1] == "*" or target_element.classList.contains(pos[1]):
                 url = correct_href(href, (target_element,))
-
-                # if (
-                #        target_element.hasAttribute("data-region")
-                #        and target_element.getAttribute("data-region") == "table"
-                # ):
-                # if pos[3]:
-                #    url = corect_href(href, True)
-                # elif pos[2]:
-                #    url = corect_href(href, False)
-                # else:
-                #    url = href
                 return url, pos[4]
     return None, None
 
@@ -232,7 +221,14 @@ def on_click_default_action(event, target_element):
             loading.remove()
 
             data_element = get_elem_from_string(data)
-            new_target_elem = data_element.querySelector("meta[name='target']")
+            if (
+                data_element.nodeName == "META"
+                and data_element.hasAttribute("name")
+                and data_element.getAttribute("name") == "target"
+            ):
+                new_target_elem = data_element
+            else:
+                new_target_elem = data_element.querySelector("meta[name='target']")
             if new_target_elem:
                 new_target = new_target_elem.getAttribute("content")
             else:
@@ -622,12 +618,19 @@ window.on_new_tab = on_new_tab
 
 
 def on_replace_app(target_element, data_element, new_url, param, event):
+    subpages = (URLSearchParams(window.location.search)).getAll("subpage")
+    if subpages:
+        subpage = subpages[0]
+    else:
+        subpage = None
+
     if window.PUSH_STATE:
         history_push_state("", window.BASE_PATH)
     else:
         window.location.pathname = window.BASE_PATH
 
     window.MENU = None
+
     wrapper = document.querySelector("div.content-wrapper")
     if wrapper:
         wrapper.innerHTML = ""
@@ -638,6 +641,15 @@ def on_replace_app(target_element, data_element, new_url, param, event):
     )
     window.init_start_page()
     window.activate_menu()
+
+    if subpage:
+        objects = Array.prototype.slice.call(document.querySelectorAll("a"))
+        for obj in objects:
+            if obj.href and obj.classList.contains("menu-href"):
+                if subpage in obj.href:
+                    obj.click()
+                    break
+
     return wrapper
 
 
@@ -648,7 +660,8 @@ def _on_subframe(frame_element, target_element, data_element, url, param, event)
     while frame_element.childNodes.length > 0:
         stack_slot.appendChild(frame_element.childNodes[0])
     mount_html(frame_element, data_element)
-    frame_element.appendChild(stack_slot)
+    # frame_element.appendChild(stack_slot)
+    frame_element.prepend(stack_slot)
 
 
 def on_subpage(target_element, data_element, new_url, param, event):
@@ -679,7 +692,8 @@ def _on_close_subpage(page, target_element, data_element, new_url, param, event)
         count = 1
     temp_slot = document.createElement("div")
     if page.childNodes.length > 0:
-        child = page.childNodes[page.childNodes.length - 1]
+        # child = page.childNodes[page.childNodes.length - 1]
+        child = page.childNodes[0]
         if (
             (not child)
             or (not hasattr(child, "classList"))
@@ -695,7 +709,8 @@ def _on_close_subpage(page, target_element, data_element, new_url, param, event)
 
     stack_slot = temp_slot.childNodes[0]
     while count > 1:
-        child = stack_slot.childNodes[stack_slot.childNodes.length - 1]
+        # child = stack_slot.childNodes[stack_slot.childNodes.length - 1]
+        child = stack_slot.childNodes[0]
         if (
             (not child)
             or (not hasattr(child, "classList"))
@@ -845,14 +860,28 @@ def on_message(target_element, data_element, new_url, param, event):
 
     if target_element.hasAttribute("data-icon"):
         options["icon"] = target_element.getAttribute("data-icon")
+    elif data_element.hasAttribute("data-icon"):
+        options["icon"] = data_element.getAttribute("data-icon")
+
     if target_element.hasAttribute("data-title"):
         options["title"] = target_element.getAttribute("data-title")
+    elif data_element.hasAttribute("data-title"):
+        options["title"] = data_element.getAttribute("data-title")
+
     if target_element.hasAttribute("data-text"):
         options["text"] = target_element.getAttribute("data-text")
+    elif data_element.hasAttribute("data-text"):
+        options["text"] = data_element.getAttribute("data-text")
+
     if target_element.hasAttribute("data-footer"):
         options["footer"] = target_element.getAttribute("data-footer")
+    elif data_element.hasAttribute("data-footer"):
+        options["footer"] = data_element.getAttribute("data-footer")
+
     if target_element.hasAttribute("data-timer"):
         options["timer"] = target_element.getAttribute("data-timer")
+    elif data_element.hasAttribute("data-timer"):
+        options["timer"] = data_element.getAttribute("data-timer")
 
     Swal.fire(options)
 
