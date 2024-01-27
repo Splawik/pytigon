@@ -9,18 +9,8 @@ from pytigon_lib.schtools import schjson
 
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
+from django.utils import timezone
 
 import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
-
-
-from schsimplescripts.models import *
-
-from schtools.models import *
-
-from schwiki.models import *
-
-from schcommander.models import *
-
-from schtasks.models import *

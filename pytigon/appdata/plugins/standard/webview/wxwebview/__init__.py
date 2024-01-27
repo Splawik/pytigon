@@ -73,8 +73,8 @@ def init_plugin_web_view(
             # self.Bind(wx.html2.EVT_WEBVIEW_SCRIPT_RESULT, self.on_script_result)
 
             self.Bind(wx.EVT_WINDOW_DESTROY, self.on_destroy)
-            #self.Bind(wx.EVT_SET_FOCUS, self.on_setfocus)
-            #self.Bind(wx.EVT_KILL_FOCUS, self.on_killfocus)
+            # self.Bind(wx.EVT_SET_FOCUS, self.on_setfocus)
+            # self.Bind(wx.EVT_KILL_FOCUS, self.on_killfocus)
 
             self.edit = False
 
@@ -82,10 +82,10 @@ def init_plugin_web_view(
                 self.GetParent().any_parent_command("show_info")
             self.afetr_init()
 
-        #def on_setfocus(self, event):
+        # def on_setfocus(self, event):
         #    event.Skip()
 
-        #def on_killfocus(self, event):
+        # def on_killfocus(self, event):
         #    print("on_killfocus", event.GetWindow())
         #    event.Skip()
 
@@ -171,7 +171,6 @@ def init_plugin_web_view(
 
         def load_url(self, url, cookies=None):
             self.LoadURL(url)
-
 
         def load_str(self, data, base=None):
             self.LoadURL("about:blank")

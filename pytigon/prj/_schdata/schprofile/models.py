@@ -26,6 +26,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth import get_user_model
 from pytigon_lib.schtools.tools import get_request
+from pytigon_lib.schdjangoext.tools import from_migrations
 
 
 def limit_owner():
@@ -183,7 +184,7 @@ USER_PROFILES = False
 def init_user_profiles():
     global USER_PROFILES
 
-    if not USER_PROFILES:
+    if not USER_PROFILES and not from_migrations():
         USER_PROFILES = True
 
         @receiver(post_save, sender=get_user_model())

@@ -19,12 +19,14 @@ from pytigon_lib.schhtml.htmltools import superstrip
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from schattachements.models import Attachement
+from pytigon_lib.schdjangoext.tools import from_migrations
 
+if not from_migrations():
 
-@receiver(post_save, sender=Attachement)
-def attachement_created(sender, instance, created, **kwargs):
-    if created:
-        WorkflowType.new_workflow_item("demo", instance)
+    @receiver(post_save, sender=Attachement)
+    def attachement_created(sender, instance, created, **kwargs):
+        if created:
+            WorkflowType.new_workflow_item("demo", instance)
 
 
 tag_CHOICE = [

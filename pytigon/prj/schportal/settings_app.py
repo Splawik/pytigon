@@ -58,13 +58,14 @@ if "EMAIL_HOST_USER" in os.environ:
 if "EMAIL_HOST_PASSWORD" in os.environ:
     EMAIL_HOST_PASSWORD = os.environ["EMAIL_HOST_PASSWORD"]
 
-INSTALLED_APPS.append("allauth.socialaccount.providers.google")
-INSTALLED_APPS.append("allauth.socialaccount.providers.facebook")
-INSTALLED_APPS.append("allauth.socialaccount.providers.github")
-INSTALLED_APPS.append("allauth.socialaccount.providers.microsoft")
-INSTALLED_APPS.append("allauth.socialaccount.providers.okta")
-INSTALLED_APPS.append("allauth.socialaccount.providers.openid")
-INSTALLED_APPS.append("allauth.socialaccount.providers.windowslive")
+if ENV("ALLAUTH"):
+    INSTALLED_APPS.append("allauth.socialaccount.providers.google")
+    INSTALLED_APPS.append("allauth.socialaccount.providers.facebook")
+    INSTALLED_APPS.append("allauth.socialaccount.providers.github")
+    INSTALLED_APPS.append("allauth.socialaccount.providers.microsoft")
+    INSTALLED_APPS.append("allauth.socialaccount.providers.okta")
+    INSTALLED_APPS.append("allauth.socialaccount.providers.openid")
+    INSTALLED_APPS.append("allauth.socialaccount.providers.windowslive")
 
 
 # EMAIL_HOST = 'smtp.gmail.com'
@@ -160,6 +161,11 @@ else:
         db_local = DATABASES["default"]
         DATABASES["default"] = ENV.db()
         DATABASES["local"] = db_local
+    else:
+        DATABASES["local"] = {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": _NAME.replace(".db", "_local.db"),
+        }
 
 
 CHANNELS_URL_TAB += [
@@ -179,7 +185,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2024.01.17 21:23:17"
+GEN_TIME = "2024.01.27 21:16:11"
 
 
 for key, value in os.environ.items():

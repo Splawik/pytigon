@@ -1,4 +1,4 @@
-% extends default_template
+% extends 'page.html'|translate:lang
 
 
 % load exfiltry
@@ -19,9 +19,6 @@
             [ title  | Pytigon additiona scripts ]
             [ start_page | None ]
             [ plugins | None ]
-
-    %% extrastyle
-
 % else:    
     %% js_extrascipts
         {{block.super}}

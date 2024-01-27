@@ -117,6 +117,11 @@ else:
         db_local = DATABASES["default"]
         DATABASES["default"] = ENV.db()
         DATABASES["local"] = db_local
+    else:
+        DATABASES["local"] = {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": _NAME.replace(".db", "_local.db"),
+        }
 
 
 CHANNELS_URL_TAB += [
@@ -132,7 +137,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2023.11.03 19:19:36"
+GEN_TIME = "2024.01.27 21:15:28"
 
 
 for key, value in os.environ.items():

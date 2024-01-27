@@ -106,6 +106,12 @@ else:
         db_local = DATABASES['default']
         DATABASES['default'] = ENV.db()
         DATABASES['local'] = db_local
+    else:
+        DATABASES["local"] = {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": _NAME.replace(".db", "_local.db"),
+        }
+
 
 {% if consumers %}
 CHANNELS_URL_TAB += [ 
