@@ -37,6 +37,9 @@ def init_plugin_web_view(
     from pytigon_lib.schindent.indent_tools import norm_html
     from pytigon_gui.guictrl.ctrl import SchBaseCtrl
     import pytigon_gui.guictrl.ctrl
+    from os import environ
+
+    environ["WEBKIT_DISABLE_DMABUF_RENDERER"] = "1"
 
     try:
         from urllib.parse import quote as escape

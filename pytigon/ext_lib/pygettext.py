@@ -651,7 +651,7 @@ def main():
         else:
             if options.verbose:
                 print(_("Working on %s") % filename)
-            fp = open(filename)
+            fp = open(filename, mode="r", encoding="utf-8")
             closep = 1
         try:
             eater.set_filename(filename)
