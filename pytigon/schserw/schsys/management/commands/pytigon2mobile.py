@@ -1,12 +1,9 @@
 import os
 
-import httpx
 import os
 from pyquery import PyQuery as pq
 
-from django.core.management.base import BaseCommand, CommandError
-from django.conf import settings
-from pytigon_lib.schdjangoext.python_style_template_loader import compile_template
+from django.core.management.base import BaseCommand
 from pytigon_lib.schhttptools import httpclient
 
 httpclient.init_embeded_django()

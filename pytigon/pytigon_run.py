@@ -19,12 +19,10 @@
 
 import sys
 import subprocess
-from multiprocessing import Process
 import os
 import configparser
 
 from pytigon_lib.schtools.tools import get_executable
-from pytigon_lib.schtools.platform_info import platform_name
 from os import environ
 
 environ["START_PATH"] = os.path.abspath(os.getcwd())

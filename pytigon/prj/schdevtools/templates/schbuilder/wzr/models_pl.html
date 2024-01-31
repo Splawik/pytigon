@@ -38,7 +38,7 @@ class {{table.name}}({%if table.base_table %}{{table.get_base_table}}{%else%}{%i
     class Meta:
         verbose_name = _("{{table.verbose_name|safe}}")
         verbose_name_plural = _("{{table.verbose_name_plural|safe}}")
-        default_permissions = ('add', 'change', 'delete', 'list')
+        default_permissions = ('add', 'change', 'delete', 'view', 'list', 'administer')
         app_label = '{{app.name}}'
 
 

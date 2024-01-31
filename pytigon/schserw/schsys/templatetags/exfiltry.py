@@ -32,7 +32,6 @@ from django.db.models import Count, Max, Min, Sum, Avg
 
 import markdown
 
-from pytigon_lib.schdjangoext.tools import make_href as mhref
 
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from pytigon_lib.schtools.wiki import wiki_from_str, make_href, wikify

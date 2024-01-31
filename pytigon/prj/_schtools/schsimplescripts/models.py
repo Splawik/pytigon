@@ -33,7 +33,7 @@ class Script(models.Model):
     class Meta:
         verbose_name = _("Script")
         verbose_name_plural = _("Scripts")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schsimplescripts"
 
         ordering = ["id"]

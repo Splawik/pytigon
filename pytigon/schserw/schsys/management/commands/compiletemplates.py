@@ -1,6 +1,6 @@
 import os
 
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.conf import settings
 from pytigon_lib.schdjangoext.python_style_template_loader import compile_template
 

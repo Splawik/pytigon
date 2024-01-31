@@ -20,7 +20,7 @@ class Rights(models.Model):
     class Meta:
         verbose_name = _("Rights")
         verbose_name_plural = _("Rights")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schodfupload"
 
         ordering = ["id"]

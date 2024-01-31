@@ -19,8 +19,6 @@
 
 import os
 import sys
-import random
-import string
 from fs.mountfs import MountFS
 from fs.multifs import MultiFS
 from fs.osfs import OSFS
@@ -277,7 +275,7 @@ if CANCAN_ENABLED:
     )
 
 try:
-    import mptt
+    pass
 
     MPTT = True
     LOGVIEWER = True
@@ -290,7 +288,7 @@ except:
 
 try:
     if ENV("ALLAUTH"):
-        import allauth
+        pass
 
         ALLAUTH = True
         INSTALLED_APPS.append("allauth")
@@ -307,7 +305,7 @@ except:
     ALLAUTH = False
 
 try:
-    import compressor
+    pass
 
     INSTALLED_APPS.append("compressor")
     STATICFILES_FINDERS.append("compressor.finders.CompressorFinder")
@@ -344,14 +342,13 @@ if (
     and platform_name() != "Emscripten"
 ):
     try:
-        import channels
-        import twisted
+        pass
 
         INSTALLED_APPS.append("channels")
     except:
         pass
 try:
-    from multiprocessing import synchronize
+    pass
 
     INSTALLED_APPS.append("django_q")
 except:

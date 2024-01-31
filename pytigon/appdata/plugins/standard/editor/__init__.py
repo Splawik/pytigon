@@ -22,8 +22,7 @@ import os.path
 
 import wx
 
-from pytigon_gui.guilib.events import *
-from pytigon_lib.schtools.tools import bencode, bdecode, is_null
+from pytigon_lib.schtools.tools import bencode, bdecode
 
 
 def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):

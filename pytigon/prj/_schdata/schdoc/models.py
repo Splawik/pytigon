@@ -46,7 +46,7 @@ class DocDef(schelements.models.BaseObject):
     class Meta:
         verbose_name = _("Document definition")
         verbose_name_plural = _("Documents definitions")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schdoc"
 
         ordering = ["id"]
@@ -136,7 +136,7 @@ class Doc(JSONModel):
     class Meta:
         verbose_name = _("Document")
         verbose_name_plural = _("Documents")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schdoc"
 
         ordering = ["id"]

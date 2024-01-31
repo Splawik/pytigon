@@ -28,10 +28,6 @@ from django.forms.forms import BaseForm
 
 from django_bootstrap5.forms import render_form
 
-import os
-import shutil
-from pytigon_lib.schfs.vfstools import extractall
-import zipfile
 
 django.db.models.fields.prep_for_like_query = lambda x: str(x).replace("\\", "\\\\")
 

@@ -19,9 +19,7 @@
 
 
 from django import template
-from base64 import b64encode
 from django.template.base import token_kwargs, TemplateSyntaxError
-from django.template.base import Node
 
 
 register = template.Library()

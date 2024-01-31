@@ -166,7 +166,6 @@ import time
 import getopt
 import token
 import tokenize
-import operator
 
 __version__ = "1.5"
 

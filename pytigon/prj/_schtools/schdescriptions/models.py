@@ -16,11 +16,11 @@ import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
 
-class Description(models.Model):
+class Description(AssociatedModel):
     class Meta:
         verbose_name = _("Description")
         verbose_name_plural = _("Descriptions")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schdescriptions"
 
         ordering = ["id"]
@@ -29,27 +29,6 @@ class Description(models.Model):
             ("admin_comment", "Can administer comments"),
         ]
 
-    application = models.CharField(
-        "Application",
-        null=True,
-        blank=True,
-        editable=False,
-        db_index=True,
-        max_length=64,
-    )
-    table = models.CharField(
-        "Table", null=True, blank=True, editable=False, db_index=True, max_length=64
-    )
-    group = models.CharField(
-        "Group", null=True, blank=True, editable=False, db_index=True, max_length=64
-    )
-    parent_id = models.IntegerField(
-        "Parent id",
-        null=True,
-        blank=True,
-        editable=False,
-        db_index=True,
-    )
     lang = models.CharField(
         "Language code", null=False, blank=False, editable=True, max_length=8
     )

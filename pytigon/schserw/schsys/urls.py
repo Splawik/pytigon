@@ -21,14 +21,11 @@
 from base64 import b64decode
 from django.utils.translation import gettext_lazy as _
 
-from django.urls import path, re_path, include
+from django.urls import path
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import LoginView
 
 from django.views.generic import TemplateView
-import django.contrib.auth.views
 from django.http import HttpResponseRedirect, HttpResponse
-from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
 from pytigon_lib.schdjangoext.tools import make_href

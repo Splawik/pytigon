@@ -42,11 +42,11 @@ def upload_path_fun(obj, filename):
     )
 
 
-class Attachement(JSONModel):
+class Attachement(AssociatedJSONModel):
     class Meta:
         verbose_name = _("Attachement")
         verbose_name_plural = _("Attachements")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schattachements"
 
         ordering = ["id"]
@@ -60,39 +60,6 @@ class Attachement(JSONModel):
     )
     ext = models.CharField(
         "Extension", null=True, blank=True, editable=False, max_length=64
-    )
-    application = models.CharField(
-        "Application",
-        null=False,
-        blank=False,
-        editable=False,
-        db_index=True,
-        max_length=64,
-    )
-    table = models.CharField(
-        "Table",
-        null=False,
-        blank=False,
-        editable=False,
-        default="default",
-        db_index=True,
-        max_length=64,
-    )
-    group = models.CharField(
-        "Group",
-        null=True,
-        blank=True,
-        editable=False,
-        default="default",
-        db_index=True,
-        max_length=64,
-    )
-    parent_id = models.IntegerField(
-        "Parent id",
-        null=True,
-        blank=True,
-        editable=False,
-        db_index=True,
     )
     thumb = models.TextField(
         "thumbnail",

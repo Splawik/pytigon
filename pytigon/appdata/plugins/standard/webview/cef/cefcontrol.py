@@ -10,7 +10,7 @@
 # or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
 # for more details.
 
-    # Pytigon - wxpython and django application framework
+# Pytigon - wxpython and django application framework
 
 # author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
 # copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
@@ -364,7 +364,6 @@ class KeyboardHandler(object):
         self.parent = parent
 
     def OnKeyEvent(self, browser, event, event_handle):
-
         m = event["modifiers"]
         t = event["type"]
         if t == 0 and m > 2:

@@ -19,12 +19,9 @@
 
 from base64 import b64encode
 import re
-import itertools
-import html
 import os
 
 from django import template
-from django.utils.translation import gettext_lazy as _
 from django.template.loader import get_template
 from django.template import Template
 from django.conf import settings
@@ -35,7 +32,6 @@ from pytigon_lib.schtools.href_action import standard_dict, actions_dict, action
 from pytigon_lib.schdjangoext.tools import import_model, make_href
 
 from pytigon_lib.schdjangoext.tools import make_href
-from pytigon_lib.schdjangoext.fields import ModelSelect2WidgetExt
 from pytigon_lib.schdjangoext.models import TreeModel
 from pytigon_lib.schtools.wiki import wiki_from_str, wikify
 from pytigon_lib.schdjangoext.tools import make_href as mhref

@@ -20,6 +20,8 @@
 """Module contains base views for pytigon applications"""
 
 import os
+import datetime
+import re
 
 from django.conf import settings
 from django.contrib import messages
@@ -40,7 +42,7 @@ from pytigon_lib.schdjangoext.tools import make_href
 
 from pytigon_lib.schviews.viewtools import dict_to_json
 
-from pytigon_lib.schtools.tools import bencode, bdecode, is_null
+from pytigon_lib.schtools.tools import bencode, bdecode
 
 
 APP = None
@@ -194,8 +196,6 @@ def datedialog(request, action):
         return HttpResponse(schjson.dumps((280, 200)))
     if action == "dialog":
         if value.__class__ == int:
-            import datetime
-
             d = datetime.date.today()
             d = d + datetime.timedelta(int(value))
             value = d
@@ -203,8 +203,6 @@ def datedialog(request, action):
         return render_to_response("schsys/date.html", context=c, request=request)
     if action == "test":
         if value.__class__ == int:
-            import datetime
-
             d = datetime.date.today()
             d = d + datetime.timedelta(int(value))
             return HttpResponse(schjson.dumps((1, d.isoformat(), (d,))))
@@ -228,7 +226,7 @@ def listdialog(request, action):
         else:
             p = request.GET.copy()
         value = bdecode(p["value"])
-        if value == None:
+        if value is None:
             value = ""
     else:
         value = ""
@@ -409,7 +407,7 @@ def app_time_stamp(request, **argv):
     if settings.GEN_TIME:
         return {"TIME": settings.GEN_TIME}
     else:
-        gmt = time.gmtime()
+        gmt = datetime.time.gmtime()
         gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (
             gmt[0],
             gmt[1],

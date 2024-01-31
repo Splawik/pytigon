@@ -32,7 +32,7 @@ class Select2Example(models.Model):
     class Meta:
         verbose_name = _("Select2 example")
         verbose_name_plural = _("Select2 examples")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "forms_demo"
 
         ordering = ["id"]

@@ -55,7 +55,7 @@ class Project(JSONModel):
     class Meta:
         verbose_name = _("Project")
         verbose_name_plural = _("Projects")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbi"
 
         ordering = ["id"]
@@ -178,7 +178,7 @@ class Page(models.Model):
     class Meta:
         verbose_name = _("Page")
         verbose_name_plural = _("Pages")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbi"
 
         ordering = ["id"]
@@ -224,7 +224,7 @@ class Chart(models.Model):
     class Meta:
         verbose_name = _("Chart")
         verbose_name_plural = _("Charts")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbi"
 
         ordering = ["id"]

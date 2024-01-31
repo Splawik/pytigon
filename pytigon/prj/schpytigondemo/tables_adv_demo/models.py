@@ -37,7 +37,7 @@ class Album(models.Model):
     class Meta:
         verbose_name = _("Album")
         verbose_name_plural = _("Albums")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "tables_adv_demo"
 
         ordering = ["id"]
@@ -105,7 +105,7 @@ class AlbumProxy(Album):
     class Meta:
         verbose_name = _("Album")
         verbose_name_plural = _("Albums")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "tables_adv_demo"
 
         ordering = ["id"]
@@ -120,7 +120,7 @@ class UserGroup(models.Model):
     class Meta:
         verbose_name = _("User group")
         verbose_name_plural = _("User groups")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "tables_adv_demo"
 
         ordering = ["id"]
@@ -133,7 +133,7 @@ class Track(models.Model):
     class Meta:
         verbose_name = _("Track")
         verbose_name_plural = _("Tracks")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "tables_adv_demo"
 
         ordering = ["id"]

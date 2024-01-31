@@ -12,7 +12,7 @@ Contributed to the wxPython project under the wxPython project's license.
 """
 
 import locale, wx, sys
-from io import StringIO, BytesIO
+from io import BytesIO
 
 import wx.lib.mixins.listctrl as listmix
 

@@ -20,7 +20,7 @@ class bookmarks(models.Model):
     class Meta:
         verbose_name = _("Bookmarks")
         verbose_name_plural = _("Bookmarks")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbrowser"
 
         ordering = ["id"]
@@ -46,7 +46,7 @@ class history(models.Model):
     class Meta:
         verbose_name = _("History")
         verbose_name_plural = _("History")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbrowser"
 
         ordering = ["id"]

@@ -48,7 +48,7 @@ class ActionType(models.Model):
     class Meta:
         verbose_name = _("Action type")
         verbose_name_plural = _("Action types")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schactions"
 
         ordering = ["id"]
@@ -138,11 +138,11 @@ class ActionType(models.Model):
 admin.site.register(ActionType)
 
 
-class Action(JSONModel):
+class Action(AssociatedJSONModel):
     class Meta:
         verbose_name = _("Action")
         verbose_name_plural = _("Actions")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schactions"
 
         ordering = ["id"]
@@ -166,27 +166,6 @@ class Action(JSONModel):
         blank=True,
         editable=True,
         verbose_name="Parent action",
-    )
-    application = models.CharField(
-        "Application",
-        null=True,
-        blank=True,
-        editable=True,
-        db_index=True,
-        max_length=64,
-    )
-    table = models.CharField(
-        "Table", null=True, blank=True, editable=True, db_index=True, max_length=64
-    )
-    group = models.CharField(
-        "Group", null=True, blank=True, editable=True, db_index=True, max_length=64
-    )
-    parent_id = models.IntegerField(
-        "Parent id",
-        null=True,
-        blank=True,
-        editable=True,
-        db_index=True,
     )
     description = models.CharField(
         "Description", null=False, blank=False, editable=True, max_length=256

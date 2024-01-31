@@ -332,7 +332,7 @@ class Element(TreeModel):
     class Meta:
         verbose_name = _("Element")
         verbose_name_plural = _("Elements")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schelements"
 
         ordering = ["id"]
@@ -923,7 +923,7 @@ class DocReg(models.Model):
     class Meta:
         verbose_name = _("Document register")
         verbose_name_plural = _("Document registers")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schelements"
 
         ordering = ["id"]
@@ -1128,7 +1128,7 @@ class DocType(models.Model):
     class Meta:
         verbose_name = _("Type of document")
         verbose_name_plural = _("Types of documents")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schelements"
 
         ordering = ["id"]
@@ -1262,7 +1262,7 @@ class DocHead(JSONModel):
     class Meta:
         verbose_name = _("Document header")
         verbose_name_plural = _("Document headers")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schelements"
 
         ordering = ["id"]
@@ -2104,7 +2104,7 @@ class DocItem(JSONModel):
     class Meta:
         verbose_name = _("Document item")
         verbose_name_plural = _("Document items")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schelements"
 
         ordering = ["id"]
@@ -2591,7 +2591,7 @@ class DocRegStatus(models.Model):
     class Meta:
         verbose_name = _("Document status")
         verbose_name_plural = _("Document status")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schelements"
 
         ordering = ["id"]
@@ -2788,7 +2788,7 @@ class DocHeadStatus(JSONModel):
     class Meta:
         verbose_name = _("Document head status")
         verbose_name_plural = _("Documents head status")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schelements"
 
         ordering = ["id"]
@@ -2834,7 +2834,7 @@ class Account(TreeModel):
     class Meta:
         verbose_name = _("Account")
         verbose_name_plural = _("Account")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schelements"
 
         ordering = ["id"]
@@ -2940,7 +2940,7 @@ class AccountState(models.Model):
     class Meta:
         verbose_name = _("State of account")
         verbose_name_plural = _("States of account")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schelements"
 
         ordering = ["id"]
@@ -3393,7 +3393,7 @@ class AccountOperation(models.Model):
     class Meta:
         verbose_name = _("Account operation")
         verbose_name_plural = _("Account operations")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schelements"
 
         ordering = ["id"]
@@ -3527,7 +3527,7 @@ class BaseObject(models.Model):
     class Meta:
         verbose_name = _("Base object")
         verbose_name_plural = _("Base objects")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schelements"
 
         ordering = ["id"]

@@ -109,8 +109,18 @@
                 {% if object.base_table == 'JSONModel' %}
                         <option value="JSONModel" selected="selected">JSONModel</option>
                   {% else %}
-                        <option value="JSONModel">
-                        JSONModel
+                        <option value="JSONModel">JSONModel</option>
+                {% endif %}
+                {% if object.base_table == 'AssociatedModel' %}
+                        <option value="AssociatedModel" selected="selected">AssociatedModel</option>
+                  {% else %}
+                        <option value="AssociatedModel">AssociatedModel</option>
+                {% endif %}
+                {% if object.base_table == 'AssociatedJSONModel' %}
+                        <option value="AssociatedJSONModel" selected="selected">AssociatedJSONModel</option>
+                  {% else %}
+                        <option value="AssociatedJSONModel">
+                        AssociatedJSONModel
                         </option>
                 {% endif %}
                 {% for model in object.get_models %}

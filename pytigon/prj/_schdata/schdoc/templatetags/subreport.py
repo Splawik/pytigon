@@ -1,21 +1,7 @@
-from base64 import b64encode
-import io
-import re
-import itertools
-import html
 
 from django import template
-from django.utils.translation import gettext_lazy as _
 from django.template.loader import get_template
-from django.template import Context, Template, RequestContext
-from django.conf import settings
-from django.utils.safestring import mark_safe
-from django.forms.widgets import CheckboxSelectMultiple
-from django.template.base import token_kwargs, TemplateSyntaxError
-from django.template.base import Node
 
-from pytigon_lib.schhtml.parser import Parser
-from pytigon_lib.schtools.wiki import wiki_from_str
 from pytigon_lib.schdjangoext.tools import make_href
 
 register = template.Library()

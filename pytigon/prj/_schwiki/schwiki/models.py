@@ -55,7 +55,7 @@ class Page(JSONModel):
     class Meta:
         verbose_name = _("Page")
         verbose_name_plural = _("Page")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schwiki"
 
         ordering = ["id"]
@@ -279,7 +279,7 @@ class WikiConf(JSONModel):
     class Meta:
         verbose_name = _("Wiki config")
         verbose_name_plural = _("Wiki config")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schwiki"
 
         ordering = ["id"]

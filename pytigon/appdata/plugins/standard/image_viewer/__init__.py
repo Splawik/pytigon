@@ -22,7 +22,7 @@ from io import BytesIO
 from PIL import Image
 from pytigon_gui.guilib.image import pil_to_image
 from pytigon_gui.guictrl.basectrl import SchBaseCtrl
-from pytigon_lib.schtools.images import svg_to_png, spec_resize
+from pytigon_lib.schtools.images import svg_to_png
 
 
 def init_plugin(

@@ -17,7 +17,6 @@
 #license: "LGPL 3.0"
 #version: "0.1a"
 
-import wx
 
 
 def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):

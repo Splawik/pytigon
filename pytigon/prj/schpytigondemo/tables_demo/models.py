@@ -39,7 +39,7 @@ class Example1User(models.Model):
     class Meta:
         verbose_name = _("User")
         verbose_name_plural = _("Users")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "tables_demo"
 
         ordering = ["id"]
@@ -62,7 +62,7 @@ class Example1Computer(models.Model):
     class Meta:
         verbose_name = _("Computer")
         verbose_name_plural = _("Computers")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "tables_demo"
 
         ordering = ["id"]
@@ -95,7 +95,7 @@ class Example2Peripheral(models.Model):
     class Meta:
         verbose_name = _("Peripheral")
         verbose_name_plural = _("Peripherals")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "tables_demo"
 
         ordering = ["id"]
@@ -120,7 +120,7 @@ class Example3Tag(models.Model):
     class Meta:
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "tables_demo"
 
         ordering = ["id"]
@@ -167,7 +167,7 @@ class Example4Parameter(JSONModel):
     class Meta:
         verbose_name = _("Parameter")
         verbose_name_plural = _("Parameters")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "tables_demo"
 
         ordering = ["id"]
@@ -216,7 +216,7 @@ class Example5ParamGroup(TreeModel):
     class Meta:
         verbose_name = _("Group of parameters")
         verbose_name_plural = _("Groups of parameters")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "tables_demo"
 
         ordering = ["id"]
@@ -266,7 +266,7 @@ class Example6ComputerFromExample1(Example1Computer):
     class Meta:
         verbose_name = _("Proxy to computer")
         verbose_name_plural = _("Proxy to computers")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "tables_demo"
 
         ordering = ["id"]
@@ -281,7 +281,7 @@ class Example7ComputerFromExample1(Example1Computer):
     class Meta:
         verbose_name = _("Proxy to computer")
         verbose_name_plural = _("Proxy to computers")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "tables_demo"
 
         ordering = ["id"]

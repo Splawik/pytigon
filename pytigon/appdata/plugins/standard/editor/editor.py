@@ -22,7 +22,6 @@ import keyword
 import wx
 import wx.stc as stc
 
-from pytigon_gui.guilib.events import *
 
 
 if wx.Platform == '__WXMSW__':

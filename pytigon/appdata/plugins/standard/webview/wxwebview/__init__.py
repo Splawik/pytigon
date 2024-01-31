@@ -17,16 +17,12 @@
 # license: "LGPL 3.0"
 # version: "0.1a"
 
-import wx
 import os
-import tempfile
-import platform
 import base64
 import json
 
-import wx.html2
 
-from pytigon.pytigon_request import init, request
+from pytigon.pytigon_request import request
 from django.conf import settings
 
 
@@ -42,9 +38,9 @@ def init_plugin_web_view(
     environ["WEBKIT_DISABLE_DMABUF_RENDERER"] = "1"
 
     try:
-        from urllib.parse import quote as escape
+        pass
     except:
-        from urllib import quote as escape
+        pass
 
     class BaseBrowser(SchBaseCtrl, base_web_browser):
         logged = False

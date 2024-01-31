@@ -87,19 +87,27 @@
         'parent', 'name'
     
     % form_item base_table.select:
-        %if not object.base_table or object.base_table == ""
+        % if not object.base_table or object.base_table == ""
             option selected=selected,,,value=...---------
-        %else
+        % else
             option value=...---------
-        %if object.base_table == 'JSONModel'
+        % if object.base_table == 'JSONModel'
             option value=JSONModel,,,selected=selected...JSONModel
         %else
             option value=JSONModel...JSONModel                    
+        % if object.base_table == 'AssociatedModel'
+            option value=AssociatedModel,,,selected=selected...AssociatedModel
+        %else
+            option value=AssociatedModel...AssociatedModel                    
+        % if object.base_table == 'AssociatedJSONModel'
+            option value=AssociatedJSONModel,,,selected=selected...AssociatedJSONModel
+        %else
+            option value=AssociatedJSONModel...AssociatedJSONModel 
             
-        %for model in object.get_models
-            %if model == object.base_table
+        % for model in object.get_models
+            % if model == object.base_table
                 option value={{model}},,,selected=selected...{{model}}
-            %else
+            % else
                 option value={{model}}...{{model}}
             
     % form:

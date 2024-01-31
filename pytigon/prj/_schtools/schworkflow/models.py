@@ -95,7 +95,7 @@ class WorkflowType(models.Model):
     class Meta:
         verbose_name = _("Workflow type")
         verbose_name_plural = _("Workflow types")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schworkflow"
 
         ordering = ["id"]
@@ -240,11 +240,11 @@ class WorkflowType(models.Model):
 admin.site.register(WorkflowType)
 
 
-class WorkflowItem(JSONModel):
+class WorkflowItem(AssociatedJSONModel):
     class Meta:
         verbose_name = _("Workflow item")
         verbose_name_plural = _("Workflow items")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schworkflow"
 
         ordering = ["id"]
@@ -253,13 +253,6 @@ class WorkflowItem(JSONModel):
             ("admin_workflowitem", "Can administer workflow items"),
         ]
 
-    parent_id = models.IntegerField(
-        "Parent id",
-        null=False,
-        blank=False,
-        editable=False,
-        db_index=True,
-    )
     workflow_type = ext_models.PtigForeignKey(
         WorkflowType,
         on_delete=models.CASCADE,
@@ -268,32 +261,6 @@ class WorkflowItem(JSONModel):
         editable=True,
         verbose_name="Workflow type",
         db_index=True,
-    )
-    application = models.CharField(
-        "Application",
-        null=False,
-        blank=False,
-        editable=False,
-        db_index=True,
-        max_length=64,
-    )
-    table = models.CharField(
-        "Table",
-        null=False,
-        blank=False,
-        editable=False,
-        default="default",
-        db_index=True,
-        max_length=64,
-    )
-    group = models.CharField(
-        "Group",
-        null=True,
-        blank=True,
-        editable=False,
-        default="default",
-        db_index=True,
-        max_length=64,
     )
     level = models.IntegerField(
         "Level",

@@ -1,43 +1,21 @@
-import django
 from django.db import models
-from django.utils import timezone
 
 from pytigon_lib.schdjangoext.fields import *
 from pytigon_lib.schdjangoext.models import *
-import pytigon_lib.schdjangoext.fields as ext_models
 from pytigon_lib.schtools import schjson
 
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
-from django.utils import timezone
 
-import os, os.path
-import sys
-from pytigon_lib.schhtml.htmltools import superstrip
 
 import schelements.models
 
 
 from schelements import models as schelements_models
 from schprofile import models as schprofile_models
-from django import forms
-from pytigon_lib.schdjangoext.formfields import Select2Field
-from pytigon_lib.schviews import actions
-from django.dispatch import receiver
-from django.db.models.signals import post_save, pre_delete
-from schprofile.models import init_user_profiles, Profile
+from schprofile.models import init_user_profiles
 from django.db.models import Q
-from django.core.management.utils import get_random_secret_key
 from pytigon_lib.schtools.tools import get_request
-from pytigon_lib.schdjangoext.email import send_message
-from mailer.models import Message as MailMessage
-from django.conf import settings
-from django.contrib.auth.models import Group
-from django.contrib.sites.shortcuts import get_current_site
-from django.urls import reverse
-from allauth.account.forms import EmailAwarePasswordResetTokenGenerator
-from allauth.account.utils import url_str_to_user_pk, user_pk_to_url_str
-from allauth.utils import build_absolute_uri
 import datetime
 
 

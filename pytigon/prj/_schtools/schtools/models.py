@@ -20,7 +20,7 @@ class Parameter(models.Model):
     class Meta:
         verbose_name = _("Parameter")
         verbose_name_plural = _("Parameter")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schtools"
 
         ordering = ["id"]
@@ -68,7 +68,7 @@ class Autocomplete(models.Model):
     class Meta:
         verbose_name = _("Autocomplete")
         verbose_name_plural = _("Autocomplete")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schtools"
 
         ordering = ["id"]

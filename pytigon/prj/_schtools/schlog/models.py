@@ -19,11 +19,11 @@ from pytigon_lib.schhtml.htmltools import superstrip
 from datetime import datetime
 
 
-class Log(models.Model):
+class Log(AssociatedModel):
     class Meta:
         verbose_name = _("Log")
         verbose_name_plural = _("Logi")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schlog"
 
         ordering = ["id"]
@@ -32,39 +32,6 @@ class Log(models.Model):
             ("admin_log", "Can administer logs"),
         ]
 
-    application = models.CharField(
-        "Application",
-        null=False,
-        blank=False,
-        editable=False,
-        db_index=True,
-        max_length=64,
-    )
-    table = models.CharField(
-        "Table",
-        null=False,
-        blank=False,
-        editable=False,
-        default="default",
-        db_index=True,
-        max_length=64,
-    )
-    group = models.CharField(
-        "Group",
-        null=True,
-        blank=True,
-        editable=False,
-        default="default",
-        db_index=True,
-        max_length=64,
-    )
-    parent_id = models.IntegerField(
-        "Parent id",
-        null=True,
-        blank=True,
-        editable=False,
-        db_index=True,
-    )
     date = models.DateTimeField(
         "Date",
         null=True,

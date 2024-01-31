@@ -47,7 +47,7 @@ class Profile(models.Model):
     class Meta:
         verbose_name = _("Profile")
         verbose_name_plural = _("Profiles")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schprofile"
 
         ordering = ["id"]
@@ -167,7 +167,7 @@ class UserProxy(User):
     class Meta:
         verbose_name = _("User")
         verbose_name_plural = _("Users")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schprofile"
 
         ordering = ["id"]
