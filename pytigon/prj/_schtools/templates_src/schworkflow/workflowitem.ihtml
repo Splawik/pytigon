@@ -10,7 +10,8 @@
 %% scroll
 
 %% list_content_actions
-    % list_action "regen" "Regenerate workflow"
+    % comment:
+        % list_action "regen" "Regenerate workflow"
 
 %% list_row_header
     th..._(Workflow type)
@@ -18,27 +19,31 @@
     th..._(Acceptance date)
     th..._(Email)
     th..._(Title)
-    th..._(Item type)
+    th..._(Item description)
     th..._(Status)
-    
-
+   
 %% list_row
-    td...{{ object.workflow_type }}
+    td...{{ object.workflow_type }}/{{ object.item_type }}
     td...{{ object.creation_date|isoformat }}
     td...{{ object.acceptance_date|isoformat }}
     td...{{ object.user_email }}
     td...{{ object.title }}
-    td...{{ object.item_type }}
+    td...{{ object.get_associated_obj.name}}
     td...{{ object.status }}
-    
 
 %% list_row_actions
-    % row_actions:
-        .edit
-        .delete
-        .accept,Accept,,refresh_frame
-        .reject,Reject,,refresh_frame
+    % comment:
+        % with d_id=object.get_associated_obj.id:
+            % row_actions:    
+                .download,_(Download),,_blank,,,{base_path}schattachements/table/Attachement/{d_id}/action/download/
+
+    % if perms.schworkflow.administer_workflowitem:
+        % row_actions:
+            .accept,Accept,,refresh_frame
+            .reject,Reject,,refresh_frame
+            .delete
 
 %% row_edit
     % form:
         .workflow_type,user_email,title,item_type,status
+

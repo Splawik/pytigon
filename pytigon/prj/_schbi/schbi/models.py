@@ -19,7 +19,9 @@ from pytigon_lib.schhtml.htmltools import superstrip
 from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
 from django.conf import settings
 import datetime
-import polars
+import pyarrow
+import pyarrow.parquet
+import duckdb
 import numpy
 import os
 import os.path as os_path
@@ -146,7 +148,7 @@ class Project(JSONModel):
             )
 
             if (not data_time) or data_time < t:
-                pd[data_name] = polars.read_parquet(
+                pd[data_name] = pyarrow.parquet.read_table(
                     os_path.join(data_path, data_name + ".parquet")
                 )
                 modify = True

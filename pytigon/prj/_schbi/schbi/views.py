@@ -40,7 +40,9 @@ from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, Modu
 from django.conf import settings
 
 import datetime
-import polars
+import pyarrow
+import pyarrow.parquet
+import duckdb
 import numpy
 import os
 import os.path as os_path

@@ -104,28 +104,6 @@ class Attachement(AssociatedJSONModel):
         "Status", null=True, blank=True, editable=True, max_length=16
     )
 
-    @classmethod
-    def filter(cls, value, view=None, request=None):
-        if value:
-            app, tbl, id, grp = value.split("__")
-            return cls.objects.filter(
-                application=app, table=tbl, parent_id=id, group=grp
-            )
-        else:
-            return cls.objects.all()
-
-    def init_new(self, request, view, value=None):
-        if value:
-            app, tbl, id, grp = value.split("__")
-            return {"application": app, "table": tbl, "parent_id": id, "group": grp}
-        else:
-            return {
-                "application": "default",
-                "table": "default",
-                "parent_id": 0,
-                "group": "default",
-            }
-
     def save(self, *args, **kwargs):
         self.ext = self.file.url.split(".")[-1].upper()
         if not self.name:

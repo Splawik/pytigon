@@ -37,7 +37,10 @@
 {% block id_extra %}
         {{ block.super }}
         {% block related_workflow %}
-                {% row_related_list "schworkflow/WorkflowItem" title="Workflow items" filter=object.application|append_str:"__"|append_str:object.table|append_str:"__"|append_str:object.id|append_str:"__"|append_str:object.group icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}" %}
+                {% comment %}
+                        {% row_related_list "schworkflow/WorkflowItem" title="Workflow items" filter=app_name|append_str:"__"|append_str:table_name|append_str:"__"|append_str:object.id|append_str:"__"|append_str:object.application|append_str:"_"|append_str:object.table icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}" %}
+                {% endcomment %}
+                {% row_related_list "schworkflow/WorkflowItem" title="Workflow items" icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}" %}
         {% endblock %}
 {% endblock %}
 {% block list_row %}

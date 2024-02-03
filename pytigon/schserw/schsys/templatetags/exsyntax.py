@@ -166,7 +166,7 @@ def new_row_base(
     tag_class="",
     url="",
 ):
-    if url and not url.startswith('+'):
+    if url and not url.startswith("+"):
         url2 = url
     else:
         if "vtype" in context and context["vtype"] == "tree":
@@ -176,7 +176,6 @@ def new_row_base(
 
         if url:
             url2 += url[1:]
-
 
         if action == "new_row/-":
             if (
@@ -254,8 +253,27 @@ def row_related_list(
     else:
         if version:
             version = "__" + version
-        if filter:
-            url2 = "{bp}" + f"{app}/table/{table}//{filter}/form{version}/sublist/" 
+        if filter != "!":
+            if filter.startswith("+") or not filter:
+                f = "%s__%s__%d" % (
+                    context["app_name"],
+                    context["table_name"],
+                    context["object"].id,
+                )
+                if filter:
+                    filter = f + "__" + filter[1:]
+                else:
+                    obj = context["object"]
+                    if hasattr(obj, "application") and hasattr(obj, "table"):
+                        filter = "%s__%s_%s" % (
+                            f,
+                            obj.application,
+                            obj.table,
+                        )
+                    else:
+                        filter = f + "__default"
+
+            url2 = "{bp}" + f"{app}/table/{table}//{filter}/form{version}/sublist/"
         else:
             url2 = (
                 "{bp}"
@@ -940,7 +958,7 @@ def editable_base(context, name, title, url):
 
 @register.simple_tag(takes_context=True)
 def editable(context, name, title="", url=None):
-    if url and not url.startswith('+'):
+    if url and not url.startswith("+"):
         url2 = url
     else:
         url2 = "../../../{oid}/{field_name}/editable/editor/"
@@ -1425,17 +1443,21 @@ class RowDetailsNode(Node):
                 if title.startswith("*"):
                     title = title[1:]
                     default = True
-                if title.startswith('(') and ')' in title:
+                if title.startswith("(") and ")" in title:
                     perm, title = title.split(")", 1)
                     perm = perm[1:]
 
-                if perm == None or ('perms' in context and hasattr(context['perms'], "user") and context['perms'].user.has_perm(perm)):
+                if perm == None or (
+                    "perms" in context
+                    and hasattr(context["perms"], "user")
+                    and context["perms"].user.has_perm(perm)
+                ):
                     if default and not test:
                         title_url_tab.append([title, url, True])
                         test = True
                     else:
                         title_url_tab.append([title, url, False])
-        
+
         if not test and len(title_url_tab) > 0:
             title_url_tab[0][2] = True
 
@@ -1537,4 +1559,3 @@ def modify(parser, token):
 @register.simple_tag(takes_context=True)
 def show_context(context):
     return str(context)
-
