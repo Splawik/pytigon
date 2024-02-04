@@ -27,6 +27,10 @@ import uuid
 import time
 from urllib.parse import urlparse
 
+import traceback
+import sys
+
+
 from django.conf import settings
 from django.urls import get_script_prefix
 
@@ -39,9 +43,10 @@ except:
 from pytigon_lib.schdjangoext.django_init import get_app_name
 from pytigon_lib.schtools.env import get_environ
 
-try:
+if settings.ALLAUTH:
     from allauth.socialaccount.providers import registry
-except:
+    from allauth.socialaccount.adapter import get_adapter
+else:
     registry = None
 
 # browser_type: 0 - python client 1 - web client 2 - hybrid - web client in
@@ -479,8 +484,13 @@ class AppManager:
 
         if registry:
             for key, value in registry.provider_map.items():
-                ret.append((key, value.name, value))
-
+                adapter = get_adapter()
+                try:
+                    adapter.get_provider(None, key)
+                    ret.append((key, value.name, value))
+                except:
+                    print(sys.exc_info()[0])
+                    print(traceback.print_exc())
         return ret
 
 
