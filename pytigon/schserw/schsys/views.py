@@ -117,15 +117,15 @@ def ok(request):
     return actions.ok(request)
 
 
-def ret_ok(request, id, title):
-    """If form is OK redirect to this view
-
-    Args:
-        request - django request
-        id
-        title
-    """
-    return actions.new_row_ok(request, id, title)
+# def ret_ok(request, id, title):
+#    """If form is OK redirect to this view
+#
+#    Args:
+#        request - django request
+#        id
+#        title
+#    """
+#    return actions.new_row_ok(request, id, title)
 
 
 #    if request.META["HTTP_USER_AGENT"].lower().startswith("py"):
