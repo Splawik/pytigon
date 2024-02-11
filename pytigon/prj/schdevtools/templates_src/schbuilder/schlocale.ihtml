@@ -22,6 +22,7 @@
 %% list_row_actions
     % row_actions: ===>
         edit
+        delete
         |
         field_list/schtranslate_set,Locale,locale
         translate_sync,_("Sync translate messages"),[|client://actions/view-refresh.png]

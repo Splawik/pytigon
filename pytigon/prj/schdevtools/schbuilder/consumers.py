@@ -22,6 +22,7 @@ from django.conf import settings
 
 
 class Clock(AsyncJsonWebsocketConsumer):
+
     COUNT = 1
 
     async def connect(self):
@@ -42,6 +43,7 @@ class Clock(AsyncJsonWebsocketConsumer):
 
 
 class WebServer(AsyncJsonWebsocketConsumer):
+
     PROC = None
 
     async def connect(self):
@@ -103,6 +105,7 @@ class WebServer(AsyncJsonWebsocketConsumer):
 
 
 class DjangoManage(AsyncJsonWebsocketConsumer):
+
     PROCS = []
 
     async def connect(self):
