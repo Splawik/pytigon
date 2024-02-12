@@ -29,8 +29,8 @@
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
-                edit
-                delete
+                ?:edit
+                tables_demo.delete_example1user?:delete
         {% endrow_actions %}
 {% endblock %}
 {% block row_edit %}

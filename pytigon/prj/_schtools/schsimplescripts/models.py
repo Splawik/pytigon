@@ -30,6 +30,7 @@ VIEW = """#Example:
 
 
 class Script(models.Model):
+
     class Meta:
         verbose_name = _("Script")
         verbose_name_plural = _("Scripts")

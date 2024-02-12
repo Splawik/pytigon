@@ -34,4 +34,5 @@ from django.utils import timezone
 
 @dict_to_template("channels_demo/v_clock.html")
 def clock(request, **argv):
+
     return {}

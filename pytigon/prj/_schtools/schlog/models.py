@@ -20,6 +20,7 @@ from datetime import datetime
 
 
 class Log(AssociatedModel):
+
     class Meta:
         verbose_name = _("Log")
         verbose_name_plural = _("Logi")

@@ -36,9 +36,9 @@
 
 %% list_row_actions
     % row_actions:
-        .edit
-        .delete
-        .field_edit/info,Additional info
+        ?:edit
+        ?:delete
+        .field_edit/info,_(Additional info)
 
 %% row_edit
     % form:

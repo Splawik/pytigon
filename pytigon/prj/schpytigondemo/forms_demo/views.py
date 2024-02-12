@@ -81,6 +81,7 @@ class form_test(forms.Form):
     )
 
     def process(self, request, queryset=None):
+
         object_list = [
             [1, 2, 3, 4, 5, 6, 7, 8],
             [1, 2, 3, 4, 5, 6, 7, 8],
@@ -168,6 +169,7 @@ class form_test2(forms.Form):
     user_field = forms.CharField(max_length=100)
 
     def process(self, request, queryset=None):
+
         object_list = [
             [1, 2, 3, 4, 5, 6, 7, 8],
             [1, 2, 3, 4, 5, 6, 7, 8],
@@ -244,6 +246,7 @@ class form_test3(forms.Form):
     )
 
     def process(self, request, queryset=None):
+
         object_list = [
             [1, 2, 3, 4, 5, 6, 7, 8],
             [1, 2, 3, 4, 5, 6, 7, 8],
@@ -284,6 +287,7 @@ class form_test4(forms.Form):
     )
 
     def process(self, request, queryset=None):
+
         object_list = [
             [1, 2, 3, 4, 5, 6, 7, 8],
             [1, 2, 3, 4, 5, 6, 7, 8],
@@ -298,6 +302,7 @@ def view_form_test4(request, *argi, **argv):
 
 @dict_to_json
 def select2query(request, **argv):
+
     term = request.GET.get("term", "")
     numbers = ["Zero", "One", "Two", "Three", "Four", "Five"]
     numbers2 = [item for item in enumerate(numbers) if term in item[1]]
@@ -307,11 +312,13 @@ def select2query(request, **argv):
 
 @dict_to_template("forms_demo/v_list2.html")
 def list2(request, **argv):
+
     prev_value = request.GET.get("q")
     return {"prev_value": prev_value}
 
 
 @dict_to_template("forms_demo/v_list3.html")
 def list3(request, **argv):
+
     prev_value = request.GET.get("q")
     return {"prev_value": prev_value}

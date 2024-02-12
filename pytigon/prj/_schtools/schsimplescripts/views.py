@@ -70,6 +70,7 @@ SCRIPT_TEMPLATE2 = (
 
 
 def run(request, pk):
+
     script = models.Script.objects.get(pk=pk)
     form = None
     if script:
@@ -149,6 +150,7 @@ def run(request, pk):
 
 
 def run_script_by_name(request, script_name):
+
     script = models.Script.objects.get(name=script_name)
     if script:
         p = reverse("row_action_scripts_run", kwargs={"pk": int(script.id)})

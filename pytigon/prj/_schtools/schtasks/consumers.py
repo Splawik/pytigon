@@ -17,6 +17,7 @@ from channels.generic.http import AsyncHttpConsumer
 
 
 class TaskEventsConsumer(AsyncJsonWebsocketConsumer):
+
     async def connect(self):
         self.exit = False
         await self.accept()

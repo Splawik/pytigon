@@ -29,8 +29,8 @@
 
 
 %% list_row_header
-    th...Name
-    th...ext
+    th..._(Name)
+    th..._(ext)
 
 
 %% id_extra
@@ -38,8 +38,7 @@
     %% related_workflow
         % comment:
             % row_related_list "schworkflow/WorkflowItem" title="Workflow items" filter=app_name|append_str:"__"|append_str:table_name|append_str:"__"|append_str:object.id|append_str:"__"|append_str:object.application|append_str:"_"|append_str:object.table icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}"
-        % row_related_list "schworkflow/WorkflowItem" title="Workflow items" icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}"
-
+        % row_related_list "schworkflow/WorkflowItem" title="_(Workflow items)" icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}"
 
 %% list_row
     td...{{object.name}}
@@ -50,8 +49,8 @@
     % row_actions:
         .download,_(Download),,_blank
     % row_actions:
-        .edit
-        .delete
+        ?:edit
+        ?:delete
 
 
 %% row_edit

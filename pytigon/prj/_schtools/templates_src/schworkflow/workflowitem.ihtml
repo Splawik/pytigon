@@ -39,9 +39,9 @@
 
     % if perms.schworkflow.administer_workflowitem:
         % row_actions:
-            .accept,Accept,,refresh_frame
-            .reject,Reject,,refresh_frame
-            .delete
+            .accept,_(Accept),,refresh_frame
+            .reject,_(Reject),,refresh_frame
+            ?:delete
 
 %% row_edit
     % form:

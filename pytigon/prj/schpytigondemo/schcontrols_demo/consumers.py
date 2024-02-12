@@ -17,6 +17,7 @@ from channels.generic.http import AsyncHttpConsumer
 
 
 class teleconference(AsyncWebsocketConsumer):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.current_node = None

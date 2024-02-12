@@ -28,8 +28,8 @@
 
 %% list_row_actions
     % row_actions:
-        .edit
-        .delete
+        ?:edit
+        ?:delete
 
 %% row_edit
     % form:

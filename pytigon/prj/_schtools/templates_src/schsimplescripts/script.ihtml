@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 % extends "forms/form.html"
 
 % load exfiltry
@@ -40,10 +39,10 @@
 
 %% list_row_actions
     % row_actions:
-        .edit
+        ?:edit
         .field_edit/code,Code,code
         .field_edit/doc,Doc,doc
-        .delete        
+        ?:delete        
     % row_actions:        
         .run,Run script,fa fa-play,_parent
 
