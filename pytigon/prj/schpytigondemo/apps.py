@@ -9,7 +9,6 @@ APPS = [
     "tasks_demo",
     "channels_demo",
     "wiki_demo",
-    "reports_demo",
     "commander_demo",
     "simplescripts_demo",
     "log_demo",

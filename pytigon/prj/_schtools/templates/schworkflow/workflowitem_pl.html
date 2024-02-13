@@ -14,12 +14,12 @@
         {% endcomment %}
 {% endblock %}
 {% block list_row_header %}
-        <th>Workflow type</th>
-        <th>Creation date</th>
-        <th>Acceptance date</th>
+        <th>Typ przepływu pracy</th>
+        <th>Data utworzenia</th>
+        <th>Data akceptacji</th>
         <th>Email</th>
-        <th>Title</th>
-        <th>Item description</th>
+        <th>Tytuł</th>
+        <th>Opis pozycji</th>
         <th>
         Status
         </th>
@@ -39,15 +39,15 @@
         {% comment %}
                 {% with d_id=object.get_associated_obj.id %}
                         {% row_actions %}
-                                download,Download,,_blank,,,{base_path}schattachements/table/Attachement/{d_id}/action/download/
+                                download,Pobierz,,_blank,,,{base_path}schattachements/table/Attachement/{d_id}/action/download/
                         {% endrow_actions %}
                 {% endwith %}
         {% endcomment %}
         {% if perms.schworkflow.administer_workflowitem %}
                 {% row_actions %}
-                        accept,Accept,,refresh_frame
-                        reject,Reject,,refresh_frame
-                        delete
+                        accept,Akceptuj,,refresh_frame
+                        reject,Odrzuć,,refresh_frame
+                        ?:delete
                 {% endrow_actions %}
         {% endif %}
 {% endblock %}

@@ -2,7 +2,7 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% block all %}
-        {% with table_type='datatable' table_subtype='table_with_details' table_details_height="33vh" %}
+        {% with table_type='datatable' %}
                 {{ block.super }}
         {% endwith %}
 {% endblock %}

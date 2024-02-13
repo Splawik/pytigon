@@ -12,21 +12,15 @@
         {% new_row "Nowy komentarz" action="new_row/{{filter}}" %}
 {% endblock %}
 {% block list_row_header %}
-        <th>Komentarz</th>
-        <th>Nadawca</th>
-        <th>Odbiorca</th>
-        <th>Odbiorca</th>
+        <th>Kod języka</th>
         <th>
-        Czas
+        Opis
         </th>
 {% endblock %}
 {% block list_row %}
-        <td>{{ object.comment }}</td>
-        <td>{{ object.sender }}</td>
-        <td>{{ object.recipient }}</td>
-        <td>{{ object.recipients }}</td>
+        <td>{{ object.lang }}</td>
         <td>
-        {{ object.time|isoformat }}
+        {{ object.description }}
         </td>
 {% endblock %}
 {% block list_row_actions %}

@@ -16,7 +16,7 @@
 </script>
 {% endblock %}
 {% block all %}
-        {% with form_width=800 form_height=600 table_type='simple' title="Common Groups" %}
+        {% with form_width=800 form_height=600 table_type='simple' title="Grupy uniwersalne" %}
                 {{ block.super }}
         {% endwith %}
 {% endblock %}
@@ -24,7 +24,7 @@
         <div class="tr d-inline">
                 {% with object_list.model|args:parent_pk|call:"get_group_types" as tab %}
                         {% if tab %}
-                                New:
+                                Nowy:
                                 {% for pos in tab %}
                                         {% new_row_inline pos.description "" "" "" "" table_path|append_str:"../../new_group/"|append_str:pos.name|append_str:"/"|append_str:parent_pk|append_str:"/?after_close=refresh" %}
                                 {% endfor %}
@@ -47,7 +47,7 @@
                 {% subtemplate object.get_def.get_action_template %}
           {% else %}
                 {% row_actions %}
-                        edit-inline,Update,,,,,{{base_path}}schreports/table/CommonGroup/{id}/edit__group/
+                        edit-inline,Popraw,,,,,{{base_path}}schreports/table/CommonGroup/{id}/edit__group/
                         pdf
                         odf
                         field_edit/data,Data,data

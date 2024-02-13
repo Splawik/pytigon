@@ -1,0 +1,399 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pytigon\n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtasks/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:3
+msgid "Config"
+msgstr "Ustawienia"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:146
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:13
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:15
+msgid "Actions"
+msgstr "Akcje"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:51
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:12
+msgid "Action types"
+msgstr "Typy akcji"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:16
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:145
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:13
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:15
+msgid "Action"
+msgstr "Akcja"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:50
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:12
+msgid "Action type"
+msgstr "Typ akcji"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/models.py:49
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/urls.py:14
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/urls.py:17
+msgid "Attachements"
+msgstr "Załączniki"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/models.py:48
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/urls.py:14
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/urls.py:17
+msgid "Attachement"
+msgstr "Załącznik"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/__init__.py:4
+msgid "Tools"
+msgstr "Narzędzia"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/__init__.py:4
+msgid "File manager"
+msgstr "Menadżer plików"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/views.py:51
+msgid "Folder"
+msgstr "Folder"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/views.py:55
+msgid "Sort"
+msgstr "Sortuj"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/views.py:64
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/views.py:72
+msgid "Destination"
+msgstr "Miejsce przeznaczenia"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/views.py:81
+msgid "Folder name"
+msgstr "Nazwa folderu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/views.py:97
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/views.py:115
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:22
+msgid "Name"
+msgstr "Nazwa"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/views.py:133
+msgid "Recycle bin"
+msgstr "Kosz"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/views.py:145
+msgid "Path 1"
+msgstr "Ścieżka 1"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/views.py:156
+msgid "Path 2"
+msgstr "Ścieżka 2"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/views.py:167
+msgid "Default for all users"
+msgstr "Domyśle dla wszystkich użytkowników"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/models.py:25
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/urls.py:12
+msgid "Comments"
+msgstr "Komentarze"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/models.py:24
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/urls.py:12
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:12
+msgid "Comment"
+msgstr "Komentarz"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/__init__.py:4
+msgid "International descriptions"
+msgstr "Opisy międzynarodowe"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/models.py:23
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/urls.py:12
+msgid "Descriptions"
+msgstr "Opisy"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/models.py:22
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/urls.py:12
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:36
+msgid "Description"
+msgstr "Opis"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/models.py:25
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/urls.py:12
+msgid "Log"
+msgstr "Log"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/__init__.py:7
+msgid "Logs"
+msgstr "Logi"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/models.py:26
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/urls.py:12
+msgid "Logi"
+msgstr "Logi"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/__init__.py:4
+msgid "Simple scripts"
+msgstr "Proste skrypty"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/models.py:36
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/urls.py:20
+msgid "Scripts"
+msgstr "Skrypty"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/models.py:35
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/urls.py:20
+msgid "Script"
+msgstr "Skrypt"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtasks/__init__.py:4
+msgid "Tasks"
+msgstr "Zadania"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/models.py:22
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/models.py:23
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/urls.py:28
+msgid "Parameter"
+msgstr "Parametr"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/models.py:71
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/models.py:72
+msgid "Autocomplete"
+msgstr "Auto uzupełnianie"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/views.py:48
+msgid "File to import"
+msgstr "Plik do importu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:4
+msgid "Workflow"
+msgstr "Przepływ pracy"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:98
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:15
+msgid "Workflow types"
+msgstr "Typ przepływu pracy"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:16
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:248
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:16
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:19
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:51
+msgid "Workflow items"
+msgstr "Pozycje przepływu pracy"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:97
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:15
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:15
+msgid "Workflow type"
+msgstr "Typ przepływu pracy"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:247
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:16
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:19
+msgid "Workflow item"
+msgstr "Przepływ pracy"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:1
+msgid "New file"
+msgstr "Nowy plik"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:2
+msgid "New directory"
+msgstr "Nowy folder"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:3
+msgid "View"
+msgstr "Widok"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:4
+msgid "Edit"
+msgstr "Edycja"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:5
+msgid "Rename"
+msgstr "Zmień nazwę"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:6
+msgid "Copy"
+msgstr "Kopiuj"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:7
+msgid "Move"
+msgstr "Przenieś"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:8
+msgid "Delete"
+msgstr "Skasuj"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:9
+msgid "Setup"
+msgstr "Ustaw"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:10
+msgid "Help"
+msgstr "Pomoc"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:11
+msgid "New comment"
+msgstr "Nowy komentarz"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:13
+msgid "Sender"
+msgstr "Nadawca"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:14
+msgid "Recipient"
+msgstr "Odbiorca"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:16
+msgid "Creation date"
+msgstr "Data utworzenia"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:17
+msgid "Acceptance date"
+msgstr "Data akceptacji"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:18
+msgid "Email"
+msgstr "Email"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:19
+msgid "Title"
+msgstr "Tytuł"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:20
+msgid "Item type"
+msgstr "Typ pozycji"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:21
+msgid "Status"
+msgstr "Status"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:23
+msgid "New attachement"
+msgstr "Nowy załącznik"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:24
+msgid "Download"
+msgstr "Pobierz"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:25
+msgid "Parameter type"
+msgstr "Typ parametru"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:26
+msgid "Parameter subtype"
+msgstr "Podtyp parametru"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:27
+msgid "Key"
+msgstr "Klucz"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:28
+msgid "Value"
+msgstr "Wartość"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:29
+msgid "Type"
+msgstr "Typ"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:30
+msgid "Label"
+msgstr "Etykieta"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:31
+msgid "Application"
+msgstr "Aplikacja"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:32
+msgid "Table"
+msgstr "Tabela"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:33
+msgid "Group"
+msgstr "Grupa"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:34
+msgid "Parent id"
+msgstr "ID przodka"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:35
+msgid "Date"
+msgstr "Data"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:37
+msgid "Operator"
+msgstr "Operator"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:38
+msgid "Operator id"
+msgstr "ID operatora"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:39
+msgid "Start date"
+msgstr "Data startu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:40
+msgid "Deadline"
+msgstr "Wymagana data zakończenia"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:41
+msgid "Email - action owner"
+msgstr "Email - właściciel akcji"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:42
+msgid "Email - action done"
+msgstr "Email - akcja zrealizowana"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:43
+msgid "Email - deadline exceeded"
+msgstr "Email - czas przekroczony"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:44
+msgid "Additional info"
+msgstr "Dodatkowe informacje"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:45
+msgid "Language code"
+msgstr "Kod języka"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:46
+msgid "Time"
+msgstr "Czas"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:47
+msgid "Item description"
+msgstr "Opis pozycji"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:48
+msgid "Accept"
+msgstr "Akceptuj"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:49
+msgid "Reject"
+msgstr "Odrzuć"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:50
+msgid "ext"
+msgstr "rozszerzenie"

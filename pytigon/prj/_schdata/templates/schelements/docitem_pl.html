@@ -31,20 +31,20 @@
                 {% with reg_name|append_str:"docitem" as doc_name %}
                         {% if doc_name|table_exists %}
                                 {% with "new_row/"|append_str:reg_name as action %}
-                                        {% new_row "New document item" action=action %}
+                                        {% new_row "Nowa pozycja dokumentu" action=action %}
                                 {% endwith %}
                           {% else %}
-                                {% new_row "New document item" %}
+                                {% new_row "Nowa pozycja dokumentu" %}
                         {% endif %}
                 {% endwith %}
         {% endwith %}
 {% endblock %}
 {% block list_row_header %}
-        <th>order</th>
-        <th>description</th>
-        <th>item</th>
+        <th>kolejność</th>
+        <th>opis</th>
+        <th>pozycja</th>
         <th>
-        quantity
+        ilość
         </th>
 {% endblock %}
 {% block list_row %}

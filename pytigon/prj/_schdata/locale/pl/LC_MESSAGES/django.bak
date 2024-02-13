@@ -1,0 +1,581 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: pytigon\n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schprofile/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schstruct/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:11
+msgid "Config"
+msgstr "Ustawienia"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/__init__.py:4
+msgid "Nested documents"
+msgstr "Dokumenty zagnieżdżone"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/models.py:47
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/urls.py:57
+msgid "Document definition"
+msgstr "Definicja dokumentu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/__init__.py:16
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/models.py:138
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/urls.py:58
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/urls.py:61
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/__init__.py:52
+msgid "Documents"
+msgstr "Dokumenty"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/models.py:48
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/urls.py:57
+msgid "Documents definitions"
+msgstr "Definicje dokumentów"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/models.py:137
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/urls.py:58
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/urls.py:61
+msgid "Document"
+msgstr "Dokument"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/views.py:101
+msgid "Data od"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schdoc/views.py:106
+msgid "Data do"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:334
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:67
+msgid "Elements"
+msgstr "Elementy"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/__init__.py:16
+msgid "Documents register"
+msgstr "Rejestr dokumentów"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/__init__.py:22
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:1130
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:69
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:79
+msgid "Types of documents"
+msgstr "Typy dokumentów"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/__init__.py:28
+msgid "Definition of document status"
+msgstr "Definicja statusów dokumentów"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/__init__.py:34
+msgid "Accounts"
+msgstr "Konta"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/__init__.py:40
+msgid "States of accounts"
+msgstr "Stany kont"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/__init__.py:46
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:3395
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:76
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:98
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:101
+msgid "Account operations"
+msgstr "Operacje na kontach"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:333
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:67
+msgid "Element"
+msgstr "Element"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:924
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:68
+msgid "Document register"
+msgstr "Rejestr dokumentów"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:925
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:68
+msgid "Document registers"
+msgstr "Rejestry dokumentów"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:1129
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:69
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:79
+msgid "Type of document"
+msgstr "Typ dokumentu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:1263
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:70
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:80
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:81
+msgid "Document header"
+msgstr "Nagłówek dokuementu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:1264
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:70
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:80
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:81
+msgid "Document headers"
+msgstr "Nagłówki dokumentów"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:2105
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:71
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:82
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:84
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:85
+msgid "Document item"
+msgstr "Pozycja dokumentu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:2106
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:71
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:82
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:84
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:85
+msgid "Document items"
+msgstr "Pozycje dokumentu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:2592
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:2593
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:72
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:86
+msgid "Document status"
+msgstr "Status dokumentu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:2789
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:73
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:90
+msgid "Document head status"
+msgstr "Status nagłówka dokumentu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:2790
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:73
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:91
+msgid "Documents head status"
+msgstr "Statusy nagłówków dokumentów"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:2835
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:2836
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:74
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:94
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:95
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:96
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/views.py:260
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:22
+msgid "Account"
+msgstr "Konto"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:2941
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:75
+msgid "State of account"
+msgstr "Stan konta"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:2942
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:75
+msgid "States of account"
+msgstr "Stany kont"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:3394
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:76
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:98
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/urls.py:101
+msgid "Account operation"
+msgstr "Operacja na koncie"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:3528
+msgid "Base object"
+msgstr "Obiekt bazowy"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/models.py:3529
+msgid "Base objects"
+msgstr "Obiekty bazowe"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/views.py:209
+msgid "Date from"
+msgstr "Data od"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/views.py:214
+msgid "Data to"
+msgstr "Data do"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/views.py:218
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/views.py:253
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:25
+msgid "Target"
+msgstr "Cel"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/views.py:221
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:51
+msgid "Number"
+msgstr "Numer"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/views.py:263
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:26
+msgid "Period"
+msgstr "Okres"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/views.py:266
+msgid "Not null"
+msgstr "Nie null"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/views.py:270
+msgid "Not empty"
+msgstr "Nie pusty"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schelements/views.py:274
+msgid "Analytical"
+msgstr "Analityczne"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schprofile/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schprofile/models.py:49
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schprofile/urls.py:12
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schprofile/urls.py:14
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schprofile/urls.py:15
+msgid "Profiles"
+msgstr "Profile"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schprofile/models.py:48
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schprofile/urls.py:12
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schprofile/urls.py:14
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schprofile/urls.py:15
+msgid "Profile"
+msgstr "Profil"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schprofile/models.py:168
+msgid "User"
+msgstr "Użytkownik"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schprofile/models.py:169
+msgid "Users"
+msgstr "Użytkownicy"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schstruct/__init__.py:4
+msgid "Structures"
+msgstr "Struktury"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schstruct/__init__.py:10
+msgid "Common group definitons"
+msgstr "Definicje grup uniwersalnych"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schstruct/__init__.py:16
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schstruct/models.py:69
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schstruct/urls.py:34
+msgid "Common groups"
+msgstr "Grupy uniwersalne"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schstruct/models.py:29
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schstruct/urls.py:32
+msgid "Common group definition"
+msgstr "Definicja grupy uniwersalnej"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schstruct/models.py:30
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schstruct/urls.py:32
+msgid "Common groups definition"
+msgstr "Definicje grup uniwersalnych"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schstruct/models.py:68
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/schstruct/urls.py:34
+msgid "Common group"
+msgstr "Grupa uniwersalna"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:1
+msgid "Common Groups"
+msgstr "Grupy uniwersalne"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:2
+msgid "New"
+msgstr "Nowy"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:3
+msgid "Update"
+msgstr "Popraw"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:4
+msgid "name"
+msgstr "nazwa"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:5
+msgid "description"
+msgstr "opis"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:6
+msgid "Report type"
+msgstr "Typ raportu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:7
+msgid "Date"
+msgstr "Data"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:8
+msgid "group"
+msgstr "grupa"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:9
+msgid "permission"
+msgstr "uprawnienie"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:10
+msgid "Owner"
+msgstr "Właściciel"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:12
+msgid "User type"
+msgstr "Typ użytkownika"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:13
+msgid "Allowed document registers"
+msgstr "Dostępne rejestry dokumentów"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:14
+msgid "Allowed document types"
+msgstr "Dostępne typy dokumentów"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:15
+msgid "Allowed accounts"
+msgstr "Dostępne konta"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:16
+msgid "New account operation"
+msgstr "Nowa operacja na koncie"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:17
+msgid "Description"
+msgstr "Opis"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:18
+msgid "Payment"
+msgstr "Płatność"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:19
+msgid "Account state"
+msgstr "Stan konta"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:20
+msgid "Sign"
+msgstr "Znak"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:21
+msgid "Amount"
+msgstr "Kwota"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:23
+msgid "Subcode"
+msgstr "Subkod"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:24
+msgid "Account name"
+msgstr "Nazwa konta"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:27
+msgid "debit"
+msgstr "Debet"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:28
+msgid "credit"
+msgstr "Kredyt"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:29
+msgid "element"
+msgstr "element"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:30
+msgid "classifier1value"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:31
+msgid "classifier2value"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:32
+msgid "classifier3value"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:33
+msgid "Name"
+msgstr "Nazwa"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:34
+msgid "Operator"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:35
+msgid "Data"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:36
+msgid "Type 1"
+msgstr "Typ 1"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:37
+msgid "Type 2"
+msgstr "Typ 2"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:38
+msgid "Classifier 1"
+msgstr "Klasyfikator 1"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:39
+msgid "Classifier 2"
+msgstr "Klasyfikator 2"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:40
+msgid "Classifier 3"
+msgstr "Klasyfikator 3"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:41
+msgid "Classifier"
+msgstr "Klasyfikator"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:42
+msgid "Are you sure you want to accept the document"
+msgstr "Czy jesteś pewien, że chcesz zaakceptować dokument"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:43
+msgid "You accept the status"
+msgstr "Akceptujesz status"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:44
+msgid "Document type"
+msgstr "Typ dokumentu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:45
+msgid "Correction"
+msgstr "Korekta"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:46
+msgid "Are you sure you want to discard the document"
+msgstr "Czy jesteś pewien, że chcesz odrzucić dokument"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:47
+msgid "You discard the status"
+msgstr "Odrzucasz status"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:48
+msgid "New document register"
+msgstr "Nowy rejestr dokumentów"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:49
+msgid "New document:"
+msgstr "Nowy dokument"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:50
+msgid "Register"
+msgstr "Rejestr"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:52
+msgid "Status"
+msgstr "Status"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:53
+msgid "Back to status:"
+msgstr "Przywróć status"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:54
+msgid "Discard status:"
+msgstr "Odrzuć status"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:55
+msgid "New element"
+msgstr "Nowy element"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:56
+msgid "Type"
+msgstr "Typ"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:57
+msgid "Code"
+msgstr "Kod"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:58
+msgid "New status"
+msgstr "Nowy status"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:59
+msgid "Order"
+msgstr "Kolejność"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:60
+msgid "New document item"
+msgstr "Nowa pozycja dokumentu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:61
+msgid "order"
+msgstr "kolejność"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:62
+msgid "amount"
+msgstr "kwota"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:63
+msgid "level"
+msgstr "poziom"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:64
+msgid "Application"
+msgstr "Aplikacja"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:65
+msgid "Declaration"
+msgstr "Deklaracja"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:66
+msgid "Template source"
+msgstr "Źródło szablonu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:67
+msgid "Template"
+msgstr "Szablon"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:68
+msgid "Convert fields to html"
+msgstr "Konwertuj pola do html"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:69
+msgid "Save function"
+msgstr "Funkcja zapisu"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:70
+msgid "Load function"
+msgstr "Funkcja wczytania"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:71
+msgid "Object to str function"
+msgstr "Funkcja konwersji obj do str"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:72
+msgid "Action template"
+msgstr "Szablon akcji"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:73
+msgid "Info template"
+msgstr "Szablon informacji"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:74
+msgid "Name of payment"
+msgstr "Nazwa płatności"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:75
+msgid "Quantity"
+msgstr "Ilość"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:76
+msgid "Refresh account states"
+msgstr "Odśwież stany kont"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:77
+msgid "balance"
+msgstr "bilans"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:78
+msgid "item"
+msgstr "pozycja"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schdata/translate.py:79
+msgid "quantity"
+msgstr "ilość"

@@ -23,16 +23,16 @@
 {% endblock %}
 {% block list_content_actions %}
         <div class="tr d-inline">
-                New:
+                Nowy:
                 {% for pos in object_list.model.get_rep_types %}
                         {% new_row_inline pos "" "" "" "" "{{base_path}}schreports/new_rep/"|append_str:pos|append_str:"/0/?after_close=refresh" %}
                 {% endfor %}
         </div>
 {% endblock %}
 {% block list_row_header %}
-        <th>Report type</th>
+        <th>Typ raportu</th>
         <th>
-        Date
+        Data
         </th>
 {% endblock %}
 {% block list_row %}
@@ -43,7 +43,7 @@
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
-                edit-inline,Update,,,,,{{base_path}}schreports/table/Report/{id}/edit__rep/
+                edit-inline,Popraw,,,,,{{base_path}}schreports/table/Report/{id}/edit__rep/
                 pdf
                 odf
                 field_edit/data,Data,data

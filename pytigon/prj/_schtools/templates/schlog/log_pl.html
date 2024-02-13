@@ -10,17 +10,17 @@
 {% endblock %}
 {% block list_row_header %}
         {% if vtype != "sublist" %}
-                <th>Application {{target}}</th>
-                <th>Table</th>
-                <th>Group</th>
-                <th>Parent id</th>
+                <th>Aplikacja {{target}}</th>
+                <th>Tabela</th>
+                <th>Grupa</th>
+                <th>ID przodka</th>
         {% endif %}
-        <th>Date {{type}}</th>
-        <th>Description</th>
+        <th>Data {{type}}</th>
+        <th>Opis</th>
         <th>Operator</th>
         {% if vtype != "sublist" %}
                 <th>
-                Operator id
+                ID operatora
                 </th>
         {% endif %}
 {% endblock %}
@@ -52,8 +52,8 @@
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
-                edit
-                delete
+                ?:edit
+                ?:delete
         {% endrow_actions %}
 {% endblock %}
 {% block row_edit %}
