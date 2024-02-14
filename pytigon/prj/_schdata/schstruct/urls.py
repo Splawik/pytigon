@@ -6,13 +6,13 @@ from . import views
 
 urlpatterns = [
     re_path(
-        "new_group/(?P<group_type>\w+)/(?P<parent_id>\d+)/$",
+        r"new_group/(?P<group_type>\w+)/(?P<parent_id>\d+)/$",
         views.new_group,
         {},
         name="schstruct_new_group",
     ),
     re_path(
-        "table/CommonGroup/(?P<group_id>\d+)/edit__group/$",
+        r"table/CommonGroup/(?P<group_id>\d+)/edit__group/$",
         views.edit__group,
         {},
         name="schstruct_edit__group",

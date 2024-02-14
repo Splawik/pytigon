@@ -91,7 +91,10 @@ for app in APPS:
                 if len(aa) == 2:
                     if not base_path in sys.path:
                         sys.path.append(base_path)
-                    LOCALE_PATHS.append(os.path.join(base_path, "locale"))
+                    locale_path = os.path.join(base_path, "locale")
+                    if locale_path not in LOCALE_PATHS:
+                        if os.path.exists(locale_path):
+                            LOCALE_PATHS.append(os.path.join(base_path, "locale"))
 
 for app in APPS_EXT:
     if not app in INSTALLED_APPS:
@@ -150,7 +153,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2024.02.13 16:49:06"
+GEN_TIME = "2024.02.14 14:52:43"
 
 
 for key, value in os.environ.items():

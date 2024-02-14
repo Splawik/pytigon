@@ -17,6 +17,7 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 
 class Rights(models.Model):
+
     class Meta:
         verbose_name = _("Rights")
         verbose_name_plural = _("Rights")

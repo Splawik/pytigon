@@ -54,6 +54,7 @@ menu_icon_size_choice = [
 
 
 class Project(JSONModel):
+
     class Meta:
         verbose_name = _("Project")
         verbose_name_plural = _("Projects")
@@ -177,6 +178,7 @@ admin.site.register(Project)
 
 
 class Page(models.Model):
+
     class Meta:
         verbose_name = _("Page")
         verbose_name_plural = _("Pages")
@@ -223,6 +225,7 @@ admin.site.register(Page)
 
 
 class Chart(models.Model):
+
     class Meta:
         verbose_name = _("Chart")
         verbose_name_plural = _("Charts")

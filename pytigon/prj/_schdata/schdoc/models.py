@@ -133,6 +133,7 @@ admin.site.register(DocDef)
 
 
 class Doc(JSONModel):
+
     class Meta:
         verbose_name = _("Document")
         verbose_name_plural = _("Documents")

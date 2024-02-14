@@ -6,25 +6,25 @@ from . import views
 
 urlpatterns = [
     re_path(
-        "table/DocHead/(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(?P<vtype>)docheadlist/",
+        r"table/DocHead/(?P<filter>[\w=_,;-]*)/(?P<target>[\w_-]*)/[_]?(?P<vtype>)docheadlist/",
         views.view_doc_heads,
         {},
         name="schelements_view_doc_heads",
     ),
     re_path(
-        "table/DocItem/(?P<parent_id>\d+)/docitemlist/",
+        r"table/DocItem/(?P<parent_id>\d+)/docitemlist/",
         views.view_doc_items,
         {},
         name="schelements_view_doc_items",
     ),
     re_path(
-        "table/DocHead/(?P<id>\d+)/edit_head/",
+        r"table/DocHead/(?P<id>\d+)/edit_head/",
         views.edit_head,
         {},
         name="schelements_edit_head",
     ),
     re_path(
-        "table/DocItem/(?P<id>\d+)/edit_item/",
+        r"table/DocItem/(?P<id>\d+)/edit_item/",
         views.edit_item,
         {},
         name="schelements_edit_item",

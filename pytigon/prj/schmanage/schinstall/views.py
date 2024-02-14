@@ -58,6 +58,7 @@ class upload_ptig(forms.Form):
     )
 
     def process(self, request, queryset=None):
+
         status = self.cleaned_data["status"]
         if status:
             if status == "1":

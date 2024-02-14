@@ -83,7 +83,7 @@ urlpatterns = [
     gen_row_action("SChLocale", "translate_sync", views.translate_sync),
     gen_row_action("SChAppSet", "locale_gen", views.locale_gen),
     re_path(
-        "download_installer/(?P<name>\w+)/$",
+        r"download_installer/(?P<name>\w+)/$",
         views.download_installer,
         {},
         name="schbuilder_download_installer",
@@ -111,7 +111,7 @@ urlpatterns = [
         },
     ),
     re_path(
-        "autocomplete/(?P<id>\d+)/(?P<key>\w+)/$",
+        r"autocomplete/(?P<id>\d+)/(?P<key>\w+)/$",
         views.autocomplete,
         {},
         name="schbuilder_autocomplete",

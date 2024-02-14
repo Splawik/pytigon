@@ -1448,14 +1448,14 @@ class SChView(models.Model):
         if self.view_type == "u":
             if "(?P" in self.url:
                 if self.url_params and self.url_params != "":
-                    return "re_path('%s', views.%s, %s, name='%s')" % (
+                    return "re_path(r'%s', views.%s, %s, name='%s')" % (
                         self.url,
                         name,
                         self.url_params,
                         self.parent.name + "_" + name,
                     )
                 else:
-                    return "re_path('%s', views.%s, name='%s')" % (
+                    return "re_path(r'%s', views.%s, name='%s')" % (
                         self.url,
                         name,
                         self.parent.name + "_" + name,

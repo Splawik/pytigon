@@ -113,6 +113,7 @@ def view__filterformdoc(request, *argi, **argv):
 
 
 def new_doc(request, doc_type, doc_type_name):
+
     # new_doc/(?P<doc_type>\w+)/(?P<doc_type_name>\w+)/$
     dochead_type = DocType.objects.filter(name=doc_type_name)
     if len(dochead_type) == 1:
@@ -137,6 +138,7 @@ def new_doc(request, doc_type, doc_type_name):
 
 
 def edit__doc(request, doc_id, doc=None):
+
     if doc == None:
         doc = models.Doc.objects.get(pk=doc_id)
     doc_def = models.DocDef.objects.get(name=doc.doc_def_name)
@@ -187,6 +189,7 @@ def edit__doc(request, doc_id, doc=None):
 
 
 def new_subdoc(request, parent_doc_id, doc_type):
+
     doc_parent = models.Doc.objects.get(pk=parent_doc_id)
     doc = models.Doc()
     doc.parent = doc_parent
@@ -197,6 +200,7 @@ def new_subdoc(request, parent_doc_id, doc_type):
 
 
 def edit_subdoc(request, parent_doc_id, doc_type, view_type):
+
     parent_doc = models.Doc.objects.get(pk=parent_doc_id)
     parent_doc_def = models.DocDef.objects.get(name=parent_doc.doc_def_name)
     doc_def = parent_doc_def.getsubdoc(doc_type)
@@ -218,14 +222,17 @@ def edit_subdoc(request, parent_doc_id, doc_type, view_type):
 
 
 def move_up(request, pk):
+
     return move_doc(request, pk, "-1")
 
 
 def move_down(request, pk):
+
     return move_doc(request, pk, "+1")
 
 
 def edit__doc2(request, dochead_id):
+
     docs = models.Doc.objects.filter(parent_doc__id=dochead_id)
     if docs.count() > 0:
         new_url = make_href("/schdoc/table/Doc/%d/edit__doc/" % docs[0].id)
@@ -235,6 +242,7 @@ def edit__doc2(request, dochead_id):
 
 
 def repaction(request, dochead_id, doc_action):
+
     doc = DocHead.objects.get(pk=dochead_id)
     docs = models.Doc.objects.filter(parent_doc=doc)
     if docs.count() > 0:
@@ -247,4 +255,5 @@ def repaction(request, dochead_id, doc_action):
 
 
 def move_to(request, doc_id, to_pos):
+
     return move_doc(request, doc_id, int(to_pos))

@@ -1672,7 +1672,7 @@ def installer(request, pk):
         for pos in err:
             buf.append(pos)
 
-    exclude = [".*\.pyc", ".*__pycache__.*"]
+    exclude = [r".*\.pyc", r".*__pycache__.*"]
     ptig_name = os.path.join(zip_path, name + ".ptig")
     zip = ZipWriter(ptig_name, base_path, exclude=exclude, sha256=True)
     zip.to_zip(base_path, name + "/")

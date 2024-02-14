@@ -17,6 +17,7 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 
 class bookmarks(models.Model):
+
     class Meta:
         verbose_name = _("Bookmarks")
         verbose_name_plural = _("Bookmarks")
@@ -43,6 +44,7 @@ admin.site.register(bookmarks)
 
 
 class history(models.Model):
+
     class Meta:
         verbose_name = _("History")
         verbose_name_plural = _("History")

@@ -6,17 +6,17 @@ from . import views
 
 urlpatterns = [
     re_path(
-        "^(?P<app_or_subject>[^/]*)/(?P<page_path>[^/]*)/view/$",
+        r"^(?P<app_or_subject>[^/]*)/(?P<page_path>[^/]*)/view/$",
         views.view_page,
         name="schwiki_view_page",
     ),
     re_path(
-        "^(?P<app_or_subject>\w*)/(?P<page_name>\w*)/edit/$",
+        r"^(?P<app_or_subject>\w*)/(?P<page_name>\w*)/edit/$",
         views.edit_page,
         name="schwiki_edit_page",
     ),
     gen_row_action("WikiConf", "publish", views.publish),
-    re_path("(?P<q>.*)/search/$", views.search, {}, name="schwiki_search"),
+    re_path(r"(?P<q>.*)/search/$", views.search, {}, name="schwiki_search"),
     path(
         "edit_page_object/", views.edit_page_object, {}, name="schwiki_edit_page_object"
     ),

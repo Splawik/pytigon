@@ -44,6 +44,7 @@ User = get_user_model()
 
 
 class Profile(models.Model):
+
     class Meta:
         verbose_name = _("Profile")
         verbose_name_plural = _("Profiles")
@@ -164,6 +165,7 @@ admin.site.register(Profile)
 
 
 class UserProxy(User):
+
     class Meta:
         verbose_name = _("User")
         verbose_name_plural = _("Users")

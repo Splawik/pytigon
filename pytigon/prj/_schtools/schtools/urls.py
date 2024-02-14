@@ -6,7 +6,7 @@ from . import views
 
 urlpatterns = [
     re_path(
-        "search/(?P<type>.+)/",
+        r"search/(?P<type>.+)/",
         views.autocomplete_search,
         {},
         name="schtools_autocomplete_search",
@@ -14,7 +14,7 @@ urlpatterns = [
     path("set_user_param/", views.set_user_param, {}, name="schtools_set_user_param"),
     path("get_user_param/", views.get_user_param, {}, name="schtools_get_user_param"),
     re_path(
-        "(?P<app>[\w=_,;-]*)/(?P<table>[\w=_,;-]*)/import_table/$",
+        r"(?P<app>[\w=_,;-]*)/(?P<table>[\w=_,;-]*)/import_table/$",
         views.import_table,
         {},
         name="schtools_import_table",

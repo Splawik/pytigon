@@ -82,6 +82,7 @@ class MultiDownload(forms.Form):
     )
 
     def process(self, request, queryset=None):
+
         parm = {}
         parm["base_address"] = self.cleaned_data["base_address"]
         parm["source_page"] = self.cleaned_data["source_page"]
@@ -117,6 +118,7 @@ def view_multidownload(request, *argi, **argv):
 
 
 def search(request):
+
     q = request.GET.get("term", request.POST.get("term", None))
     if not q:
         return HttpResponse(content_type="text/plain")
