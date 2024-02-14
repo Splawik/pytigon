@@ -13,7 +13,6 @@ extensions.json
 */prjlib/
 migrations/
 
-*.mo
 *.pkl
 *.pid
 *.log
