@@ -1,9 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "config"
 ModuleTitle = _("Config")
+Name = "schdoc"
 Title = _("Nested documents")
 Perms = True
-Index = "None"
+Index = ""
 Urls = (
     (
         "table/DocDef/-/form/list/?view_in=desktop",

@@ -1,9 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "external interfaces"
 ModuleTitle = _("External interfaces")
+Name = "interfaces"
 Title = _("External interfaces")
 Perms = False
-Index = "None"
+Index = ""
 Urls = (
     (
         "test_interfaces/",

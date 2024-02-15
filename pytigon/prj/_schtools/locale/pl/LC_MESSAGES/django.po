@@ -7,31 +7,31 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:3
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/__init__.py:3
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/__init__.py:3
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/__init__.py:3
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/__init__.py:3
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/__init__.py:3
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtasks/__init__.py:3
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtasks/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:4
 msgid "Config"
 msgstr "Ustawienia"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:6
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:146
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:13
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:15
 msgid "Actions"
 msgstr "Akcje"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:12
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:51
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:12
 msgid "Action types"
 msgstr "Typy akcji"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:16
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:18
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:145
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:13
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:15
@@ -43,8 +43,8 @@ msgstr "Akcja"
 msgid "Action type"
 msgstr "Typ akcji"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/__init__.py:4
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/__init__.py:6
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/__init__.py:12
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/models.py:49
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/urls.py:14
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/urls.py:17
@@ -57,13 +57,13 @@ msgstr "Załączniki"
 msgid "Attachement"
 msgstr "Załącznik"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/__init__.py:3
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/__init__.py:3
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/__init__.py:4
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/__init__.py:6
 msgid "Tools"
 msgstr "Narzędzia"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/__init__.py:6
 msgid "File manager"
 msgstr "Menadżer plików"
 
@@ -106,8 +106,8 @@ msgstr "Ścieżka 2"
 msgid "Default for all users"
 msgstr "Domyśle dla wszystkich użytkowników"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/__init__.py:4
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/__init__.py:6
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/__init__.py:12
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/models.py:25
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/urls.py:12
 msgid "Comments"
@@ -119,11 +119,11 @@ msgstr "Komentarze"
 msgid "Comment"
 msgstr "Komentarz"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/__init__.py:6
 msgid "International descriptions"
 msgstr "Opisy międzynarodowe"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/__init__.py:12
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/models.py:23
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/urls.py:12
 msgid "Descriptions"
@@ -135,13 +135,13 @@ msgstr "Opisy"
 msgid "Description"
 msgstr "Opis"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/__init__.py:6
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/models.py:25
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/urls.py:12
 msgid "Log"
 msgstr "Log"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/__init__.py:7
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/__init__.py:9
 msgid "Logs"
 msgstr "Logi"
 
@@ -150,11 +150,11 @@ msgstr "Logi"
 msgid "Logi"
 msgstr "Logi"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/__init__.py:6
 msgid "Simple scripts"
 msgstr "Proste skrypty"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/__init__.py:12
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/models.py:36
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/urls.py:20
 msgid "Scripts"
@@ -165,7 +165,7 @@ msgstr "Skrypty"
 msgid "Script"
 msgstr "Skrypt"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtasks/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtasks/__init__.py:6
 msgid "Tasks"
 msgstr "Zadania"
 
@@ -184,17 +184,17 @@ msgstr "Auto uzupełnianie"
 msgid "File to import"
 msgstr "Plik do importu"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:6
 msgid "Workflow"
 msgstr "Przepływ pracy"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:10
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:12
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:98
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:15
 msgid "Workflow types"
 msgstr "Typ przepływu pracy"
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:16
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:18
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:248
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:16
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:19

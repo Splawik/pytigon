@@ -11,7 +11,7 @@
 
 %% list_content_actions
     % comment:
-        % list_action "regen" "Regenerate workflow"
+        % list_action "regen" "_(Regenerate workflow)"
 
 %% list_row_header
     th..._(Workflow type)

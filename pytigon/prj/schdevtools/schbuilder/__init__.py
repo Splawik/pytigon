@@ -1,9 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "main tools"
 ModuleTitle = _("main tools")
+Name = "schbuilder"
 Title = _("Pytigon builder")
 Perms = True
-Index = "None"
+Index = ""
 Urls = (
     (
         "table/SChAppSet/main_view/form/list/?view_in=desktop",

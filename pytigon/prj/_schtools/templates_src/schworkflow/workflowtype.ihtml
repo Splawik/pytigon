@@ -10,7 +10,7 @@
 %% scroll
 
 %% list_content_actions
-    % new_row "New workflow type"
+    % new_row "_(New workflow type)"
 
 %% list_row_header
     th..._(Name)

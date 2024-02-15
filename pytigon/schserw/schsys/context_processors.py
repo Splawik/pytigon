@@ -195,21 +195,24 @@ class AppInfo:
         app_perms="",
         index="",
         app_name="",
-        module_title="",
         module_name="",
+        module_title="",
+        sys_module_name="",
         user_param="",
     ):
         self.app_title = app_title
         self.app_perms = app_perms
         self.index = index
         self.app_name = app_name
-        self.module_title = module_title
         self.module_name = module_name
+        self.module_title = module_title
+        self.sys_module_name = sys_module_name
         self.user_param = user_param
 
     def __str__(self):
         return (
-            f"module_name: {self.module_name}\n"
+            f"sys_module_name: {self.sys_module_name}\n"
+            + f"module_name: {self.module_name}\n"
             + f"module_title: {self.module_title}\n"
             + f"app_name: {self.app_name}\n"
             + f"app_title: {self.app_title}\n"
@@ -223,8 +226,9 @@ class AppItemInfo(AppInfo):
             app_info.app_perms,
             app_info.index,
             app_info.app_name,
-            app_info.module_title,
             app_info.module_name,
+            app_info.module_title,
+            app_info.sys_module_name,
             app_info.user_param,
         )
         self.url = url
@@ -238,8 +242,9 @@ class AppItemInfo(AppInfo):
             self.app_perms,
             self.index,
             self.app_name,
-            self.module_title,
             self.module_name,
+            self.module_title,
+            self.sys_module_name,
             self.user_param,
         )
 
@@ -303,6 +308,7 @@ class AppManager:
                 continue
             try:
                 module_title = None
+                module_name = None
                 title = None
                 perms = None
                 url = None
@@ -315,6 +321,10 @@ class AppManager:
                     module2 = module
                 if module2:
                     module_title = module2.ModuleTitle
+                    try:
+                        module_name = module2.ModuleName
+                    except:
+                        module_name = module_title
                     title = module2.Title
                     perms = module2.Perms
                     index = module2.Index
@@ -328,12 +338,11 @@ class AppManager:
                     app_info.app_perms = perms
                     app_info.index = index
                     app_info.app_name = appname
+                    app_info.module_name = module_name
                     app_info.module_title = module_title
-                    app_info.module_name = elementy[0]
+                    app_info.sys_module_name = elementy[0]
                     app_info.user_param = user_param
                     ret.append(app_info)
-
-                    # ret.append(AppInfo(title, perms, index, appname, module_title, elementy[0], user_param))
             except:
                 pass
         return ret
@@ -366,8 +375,8 @@ class AppManager:
         for app in apps:
             if app.app_name != None and app.app_name != "":
                 # try:
-                module = __import__(app.module_name)
-                if app.module_name != app.app_name:
+                module = __import__(app.sys_module_name)
+                if app.sys_module_name != app.app_name:
                     module2 = getattr(module, app.app_name)
                 else:
                     module2 = module
@@ -391,7 +400,9 @@ class AppManager:
                             urls2 = module2.AdditionalUrls
                         for pos in urls2:
                             app_info = AppItemInfo(app)
-                            app_info.module_name = pos[4] if pos[4] else app.module_name
+                            app_info.sys_module_name = (
+                                pos[4] if pos[4] else app.sys_module_name
+                            )
                             app_info.module_title = (
                                 pos[5] if pos[5] else app.module_title
                             )
@@ -407,7 +418,7 @@ class AppManager:
                             test = 0
                             i = 0
                             for pos in ret:
-                                if pos.module_title == app_info.module_title:
+                                if pos.module_name == app_info.module_name:
                                     if test == 0:
                                         id = i
                                     if pos.app_name == app_info.app_name:
@@ -468,16 +479,16 @@ class AppManager:
     def get_main_tools_app_items_width_perm(self, prj=settings.PRJ_NAME):
         ret = self.get_app_items_width_perm(prj)
         if settings.THREE_LEVEL_MENU:
-            return [item for item in ret if item.module_title == "main tools"]
+            return [item for item in ret if item.module_name == "main tools"]
         else:
-            return [item for item in ret if item.module_title != "Config"]
+            return [item for item in ret if item.module_name != "config"]
 
     def get_not_main_tools_app_items_width_perm(self, prj=settings.PRJ_NAME):
         ret = self.get_app_items_width_perm(prj)
         if settings.THREE_LEVEL_MENU:
-            return [item for item in ret if item.module_title != "main tools"]
+            return [item for item in ret if item.module_name != "main tools"]
         else:
-            return [item for item in ret if item.module_title == "Config"]
+            return [item for item in ret if item.module_name == "config"]
 
     def login_providers(self):
         ret = []

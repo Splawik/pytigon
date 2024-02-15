@@ -1,9 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "channels"
 ModuleTitle = _("channels")
+Name = "channels_demo"
 Title = _("Channels")
 Perms = False
-Index = "None"
+Index = ""
 Urls = (
     (
         "clock/",

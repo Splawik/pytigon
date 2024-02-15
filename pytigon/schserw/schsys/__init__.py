@@ -18,8 +18,10 @@
 # version: "0.1a"
 
 
-ModuleTitle = "System"
+Name = "schsys"
 Title = "System tools"
+ModuleName = "System"
+ModuleTitle = "System"
 Perms = True
 Index = "index"
 Urls = ()

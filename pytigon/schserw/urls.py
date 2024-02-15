@@ -264,7 +264,7 @@ for app in settings.INSTALLED_APPS:
 
     try:
         test = importlib.import_module(pos)
-        if hasattr(test, "ModuleTitle"):
+        if hasattr(test, "ModuleName"):
             module_name = "%s.urls" % str(pos)
             m = importlib.import_module(module_name)
             if hasattr(m, "gen"):

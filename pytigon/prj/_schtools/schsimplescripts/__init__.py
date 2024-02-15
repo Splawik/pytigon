@@ -1,9 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "config"
 ModuleTitle = _("Config")
+Name = "schsimplescripts"
 Title = _("Simple scripts")
 Perms = True
-Index = "None"
+Index = ""
 Urls = (
     (
         "table/Script/-/form/list/?view_in=desktop",

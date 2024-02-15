@@ -1,9 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "views"
 ModuleTitle = _("views")
+Name = "views_demo"
 Title = _("Views")
 Perms = False
-Index = "None"
+Index = ""
 Urls = (
     (
         "template_example?view_in=desktop",

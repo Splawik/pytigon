@@ -1,9 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "tools"
 ModuleTitle = _("Tools")
+Name = "schbrowser"
 Title = _("Browser")
 Perms = False
-Index = "None"
+Index = ""
 Urls = (
     (
         "table/bookmarks/0/form/tree?view_in=desktop",

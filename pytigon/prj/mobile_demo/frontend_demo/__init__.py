@@ -1,9 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "frontend views"
 ModuleTitle = _("Frontend views")
+Name = "frontend_demo"
 Title = _("Frontend Views")
 Perms = False
-Index = "None"
+Index = ""
 Urls = (
     (
         "../static/frontend_demo/views/todo_demo.fview",

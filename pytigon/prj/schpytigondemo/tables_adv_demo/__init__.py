@@ -1,9 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "tables"
 ModuleTitle = _("tables")
+Name = "tables_adv_demo"
 Title = _("Advanced tables")
 Perms = False
-Index = "None"
+Index = ""
 Urls = (
     (
         "table/Album/-/form/list/?view_in=desktop",

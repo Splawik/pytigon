@@ -1,6 +1,8 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "editor"
 ModuleTitle = _("Editor")
+Name = "sched"
 Title = _("Editor")
 Perms = False
 Index = ""

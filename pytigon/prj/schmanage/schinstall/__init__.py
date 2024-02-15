@@ -1,9 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "config"
 ModuleTitle = _("Config")
+Name = "schinstall"
 Title = _("Pytigon setup")
 Perms = True
-Index = "None"
+Index = ""
 Urls = (
     (
         "form/upload_ptig/?view_in=desktop",

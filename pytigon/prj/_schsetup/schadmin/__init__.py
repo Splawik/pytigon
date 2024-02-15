@@ -1,9 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "config"
 ModuleTitle = _("Config")
+Name = "schadmin"
 Title = _("Administration")
 Perms = True
-Index = "None"
+Index = ""
 Urls = (
     (
         "terminal?view_in=desktop",

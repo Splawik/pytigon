@@ -667,13 +667,16 @@ class SChApp(JSONModel):
         verbose_name="Parent",
     )
     name = models.CharField(
-        "Name", null=False, blank=False, editable=True, max_length=255
-    )
-    module_title = models.CharField(
-        "Module title", null=True, blank=True, editable=True, max_length=32
+        "Name", null=False, blank=False, editable=True, max_length=64
     )
     title = models.CharField(
         "Title", null=True, blank=True, editable=True, max_length=255
+    )
+    module_name = models.CharField(
+        "Module name", null=False, blank=False, editable=True, max_length=64
+    )
+    module_title = models.CharField(
+        "Module title", null=True, blank=True, editable=True, max_length=255
     )
     perms = models.BooleanField(
         "Perms",

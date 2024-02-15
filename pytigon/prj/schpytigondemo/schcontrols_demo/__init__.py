@@ -1,9 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 
+ModuleName = "main tools"
 ModuleTitle = _("main tools")
+Name = "schcontrols_demo"
 Title = _("Controls")
 Perms = False
-Index = "None"
+Index = ""
 Urls = (
     (
         "standardcontrols",
