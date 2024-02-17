@@ -1,0 +1,32 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "_(New label type)"
+
+%% list_row_header
+    th..._(Name)
+    th..._(Title)
+    
+
+%% list_row
+    td...{{ object.name }}
+    td...{{ object.title }}
+    
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+
+%% row_edit
+    % form:
+        .name,title
