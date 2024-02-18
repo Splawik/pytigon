@@ -21,14 +21,14 @@
 
 %% list_row_actions
     % row_actions:
-        .edit
-        .field_list/workflowitem_set,Workflow items
-        .field_edit/script_for_new_item,Script for new item
-        .field_edit/script_for_accept_item,Script for accept item
-        .field_edit/script_for_reject_item,Script for reject item
-        .field_edit/script_for_refresh_queue,Script for refresh queue
-        .field_edit/script_for_handle_event,Script for handle refresh event
-        .delete
+        ?:edit
+        .field_list/workflowitem_set,_(Workflow items)
+        .field_edit/script_for_new_item,_(Script for new item)
+        .field_edit/script_for_accept_item,_(Script for accept item)
+        .field_edit/script_for_reject_item,_(Script for reject item)
+        .field_edit/script_for_refresh_queue,_(Script for refresh queue)
+        .field_edit/script_for_handle_event,_(Script for handle refresh event)
+        ?:delete
 
 %% row_edit
     % form:

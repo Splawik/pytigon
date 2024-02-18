@@ -98,12 +98,12 @@ PFORM = form_with_perms("schdoc")
 
 class _FilterFormDoc(forms.Form):
     date_from = forms.DateField(
-        label=_("Data od"),
+        label=_("Date from"),
         required=False,
         initial=year_ago,
     )
     date_to = forms.DateField(
-        label=_("Data do"),
+        label=_("Date to"),
         required=False,
     )
 

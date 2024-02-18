@@ -211,7 +211,7 @@ class _FilterFormDocHead(forms.Form):
         initial=year_ago,
     )
     date_to = forms.DateField(
-        label=_("Data to"),
+        label=_("Date to"),
         required=False,
     )
     target = forms.CharField(

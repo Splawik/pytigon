@@ -11,9 +11,9 @@
 {% block list_content_actions %}
 {% endblock %}
 {% block list_row_header %}
-        <th>Group</th>
+        <th>Grupa</th>
         <th>
-        Type
+        Typ
         </th>
 {% endblock %}
 {% block list_row %}
@@ -24,13 +24,7 @@
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
-                edit
                 delete
         {% endrow_actions %}
-{% endblock %}
-{% block row_edit %}
-        {% form %}
-                parent,type
-        {% endform %}
 {% endblock %}
 

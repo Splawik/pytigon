@@ -397,3 +397,31 @@ msgstr "Odrzuć"
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:50
 msgid "ext"
 msgstr "rozszerzenie"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:52
+msgid "Regenerate workflow"
+msgstr "Przebuduj przepływy pracy"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:53
+msgid "New workflow type"
+msgstr "Nowy typ przepływu pracy"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:54
+msgid "Script for new item"
+msgstr "Skrypt dla nowych pozycji"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:55
+msgid "Script for accept item"
+msgstr "Skrypt dla akceptacji pozycji"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:56
+msgid "Script for reject item"
+msgstr "Skrypt dla odrzucenia pozycji"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:57
+msgid "Script for refresh queue"
+msgstr "Skrypt dla odświeżenia kolejki"
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:58
+msgid "Script for handle refresh event"
+msgstr "Skypt dla przechwycenia zdarzenia odśwież"

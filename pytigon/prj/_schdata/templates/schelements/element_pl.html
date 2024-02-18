@@ -64,7 +64,7 @@
                                         {% endfor %}
                                   {% else %}
                                         {% if parent_pk %}
-                                                {% new_row "New element" url=table_path|append_str:'%d/this/-/add/'|format:parent_pk %}
+                                                {% new_row "Nowy element" url=table_path|append_str:'%d/this/-/add/'|format:parent_pk %}
                                         {% endif %}
                                 {% endif %}
                         {% endwith %}
@@ -75,17 +75,17 @@
                                                 {% new_row "new "|append_str:button.title url=base_path|append_str:button.app|append_str:"/table/"|append_str:button.table|append_str:'/0/this/'|append_str:button.type|append_str:"/add/" %}
                                         {% endfor %}
                                   {% else %}
-                                        {% new_row "New element" url=table_path|append_str:'0/this/-/add/' %}
+                                        {% new_row "Nowy element" url=table_path|append_str:'0/this/-/add/' %}
                                 {% endif %}
                         {% endwith %}
                 {% endif %}
         {% endif %}
 {% endblock %}
 {% block list_row_header %}
-        <th>Type</th>
-        <th>Code</th>
+        <th>Typ</th>
+        <th>Kod</th>
         <th>
-        Name
+        Nazwa
         </th>
 {% endblock %}
 {% block list_row %}

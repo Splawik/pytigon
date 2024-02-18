@@ -23,14 +23,14 @@
 {% endblock %}
 {% block list_row_actions %}
         {% row_actions %}
-                edit
+                ?:edit
                 field_list/workflowitem_set,Workflow items
                 field_edit/script_for_new_item,Script for new item
                 field_edit/script_for_accept_item,Script for accept item
                 field_edit/script_for_reject_item,Script for reject item
                 field_edit/script_for_refresh_queue,Script for refresh queue
                 field_edit/script_for_handle_event,Script for handle refresh event
-                delete
+                ?:delete
         {% endrow_actions %}
 {% endblock %}
 {% block row_edit %}

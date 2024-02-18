@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2024-02-15 23:24+0100\n"
+"POT-Creation-Date: 2024-02-18 15:04+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -404,5 +404,33 @@ msgstr ""
 
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:50
 msgid "ext"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:52
+msgid "Regenerate workflow"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:53
+msgid "New workflow type"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:54
+msgid "Script for new item"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:55
+msgid "Script for accept item"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:56
+msgid "Script for reject item"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:57
+msgid "Script for refresh queue"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:58
+msgid "Script for handle refresh event"
 msgstr ""
 
