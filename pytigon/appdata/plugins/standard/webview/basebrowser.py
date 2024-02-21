@@ -287,7 +287,7 @@ class BaseWebBrowser(object):
             find = True
         if not find:
             url = href
-            #if url[-4:].lower() == ".pdf":
+            # if url[-4:].lower() == ".pdf":
             #    self.pdf = url
             #    x = "/" if wx.Platform == "__WXMSW__" else ""
             #    return self.go(
@@ -483,7 +483,6 @@ class BaseWebBrowser(object):
             self.execute_javascript(cmd)
         elif l[0] == "action":
             x = split2(l[1], "??")
-            print(x)
             # cmd = f"window.get_action_data("""
         return
 

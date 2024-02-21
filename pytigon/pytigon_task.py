@@ -24,7 +24,6 @@ import getopt
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 if __name__ == "__main__":
-
     from pytigon_lib.schtools.main_paths import get_main_paths
 
     paths = get_main_paths()
@@ -70,7 +69,7 @@ if __name__ == "__main__":
 
     ARGUMENTS = {}
     FORCE_GET = False
-    for (opt, arg) in opts:
+    for opt, arg in opts:
         if opt in ("-h", "--help"):
             usage()
             sys.exit()
@@ -107,7 +106,6 @@ if __name__ == "__main__":
             )  # , credentials=(USERNAME, PASSWORD))
         else:
             ret, newaddr = http.get(None, VIEW)  # , credentials=(USERNAME, PASSWORD))
-        print(response.str())
     else:
         from apps import APPS
         from pytigon_lib.schtools import sch_import
