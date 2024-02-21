@@ -168,7 +168,7 @@ TEMPLATES = [
                 "pytigon.schserw.schsys.context_processors.sch_standard",
             ],
             "loaders": [
-                "pytigon_lib.schdjangoext.python_style_template_loader.Loader",
+                # "pytigon_lib.schdjangoext.python_style_template_loader.Loader",
                 "pytigon_lib.schdjangoext.python_style_template_loader.DBLoader",
                 "django.template.loaders.filesystem.Loader",
                 "django.template.loaders.app_directories.Loader",
@@ -180,6 +180,11 @@ TEMPLATES = [
         },
     }
 ]
+
+if DEBUG:
+    TEMPLATES[0]["OPTIONS"]["loaders"].insert(
+        0, "pytigon_lib.schdjangoext.python_style_template_loader.Loader"
+    )
 
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
