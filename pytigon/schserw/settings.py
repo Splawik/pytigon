@@ -21,11 +21,14 @@ import os
 import sys
 from fs.mountfs import MountFS
 from fs.multifs import MultiFS
-from pytigon.ext_lib.django_storage import OSFS_EXT
+
 from django.conf import settings
+
+from pytigon.ext_lib.django_storage import OSFS_EXT
+
 from pytigon_lib.schtools.main_paths import get_main_paths, get_prj_name
+from pytigon_lib.schtools.platform_info import platform_name
 from pytigon_lib.schtools.env import get_environ
-import os
 
 ENV = get_environ()
 BASE_PRJ_NAME = get_prj_name()
@@ -53,7 +56,6 @@ else:
 
 if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")):
     PRODUCTION_VERSION = False
-    # DEBUG = True
 
 SHOW_LOGIN_WIN = True
 
@@ -97,22 +99,26 @@ BASE_URL = "http://127.0.0.1:81"
 
 URL_ROOT_FOLDER = ""
 URL_ROOT_PREFIX = "/"
+
 STATIC_URL = "static/"
 MEDIA_URL = "site_media/"
 MEDIA_URL_PROTECTED = "site_media_protected/"
-
+UPLOAD_URL = "site_media/upload/"
+UPLOAD_URL_PROTECTED = "site_media_protected/upload/"
+DOC_URL = "site_media/doc/"
+DOC_URL_PROTECTED = "site_media_protected/doc/"
 
 APPEND_SLASH = False
 
-from pytigon_lib.schtools.platform_info import platform_name
-
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, BASE_PRJ_NAME), "media")
 MEDIA_ROOT_PROTECTED = os.path.join(
-    os.path.join(DATA_PATH, BASE_PRJ_NAME), "protected_media"
+    os.path.join(DATA_PATH, BASE_PRJ_NAME), "media_protected"
 )
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
-UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT, "protected_upload")
+UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT_PROTECTED, "upload")
 DOC_PATH = os.path.join(MEDIA_ROOT, "doc")
+DOC_PATH_PROTECTED = os.path.join(MEDIA_ROOT_PROTECTED, "doc")
+
 ADMIN_MEDIA_PREFIX = "/media/"
 
 SECRET_KEY = ENV("SECRET_KEY")
@@ -125,7 +131,6 @@ if ENV("GRAPHQL"):
 else:
     GRAPHQL = False
 
-
 if ENV("REST"):
     REST = True
 else:
@@ -135,7 +140,6 @@ if ENV("CANCAN_ENABLED"):
     CANCAN_ENABLED = True
 else:
     CANCAN_ENABLED = False
-
 
 ROOT_URLCONF = "pytigon.schserw.urls"
 
@@ -214,7 +218,6 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
 ]
 
-
 INSTALLED_APPS = [
     "django.contrib.auth",
     "django.contrib.messages",
@@ -238,7 +241,7 @@ if GRAPHQL:
 
 if REST:
     INSTALLED_APPS.append("rest_framework")
-    if not "oauth2_provider" in INSTALLED_APPS:
+    if "oauth2_provider" not in INSTALLED_APPS:
         INSTALLED_APPS.append("oauth2_provider")
         INSTALLED_APPS.append("pytigon.schserw.oauth2_ext")
     INSTALLED_APPS.append("drf_yasg")
@@ -278,47 +281,27 @@ if CANCAN_ENABLED:
         i, "cancan.context_processors.abilities"
     )
 
-try:
-    pass
-
-    MPTT = True
-    LOGVIEWER = True
-    INSTALLED_APPS.append("mptt")
-    INSTALLED_APPS.append("django_filters")
-    INSTALLED_APPS.append("log_viewer")
-except:
-    MPTT = False
-    LOGVIEWER = False
-
-try:
-    if ENV("ALLAUTH"):
-        pass
-
-        ALLAUTH = True
-        INSTALLED_APPS.append("allauth")
-        INSTALLED_APPS.append("allauth.account")
-        INSTALLED_APPS.append("allauth.socialaccount")
-        AUTHENTICATION_BACKENDS.append(
-            "allauth.account.auth_backends.AuthenticationBackend"
-        )
-        MIDDLEWARE.append("allauth.account.middleware.AccountMiddleware")
-    else:
-        ALLAUTH = False
-        INSTALLED_APPS.append("pytigon.schserw.nosocial")
-except:
+if ENV("ALLAUTH"):
+    ALLAUTH = True
+    INSTALLED_APPS.append("allauth")
+    INSTALLED_APPS.append("allauth.account")
+    INSTALLED_APPS.append("allauth.socialaccount")
+    AUTHENTICATION_BACKENDS.append(
+        "allauth.account.auth_backends.AuthenticationBackend"
+    )
+    MIDDLEWARE.append("allauth.account.middleware.AccountMiddleware")
+else:
     ALLAUTH = False
+    INSTALLED_APPS.append("pytigon.schserw.nosocial")
 
-try:
-    pass
-
+if ENV("COMPRESSOR"):
     INSTALLED_APPS.append("compressor")
     STATICFILES_FINDERS.append("compressor.finders.CompressorFinder")
-except:
+else:
     INSTALLED_APPS.append("_schserverless.schnocompress")
 
 if ENV("PWA"):
     INSTALLED_APPS.append("pwa_webpush")
-
     if DEBUG:
         WEBPUSH_SETTINGS = {
             "VAPID_PUBLIC_KEY": "BC50NYho7GMYXtR2tmVyMZyWWRsQRkyX0cuNU-eLcJ8Bmkijj4rbSbw8Q-oH0-fxuggofrcdxTyehu08IX4x8CM",
@@ -331,7 +314,6 @@ else:
 
 if PLATFORM_TYPE != "webserver":
     MIDDLEWARE.insert(
-        #        0, "pytigon.schserw.schmiddleware.whitenoise2.WhiteNoiseMiddleware2"
         0,
         "whitenoise.middleware.WhiteNoiseMiddleware",
     )
@@ -345,18 +327,10 @@ if (
     and platform_name() != "Android"
     and platform_name() != "Emscripten"
 ):
-    try:
-        pass
+    INSTALLED_APPS.append("channels")
 
-        INSTALLED_APPS.append("channels")
-    except:
-        pass
-try:
-    pass
-
+if ENV("DJANGO_Q"):
     INSTALLED_APPS.append("django_q")
-except:
-    pass
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
@@ -489,16 +463,21 @@ else:
         },
     }
 
-LOG_VIEWER_FILES = [
-    "pytigon.log",
-    "pytigon-err.log",
-    "pytigon-task.log",
-    "pytigon-err-task.log",
-]
-LOG_VIEWER_FILES_DIR = LOG_PATH
-LOG_VIEWER_PATTERNS = [
-    "[",
-]
+if ENV("LOG_VIEWER"):
+    LOGVIEWER = True
+    INSTALLED_APPS.append("log_viewer")
+    LOG_VIEWER_FILES = [
+        "pytigon.log",
+        "pytigon-err.log",
+        "pytigon-task.log",
+        "pytigon-err-task.log",
+    ]
+    LOG_VIEWER_FILES_DIR = LOG_PATH
+    LOG_VIEWER_PATTERNS = [
+        "[",
+    ]
+else:
+    LOGVIEWER = False
 
 LOCALE_PATHS = [
     os.path.join(SERW_PATH, "locale"),
@@ -592,12 +571,14 @@ def DEFAULT_FILE_STORAGE_FS():
         pass
     try:
         # _m.mount("media", OSFS_EXT(settings.MEDIA_ROOT))
-        _m.mount("site_media", OSFS_EXT(os.path.join(settings.MEDIA_ROOT, "site")))
+        _m.mount("site_media", OSFS_EXT(settings.MEDIA_ROOT))
+        _m.mount("site_media_protected", OSFS_EXT(settings.MEDIA_ROOT_PROTECTED))
     except:
         print("mount error: ")
 
     try:
         _m.mount("doc", OSFS_EXT(settings.DOC_PATH))
+        _m.mount("doc_protected", OSFS_EXT(settings.DOC_PATH_PROTECTED))
 
         _m.mount("upload", OSFS_EXT(settings.UPLOAD_PATH))
         _m.mount(
