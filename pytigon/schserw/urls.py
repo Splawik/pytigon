@@ -200,31 +200,22 @@ if settings.PWA:
         ]
     )
 
+_urlpatterns.append(
+    re_path(
+        r"^site_media/(?P<path>.*)$",
+        django.views.static.serve,
+        {"document_root": settings.MEDIA_ROOT},
+    )
+)
+_urlpatterns.append(re_path(r"site_media_protected/(.*)$", views.site_media_protected))
+
 if settings.DEBUG:
     _urlpatterns.append(
         re_path(
-            "site_media/(.*)$",
-            django.contrib.staticfiles.views.serve,
-            {"document_root": settings.MEDIA_ROOT},
-        )
-    )
-    _urlpatterns.append(
-        re_path(
-            "site_media_protected/(.*)$",
-            django.contrib.staticfiles.views.serve,
+            r"^media_protected/(?P<path>.*)$",
+            django.views.static.serve,
             {"document_root": settings.MEDIA_ROOT_PROTECTED},
         )
-    )
-else:
-    _urlpatterns.append(
-        re_path(
-            "site_media/(.*)$",
-            django.contrib.staticfiles.views.serve,
-            {"document_root": settings.MEDIA_ROOT},
-        )
-    )
-    _urlpatterns.append(
-        re_path("site_media_protected/(.*)$", views.site_media_protected)
     )
 
 

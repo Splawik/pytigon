@@ -2,6 +2,7 @@
 
 % load exfiltry
 % load exsyntax
+% load thumbnail
 
 %% pythoncode
     script language=python
@@ -42,10 +43,18 @@
 
 %% list_row
     td...{{object.name}}
-    td...{{object.ext}}
-
+    td
+        % if object.is_image:
+            <img src="{% thumbnail object.file 40x40 crop %}" alt="" />
+        % else:
+            {{object.ext}}
 
 %% list_row_actions
+    % if object.is_image:
+        % with url=object.file|thumbnail_url:'large':
+            % row_actions:
+                .preview,_(Preview),,_blank,,,{url}
+             
     % row_actions:
         .download,_(Download),,_blank
     % row_actions:

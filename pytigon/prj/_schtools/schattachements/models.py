@@ -111,5 +111,11 @@ class Attachement(AssociatedJSONModel):
             self.name = str(self.file)
         super(Attachement, self).save(*args, **kwargs)
 
+    def is_image(self):
+        if self.ext.lower() in ("png", "jpg", "jpeg", "svg"):
+            return True
+        else:
+            return False
+
 
 admin.site.register(Attachement)

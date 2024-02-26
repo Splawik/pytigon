@@ -21,7 +21,7 @@ import os
 import sys
 from fs.mountfs import MountFS
 from fs.multifs import MultiFS
-from fs.osfs import OSFS
+from pytigon.ext_lib.django_storage import OSFS_EXT
 from django.conf import settings
 from pytigon_lib.schtools.main_paths import get_main_paths, get_prj_name
 from pytigon_lib.schtools.env import get_environ
@@ -99,7 +99,7 @@ URL_ROOT_FOLDER = ""
 URL_ROOT_PREFIX = "/"
 STATIC_URL = "static/"
 MEDIA_URL = "site_media/"
-MEDIA_URL_PROTECTED = "protected_site_media/"
+MEDIA_URL_PROTECTED = "site_media_protected/"
 
 
 APPEND_SLASH = False
@@ -113,7 +113,6 @@ MEDIA_ROOT_PROTECTED = os.path.join(
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT, "protected_upload")
 DOC_PATH = os.path.join(MEDIA_ROOT, "doc")
-
 ADMIN_MEDIA_PREFIX = "/media/"
 
 SECRET_KEY = ENV("SECRET_KEY")
@@ -568,63 +567,86 @@ STATIC_FS = None
 
 def STATIC_FILE_STORAGE_FS():
     static_fs = MultiFS()
-    static_fs.add_fs("static_main", OSFS(settings.STATIC_ROOT), write=True)
+    static_fs.add_fs("static_main", OSFS_EXT(settings.STATIC_ROOT), write=True)
     p = os.path.join(PRJ_PATH, BASE_PRJ_NAME, "static")
     if os.path.exists(p):
-        static_fs.add_fs("static_prj", OSFS(p))
+        static_fs.add_fs("static_prj", OSFS_EXT(p))
     return static_fs
 
 
 def DEFAULT_FILE_STORAGE_FS():
     global STATIC_FS
     _m = MountFS()
-    _m.mount("pytigon", OSFS(settings.ROOT_PATH))
+    _m.mount("pytigon", OSFS_EXT(settings.ROOT_PATH))
     STATIC_FS = MultiFS()
-    STATIC_FS.add_fs("static_main", OSFS(settings.STATIC_ROOT))
+    STATIC_FS.add_fs("static_main", OSFS_EXT(settings.STATIC_ROOT))
     p = os.path.join(PRJ_PATH, BASE_PRJ_NAME, "static")
     if os.path.exists(p):
-        STATIC_FS.add_fs("static_prj", OSFS(p))
+        STATIC_FS.add_fs("static_prj", OSFS_EXT(p))
     _m.mount("static", STATIC_FS)
-    _m.mount("app", OSFS(settings.LOCAL_ROOT_PATH))
-    _m.mount("data", OSFS(settings.DATA_PATH))
+    _m.mount("app", OSFS_EXT(settings.LOCAL_ROOT_PATH))
+    _m.mount("data", OSFS_EXT(settings.DATA_PATH))
     try:
-        _m.mount("temp", OSFS(settings.TEMP_PATH))
+        _m.mount("temp", OSFS_EXT(settings.TEMP_PATH))
     except:
         pass
     try:
-        _m.mount("media", OSFS(settings.MEDIA_ROOT))
-        _m.mount("site_media", OSFS(settings.MEDIA_ROOT))
+        # _m.mount("media", OSFS_EXT(settings.MEDIA_ROOT))
+        _m.mount("site_media", OSFS_EXT(os.path.join(settings.MEDIA_ROOT, "site")))
     except:
-        pass
+        print("mount error: ")
 
     try:
-        _m.mount("doc", OSFS(settings.DOC_PATH))
-        _m.mount("upload", OSFS(settings.UPLOAD_PATH))
+        _m.mount("doc", OSFS_EXT(settings.DOC_PATH))
+
+        _m.mount("upload", OSFS_EXT(settings.UPLOAD_PATH))
         _m.mount(
-            "filer_public", OSFS(os.path.join(settings.UPLOAD_PATH, "filer_public"))
+            "filer_public", OSFS_EXT(os.path.join(settings.UPLOAD_PATH, "filer_public"))
         )
         _m.mount(
-            "filer_private", OSFS(os.path.join(settings.UPLOAD_PATH, "filer_private"))
+            "filer_private",
+            OSFS_EXT(os.path.join(settings.UPLOAD_PATH, "filer_private")),
         )
         _m.mount(
             "filer_public_thumbnails",
-            OSFS(os.path.join(settings.UPLOAD_PATH, "filer_public_thumbnails")),
+            OSFS_EXT(os.path.join(settings.UPLOAD_PATH, "filer_public_thumbnails")),
         )
         _m.mount(
             "filer_private_thumbnails",
-            OSFS(os.path.join(settings.UPLOAD_PATH, "filer_private_thumbnails")),
+            OSFS_EXT(os.path.join(settings.UPLOAD_PATH, "filer_private_thumbnails")),
         )
     except:
-        pass
+        print("mount error: ")
 
     if sys.argv and sys.argv[0].endswith("pytigon"):
         if platform_name() == "Windows":
-            _m.mount("osfs", OSFS("c:\\"))
+            _m.mount("osfs", OSFS_EXT("c:\\"))
         else:
-            _m.mount("osfs", OSFS("/"))
+            _m.mount("osfs", OSFS_EXT("/"))
 
     return _m
 
+
+THUMBNAIL_DEFAULT_STORAGE = "pytigon.ext_lib.django_storage.ThumbnailFileSystemStorage"
+
+if ENV("THUMBNAIL_PROTECTED"):
+    THUMBNAIL_MEDIA_ROOT = os.path.join(MEDIA_ROOT_PROTECTED, "thumb")
+    THUMBNAIL_MEDIA_URL = MEDIA_URL_PROTECTED + "thumb/"
+else:
+    THUMBNAIL_MEDIA_ROOT = os.path.join(MEDIA_ROOT, "thumb")
+    THUMBNAIL_MEDIA_URL = MEDIA_URL + "thumb/"
+
+THUMBNAIL_BASEDIR = THUMBNAIL_MEDIA_ROOT
+
+if not os.path.exists(THUMBNAIL_MEDIA_ROOT):
+    os.makedirs(THUMBNAIL_MEDIA_ROOT)
+
+THUMBNAIL_ALIASES = {
+    "": {
+        "small": {"size": (50, 50), "crop": True},
+        "large": {"size": (800, 600), "crop": True},
+    },
+}
 
 DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
 OFFLINE_SUPPORT = False

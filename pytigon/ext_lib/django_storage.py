@@ -1,12 +1,43 @@
 import os
 
 from django.conf import settings
-from django.core.files.storage import Storage
+from django.core.files.storage import Storage, FileSystemStorage
 from django.core.files import File
+from django.utils.deconstruct import deconstructible
+from django.utils.encoding import filepath_to_uri
+
+from urllib.parse import urljoin
 
 from fs.path import abspath, dirname
 from fs.errors import ResourceNotFound as ResourceNotFoundError
 from fs.error_tools import unwrap_errors
+from fs.osfs import OSFS
+
+
+class OSFS_EXT(OSFS):
+    def __init__(self, path, **argv):
+        if not os.path.exists(path):
+            os.makedirs(path)
+        return super().__init__(path, **argv)
+
+
+@deconstructible
+class ThumbnailFileSystemStorage(FileSystemStorage):
+    def __init__(self, location=None, base_url=None, *args, **kwargs):
+        if location is None:
+            location = settings.THUMBNAIL_MEDIA_ROOT or None
+        if base_url is None:
+            base_url = settings.THUMBNAIL_MEDIA_URL or None
+        super().__init__(location, base_url, *args, **kwargs)
+
+    def url(self, name):
+        if self.base_url is None:
+            raise ValueError("This file is not accessible via a URL.")
+        url = filepath_to_uri(name)
+        url = url.replace(settings.THUMBNAIL_MEDIA_ROOT, "")
+        if url is not None:
+            url = url.lstrip("/")
+        return urljoin(self.base_url, url)
 
 
 class FSStorage(Storage):
@@ -59,7 +90,10 @@ class FSStorage(Storage):
         return (dirs, files)
 
     def path(self, name):
-        path = self.fs.getsyspath(name)
+        try:
+            path = self.fs.getsyspath(name)
+        except:
+            raise NotImplementedError
         if path is None:
             raise NotImplementedError
         return path
@@ -105,7 +139,7 @@ class FSStorage(Storage):
         return info.modified
 
     def generate_filename(self, filename):
-        return "/" + filename
+        return filename
 
 
 class StaticFSStorage(FSStorage):
@@ -121,11 +155,3 @@ class StaticFSStorage(FSStorage):
     def url(self, *argi, **argv):
         ret = super().url(*argi, **argv)
         return ret
-
-
-class MediaFSStorage(FSStorage):
-    def __init__(self, fs=None, base_url=None):
-        super().__init__(fs, settings.MEDIA_URL)
-
-    def generate_filename(self, filename):
-        return "/media/" + filename

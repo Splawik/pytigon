@@ -236,8 +236,6 @@ def listdialog(request, action):
     if action == "dialog":
         c = {"value": value}
         ret = render_to_response("schsys/list.html", context=c, request=request)
-        # print("X1: ", ret)
-        # print("X2: ", ret.content)
         return ret
     if action == "test":
         return HttpResponse(schjson.dumps((2, None, (None,))))
@@ -431,17 +429,21 @@ def search(request, **argv):
 
 
 def redirect_site_media_protected(request):
-    url = request.path.replace("media", "media_protected")
-    response = HttpResponse()
-    response["X-Accel-Redirect"] = url
-    response["Content-Type"] = ""
-    return response
+    url = request.path.replace("site_media_protected", "media_protected")
+    if settings.DEBUG:
+        return HttpResponseRedirect(url)
+    else:
+        url = request.path.replace("site_media_protected", "media_protected")
+        response = HttpResponse()
+        response["X-Accel-Redirect"] = url
+        response["Content-Type"] = ""
+        return response
 
 
-def site_media_protected(request):
+def site_media_protected(request, *argi, **argv):
     if hasattr(settings, "PROTECTED_MEDIA_PERMISSIONS"):
-        x = request.path.split("media/", 1)
-        if len(x) == 2:
+        x = request.path.split("site_media_protected/")
+        if len(x) >= 2:
             path = x[1]
             for row in settings.PROTECTED_MEDIA_PERMISSIONS:
                 result = re.match(row[0], path)

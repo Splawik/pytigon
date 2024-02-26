@@ -1,6 +1,7 @@
 {% extends "forms/form.html" %}
 {% load exfiltry %}
 {% load exsyntax %}
+{% load thumbnail %}
 {% block pythoncode %}
         <script language="python">
         def signal_from_child(self, child, signal):
@@ -46,10 +47,21 @@
 {% block list_row %}
         <td>{{object.name}}</td>
         <td>
-        {{object.ext}}
+                {% if object.is_image %}
+                        <img src="{% thumbnail object.file 40x40 crop %}" alt="" />
+                  {% else %}
+                        {{object.ext}}
+                {% endif %}
         </td>
 {% endblock %}
 {% block list_row_actions %}
+        {% if object.is_image %}
+                {% with url=object.file|thumbnail_url:'large' %}
+                        {% row_actions %}
+                                preview,Preview,,_blank,,,{url}
+                        {% endrow_actions %}
+                {% endwith %}
+        {% endif %}
         {% row_actions %}
                 download,Pobierz,,_blank
         {% endrow_actions %}
