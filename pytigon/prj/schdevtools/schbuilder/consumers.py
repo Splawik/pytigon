@@ -4,6 +4,7 @@ import datetime
 import json
 import asyncio
 
+
 from channels.consumer import AsyncConsumer, SyncConsumer
 
 from channels.generic.websocket import (
@@ -22,7 +23,6 @@ from django.conf import settings
 
 
 class Clock(AsyncJsonWebsocketConsumer):
-
     COUNT = 1
 
     async def connect(self):
@@ -43,7 +43,6 @@ class Clock(AsyncJsonWebsocketConsumer):
 
 
 class WebServer(AsyncJsonWebsocketConsumer):
-
     PROC = None
 
     async def connect(self):
@@ -105,7 +104,6 @@ class WebServer(AsyncJsonWebsocketConsumer):
 
 
 class DjangoManage(AsyncJsonWebsocketConsumer):
-
     PROCS = []
 
     async def connect(self):
@@ -121,7 +119,7 @@ class DjangoManage(AsyncJsonWebsocketConsumer):
             "manage_" + prj,
             *cmd,
             stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.STDOUT
+            stderr=asyncio.subprocess.STDOUT,
         )
         self.PROCS.append(proc)
 

@@ -17,17 +17,17 @@
 # license: "LGPL 3.0"
 # version: "0.1a"
 
-
 import importlib
 
 from django.urls import path, re_path
-
+from django.core.asgi import get_asgi_application
 from django.conf import settings
 
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
 
 urls_tab = []
+
 
 if hasattr(settings, "CHANNELS_URL_TAB"):
     for row in settings.CHANNELS_URL_TAB:
@@ -56,8 +56,11 @@ class LifespanApp:
                     return
 
 
+django_asgi_app = get_asgi_application()
+
 application = ProtocolTypeRouter(
     {
+        "http": django_asgi_app,
         "websocket": AuthMiddlewareStack(URLRouter(urls_tab)),
         "lifespan": LifespanApp,
     }
