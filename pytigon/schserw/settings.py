@@ -141,6 +141,11 @@ if ENV("CANCAN_ENABLED"):
 else:
     CANCAN_ENABLED = False
 
+if ENV("MAILER"):
+    MAILER = True
+else:
+    MAILER = False
+
 ROOT_URLCONF = "pytigon.schserw.urls"
 
 STATICFILES_FINDERS = [
@@ -227,12 +232,15 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.forms",
     "django_select2",
-    "mailer",
     "django_bootstrap5",
     "corsheaders",
     "widget_tweaks",
     "pytigon.schserw.schsys",
 ]
+
+if MAILER:
+    INSTALLED_APPS.append("mailer")
+    EMAIL_BACKEND = "mailer.backend.DbBackend"
 
 if GRAPHQL:
     INSTALLED_APPS.append("graphene_django")
@@ -294,7 +302,12 @@ else:
     ALLAUTH = False
     INSTALLED_APPS.append("pytigon.schserw.nosocial")
 
-if ENV("COMPRESSOR"):
+if ENV("COMPRESS_ENABLED"):
+    COMPRESS_ENABLED = True
+else:
+    COMPRESS_ENABLED = False
+
+if COMPRESS_ENABLED:
     INSTALLED_APPS.append("compressor")
     STATICFILES_FINDERS.append("compressor.finders.CompressorFinder")
 else:
@@ -534,11 +547,6 @@ else:
 DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
 STATICFILES_STORAGE = "pytigon.ext_lib.django_storage.StaticFSStorage"
 
-if ENV("COMPRESS_ENABLED"):
-    COMPRESS_ENABLED = True
-else:
-    COMPRESS_ENABLED = False
-
 COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
 
 STATIC_FS = None
@@ -670,7 +678,6 @@ GRAPHENE = {
 
 GRAPHENE_PUBLIC = False
 
-EMAIL_BACKEND = "mailer.backend.DbBackend"
 try:
     import dj_email_url
 
@@ -699,8 +706,3 @@ else:
         "bulk": 10,
         "orm": "default",
     }
-
-# try:
-#    from pytigon.schserw import *
-# except:
-#    pass
