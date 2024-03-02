@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from django.core.management.base import BaseCommand, CommandError
 
 import sys
@@ -16,6 +15,7 @@ PRJS_TO_EXPORT  =  [
     'schdevtools', #prepare with initial data
     'schmanage', 'schscripts', '_schsetup', '_schot', 'schportal', 'schpytigondemo', 'schwebtrapper', 'scheditor', #prepare db but without initial data
     '_schcomponents', 'scheditor', '_schdata', '_schremote', '_schtools', '_schwiki', '_schserverless', #without db
+    'schemail', '_schall', 'schodf', '_schplaywright', 'mobile_demo', '_schbi', '_schbusiness', 
 ]    
 
 

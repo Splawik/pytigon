@@ -1,0 +1,175 @@
+[
+    {
+        "additional_settings": "",
+        "app_main": null,
+        "autor_email": null,
+        "autor_name": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "custom_tags": "_schcomponents/components/ptig-svg.js",
+        "desktop_gui_type": "smartfon_standard",
+        "doc": null,
+        "encoded_zip": null,
+        "ext_apps": null,
+        "git_repository": "https://git.pytigon.eu/pytigon/mobile_demo.git",
+        "gui_elements": null,
+        "gui_type": "modern",
+        "icon": "png://mimetypes/text-html.png",
+        "icon_code": null,
+        "icon_size": "1",
+        "install_file": null,
+        "jsondata": null,
+        "license_file": null,
+        "login_required": false,
+        "main": true,
+        "main_view": true,
+        "name": "mobile_demo",
+        "plugins": null,
+        "public": true,
+        "readme_file": null,
+        "smartfon_gui_type": "smartfon_standard",
+        "start_page": "static/frontend_demo/views/todo_demo.fview",
+        "tablet_gui_type": "smartfon_standard",
+        "template_desktop": null,
+        "template_schweb": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exfiltry\n% load exsyntax\n% load static\n% load compress\n\n%% component_init\n    .var component_init = { graphql_pub: 'https://www.pytigon.eu/graphql_public/', graphql_prv: 'https://www.pytigon.eu/graphql/', }\n\n%% js_scripts_base\n    % if settings.USE_I18N:\n        <script src=\"{% url 'javascript-catalog' %}\"></script>\n    % compress js:\n        {% jscript_link 'pytigon_js/py_runtime.js' %}\n        {% jscript_link 'system/morphdom-umd.min.js' %}\n        {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}\n        {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}\n        {% jscript_link 'vanillajs_plugins/lz-string/lz-string.min.js' %}\n        {% jscript_link 'vanillajs_plugins/cookie/js.cookie.js' %}\n        {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}\n        {% jscript_link 'vanillajs_plugins/nunjucks/nunjucks.min.js' %}\n    \n        {% jscript_link 'jquery/jquery-3.2.1.min.js' %}\n\n        {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}\n        {% jscript_link 'django_select2/django_select2.js' %}\n        {% jscript_link 'jquery_plugins/form/jquery.form.js' %}\n        {% jscript_link 'jquery_plugins/csrf/csrf.js' %}\n        {% jscript_link 'jquery_plugins/unique-element-id/jquery.unique-element-id.js' %}\n        {% jscript_link 'jquery_plugins/draggable/jquery.draggable.js' %}\n        {% jscript_link 'jquery_plugins/perfect-scrollbar/js/perfect-scrollbar.min.js' %}\n        {% jscript_link 'jquery_plugins/jquery-treegrid/js/jquery.treegrid.min.js' %}\n\n\n        %% bootstrap_js\n            {% jscript_link 'bootstrap/js/bootstrap.bundle.js' %}\n\n        {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}\n        {% jscript_link 'bootstrap_plugins/bootstrap5-editable/js/bootstrap-editable.min.js' %}\n        {% jscript_link 'bootstrap_plugins/bootstrap-ladda/spin.min.js' %}\n        {% jscript_link 'bootstrap_plugins/bootstrap-ladda/ladda.min.js' %}\n        {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}\n        {% jscript_link 'bootstrap_plugins/bootstrap-sweetalert2/sweetalert2.min.js' %}\n\n        %% theme_js_scripts\n        {% jscript_link 'vanillajs_plugins/pouchdb/pouchdb-7.3.0.min.js' %}\n        {% jscript_link 'vanillajs_plugins/graphql/graphql.min.js' %}\n\n    {% module_link 'pytigon_js/pytigon.js' %}\n\n%% css_links\n    % compress css:\n        {% css_link 'vanillajs_plugins/tether/css/tether.min.css' %}\n        {% css_link 'bootstrap_plugins/bootstrap5-editable/css/bootstrap-editable.css' %}\n\n        {% css_link 'fonts/fork-awesome/css/fork-awesome.min.css' %}\n\n        {% css_link 'bootstrap_plugins/bootstrap-select/css/bootstrap-select.min.css' %}\n        {% css_link 'bootstrap_plugins/bootstrap-ladda/ladda-themeless.min.css' %}\n        {% css_link 'bootstrap_plugins/bootstrap-sweetalert2/sweetalert2-bootstrap-4.min.css' %}\n\n        {% css_link 'jquery_plugins/perfect-scrollbar/css/perfect-scrollbar.css' %}\n        {% css_link 'jquery_plugins/jquery-treegrid/css/jquery.treegrid.css' %}\n        {% css_link 'jquery_plugins/select2/css/select2.min.css' %}\n\n        {{ form.media.css }}\n\n        {% css_link 'bootstrap_plugins/select2-bootstrap-5-theme/select2-bootstrap-5-theme.css' %}\n        %% botstrap_css\n            % if settings.BOOTSTRAP_TEMPLATE:\n                {% css_link 'themes/'|add:settings.BOOTSTRAP_TEMPLATE|add:'/bootstrap.min.css' %}\n            % else:\n                {% css_link 'themes/bootswatch/default/bootstrap.min.css' %}\n\n            {% css_link 'vanillajs_plugins/icheck-material-1.0.1/icheck-material.min.css' %}\n        \n        %% theme_css_links\n            % if 'materia' in settings.BOOTSTRAP_TEMPLATE:\n                style {:}\n                    span.select2-selection:\n                        border-top: none !important\n                        border-left: none !important\n                        border-right: none !important\n                        border-radius: unset !important\n\n        %% theme_css_links_spec\n            {% css_link 'themes/default.css' %}\n            {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}\n",
+        "title": "Mobile demo",
+        "user_app_template": "",
+        "version": "latest"
+    },
+    [
+        [
+            {
+                "consumer_code": "",
+                "doc": null,
+                "icon": "png://actions/edit-find-replace.png",
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": null,
+                "module_name": "Frontend views",
+                "module_title": "Frontend views",
+                "name": "frontend_demo",
+                "perms": false,
+                "tasks_code": "",
+                "title": "Frontend Views",
+                "urls_code": null,
+                "user_param": "",
+                "view_code": null
+            },
+            [],
+            [],
+            [],
+            [
+                {
+                    "asynchronous": false,
+                    "direct_to_template": true,
+                    "name": "dynamic_fragment",
+                    "tags_mount": null,
+                    "template_code": "h1...Standard backend page\n\n.Hello world\n\nh2...Dynamic content\n\ndiv class=ajax-region ajax-frame auto-frame ajax-link,,,href=/static/frontend_demo/views/todo_demo2.fview,,,target=refresh_frame\n",
+                    "url": "dynamic_fragment/",
+                    "url_parm": null
+                }
+            ],
+            [
+                {
+                    "icon": "png://devices/drive-removable-media.png",
+                    "icon_code": null,
+                    "icon_size": "1",
+                    "name": "ToDo demo",
+                    "perms": null,
+                    "url": "../static/frontend_demo/views/todo_demo.fview",
+                    "url_type": "-"
+                },
+                {
+                    "icon": "png://actions/view-fullscreen.png",
+                    "icon_code": null,
+                    "icon_size": "1",
+                    "name": "Dynamic fragment",
+                    "perms": null,
+                    "url": "dynamic_fragment/",
+                    "url_type": "-"
+                }
+            ],
+            [],
+            [],
+            [],
+            [
+                {
+                    "content": "def request(param, complete):\n    context = { 'template': \".\", }\n    complete(context)\n",
+                    "file_type": "j",
+                    "name": "todo_demo"
+                },
+                {
+                    "content": "div class=ajax-region \n    nav class=navbar bg-light\n        div class=container\n            form class=ajax-link,,,action=/static/frontend_demo/views/todo_demo2.fview,,,target=refresh_frame\n                h2...To Do list\n                input type=text,,,name=task,,,placeholder=task...\n                input type=submit,,,value=Add task\n    ul\n        div class=ajax-frame auto-frame\n",
+                    "file_type": "T",
+                    "name": "todo_demo"
+                },
+                {
+                    "content": "div class=ajax-frame\n    li...test\n    % for row in table:\n        li...{{row.doc.description}}\n",
+                    "file_type": "T",
+                    "name": "todo_demo2"
+                },
+                {
+                    "content": "def request(param, complete):\n    try:\n        document.getElementsByName(\"task\")[0].value = \"\"\n    except:\n        pass\n    \n    db = PouchDB(\"todo\")\n\n    if param['task']:\n        db.put({\"_id\": Date().toJSON(), \"description\": param['task']})\n        navigator.vibrate(1000);\n        \n    def callback(table):\n        context = { \"template\": \".\", \"table\": table[\"rows\"]}\n        complete(context)\n\n    db.allDocs({\"include_docs\": True}).then(callback)\n",
+                    "file_type": "j",
+                    "name": "todo_demo2"
+                }
+            ]
+        ],
+        [
+            {
+                "consumer_code": "",
+                "doc": null,
+                "icon": "png://mimetypes/application-x-executable.png",
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": null,
+                "module_name": "Components",
+                "module_title": "Components",
+                "name": "components",
+                "perms": false,
+                "tasks_code": "",
+                "title": "Components",
+                "urls_code": null,
+                "user_param": "",
+                "view_code": null
+            },
+            [],
+            [],
+            [],
+            [
+                {
+                    "asynchronous": false,
+                    "direct_to_template": true,
+                    "name": "svg",
+                    "tags_mount": null,
+                    "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% content\n\n    ptig-svg width=25%\n      ===>\n        <svg\n           xmlns:dc=\"http://purl.org/dc/elements/1.1/\"\n           xmlns:cc=\"http://creativecommons.org/ns#\"\n           xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n           xmlns:svg=\"http://www.w3.org/2000/svg\"\n           xmlns=\"http://www.w3.org/2000/svg\"\n           xmlns:sodipodi=\"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd\"\n           xmlns:inkscape=\"http://www.inkscape.org/namespaces/inkscape\"\n           width=\"100%\"\n           viewBox=\"0 0 210 297\"\n           version=\"1.1\"\n           id=\"svg8\"\n           inkscape:version=\"0.92.5 (2060ec1f9f, 2020-04-08)\"\n           sodipodi:docname=\"aaa.svg\">\n          <style>\n            {% svg_standard_style %}\n            @keyframes moving {\n                from { x:35; }\n                to { x:50; }\n            }\n            #path4520:hover {\n                fill:#f00 !important;\n                stroke: orange !important;\n                stroke-width: 1 !important;\n                rx: 22px !important;\n                ry: 22px !important;\n                cursor: pointer;\n            }\n            #rect4518:hover {\n                fill:#ffee00 !important;\n                stroke: orange !important;\n                stroke-width: 1 !important;\n                width: 40px !important;\n                height: 38px !important;\n                cursor: pointer;\n                animation-name: moving;\n                animation-duration: 1s;\n                x:50;\n            }\n          </style>\n          <defs\n             id=\"defs2\" />\n          <sodipodi:namedview\n             id=\"base\"\n             pagecolor=\"#ffffff\"\n             bordercolor=\"#666666\"\n             borderopacity=\"1.0\"\n             inkscape:pageopacity=\"0.0\"\n             inkscape:pageshadow=\"2\"\n             inkscape:zoom=\"1.01\"\n             inkscape:cx=\"98.818177\"\n             inkscape:cy=\"897.33208\"\n             inkscape:document-units=\"mm\"\n             inkscape:current-layer=\"layer1\"\n             showgrid=\"false\"\n             inkscape:window-width=\"1880\"\n             inkscape:window-height=\"1054\"\n             inkscape:window-x=\"40\"\n             inkscape:window-y=\"0\"\n             inkscape:window-maximized=\"1\" />\n          <metadata\n             id=\"metadata5\">\n            <rdf:RDF>\n              <cc:Work\n                 rdf:about=\"\">\n                <dc:format>image/svg+xml</dc:format>\n                <dc:type\n                   rdf:resource=\"http://purl.org/dc/dcmitype/StillImage\" />\n                <dc:title></dc:title>\n              </cc:Work>\n            </rdf:RDF>\n          </metadata>\n          <g\n             inkscape:label=\"Layer 1\"\n             inkscape:groupmode=\"layer\"\n             id=\"layer1\"\n             class=\"popover__wrapper\"\n          >\n            <rect\n               style=\"opacity:0.47000002;fill:#ffcc00;fill-opacity:1;stroke:none;stroke-width:0.31211713;stroke-opacity:1\"\n               id=\"rect4518\"\n               width=\"35.627064\"\n               height=\"33.007423\"\n               x=\"26.196369\"\n               y=\"23.247936\" \n               data-bind=\":onclick\" \n               target=\"_top\"\n               href=\"/schcomponents/spreadsheet\"\n            />\n            \n            <ellipse\n                           style=\"opacity:0.47000002;fill:#c83737;fill-opacity:1;stroke:none;stroke-width:0.25522161;stroke-opacity:1\"\n                           id=\"path4520\"\n                           cx=\"63.526196\"\n                           cy=\"58.35107\"\n                           rx=\"18.730404\"\n                           ry=\"18.599422\"\n                           data-bind=\":onclick\" \n                           target=\"_blank\"\n                           href=\"https://www.onet.pl\"\n                           class=\"popover__source\"\n            />\n            <text\n                   xml:space=\"preserve\"\n                   style=\"font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1\"\n                   x=\"35.529758\"\n                   y=\"145.80952\"\n                   id=\"text5094\"\n                   class=\"popover__message\"\n                >\n                <tspan\n                     sodipodi:role=\"line\"\n                     id=\"tspan5092\"\n                     x=\"35.529758\"\n                     y=\"145.80952\"\n                     style=\"stroke-width:0.26458332px\">\n                     HELLO\n                </tspan>\n            </text>\n   \n          </g>\n        </svg>\n",
+                    "url": "svg/",
+                    "url_parm": null
+                }
+            ],
+            [
+                {
+                    "icon": "fa://gears.png",
+                    "icon_code": null,
+                    "icon_size": "1",
+                    "name": "Svg",
+                    "perms": null,
+                    "url": "svg/",
+                    "url_type": "-"
+                }
+            ],
+            [],
+            [],
+            [],
+            []
+        ]
+    ],
+    []
+]

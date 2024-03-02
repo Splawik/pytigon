@@ -1,0 +1,81 @@
+[
+    {
+        "additional_settings": null,
+        "app_main": null,
+        "autor_email": null,
+        "autor_name": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "custom_tags": "",
+        "desktop_gui_type": "auto",
+        "doc": null,
+        "encoded_zip": null,
+        "ext_apps": null,
+        "git_repository": null,
+        "gui_elements": "toolbar(file(open,exit),clipboard)",
+        "gui_type": "modern",
+        "icon": "None",
+        "icon_code": null,
+        "icon_size": "1",
+        "install_file": "PIP=aiosmtpd",
+        "jsondata": null,
+        "license_file": null,
+        "login_required": true,
+        "main": false,
+        "main_view": true,
+        "name": "schemail",
+        "plugins": null,
+        "public": true,
+        "readme_file": null,
+        "smartfon_gui_type": "auto",
+        "start_page": null,
+        "tablet_gui_type": "auto",
+        "template_desktop": null,
+        "template_schweb": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_theme": null,
+        "title": "Emails",
+        "user_app_template": null,
+        "version": "latest"
+    },
+    [
+        [
+            {
+                "consumer_code": "",
+                "doc": null,
+                "icon": "None",
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": null,
+                "module_name": "smtpd",
+                "module_title": "smtpd",
+                "name": "smtpd",
+                "perms": false,
+                "tasks_code": "",
+                "title": "smtpd",
+                "urls_code": null,
+                "user_param": "",
+                "view_code": null
+            },
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [
+                {
+                    "content": "from django.core.management.base import BaseCommand, CommandError\nimport asyncio\nfrom aiosmtpd.controller import Controller\n\n\nclass CustomHandler:\n    async def handle_DATA(self, server, session, envelope):\n        peer = session.peer\n        mail_from = envelope.mail_from\n        rcpt_tos = envelope.rcpt_tos\n        data = envelope.content         # type: bytes\n        # Process message data...\n        print(data)\n        # pass\n        if error_occurred:\n            return '500 Could not process your message'\n        return '250 OK'\n\n\nclass Command(BaseCommand):\n    help = 'run smtpd server'\n\n    def add_arguments(self, parser):\n        parser.add_argument('port', nargs='+', type=int)\n\n    def handle(self, *args, **options):\n        if 'port' in options:\n            port = options['port']\n        else:\n            port = 25\n            \n        handler = CustomHandler()\n        controller = Controller(handler, hostname='0.0.0.0', port=port)\n        controller.start()\n        # Wait for the user to press Return.\n        input('SMTP server running. Press Return to stop server and exit.')\n        controller.stop()\n",
+                    "file_type": "m",
+                    "name": "smtpd.py"
+                }
+            ]
+        ]
+    ],
+    []
+]

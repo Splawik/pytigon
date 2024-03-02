@@ -1,0 +1,185 @@
+[
+    {
+        "additional_settings": "",
+        "app_main": null,
+        "autor_email": null,
+        "autor_name": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "custom_tags": "",
+        "desktop_gui_type": "auto",
+        "doc": null,
+        "encoded_zip": null,
+        "ext_apps": null,
+        "git_repository": "https://git.pytigon.eu/pytigon/schodf.git",
+        "gui_elements": null,
+        "gui_type": "modern",
+        "icon": "None",
+        "icon_code": null,
+        "icon_size": "1",
+        "install_file": null,
+        "jsondata": null,
+        "license_file": null,
+        "login_required": false,
+        "main": false,
+        "main_view": true,
+        "name": "schodf",
+        "plugins": null,
+        "public": false,
+        "readme_file": null,
+        "smartfon_gui_type": "auto",
+        "start_page": "schodfupload/odf_upload/",
+        "tablet_gui_type": "auto",
+        "template_desktop": null,
+        "template_schweb": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_theme": null,
+        "title": "Odf",
+        "user_app_template": "",
+        "version": "latest"
+    },
+    [
+        [
+            {
+                "consumer_code": null,
+                "doc": null,
+                "icon": null,
+                "icon_code": null,
+                "icon_size": "1",
+                "index": "",
+                "jsondata": null,
+                "model_code": null,
+                "module_name": "main",
+                "module_title": "main",
+                "name": "schodfupload",
+                "perms": true,
+                "tasks_code": null,
+                "title": "OdfUpload",
+                "urls_code": null,
+                "user_param": null,
+                "view_code": "from pytigon_lib.schfs.vfstools import get_temp_filename\nfrom pytigon_lib.schdjangoext.spreadsheet_render import render_to_response_odf\n\nclass y(object):\n    name =  \"Hello world!\"\n    \nclass x(object):\n    stanowisko = y()"
+            },
+            [
+                [
+                    {
+                        "base_table": "",
+                        "doc": null,
+                        "generic": false,
+                        "metaclass_code": null,
+                        "name": "Rights",
+                        "ordering": "['id']",
+                        "proxy_model": null,
+                        "table_code": null,
+                        "url_params": "",
+                        "verbose_name": "Rights",
+                        "verbose_name_plural": "Rights"
+                    },
+                    [
+                        {
+                            "blank": true,
+                            "choices": "",
+                            "db_index": false,
+                            "default": "",
+                            "description": "Title",
+                            "editable": true,
+                            "help_text": "",
+                            "name": "title",
+                            "null": true,
+                            "param": "max_length=64",
+                            "rel_to": "",
+                            "type": "CharField",
+                            "unique": false,
+                            "url_params": ""
+                        }
+                    ]
+                ]
+            ],
+            [],
+            [
+                {
+                    "asynchronous": false,
+                    "doc": null,
+                    "extra_code": null,
+                    "name": "odf_upload",
+                    "param": "*args, **argv",
+                    "ret_type": "U",
+                    "url": "odf_upload/",
+                    "url_params": "{}",
+                    "view_code": "return PFORM(request, OdfUploadForm, \"schodfupload/odf_upload.html\", {})",
+                    "view_type": "u"
+                }
+            ],
+            [
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "odf_upload",
+                    "tags_mount": null,
+                    "template_code": "% extends \"base.html\"\n\n%% content\n    h1...Wczytywanie dokumentu odf\n    form action=./,,,method=post,,,enctype=multipart/form-data\n        % csrf_token\n        table\n            {{form}}\n        input type=submit,,,value=Wczytaj dokument\n    br\n    h2...Sk\u0142adnia znacznik\u00f3w w pliku odf:\n    br    \n    .Pierwszy znak w kom\u00f3rce arkusza:<br>\n    .    * - wynik w postaci tekstowej<br>\n    .    : - wynik jako liczba<br>\n    .    @ - wynik jako formu\u0142a<br>\n    .Pierwszy znak w notatce:<br>\n    .    !   - przeniesienie wyra\u017cenia do poziomu aktualnej kom\u00f3rki <br>\n    .          element przed kom\u00f3rk\u0105 oddzielony od elementu za kom\u00f3rk\u0105 znakiem @<br>\n    .          !{% for i in lista %}@{%endfor%}<br>\n    .   !!   - przeniesienie wyra\u017cenia do poziomu aktualnego wiersza <br>\n    . ! !!   - przeniesienie wyra\u017cenia do poziomu aktualnego arkusza<br>\n    .    <br>\n    .W dowolnym miejscu sk\u0142adnia zgodna z django:<br>\n    .    {&#123;zmienna&#125;], &#123;% blok %&#125; itp. <br>\n    .Dodatkowo wyra\u017cenie: _start_ zamieniane jest na: {&#123;<br>\n    .                     _end_ zamieniane jest na: &#125;}<br>\n    .                    <br>\n    .<br>",
+                    "url": "",
+                    "url_parm": ""
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "FormOdfUploadForm",
+                    "tags_mount": null,
+                    "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                    \"<<name1>>\": \"<<image_path1>>\",\n                    \"<<name2>>\": \"<<image_path2>>\",\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with form_width=<<dx>> form_height=<<dy>>\n        {{ block.super }}\n\n%% scroll\n\n%% form\n    %if form\n         table class=form\n            tr\n                td...title\n                td...{{ form.[[field]] }}\n            tr\n                td\n                td\n                    input type=submit,,,value=Refresh\n         br\n    %if tabela\n        h2...OK\n\n\n%% form_header\n    p\n        % new_row \"<<new_row_title>>\"\n        % list_action \"<<action>>\" \"<<action_title>>\"\n\n%% table_header\n  tr\n    td...ID\n    td...<<col_name>>\n    td...Action\n\n%% table_content\n    tr\n        td:::a href={{object.id}}/info?width=<<info_dy>>&height=<<info_dx>>,,,title=<<info_title>>,,,class=thickbox...{{object.id}}\n        td...{{object.<<object_name>>}}\n        td\n            % list_field \"<<child_name>>_set\" \"<<child_id>>\" \"<<child_title>>\"\n\n            % edit_field \"<<field_name>>\" \"<<field_id>>\" \"<<field_title>>\"\n\n            % action_row \"<<name1>>\" \"<<action_title_1>>\"\n            % action_row \"<<name2>>\" \"<<action_title_2>>\"\n\n            % edit_row \"update\"\n            % delete_row \"delete\"\n\n%% table_footer\n  tr\n    td...-\n    td...-\n    td:::\n        % new_row \"<<new_row_title>>\"\n\n%% row_edit\n    {{form.as_table}}\n    {{form.fields_as_table.<<field1>>__<<field2>>__<<field3>>}}",
+                    "url": null,
+                    "url_parm": null
+                },
+                {
+                    "asynchronous": false,
+                    "direct_to_template": null,
+                    "name": "Rights",
+                    "tags_mount": null,
+                    "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                    \"<<name1>>\": \"<<image_path1>>\",\n                    \"<<name2>>\": \"<<image_path2>>\",\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with form_width=<<dx>> form_height=<<dy>>\n        {{ block.super }}\n\n%% scroll\n\n%% form_header\n    p\n        % new_row \"<<new_row_title>>\"\n        % action_table \"<<action>>\" \"<<action_title>>\"\n\n%% table_header\n  tr\n    td...ID\n    td...<<col_name>>\n    td...Action\n\n%% table_content\n    tr\n        td:::a href={{object.id}}/info?width=<<info_dy>>&height=<<info_dx>>,,,title=<<info_title>>,,,class=thickbox...{{object.id}}\n        td...{{object.<<object_name>>}}\n        td\n            % list_field \"<<child_name>>_set\" \"<<child_id>>\" \"<<child_title>>\"\n\n            % edit_field \"<<field_name>>\" \"<<field_id>>\" \"<<field_title>>\"\n\n            % action_row \"<<name1>>\" \"<<action_title_1>>\"\n            % action_row \"<<name2>>\" \"<<action_title_2>>\"\n\n            % edit_row \"update\"\n            % delete_row \"delete\"\n\n%% table_footer\n  tr\n    td...-\n    td...-\n    td:::\n        % new_row \"<<new_row_title>>\"\n\n%% table_row_edit\n    {{form.as_table}}\n    {{form.fields_as_table.<<field1>>__<<field2>>__<<field3>>}}",
+                    "url": null,
+                    "url_parm": null
+                }
+            ],
+            [
+                {
+                    "icon": "wx.ART_REDO",
+                    "icon_code": null,
+                    "icon_size": "1",
+                    "name": "Odf upload",
+                    "perms": null,
+                    "url": "odf_upload/",
+                    "url_type": "desktop"
+                }
+            ],
+            [
+                [
+                    {
+                        "asynchronous": false,
+                        "doc": "",
+                        "end_class_code": "def render_to_response(self, request, template, context_instance):\n    odfdata= request.FILES['odf_file']\n    file_name = get_temp_filename(\"temp.ods\")\n\n    plik = open(file_name, 'wb')\n    plik.write(odfdata.read())\n    plik.close()\n    \n    return render_to_response_odf(file_name, context_instance=context_instance)",
+                        "end_code": "",
+                        "module": "schodf",
+                        "name": "OdfUploadForm",
+                        "process_code": "return {'object':  x() }"
+                    },
+                    [
+                        {
+                            "error_messages": "",
+                            "help_text": "",
+                            "initial": "",
+                            "label": "Odf file",
+                            "name": "odf_file",
+                            "param": "",
+                            "required": true,
+                            "type": "FileField",
+                            "widget": ""
+                        }
+                    ]
+                ]
+            ],
+            [],
+            [],
+            []
+        ]
+    ],
+    []
+]

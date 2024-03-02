@@ -1,0 +1,81 @@
+[
+    {
+        "additional_settings": null,
+        "app_main": null,
+        "autor_email": null,
+        "autor_name": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "custom_tags": "",
+        "desktop_gui_type": "auto",
+        "doc": null,
+        "encoded_zip": null,
+        "ext_apps": null,
+        "git_repository": null,
+        "gui_elements": null,
+        "gui_type": "modern",
+        "icon": "None",
+        "icon_code": null,
+        "icon_size": "1",
+        "install_file": "PIP=playwright",
+        "jsondata": null,
+        "license_file": null,
+        "login_required": false,
+        "main": false,
+        "main_view": true,
+        "name": "_schplaywright",
+        "plugins": null,
+        "public": false,
+        "readme_file": null,
+        "smartfon_gui_type": "auto",
+        "start_page": null,
+        "tablet_gui_type": "auto",
+        "template_desktop": null,
+        "template_schweb": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_theme": null,
+        "title": "Playwright integration",
+        "user_app_template": null,
+        "version": "latest"
+    },
+    [
+        [
+            {
+                "consumer_code": "",
+                "doc": null,
+                "icon": "None",
+                "icon_code": null,
+                "icon_size": "1",
+                "index": null,
+                "jsondata": null,
+                "model_code": null,
+                "module_name": "playwright",
+                "module_title": "playwright",
+                "name": "playwright_integration",
+                "perms": false,
+                "tasks_code": "",
+                "title": "Playwright integration",
+                "urls_code": "import playwright_integration.applib.playwrightrendering\n",
+                "user_param": "",
+                "view_code": null
+            },
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [],
+            [
+                {
+                    "content": "from playwright.sync_api import sync_playwright\nimport pytigon_lib.schhtml.htmlviewer\nfrom playwright.sync_api import sync_playwright\nimport io\n\nclass PlayWrightRendering(pytigon_lib.schhtml.htmlviewer.BaseRenderingLib):\n    def render(\n        html,\n        output_stream=None,\n        css=None,\n        width=int(210 * 72 / 25.4),\n        height=int(297 * 72 / 25.4),\n        stream_type=\"pdf\",\n        base_url=None,\n        info=None\n    ):\n        with sync_playwright() as p:\n            browser_type = p.chromium\n            browser = browser_type.launch()\n            page = browser.new_page()\n            if type(html) == str:\n                html2 = html\n            else:\n                html2 = html.decode(\"utf-8\")\n\n            if html2.startswith(\"http\"):\n                page.goto(html2.split(\"\\n\")[0].strip())\n            else:\n                page.set_content(html2)\n            buf = page.pdf()\n            result = io.BytesIO(buf)\n            browser.close()\n            return result\n\n    def accept(html, stream_type=\"pdf\", base_url=None, info=None):\n        if stream_type == \"pdf\":\n            return True\n        return False\n\npytigon_lib.schhtml.htmlviewer.set_endering_lib(PlayWrightRendering)\n",
+                    "file_type": "l",
+                    "name": "playwrightrendering"
+                }
+            ]
+        ]
+    ],
+    []
+]
