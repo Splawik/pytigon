@@ -55,8 +55,6 @@ from django.db import transaction
 from django.urls import reverse
 
 from pytigon_lib.schviews.viewtools import change_pos, duplicate_row
-
-# from pytigon_lib.schtasks.base_task import get_process_manager
 import pytigon_lib.schindent.indent_style
 from pytigon_lib.schindent.indent_tools import convert_js
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
@@ -670,13 +668,15 @@ def prj_export_to_str(pk):
 
 def build_prj(pk):
     prj = models.SChAppSet.objects.get(id=pk)
-    root_path = settings.ROOT_PATH
 
     if hasattr(pytigon.schserw.settings, "_PRJ_PATH_ALT"):
         base_path = os.path.join(pytigon.schserw.settings._PRJ_PATH_ALT, prj.name)
     else:
-        base_path = os.path.join(settings.PRJ_PATH_ALT, prj.name)
-    src_path = os.path.join(settings.PRJ_PATH, "schdevtools")
+        if os.path.exists(os.path.join(environ["START_PATH"], "prj")):
+            base_path = os.path.join(environ["START_PATH"], "prj", prj.name)
+        else:
+            base_path = os.path.join(settings.PRJ_PATH_ALT, prj.name)
+
     object_list = []
     gmt = time.gmtime()
     gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (
@@ -688,17 +688,11 @@ def build_prj(pk):
         gmt[5],
     )
 
-    # os.makedirs(base_path, exist_ok=True)
-    # os.makedirs(base_path+"/templates", exist_ok=True)
     os.makedirs(base_path + "/templates/theme", exist_ok=True)
-    # os.makedirs(base_path+"/templates_src", exist_ok=True)
     os.makedirs(base_path + "/templates_src/theme", exist_ok=True)
-    # os.makedirs(base_path+"/apache", exist_ok=True)
 
     apps = prj.schapp_set.all()
 
-    # template_to_file(base_path, "license", "LICENSE.txt", {'prj': prj})
-    # template_to_file(base_path, "readme", "README.txt",  {'prj': prj})
     with open(os.path.join(base_path, "README.md"), "wt") as f:
         if prj.readme_file:
             f.write(prj.readme_file)
@@ -711,9 +705,6 @@ def build_prj(pk):
         f.write("GEN_TIME='%s'\n" % gmt_str)
         if prj.install_file:
             f.write(prj.install_file)
-    # if prj.app_main:
-    #    with open(os.path.join(base_path, "prj_main.py"), "wt") as f:
-    #        f.write(prj.app_main)
 
     template_to_file(base_path, "manage", "manage.py", {"prj": prj})
     template_to_file(base_path, "init", "__init__.py", {"prj": prj})
@@ -854,7 +845,6 @@ def build_prj(pk):
             app.name + "/__init__.py",
             {"appmenus": appmenus, "app": app, "user_param": user_param},
         )
-        # template_to_file(base_path, "schema", app.name+"/schema.py",  {'appmenus': appmenus, 'app': app, 'user_param': user_param})
 
         for file_obj in app.schfiles_set.all():
             if file_obj.file_type == "f":
@@ -1001,16 +991,7 @@ def build_prj(pk):
 
     static_files = prj.schstatic_set.all()
 
-    # if settings.STATIC_APP_ROOT:
-    #    static_root = os.path.join(settings.STATIC_APP_ROOT, prj.name)
-    # else:
-    #    if settings.STATIC_ROOT:
-    #        static_root = os.path.join(os.path.join(settings.STATIC_ROOT, 'app'),prj.name)
-    #    else:
-    #        static_root = os.path.join(os.path.join(settings.STATICFILES_DIRS[0], 'app'),prj.name)
-
     static_root = os.path.join(base_path, "static", prj.name)
-
     static_scripts = os.path.join(static_root, "js")
     static_style = os.path.join(static_root, "css")
     static_components = os.path.join(static_root, "components")
@@ -1067,7 +1048,6 @@ def build_prj(pk):
                     "./org.transcrypt.__runtime__.js",
                     "../../pytigon_js/org.transcrypt.__runtime__.js",
                 ).replace("__globals__,", "")
-                # codejs = codejs.split("__pragma__ ('<all>')",1)[0]
             except:
                 codejs = ""
             print(
@@ -1088,7 +1068,6 @@ def build_prj(pk):
         if typ == "R":
             try:
                 codejs = pytigon_lib.schindent.indent_style.py_to_js(txt, None)
-                # codejs = codejs.split("__pragma__ ('<all>')",1)[0]
                 codejs = codejs.replace(
                     "./org.transcrypt.__runtime__.js",
                     "../../pytigon_js/org.transcrypt.__runtime__.js",
@@ -1134,8 +1113,6 @@ def build_prj(pk):
             f = open_and_create_dir(dest_path, "wb")
             f.write(txt2.encode("utf-8"))
             f.close()
-        # if static_file.type=='G':
-        #    initial_state += txt
         if typ == "O":
             p = os.path.join(base_path, static_file.name)
             dname = os.path.dirname(p)
@@ -1146,7 +1123,6 @@ def build_prj(pk):
     component_elements = []
 
     if prj.custom_tags:
-        # component_elements += [ pos.split('/')[0] + '/components/' + pos.split('/')[1] for pos in prj.custom_tags.replace('\n',';').replace('\r','').split(';') if pos and '/' in pos ]
         component_elements += [
             pos
             for pos in prj.custom_tags.replace("\n", ";").replace("\r", "").split(";")
@@ -1172,11 +1148,6 @@ def build_prj(pk):
                 if not x in prj_tab:
                     prj_tab.append(x)
 
-        # for pos in prj.ext_apps.split(','):
-        #    if pos:
-        #        x = pos.split('.')[0]
-        #        if not x in prj_tab:
-        #            prj_tab.append(x)
         for pos in prj_tab:
             try:
                 prj2 = models.SChAppSet.objects.get(name=pos)
@@ -1228,14 +1199,8 @@ def build_prj(pk):
             _file_name = os.path.join(
                 base_path, "templates_src", *(file_path.split("/"))
             )
-            # os.makedirs(os.path.join(os.path.join(base_path, "templates_src", "theme")), exist_ok=True)
             with open(_file_name, "wt") as f:
                 f.write(field)
-
-    ##print(component_elements)
-    ##template_to_i_file(base_path, src_path+"templates_src/schbuilder/wzr/schweb.ihtml","templates_src/template/schweb.ihtml",  {'prj': prj, 'component_elements': component_elements })
-
-    # template_to_file(base_path, "schweb", "templates_src/template/schweb.ihtml",  {'prj': prj, 'component_elements': component_elements })
 
     consumers_dict = {}
     for _app in apps:
@@ -1350,33 +1315,6 @@ def build_prj(pk):
         bstream = io.BytesIO(bcontent)
         with zipfile.ZipFile(bstream, "r") as izip:
             izip.extractall(base_path)
-
-    # success = True
-
-    # if platform_name()!='Android' and prj.install_file:
-    #    init_str = "[DEFAULT]\n"+prj.install_file
-    #    config = configparser.ConfigParser(allow_no_value=True)
-    #    config.read_string(init_str)
-    #    pip_str = config['DEFAULT']['pip']
-    #    if pip_str:
-    #        prjlib_path  = os.path.join(base_path, "prjlib")
-    #        if not os.path.exists(prjlib_path):
-    #            os.mkdir(prjlib_path)
-    #        packages = [ x.strip() for x in pip_str.split(' ') if x ]
-    #        exit_code, output_tab, err_tab = py_run(['-m', 'pip', "--disable-pip-version-check", 'install', f'--target={prjlib_path}', '--upgrade', ] + packages)
-    #        if output_tab:
-    #            for pos in output_tab:
-    #                if pos:
-    #                    object_list.append((datetime.datetime.now(), "pip info", pos))
-    #        if err_tab:
-    #            for pos in err_tab:
-    #                if pos:
-    #                    object_list.append((datetime.datetime.now(), "pip error", pos))
-    #                    success = False
-    # if success:
-    #    object_list.append((datetime.datetime.now(), 'SUCCESS:', ""))
-    # else:
-    #    object_list.append((datetime.datetime.now(), 'ERRORS:', ""))
 
     (exit_code, output_tab, err_tab) = make(settings.DATA_PATH, base_path, prj.name)
     if output_tab:
