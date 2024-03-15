@@ -49,7 +49,8 @@ if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
     STATIC_URL = URL_ROOT_FOLDER + "/static/"
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
     MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
-
+if "_schserverless.schnocompress" in INSTALLED_APPS:
+    INSTALLED_APPS.remove("_schserverless.schnocompress")
 from pytigon_lib.schtools.install_init import init
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -132,7 +133,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2024.02.15 22:17:30"
+GEN_TIME = "2024.03.15 20:33:00"
 
 
 for key, value in os.environ.items():
