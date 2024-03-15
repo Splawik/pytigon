@@ -40,5 +40,12 @@
         "version": "latest"
     },
     [],
-    []
+    [
+        {
+            "code": "GRAPHQL=true\nREST=true\nALLAUTH=true\n",
+            "doc": null,
+            "name": "env",
+            "type": "O"
+        }
+    ]
 ]
