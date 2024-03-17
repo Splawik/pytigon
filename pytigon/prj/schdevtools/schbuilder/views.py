@@ -1732,8 +1732,8 @@ def update(request):
 
     prj_names = (
         "schdevtools",
-        "schsetup",
-        "schcomponents",
+        "_schsetup",
+        "_schcomponents",
         "_schwiki",
         "_schdata",
         "_schtools",

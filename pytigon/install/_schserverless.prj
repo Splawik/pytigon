@@ -1,6 +1,6 @@
 [
     {
-        "additional_settings": "",
+        "additional_settings": "if \"_schserverless.schnocompress\" in INSTALLED_APPS:\n    INSTALLED_APPS.remove(\"_schserverless.schnocompress\")",
         "app_main": null,
         "autor_email": null,
         "autor_name": null,
