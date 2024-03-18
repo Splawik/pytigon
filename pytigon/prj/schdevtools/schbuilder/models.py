@@ -9,6 +9,7 @@ from pytigon_lib.schtools import schjson
 
 from django.utils.translation import gettext_lazy as _
 from django.contrib import admin
+from django.utils import timezone
 
 import os, os.path
 import sys
@@ -315,7 +316,7 @@ class SChAppSet(JSONModel):
     class Meta:
         verbose_name = _("Application package")
         verbose_name_plural = _("Application packages")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -652,7 +653,7 @@ class SChApp(JSONModel):
     class Meta:
         verbose_name = _("SChApp")
         verbose_name_plural = _("SChApp")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -950,7 +951,7 @@ class SChChoice(models.Model):
     class Meta:
         verbose_name = _("SChChoice")
         verbose_name_plural = _("SChChoice")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -982,7 +983,7 @@ class SChChoiceItem(models.Model):
     class Meta:
         verbose_name = _("SChChoiceItem")
         verbose_name_plural = _("SChChoiceItem")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -1014,7 +1015,7 @@ class SChTable(models.Model):
     class Meta:
         verbose_name = _("SChTable")
         verbose_name_plural = _("SChTable")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -1109,7 +1110,7 @@ class SChField(models.Model):
     class Meta:
         verbose_name = _("SChField")
         verbose_name_plural = _("SChField")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -1351,7 +1352,7 @@ class SChView(models.Model):
     class Meta:
         verbose_name = _("SChView")
         verbose_name_plural = _("SChView")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -1548,7 +1549,7 @@ class SChStatic(models.Model):
     class Meta:
         verbose_name = _("Static file")
         verbose_name_plural = _("Static files")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -1600,7 +1601,7 @@ class SChTemplate(models.Model):
     class Meta:
         verbose_name = _("SChTemplate")
         verbose_name_plural = _("SChTemplate")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -1865,7 +1866,7 @@ class SChAppMenu(models.Model):
     class Meta:
         verbose_name = _("SChAppMenu")
         verbose_name_plural = _("SChAppMenu")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -1966,7 +1967,7 @@ class SChForm(models.Model):
     class Meta:
         verbose_name = _("Form")
         verbose_name_plural = _("Form")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -2035,7 +2036,7 @@ class SChFormField(models.Model):
     class Meta:
         verbose_name = _("Form field")
         verbose_name_plural = _("Form field")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -2144,7 +2145,7 @@ class SChTask(models.Model):
     class Meta:
         verbose_name = _("SChTask")
         verbose_name_plural = _("SChTask")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -2202,7 +2203,7 @@ class SChFiles(models.Model):
     class Meta:
         verbose_name = _("SChFiles")
         verbose_name_plural = _("SChFiles")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -2249,7 +2250,7 @@ class SChLocale(models.Model):
     class Meta:
         verbose_name = _("Locale")
         verbose_name_plural = _("Locales")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -2275,7 +2276,7 @@ class SChTranslate(models.Model):
     class Meta:
         verbose_name = _("Translate")
         verbose_name_plural = _("Translate")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
@@ -2307,7 +2308,7 @@ class SChChannelConsumer(models.Model):
     class Meta:
         verbose_name = _("Channel consumer")
         verbose_name_plural = _("Channel consumers")
-        default_permissions = ("add", "change", "delete", "list")
+        default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
         ordering = ["id"]
