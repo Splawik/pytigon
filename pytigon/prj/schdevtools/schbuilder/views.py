@@ -976,6 +976,23 @@ def build_prj(pk):
                 file_name = base_path + "/" + app.name + "/schema.py"
             elif file_obj.file_type == "r":
                 file_name = base_path + "/" + app.name + "/rest_api.py"
+            elif file_obj.file_type == "n":
+                file_name = os.path.join(base_path, app.name, "applib", file_obj.name)
+                if not file_name.endswith(".nim"):
+                    file_name += ".nim"
+                file_name2 = os.path.join(
+                    settings.PRJ_PATH,
+                    "schdevtools",
+                    "templates_src",
+                    "schbuilder",
+                    "wzr",
+                    "build.ihtml",
+                )
+                with open(file_name2, "rt") as f:
+                    buf = f.read()
+                    file_name3 = file_name.replace(".nim", "_build.py")
+                    with open(file_name3, "wt") as f3:
+                        f3.write(buf)
             else:
                 file_name = None
 
@@ -1056,11 +1073,9 @@ def build_prj(pk):
                 else os.path.join(static_scripts, static_file.name + ".js")
             )
             f = open_and_create_dir(
-                (
-                    dest_path
-                    if dest_path
-                    else os.path.join(static_scripts, static_file.name + ".js")
-                ),
+                dest_path
+                if dest_path
+                else os.path.join(static_scripts, static_file.name + ".js"),
                 "wb",
             )
             f.write(codejs.encode("utf-8"))
@@ -1080,11 +1095,9 @@ def build_prj(pk):
                 else os.path.join(static_components, static_file.name + ".js")
             )
             f = open_and_create_dir(
-                (
-                    dest_path
-                    if dest_path
-                    else os.path.join(static_components, static_file.name + ".js")
-                ),
+                dest_path
+                if dest_path
+                else os.path.join(static_components, static_file.name + ".js"),
                 "wb",
             )
             f.write(codejs.encode("utf-8"))
@@ -1098,11 +1111,9 @@ def build_prj(pk):
                 t = Template(buf)
                 txt2 = t.render(Context({"prj": prj}))
                 f = open_and_create_dir(
-                    (
-                        dest_path
-                        if dest_path
-                        else os.path.join(static_style, static_file.name + ".css")
-                    ),
+                    dest_path
+                    if dest_path
+                    else os.path.join(static_style, static_file.name + ".css"),
                     "wb",
                 )
                 f.write(txt2.encode("utf-8"))
@@ -1339,7 +1350,6 @@ class Installer(forms.Form):
     )
 
     def process(self, request, queryset=None):
-
         name = self.cleaned_data["name"]
         return installer(request, name)
 
@@ -1355,7 +1365,6 @@ class Install(forms.Form):
     )
 
     def process(self, request, queryset=None):
-
         install_file = request.FILES["install_file"]
         name = install_file.name.split(".")[0].split("-")[0]
 
@@ -1397,7 +1406,6 @@ class ImportFromGit(forms.Form):
     )
 
     def process(self, request, queryset=None):
-
         object_list = []
         git_repository = self.cleaned_data["path"]
         prj_name = git_repository.split("/")[-1].split(".")[0]
@@ -1444,26 +1452,22 @@ def view_importfromgit(request, *argi, **argv):
 # Hello
 @dict_to_template("schbuilder/v_gen.html")
 def gen(request, pk):
-
     return {"object_list": reversed(build_prj(pk))}
 
 
 def prj_export(request, pk):
-
     content = prj_export_to_str(pk)
     return HttpResponse(content, content_type="text/plain")
 
 
 @dict_to_template("schbuilder/v_prj_import.html")
 def prj_import(request):
-
     ex_str = request.POST["EDITOR"]
     return prj_import_from_str(ex_str, backup_old=True)
 
 
 @dict_to_template("schbuilder/v_manage.html")
 def manage(request, pk):
-
     prj = models.SChAppSet.objects.get(id=pk)
     return {"project": prj}
 
@@ -1494,7 +1498,6 @@ def manage(request, pk):
 
 
 def template_edit(request, pk):
-
     table = models.SChTable.objects.get(id=pk)
     templates = models.SChTemplate.objects.filter(parent=table.parent).filter(
         name=table.name
@@ -1544,12 +1547,10 @@ def template_edit(request, pk):
 
 
 def edit(request):
-
     return TemplateView.as_view(template_name="schbuilder/import_form.html")(request)
 
 
 def template_edit2(request, pk):
-
     form = models.SChForm.objects.get(id=pk)
     templates = models.SChTemplate.objects.filter(parent=form.parent).filter(
         name="Form" + form.name
@@ -1578,7 +1579,6 @@ def template_edit2(request, pk):
 
 @dict_to_template("schbuilder/v_installer.html")
 def installer(request, pk):
-
     buf = []
 
     try:
@@ -1690,7 +1690,6 @@ def installer(request, pk):
 
 @dict_to_template("schbuilder/v_restart_server.html")
 def restart_server(request):
-
     lck = os.path.join(settings.DATA_PATH, "restart_needed.lck")
     success = True
     try:
@@ -1702,7 +1701,6 @@ def restart_server(request):
 
 
 def template_edit3(request, pk):
-
     view = models.SChView.objects.get(id=pk)
     templates = models.SChTemplate.objects.filter(parent=view.parent).filter(
         name="v_" + view.name
@@ -1729,7 +1727,6 @@ def template_edit3(request, pk):
 
 @dict_to_template("schbuilder/v_update.html")
 def update(request):
-
     prj_names = (
         "schdevtools",
         "_schsetup",
@@ -1811,7 +1808,6 @@ def update(request):
 
 @dict_to_template("schbuilder/v_translate_sync.html")
 def translate_sync(request, pk):
-
     locale_obj = models.SChLocale.objects.get(id=pk)
     prj = locale_obj.parent
 
@@ -1892,7 +1888,6 @@ def translate_sync(request, pk):
 
 @dict_to_template("schbuilder/v_locale_gen.html")
 def locale_gen(request, pk):
-
     ret = locale_gen_internal(pk)
     if ret:
         ret_str = "OK"
@@ -1907,7 +1902,6 @@ def locale_gen(request, pk):
 
 
 def download_installer(request, name):
-
     installer = os.path.join(os.path.join(settings.DATA_PATH, "temp"), name + ".ptig")
     if os.path.exists(installer):
         with open(installer, "rb") as zip_file:
@@ -1921,7 +1915,6 @@ def download_installer(request, name):
 
 @dict_to_json
 def autocomplete(request, id, key):
-
     if key in ("object_fields", "object_methods", "object_fields_and_methods"):
         template = models.SChTemplate.objects.get(pk=int(id))
         ret = []
@@ -2056,7 +2049,6 @@ def autocomplete(request, id, key):
 
 @dict_to_template("schbuilder/v_gen_milestone.html")
 def gen_milestone(request, pk):
-
     object_list = []
 
     prj = models.SChAppSet.objects.get(id=pk)
@@ -2177,13 +2169,11 @@ def gen_milestone(request, pk):
 
 
 def prj_import2(request):
-
     return view_importfromgit(request)
 
 
 @dict_to_template("schbuilder/v_run.html")
 def run(request, pk):
-
     x = 1.5
     t = Template("X {{ x }}")
     c = Context({"x": x})
@@ -2195,7 +2185,6 @@ def run(request, pk):
 
 
 def run2(request, pk):
-
     prj = models.SChAppSet.objects.get(pk=pk)
     environ["PYTHONPATH"] = os.path.join(settings.ROOT_PATH, "..")
     subprocess.run([sys.executable, "-m", "pytigon.ptig", prj.name], shell=False)

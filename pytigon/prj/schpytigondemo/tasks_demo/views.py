@@ -37,7 +37,6 @@ import time
 
 @dict_to_template("tasks_demo/v_test_task.html")
 def test_task(request, **argv):
-
     id = "test1"
     task_id = async_task("tasks_demo.tasks.test_task", task_publish_id=id, param=123)
     return {"task_id": task_id, "id": "demo__" + id}
@@ -45,6 +44,5 @@ def test_task(request, **argv):
 
 @dict_to_template("tasks_demo/v_test_task2.html")
 def test_task2(request, **argv):
-
     task_id = async_task("tasks_demo.tasks.test_task2")
     return {"ret": task_id}

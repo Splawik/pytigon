@@ -31,6 +31,14 @@ import sys
 import datetime
 from django.utils import timezone
 
+from pytigon_lib.schtools import nim_ext
+from django.conf import settings
+import os
+
+ext_path = os.path.join(settings.DATA_PATH, settings.PRJ_NAME, "prjlib")
+
+lib = nim_ext.load_nim_lib(os.path.join(ext_path, "schpytigondemo_test_nim"), "ext")
+
 
 def make_csum_fun():
     from pytigon_lib.schtools.llvm_exec import compile_str_to_module, get_function
@@ -60,27 +68,13 @@ csum = make_csum_fun()
 
 @dict_to_template("interfaces/v_test_interfaces.html")
 def test_interfaces(request, **argv):
-
-    title1 = "cffi test"
-    from interfaces.applib.cffi_add import lib as cffitestlib
-
-    result1 = cffitestlib.add(2, 2)
-
-    title2 = "zig ctypes test"
+    title1 = "zig ctypes test"
     import ctypes
 
     lib = ctypes.CDLL("interfaces/applib/libzig_add.so")
-    result2 = lib.add(2, 2)
+    result1 = lib.add(2, 2)
 
-    title3 = "setuptools test"
-    # try:
-    import c_sum
-
-    result3 = c_sum.sum(2, 2)
-    # except:
-    #    print("c_sum demo error")
-
-    title4 = "wasm from zig"
+    title2 = "wasm from zig"
     import interfaces.applib
     from wasmtime import Store, Module, Instance, Func, FuncType
 
@@ -91,7 +85,7 @@ def test_interfaces(request, **argv):
 
     instance = Instance(store, module, [])
     sum_func = instance.exports(store)["add"]
-    result4 = sum_func(store, 2, 2)
+    result2 = sum_func(store, 2, 2)
 
     # from wasmer import engine, wasi, Store, Module, ImportObject, Instance
     # from wasmer_compiler_cranelift import Compiler
@@ -113,15 +107,34 @@ def test_interfaces(request, **argv):
     #    sum = instance.exports.add
     #    result4 = sum(2, 2)
 
-    title5 = "llvm test"
-    result5 = csum(1, 3)
+    title3 = "llvm test"
+    result3 = csum(1, 3)
 
-    return {
-        "object_list": (
-            (title1, result1),
-            (title2, result2),
-            (title3, result3),
-            (title4, result4),
-            (title5, result5),
-        )
-    }
+    print("json_test")
+    ret = nim_ext.ext.json_test(x=100, y=300, value="Hello world!")
+    print(ret)
+
+    print("int_test")
+    print(nim_ext.ext.int_test(10))
+
+    print("float_test")
+    print(nim_ext.ext.float_test(100.0))
+
+    print("string_test")
+    print(nim_ext.ext.string_test(b"Hello"))
+    print(nim_ext.ext.string_test_str("Hello"))
+
+    print("int_test")
+    print(nim_ext.ext.int_test(10))
+
+    print("void_test")
+    print(nim_ext.ext.void_test())
+
+    print("string_int_test")
+    print(nim_ext.ext.string_int_test("string int test"))
+
+    print("json_test2")
+    ret = nim_ext.ext.json_test2()
+    print(ret)
+
+    return {"object_list": ((title1, result1), (title2, result2), (title3, result3))}

@@ -36,7 +36,6 @@ tag_CHOICE = [
 
 
 class Example1User(models.Model):
-
     class Meta:
         verbose_name = _("User")
         verbose_name_plural = _("Users")
@@ -60,7 +59,6 @@ admin.site.register(Example1User)
 
 
 class Example1Computer(models.Model):
-
     class Meta:
         verbose_name = _("Computer")
         verbose_name_plural = _("Computers")
@@ -94,7 +92,6 @@ admin.site.register(Example1Computer)
 
 
 class Example2Peripheral(models.Model):
-
     class Meta:
         verbose_name = _("Peripheral")
         verbose_name_plural = _("Peripherals")
@@ -120,7 +117,6 @@ admin.site.register(Example2Peripheral)
 
 
 class Example3Tag(models.Model):
-
     class Meta:
         verbose_name = _("Tag")
         verbose_name_plural = _("Tags")
@@ -168,7 +164,6 @@ admin.site.register(Example3Tag)
 
 
 class Example4Parameter(JSONModel):
-
     class Meta:
         verbose_name = _("Parameter")
         verbose_name_plural = _("Parameters")
@@ -218,7 +213,6 @@ admin.site.register(Example4Parameter)
 
 
 class Example5ParamGroup(TreeModel):
-
     class Meta:
         verbose_name = _("Group of parameters")
         verbose_name_plural = _("Groups of parameters")
@@ -269,7 +263,6 @@ admin.site.register(Example5ParamGroup)
 
 
 class Example6ComputerFromExample1(Example1Computer):
-
     class Meta:
         verbose_name = _("Proxy to computer")
         verbose_name_plural = _("Proxy to computers")
@@ -285,7 +278,6 @@ admin.site.register(Example6ComputerFromExample1)
 
 
 class Example7ComputerFromExample1(Example1Computer):
-
     class Meta:
         verbose_name = _("Proxy to computer")
         verbose_name_plural = _("Proxy to computers")

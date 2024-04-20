@@ -10,7 +10,6 @@ from pytigon_lib.schtasks.publish import publish
 
 @publish("demo")
 def test_task(cproxy=None, **kwargs):
-
     if "param" in kwargs:
         print(kwargs["param"])
     if cproxy:
@@ -25,7 +24,6 @@ def test_task(cproxy=None, **kwargs):
 
 
 def test_task2(cproxy=None, **kwargs):
-
     for i in range(0, 30):
         print("item:", i)
         time.sleep(1)

@@ -17,6 +17,7 @@ from channels.generic.http import AsyncHttpConsumer
 
 
 class clock(AsyncJsonWebsocketConsumer):
+    print("A1")
     COUNT = 1
 
     async def connect(self):
@@ -33,3 +34,5 @@ class clock(AsyncJsonWebsocketConsumer):
 
     async def disconnect(self, close_code):
         print("Websocket closed", close_code)
+
+    print("A2")

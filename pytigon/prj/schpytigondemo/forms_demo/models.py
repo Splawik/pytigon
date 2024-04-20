@@ -29,7 +29,6 @@ test_choice = [
 
 
 class Select2Example(models.Model):
-
     class Meta:
         verbose_name = _("Select2 example")
         verbose_name_plural = _("Select2 examples")
