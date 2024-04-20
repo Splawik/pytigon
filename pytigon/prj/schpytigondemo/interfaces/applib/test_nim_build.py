@@ -28,6 +28,18 @@ def build(**argv):
             settings.PRJ_NAME + "_" + base_name + ".so",
         )
 
+    packages = ""
+    if packages:
+        packages_list = packages.replace(",",";").split(";")
+        for package in packages_list:
+            subprocess.run(
+                [   
+                    os.path.join(nim_path, "bin", exe.replace("nim", "nimble")),
+                    "install",
+                    package
+                ]
+            )
+
     subprocess.run(
         [
             os.path.join(nim_path, "bin", exe),

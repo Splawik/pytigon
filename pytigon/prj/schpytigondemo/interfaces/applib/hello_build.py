@@ -14,21 +14,19 @@ def build(**argv):
         exe = "nim.exe"
         out_path = os.path.join(
             settings.DATA_PATH,
-            settings.PRJ_NAME,
-            "prjlib",
-            settings.PRJ_NAME + "_" + base_name + ".dll",
+            "prg",
+            settings.PRJ_NAME + "_" + base_name + ".exe",
         )
     else:
         os.environ["PATH"] = os.environ["PATH"] + (":%s/bin/" % nim_path)
         exe = "nim"
         out_path = os.path.join(
             settings.DATA_PATH,
-            settings.PRJ_NAME,
-            "prjlib",
-            settings.PRJ_NAME + "_" + base_name + ".so",
+            "prg",
+            settings.PRJ_NAME + "_" + base_name,
         )
 
-    packages = "{PARAM}"
+    packages = "zmq"
     if packages:
         packages_list = packages.replace(",",";").split(";")
         for package in packages_list:
@@ -50,8 +48,6 @@ def build(**argv):
             "--clang.exe=zigcc",
             "--clang.linkerexe=zigcc",
             "-d:release",
-            "--app:lib",
-            "--noMain",
             "--gc:orc",
             "--opt:size",
             path,

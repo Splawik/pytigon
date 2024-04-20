@@ -289,7 +289,8 @@ FileType_CHOICES = [
     ("r", "Rest api"),
     ("j", "Frontend view"),
     ("T", "Frontend template"),
-    ("n", "Nim source file"),
+    ("n", "Pytigon extension in nim"),
+    ("N", "Nim executable source file"),
 ]
 
 Consumer_CHOICES = [
