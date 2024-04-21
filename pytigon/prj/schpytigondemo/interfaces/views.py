@@ -137,4 +137,8 @@ def test_interfaces(request, **argv):
     ret = nim_ext.ext.json_test2()
     print(ret)
 
+    import nimext
+
+    print(nimext.greet("world"), " from nimext")
+
     return {"object_list": ((title1, result1), (title2, result2), (title3, result3))}

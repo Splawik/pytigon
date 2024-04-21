@@ -976,7 +976,7 @@ def build_prj(pk):
                 file_name = base_path + "/" + app.name + "/schema.py"
             elif file_obj.file_type == "r":
                 file_name = base_path + "/" + app.name + "/rest_api.py"
-            elif file_obj.file_type in ("n", "N"):
+            elif file_obj.file_type in ("n", "N", "E"):
                 file_name = os.path.join(base_path, app.name, "applib", file_obj.name)
                 param = ""
                 if "(" in file_name:
@@ -985,13 +985,20 @@ def build_prj(pk):
                     param = x[1].split(")")[0]
                 if not file_name.endswith(".nim"):
                     file_name += ".nim"
+
+                build_name = "build.ihtml"
+                if file_obj.file_type == "N":
+                    build_name = "build_exe.ihtml"
+                elif file_obj.file_type == "E":
+                    build_name = "build_ext.ihtml"
+
                 file_name2 = os.path.join(
                     settings.PRJ_PATH,
                     "schdevtools",
                     "templates_src",
                     "schbuilder",
                     "wzr",
-                    "build.ihtml" if file_obj.file_type == "n" else "build_exe.ihtml",
+                    build_name,
                 )
                 with open(file_name2, "rt") as f:
                     buf = f.read()

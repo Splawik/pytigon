@@ -291,6 +291,7 @@ FileType_CHOICES = [
     ("T", "Frontend template"),
     ("n", "Pytigon extension in nim"),
     ("N", "Nim executable source file"),
+    ("E", "Nimpy extension"),
 ]
 
 Consumer_CHOICES = [
