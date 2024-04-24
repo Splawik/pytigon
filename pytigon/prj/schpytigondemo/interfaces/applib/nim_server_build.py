@@ -26,7 +26,7 @@ def build(**argv):
             settings.PRJ_NAME + "_" + base_name,
         )
 
-    packages = "prologue,nimja"
+    packages = "nimja"
     if packages:
         packages_list = packages.replace(",",";").split(";")
         for package in packages_list:

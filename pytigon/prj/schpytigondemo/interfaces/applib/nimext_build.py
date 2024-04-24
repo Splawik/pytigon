@@ -28,7 +28,7 @@ def build(**argv):
             base_name + ".so",
         )
 
-    packages = "nimpy;"
+    packages = "nimpy;nimpy"
     if packages:
         packages_list = packages.replace(",",";").split(";")
         for package in packages_list:
