@@ -383,6 +383,45 @@ def run(param=None):
             argv[1] = ret[0]
 
         subprocess.run([get_executable(), "-m", "ziglang"] + argv[2:])
+    elif len(argv) > 1 and argv[1] in ("nim", "nimble"):
+        from pytigon_lib.schtools.main_paths import get_main_paths
+        from pytigon_lib.schtools.nim_integration import get_nim_path
+
+        paths = get_main_paths()
+        ret = schserw_init_prj_path(paths, None, param)
+        if ret:
+            argv[1] = ret[0]
+        nim_path = get_nim_path(paths["DATA_PATH"])
+        if nim_path:
+            nim_path = os.path.join(nim_path, "bin")
+            if os.name == "nt":
+                environ["PATH"] = environ["PATH"] + ";" + nim_path
+            else:
+                environ["PATH"] = environ["PATH"] + ":" + nim_path
+            subprocess.run(
+                [
+                    os.path.join(
+                        nim_path, argv[1] + ".exe" if os.name == "nt" else argv[1]
+                    ),
+                ]
+                + argv[2:]
+            )
+    elif len(argv) > 1 and argv[1].startswith("@"):
+        from pytigon_lib.schtools.main_paths import get_main_paths
+
+        paths = get_main_paths()
+        ret = schserw_init_prj_path(paths, None, param)
+        if ret:
+            argv[1] = ret[0]
+        prg_path = os.path.join(paths["DATA_PATH"], "prg")
+        subprocess.run(
+            [
+                os.path.join(
+                    prg_path, argv[1][1:] + ".exe" if os.name == "nt" else argv[1][1:]
+                ),
+            ]
+            + argv[2:]
+        )
     elif len(argv) > 1 and (
         argv[1].endswith(".py")
         or argv[1][-4:-1] == ".py"
