@@ -64,7 +64,7 @@ from pytigon_lib.schtools.install import Ptig
 from pytigon_lib.schtools.process import py_run
 from pytigon_lib.schtools.platform_info import platform_name
 
-from pytigon_lib.schtools.cc import import_plugin, make
+# from pytigon_lib.schtools.cc import import_plugin, make
 from pytigon_lib.schdjangoext.python_style_template_loader import compile_template
 
 from pytigon.ext_lib.pygettext import main as gtext
@@ -1340,16 +1340,16 @@ def build_prj(pk):
         with zipfile.ZipFile(bstream, "r") as izip:
             izip.extractall(base_path)
 
-    (exit_code, output_tab, err_tab) = make(settings.DATA_PATH, base_path, prj.name)
-    if output_tab:
-        for pos in output_tab:
-            if pos:
-                object_list.append((datetime.datetime.now(), "compile info", pos))
-    if err_tab:
-        for pos in err_tab:
-            if pos:
-                object_list.append((datetime.datetime.now(), "compile error", pos))
-                success = False
+    # (exit_code, output_tab, err_tab) = make(settings.DATA_PATH, base_path, prj.name)
+    # if output_tab:
+    #    for pos in output_tab:
+    #        if pos:
+    #            object_list.append((datetime.datetime.now(), "compile info", pos))
+    # if err_tab:
+    #    for pos in err_tab:
+    #        if pos:
+    #            object_list.append((datetime.datetime.now(), "compile error", pos))
+    #            success = False
 
     return object_list
 

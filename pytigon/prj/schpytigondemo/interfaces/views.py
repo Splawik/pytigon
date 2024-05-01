@@ -68,13 +68,7 @@ csum = make_csum_fun()
 
 @dict_to_template("interfaces/v_test_interfaces.html")
 def test_interfaces(request, **argv):
-    title1 = "zig ctypes test"
-    import ctypes
-
-    lib = ctypes.CDLL("interfaces/applib/libzig_add.so")
-    result1 = lib.add(2, 2)
-
-    title2 = "wasm from zig"
+    title1 = "wasm from zig"
     import interfaces.applib
     from wasmtime import Store, Module, Instance, Func, FuncType
 
@@ -85,7 +79,7 @@ def test_interfaces(request, **argv):
 
     instance = Instance(store, module, [])
     sum_func = instance.exports(store)["add"]
-    result2 = sum_func(store, 2, 2)
+    result1 = sum_func(store, 2, 2)
 
     # from wasmer import engine, wasi, Store, Module, ImportObject, Instance
     # from wasmer_compiler_cranelift import Compiler
@@ -107,38 +101,45 @@ def test_interfaces(request, **argv):
     #    sum = instance.exports.add
     #    result4 = sum(2, 2)
 
-    title3 = "llvm test"
-    result3 = csum(1, 3)
+    title2 = "json_test"
+    result2 = nim_ext.ext.json_test(x=100, y=300, value="Hello world!")
 
-    print("json_test")
-    ret = nim_ext.ext.json_test(x=100, y=300, value="Hello world!")
-    print(ret)
+    title3 = "int_test"
+    result3 = nim_ext.ext.int_test(10)
 
-    print("int_test")
-    print(nim_ext.ext.int_test(10))
+    title4 = "float_test"
+    result4 = nim_ext.ext.float_test(100.0)
 
-    print("float_test")
-    print(nim_ext.ext.float_test(100.0))
+    title5 = "string_test"
+    result5 = nim_ext.ext.string_test(b"Hello")
+    title6 = "string_test_from_utf"
+    result6 = nim_ext.ext.string_test_str("Hello")
 
-    print("string_test")
-    print(nim_ext.ext.string_test(b"Hello"))
-    print(nim_ext.ext.string_test_str("Hello"))
+    title7 = "void_test"
+    result7 = nim_ext.ext.void_test()
 
-    print("int_test")
-    print(nim_ext.ext.int_test(10))
+    title8 = "string_int_test"
+    result8 = nim_ext.ext.string_int_test("string int test")
 
-    print("void_test")
-    print(nim_ext.ext.void_test())
-
-    print("string_int_test")
-    print(nim_ext.ext.string_int_test("string int test"))
-
-    print("json_test2")
-    ret = nim_ext.ext.json_test2()
-    print(ret)
+    title9 = "json_test2"
+    result9 = nim_ext.ext.json_test2()
 
     import nimext
 
-    print(nimext.greet("world"), " from nimext")
+    title10 = "nimext test"
+    result10 = nimext.greet("world") + " from nimext"
 
-    return {"object_list": ((title1, result1), (title2, result2), (title3, result3))}
+    return {
+        "object_list": (
+            (title1, result1),
+            (title2, result2),
+            (title3, result3),
+            (title4, result4),
+            (title5, result5),
+            (title6, result6),
+            (title7, result7),
+            (title8, result8),
+            (title9, result9),
+            (title10, result10),
+        )
+    }

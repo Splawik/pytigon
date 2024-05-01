@@ -17,7 +17,6 @@ from channels.generic.http import AsyncHttpConsumer
 
 
 class teleconference(AsyncJsonWebsocketConsumer):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.host = True
