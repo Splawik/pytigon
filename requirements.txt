@@ -15,3 +15,4 @@ django_select2
 django-widget-tweaks
 django-q2
 django-cancan
+django-extensions

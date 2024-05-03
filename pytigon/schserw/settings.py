@@ -43,7 +43,7 @@ if (
     sys.argv
     and (
         (sys.argv[0].endswith("manage.py") and "runserver" in sys.argv)
-        or "--debug" in sys.argv
+        or "--dev" in sys.argv
     )
 ) or ENV("PYTIGON_DEBUG"):
     DEBUG = True
@@ -237,6 +237,9 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "pytigon.schserw.schsys",
 ]
+
+if DEBUG:
+    INSTALLED_APPS.append("django_extensions")
 
 if MAILER:
     INSTALLED_APPS.append("mailer")

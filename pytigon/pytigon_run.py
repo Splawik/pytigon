@@ -383,7 +383,7 @@ def run(param=None):
             argv[1] = ret[0]
 
         subprocess.run([get_executable(), "-m", "ziglang"] + argv[2:])
-    elif len(argv) > 1 and argv[1] in ("nim", "nimble"):
+    elif len(argv) > 1 and argv[1] in ("nim", "nimble", "-y"):
         from pytigon_lib.schtools.main_paths import get_main_paths
         from pytigon_lib.schtools.nim_integration import get_nim_path
 
