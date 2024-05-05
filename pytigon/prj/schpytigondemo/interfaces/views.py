@@ -129,6 +129,9 @@ def test_interfaces(request, **argv):
     title10 = "nimext test"
     result10 = nimext.greet("world") + " from nimext"
 
+    title11 = "llvm assembly"
+    result11 = csum(2, 2)
+
     return {
         "object_list": (
             (title1, result1),
@@ -141,5 +144,6 @@ def test_interfaces(request, **argv):
             (title8, result8),
             (title9, result9),
             (title10, result10),
+            (title11, result11),
         )
     }
