@@ -25,7 +25,6 @@ from schelements.models import *
 
 
 class CommonGroupDef(schelements.models.BaseObject):
-
     class Meta:
         verbose_name = _("Common group definition")
         verbose_name_plural = _("Common groups definition")
@@ -65,7 +64,6 @@ admin.site.register(CommonGroupDef)
 
 
 class CommonGroup(JSONModel):
-
     class Meta:
         verbose_name = _("Common group")
         verbose_name_plural = _("Common groups")

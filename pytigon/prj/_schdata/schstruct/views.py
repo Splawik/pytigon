@@ -157,7 +157,6 @@ def move_rep(request, id, to_pos="+1"):
 
 
 def new_group(request, group_type, parent_id):
-
     # new_group/(?P<group_type>\w+)/(?P<parent_id\d+)/$
     if parent_id and int(parent_id) > 0:
         parent = models.CommonGroup.objects.get(id=int(parent_id))
@@ -188,7 +187,6 @@ def new_group(request, group_type, parent_id):
 
 
 def edit__group(request, group_id):
-
     group = models.CommonGroup.objects.get(pk=group_id)
     return edit_group(request, group)
 
@@ -254,7 +252,6 @@ def edit__group(request, group_id):
 
 
 def list_group_by_tag(request, group_tag, template):
-
     if template:
         target_template = "__" + template
     else:

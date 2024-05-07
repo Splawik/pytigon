@@ -44,7 +44,6 @@ User = get_user_model()
 
 
 class Profile(models.Model):
-
     class Meta:
         verbose_name = _("Profile")
         verbose_name_plural = _("Profiles")
@@ -165,7 +164,6 @@ admin.site.register(Profile)
 
 
 class UserProxy(User):
-
     class Meta:
         verbose_name = _("User")
         verbose_name_plural = _("Users")
@@ -193,11 +191,10 @@ def init_user_profiles():
         def create_user_profile(sender, instance, created, **kwargs):
             if created:
                 Profile.objects.create(user=instance)
-
-            if hasattr(instance, "profile"):
-                instance.profile.save()
             else:
-                if not created:
+                try:
+                    instance.profile.save()
+                except Profile.DoesNotExist:
                     Profile.objects.create(user=instance)
 
         class UserWithProfileInline(admin.StackedInline):

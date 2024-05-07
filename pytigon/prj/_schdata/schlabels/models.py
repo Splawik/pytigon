@@ -20,7 +20,6 @@ import schstruct.models
 
 
 class LabelType(models.Model):
-
     class Meta:
         verbose_name = _("Label type")
         verbose_name_plural = _("Label types")
@@ -41,7 +40,6 @@ admin.site.register(LabelType)
 
 
 class ElementLabel(models.Model):
-
     class Meta:
         verbose_name = _("Element label")
         verbose_name_plural = _("Element labels")
@@ -100,7 +98,6 @@ admin.site.register(ElementLabel)
 
 
 class CommonGroupLabel(models.Model):
-
     class Meta:
         verbose_name = _("Common group label")
         verbose_name_plural = _("Common groups labels")
@@ -158,7 +155,6 @@ admin.site.register(CommonGroupLabel)
 
 
 class Label(AssociatedModel):
-
     class Meta:
         verbose_name = _("Label")
         verbose_name_plural = _("Labels")

@@ -329,7 +329,6 @@ doctype_status = [
 
 
 class Element(TreeModel):
-
     class Meta:
         verbose_name = _("Element")
         verbose_name_plural = _("Elements")
@@ -921,7 +920,6 @@ admin.site.register(Element)
 
 
 class DocReg(models.Model):
-
     class Meta:
         verbose_name = _("Document register")
         verbose_name_plural = _("Document registers")
@@ -1127,7 +1125,6 @@ admin.site.register(DocReg)
 
 
 class DocType(models.Model):
-
     class Meta:
         verbose_name = _("Type of document")
         verbose_name_plural = _("Types of documents")
@@ -1262,7 +1259,6 @@ admin.site.register(DocType)
 
 
 class DocHead(JSONModel):
-
     class Meta:
         verbose_name = _("Document header")
         verbose_name_plural = _("Document headers")
@@ -1992,9 +1988,9 @@ class DocHead(JSONModel):
                         if action != "accept":
                             DocItem.objects.filter(
                                 parent=self,
-                                level__gt=(
-                                    reg_status.order if reg_status.order >= 0 else 0
-                                ),
+                                level__gt=reg_status.order
+                                if reg_status.order >= 0
+                                else 0,
                             ).delete()
 
                         doc_status.date = timezone.now()
@@ -2105,7 +2101,6 @@ admin.site.register(DocHead)
 
 
 class DocItem(JSONModel):
-
     class Meta:
         verbose_name = _("Document item")
         verbose_name_plural = _("Document items")
@@ -2593,7 +2588,6 @@ admin.site.register(DocItem)
 
 
 class DocRegStatus(models.Model):
-
     class Meta:
         verbose_name = _("Document status")
         verbose_name_plural = _("Document status")
@@ -2791,7 +2785,6 @@ admin.site.register(DocRegStatus)
 
 
 class DocHeadStatus(JSONModel):
-
     class Meta:
         verbose_name = _("Document head status")
         verbose_name_plural = _("Documents head status")
@@ -2838,7 +2831,6 @@ admin.site.register(DocHeadStatus)
 
 
 class Account(TreeModel):
-
     class Meta:
         verbose_name = _("Account")
         verbose_name_plural = _("Account")
@@ -2945,7 +2937,6 @@ admin.site.register(Account)
 
 
 class AccountState(models.Model):
-
     class Meta:
         verbose_name = _("State of account")
         verbose_name_plural = _("States of account")
@@ -3399,7 +3390,6 @@ admin.site.register(AccountState)
 
 
 class AccountOperation(models.Model):
-
     class Meta:
         verbose_name = _("Account operation")
         verbose_name_plural = _("Account operations")
@@ -3534,7 +3524,6 @@ admin.site.register(AccountOperation)
 
 
 class BaseObject(models.Model):
-
     class Meta:
         verbose_name = _("Base object")
         verbose_name_plural = _("Base objects")
