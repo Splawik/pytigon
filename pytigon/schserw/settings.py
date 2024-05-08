@@ -38,6 +38,7 @@ if not BASE_PRJ_NAME:
 
 GEN_TIME = "0000.00.00 00:00:00"
 USE_TZ = True
+DATE_INPUT_FORMATS = ["%Y-%m-%d",]
 
 if (
     sys.argv

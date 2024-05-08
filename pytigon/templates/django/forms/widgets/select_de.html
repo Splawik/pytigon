@@ -1,0 +1,24 @@
+<select name="{{ widget.name }}" {% include "django/forms/widgets/attrs.html" %}>
+        {% for group_name, group_choices, group_index in widget.optgroups %}
+                {% if group_name %}
+                        <optgroup label="{{ group_name }}">
+                {% endif %}
+                {% for option in group_choices %}
+                        {% include option.template_name with widget=option %}
+                {% endfor %}
+                {% if group_name %}
+                        </optgroup>
+                {% endif %}
+        {% endfor %}
+</select>
+{% if 'href1' in widget.attrs %}
+        <a href="{{ widget.attrs.href1 }}" class="btn {{btn_size}} shadow-none foreignkey_button get_tbl_value" get row target="popup_edit" data-role="button" data-inline-position="^div.ajax-region:append" style="height:100%;">
+                <span class="fa fa-table"></span>
+        </a>
+{% endif %}
+{% if 'href2' in widget.attrs %}
+        <a href="{{ widget.attrs.href2 }}" class="btn {{btn_size}} shadow-none foreignkey_button get_tbl_value" new row target="popup_edit" data-role="button" data-inline-position="^div.ajax-region:append" style="height:100%;">
+                <span class="fa fa-plus"></span>
+        </a>
+{% endif %}
+

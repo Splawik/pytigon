@@ -227,19 +227,29 @@ class _FilterFormDocHead(forms.Form):
         target = self.cleaned_data["target"]
         number = self.cleaned_data["number"]
 
+        filtered = False
         if date_from:
             queryset = queryset.filter(date__gte=date_from)
+            filtered = True
         if date_to:
             queryset = queryset.filter(date__lt=date_to + datetime.timedelta(days=1))
+            filtered = True
         if target:
             queryset = queryset.filter(parent_element__name__icontains=target)
+            filtered = True
         if number:
             queryset = queryset.filter(number__icontains=number)
+            filtered = True
+
+        if not filtered:
+            return self.process_empty_or_invalid(request, queryset)
+
+        queryset = queryset.order_by("-date", "-id")
 
         return queryset
 
     def process_empty_or_invalid(self, request, queryset):
-        return queryset.filter(date__gte=year_ago())
+        return queryset.filter(date__gte=year_ago()).order_by("-date", "-id")
 
 
 def view__filterformdochead(request, *argi, **argv):

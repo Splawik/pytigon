@@ -215,7 +215,7 @@ TEMPLATE_SRC = """#Example:
 
 % load exfiltry
 % load exsyntax
-% load subreport
+% load subdoc
 
 %% row_edit_form
     % form:

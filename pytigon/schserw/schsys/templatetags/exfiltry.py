@@ -17,9 +17,7 @@
 # license: "LGPL 3.0"
 # version: "0.1a"
 
-"""Standard python template filters
-
-"""
+"""Standard python template filters"""
 
 from base64 import b64encode, b64decode
 import datetime
@@ -29,7 +27,7 @@ import uuid
 from django import template
 from django.urls import reverse
 from django.db.models import Count, Max, Min, Sum, Avg
-
+from django.utils import formats
 import markdown
 
 
@@ -374,12 +372,34 @@ def amount(text):
     return " ".join(split_len(t[0][::-1], 3))[::-1] + "." + t[1]
 
 
+def parse_locale_date(formatted_date):
+    parsed_date = None
+    for date_format in formats.get_format("DATE_INPUT_FORMATS"):
+        try:
+            parsed_date = datetime.datetime.strptime(formatted_date, date_format)
+        except ValueError:
+            continue
+        else:
+            break
+    if not parsed_date:
+        raise ValueError
+    return parsed_date
+    # return parsed_date.date()
+
+
 @register.filter(name="isoformat")
 def isoformat(value):
     if value:
+        if isinstance(value, str):
+            value2 = parse_locale_date(value)
+        else:
+            value2 = value
         try:
-            iso = value.isoformat()[:19].replace("T", " ")
-            return iso
+            iso = value2.isoformat()[:19].replace("T", " ")
+            if len(value) <= 10:
+                return iso[:10]
+            else:
+                return iso
         except:
             return value
     else:
