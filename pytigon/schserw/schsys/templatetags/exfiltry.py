@@ -210,9 +210,9 @@ def append_get_param(href, parm):
 
 
 @register.filter(name="call")
-def _call(obj, methodName):
-    if hasattr(obj, methodName):
-        method = getattr(obj, methodName)
+def _call(obj, method_name):
+    if hasattr(obj, method_name):
+        method = getattr(obj, method_name)
         if hasattr(obj, "__callArg"):
             param = obj.__callArg
             del obj.__callArg

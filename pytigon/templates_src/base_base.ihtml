@@ -292,7 +292,7 @@
                                         a class=page-link
                                             span... &laquo;
 
-                                % for i in paginator.page_range:
+                                % for i in paginator|args:page_obj.number|call:"get_elided_page_range":
                                     % if page_obj.number == i:
                                         li class=active page-item
                                             a class=page-link

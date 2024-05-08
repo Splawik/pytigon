@@ -107,6 +107,9 @@ class _FilterFormDoc(forms.Form):
         required=False,
     )
 
+    def process(self, request, queryset=None):
+        return queryset
+
 
 def view__filterformdoc(request, *argi, **argv):
     return PFORM(request, _FilterFormDoc, "schdoc/form_filterformdoc.html", {})
