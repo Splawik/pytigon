@@ -150,6 +150,8 @@
                 {% block browser_type_css_links %}
                         {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
                 {% endblock %}
+                {% block ext_css_links %}
+                {% endblock %}
         {% endcompress %}
 {% endblock %}
 {% block css_start %}

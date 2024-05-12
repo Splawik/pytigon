@@ -2,9 +2,9 @@
 
 % load exsyntax
 
-%% extrahead
-    {{block.super}}
+%% ext_css_links
     {% css_link 'vanillajs_plugins/plotly/plotly.css' %}
+    {{block.super}}
 
 
 %% x__botstrap_css

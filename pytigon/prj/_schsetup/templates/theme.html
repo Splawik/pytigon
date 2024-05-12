@@ -1,8 +1,8 @@
 {% extends 'theme_base.html'|translate:lang %}
 {% load exfiltry %}
 {% load exsyntax %}
-{% block extrahead %}
+{% block ext_css_links %}
+        {% css_link 'explorer/css/explorer.css' %}
         {{block.super}}
-        {% css_link 'explorer/explorer.css' %}
 {% endblock %}
 

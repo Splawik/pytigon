@@ -162,6 +162,8 @@
         %% browser_type_css_links    
             {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
 
+        %% ext_css_links
+
 
 %% css_start
     <style type="text/css">

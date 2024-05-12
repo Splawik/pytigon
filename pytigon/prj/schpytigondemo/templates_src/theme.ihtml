@@ -32,9 +32,9 @@
             home();            
         };
 
-%% extrahead
+%% ext_css_links
+    {% css_link 'explorer/css/explorer.css' %}
     {{block.super}}
-    {% css_link 'explorer/explorer.css' %}
 
 %% ext_js_scripts
     {{ block.super }}
