@@ -63,7 +63,6 @@ def read_and_forward_pty_output(consumer):
 
 
 class ShellConsumer(WebsocketConsumer):
-
     def set_winsize(self, fd, row, col, xpix=0, ypix=0):
         winsize = struct.pack("HHHH", row, col, xpix, ypix)
         fcntl.ioctl(self.fd, termios.TIOCSWINSZ, winsize)

@@ -26,11 +26,11 @@
         {% endblock %}
         {% block extrastyle %}
                 {{block.super}}
-                {% css_link '_schwiki/css/wiki_editor.css' %}
+                {% css_link 'schwiki/css/wiki_editor.css' %}
         {% endblock %}
         {% block body_footer_scripts %}
                 {{block.super}}
-                {% component '_schwiki/components/insert_object.js' %}
+                {% component 'schwiki/components/insert_object.js' %}
         {% endblock %}
         {% block component_init %}
                         var initial_state={};

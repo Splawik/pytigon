@@ -43,7 +43,6 @@ def upload_path_fun(obj, filename):
 
 
 class Attachement(AssociatedJSONModel):
-
     class Meta:
         verbose_name = _("Attachement")
         verbose_name_plural = _("Attachements")

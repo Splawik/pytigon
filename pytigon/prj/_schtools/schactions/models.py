@@ -45,7 +45,6 @@ EMAIL = """#Example:
 
 
 class ActionType(models.Model):
-
     class Meta:
         verbose_name = _("Action type")
         verbose_name_plural = _("Action types")
@@ -140,7 +139,6 @@ admin.site.register(ActionType)
 
 
 class Action(AssociatedJSONModel):
-
     class Meta:
         verbose_name = _("Action")
         verbose_name_plural = _("Actions")

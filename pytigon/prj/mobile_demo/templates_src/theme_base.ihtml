@@ -23,13 +23,11 @@
     %% js_extrascipts
         {{block.super}}
         
-        
         {% jscript_link 'system/require.js' %}
         
 
     %% extrastyle
         {{block.super}}
-        
         
 
     %% body_footer_scripts
@@ -43,5 +41,3 @@
             .var initial_state={};
             .GLOBAL_BUS.set_state(initial_state);
             .var component_init = [ "ptig-svg.js",  ];  
-
-

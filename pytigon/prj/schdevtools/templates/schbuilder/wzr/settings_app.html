@@ -83,6 +83,10 @@ for app in APPS:
 for app in APPS_EXT:
     if not app in INSTALLED_APPS:
         INSTALLED_APPS.append(app)
+
+{% for related_prj in prj.get_related_projects %}STATICFILES_DIRS.append(PRJ_PATH + "/{{related_prj}}/static")
+STATICFILES_DIRS.append(PRJ_PATH_ALT + "/{{related_prj}}/static")
+{% endfor %}
     
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
 TEMPLATES[0]['DIRS'].insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates"))

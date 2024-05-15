@@ -92,7 +92,6 @@ workflow_item_status_choices = [
 
 
 class WorkflowType(models.Model):
-
     class Meta:
         verbose_name = _("Workflow type")
         verbose_name_plural = _("Workflow types")
@@ -242,7 +241,6 @@ admin.site.register(WorkflowType)
 
 
 class WorkflowItem(AssociatedJSONModel):
-
     class Meta:
         verbose_name = _("Workflow item")
         verbose_name_plural = _("Workflow items")

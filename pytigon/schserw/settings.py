@@ -38,7 +38,9 @@ if not BASE_PRJ_NAME:
 
 GEN_TIME = "0000.00.00 00:00:00"
 USE_TZ = True
-DATE_INPUT_FORMATS = ["%Y-%m-%d",]
+DATE_INPUT_FORMATS = [
+    "%Y-%m-%d",
+]
 
 if (
     sys.argv
@@ -152,7 +154,7 @@ ROOT_URLCONF = "pytigon.schserw.urls"
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    "pytigon_lib.schdjangoext.django_settings.AppPackDirectoriesFinder",
+    #"pytigon_lib.schdjangoext.django_settings.AppPackDirectoriesFinder",
 ]
 
 TEMPLATES = [

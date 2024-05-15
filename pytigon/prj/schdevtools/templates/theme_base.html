@@ -30,6 +30,7 @@
                 {{block.super}}
                 {% css_link 'schdevtools/css/style.css' %}
                 {% css_link 'schdevtools/css/test_icss.css' %}
+                {% css_link 'schwiki/css/wiki_editor.css' %}
         {% endblock %}
         {% block body_footer_scripts %}
                 {{block.super}}
@@ -42,11 +43,12 @@
                 {% component '_schcomponents/components/ptig-video.js' %}
                 {% component '_schwiki/components/insert_object.js' %}
                 {% component 'schdevtools/components/test.js' %}
+                {% component 'schwiki/components/insert_object.js' %}
         {% endblock %}
         {% block component_init %}
                         var initial_state = { username: "", theme: "" };
                         GLOBAL_BUS.set_state(initial_state);
-                        var component_init = [ "ptig-codeeditor.js", "ptig-d3.js", "ptig-leaflet.js", "ptig-pivottable.js", "ptig-plotly.js", "ptig-spreadsheet.js", "ptig-video.js", "insert_object.js", "test.js",  ];
+                        var component_init = [ "ptig-codeeditor.js", "ptig-d3.js", "ptig-leaflet.js", "ptig-pivottable.js", "ptig-plotly.js", "ptig-spreadsheet.js", "ptig-video.js", "insert_object.js", "test.js", "insert_object.js",  ];
         {% endblock %}
 {% endif %}
 

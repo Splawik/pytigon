@@ -22,14 +22,14 @@
 % else:    
     %% js_extrascipts
         {{block.super}}
-        
+        {% module_link 'schdoc/js/subdoc.js' %}
         
         {% jscript_link 'system/require.js' %}
         
 
     %% extrastyle
         {{block.super}}
-        
+        {% css_link 'schwiki/css/wiki_editor.css' %}
         
 
     %% body_footer_scripts
@@ -56,17 +56,15 @@
         {% component '_schcomponents/components/ptig-webrtc.js' %}
         {% component '_schcomponents/components/ptig-wysiwygedit.js' %}
         {% component '_schcomponents/components/ptig-xterm.js' %}
-        {% component '_schwiki/components/insert_object.js' %}
         {% component 'schpytigondemo/components/clock-channel.js' %}
         {% component 'schpytigondemo/components/ptig-db.js' %}
         {% component 'schpytigondemo/components/ptig-db2.js' %}
         {% component 'schpytigondemo/components/test.js' %}
+        {% component 'schwiki/components/insert_object.js' %}
         
         
 
     %% component_init
             .var initial_state={};
             .GLOBAL_BUS.set_state(initial_state);
-            .var component_init = [ "ptig-calendar.js", "ptig-codeeditor.js", "ptig-codemirror.js", "ptig-d3.js", "ptig-event-calendar.js", "ptig-form.js", "ptig-leaflet.js", "ptig-margin-left.js", "ptig-mask.js", "ptig-pivottable.js", "ptig-plotly.js", "ptig-scroll-action.js", "ptig-select2.js", "ptig-spreadsheet.js", "ptig-svg.js", "ptig-task.js", "ptig-time.js", "ptig-video.js", "ptig-webrtc.js", "ptig-wysiwygedit.js", "ptig-xterm.js", "insert_object.js", "clock-channel.js", "ptig-db.js", "ptig-db2.js", "test.js",  ];  
-
-
+            .var component_init = [ "ptig-calendar.js", "ptig-codeeditor.js", "ptig-codemirror.js", "ptig-d3.js", "ptig-event-calendar.js", "ptig-form.js", "ptig-leaflet.js", "ptig-margin-left.js", "ptig-mask.js", "ptig-pivottable.js", "ptig-plotly.js", "ptig-scroll-action.js", "ptig-select2.js", "ptig-spreadsheet.js", "ptig-svg.js", "ptig-task.js", "ptig-time.js", "ptig-video.js", "ptig-webrtc.js", "ptig-wysiwygedit.js", "ptig-xterm.js", "clock-channel.js", "ptig-db.js", "ptig-db2.js", "test.js", "insert_object.js",  ];  

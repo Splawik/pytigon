@@ -17,7 +17,6 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 
 class Description(AssociatedModel):
-
     class Meta:
         verbose_name = _("Description")
         verbose_name_plural = _("Descriptions")

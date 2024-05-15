@@ -275,6 +275,7 @@ Static_CHOICES = [
     ("I", "sass to css (included in desktop.html)"),
     ("U", "custom file (embeded translation for .pyj, .webc, .sass)"),
     ("O", "Other project file"),
+    ("B", "Other project file (base64 encoded)"),
 ]
 
 FileType_CHOICES = [
@@ -292,6 +293,14 @@ FileType_CHOICES = [
     ("n", "Pytigon extension in nim"),
     ("N", "Nim executable source file"),
     ("E", "Nimpy extension"),
+    ("C", "css (included in desktop.html)"),
+    ("J", "javascript (included in desktop.html)"),
+    ("P", "python to javascript (included in desktop.html)"),
+    ("R", "component (included in desktop.html)"),
+    ("I", "sass to css (included in desktop.html)"),
+    ("U", "custom file (embeded translation for .pyj, .webc, .sass)"),
+    ("O", "Other application file"),
+    ("B", "Other application file (base64 encoded)"),
 ]
 
 Consumer_CHOICES = [
@@ -605,6 +614,27 @@ class SChAppSet(JSONModel):
                         module = elms[-2]
                         ret.append(module)
         return ret
+
+    def get_related_projects(self):
+        related_projects = []
+        if self.ext_apps:
+            for item in self.get_ext_pytigon_apps():
+                if not item:
+                    continue
+                if "." in item:
+                    item = item.split(".")[0]
+            if item != self.name and item not in related_projects:
+                related_projects.append(item)
+
+        if self.custom_tags:
+            l = self.custom_tags.replace("\n", ",").replace(";", ",").split(",")
+            for tag in l:
+                if tag != "" and not tag.startswith("@"):
+                    if "/" in tag:
+                        item = tag.split("/")[0]
+                        if item != self.name and item not in related_projects:
+                            related_projects.append(item)
+        return related_projects
 
     def icon_exists(self):
         return self.icon or self.icon_code

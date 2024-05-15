@@ -19,7 +19,6 @@ import schprofile.models
 
 
 class Comment(AssociatedJSONModel):
-
     class Meta:
         verbose_name = _("Comment")
         verbose_name_plural = _("Comments")

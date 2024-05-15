@@ -45,6 +45,7 @@ import io
 import time
 import configparser
 import hashlib
+import base64
 
 from os import environ
 import subprocess
@@ -666,6 +667,110 @@ def prj_export_to_str(pk):
     return json.dumps(prj_tab, indent=4)
 
 
+def _handle_static_file(static_file, base_path, prj, app=None):
+    file_name = static_file.name
+    if app:
+        base_path = os.path.join(base_path, app.name)
+        static_root = os.path.join(base_path, "static", app.name)
+    else:
+        static_root = os.path.join(base_path, "static", prj.name)
+    static_scripts = os.path.join(static_root, "js")
+    static_style = os.path.join(static_root, "css")
+    static_components = os.path.join(static_root, "components")
+
+    if isinstance(static_file, models.SChStatic):
+        typ = static_file.type
+        txt = static_file.code
+    else:
+        typ = static_file.file_type
+        txt = static_file.content
+    dest_path = None
+
+    if typ == "U":
+        dest_path = os.path.join(static_root, file_name)
+        if ".pyj" in file_name:
+            dest_path = os.path.join(static_root, file_name.replace(".pyj", ".js"))
+            typ = "P"
+        elif ".sass" in file_name:
+            dest_path = os.path.join(static_root, file_name.replace(".sass", ".css"))
+            typ = "I"
+        elif ".webc" in file_name:
+            dest_path = os.path.join(static_root, file_name.replace(".webc", ".js"))
+            typ = "R"
+    if typ == "C":
+        t = Template(txt)
+        txt2 = t.render(Context({"prj": prj}))
+        f = open_and_create_dir(os.path.join(static_style, file_name + ".css"), "wb")
+        f.write(txt2.encode("utf-8"))
+        f.close()
+    elif typ == "J":
+        t = Template(txt)
+        txt2 = t.render(Context({"prj": prj}))
+        f = open_and_create_dir(os.path.join(static_scripts, file_name + ".js"), "wb")
+        f.write(txt2.encode("utf-8"))
+        f.close()
+    elif typ == "P":
+        t = Template(txt)
+        txt2 = t.render(Context({"prj": prj}))
+        try:
+            codejs = pytigon_lib.schindent.indent_style.py_to_js(txt2, None)
+        except:
+            codejs = ""
+        f = open_and_create_dir(
+            dest_path if dest_path else os.path.join(static_scripts, file_name + ".js"),
+            "wb",
+        )
+        f.write(codejs.encode("utf-8"))
+        f.close()
+    elif typ == "R":
+        try:
+            codejs = pytigon_lib.schindent.indent_style.py_to_js(txt, None)
+        except:
+            codejs = ""
+        f = open_and_create_dir(
+            dest_path
+            if dest_path
+            else os.path.join(static_components, file_name + ".js"),
+            "wb",
+        )
+        f.write(codejs.encode("utf-8"))
+        f.close()
+    elif typ == "I":
+        if sass:
+            buf = sass.compile(
+                string=txt,
+                indented=True,
+            )
+            t = Template(buf)
+            txt2 = t.render(Context({"prj": prj}))
+            f = open_and_create_dir(
+                dest_path
+                if dest_path
+                else os.path.join(static_style, file_name + ".css"),
+                "wb",
+            )
+            f.write(txt2.encode("utf-8"))
+            f.close()
+    # elif typ == "U":
+    #    t = Template(txt)
+    #    txt2 = t.render(Context({"prj": prj}))
+    #    f = open_and_create_dir(dest_path, "wb")
+    #    f.write(txt2.encode("utf-8"))
+    #    f.close()
+    elif typ == "O":
+        p = os.path.join(base_path, file_name)
+        dname = os.path.dirname(p)
+        os.makedirs(dname, exist_ok=True)
+        with open(p, "wt", encoding="utf-8") as f:
+            f.write(txt)
+    elif typ == "B":
+        p = os.path.join(base_path, file_name)
+        dname = os.path.dirname(p)
+        os.makedirs(dname, exist_ok=True)
+        with open(p, "wt", encoding="utf-8") as f:
+            f.write(base64.b64decode(txt.en))
+
+
 def build_prj(pk):
     prj = models.SChAppSet.objects.get(id=pk)
 
@@ -847,7 +952,10 @@ def build_prj(pk):
         )
 
         for file_obj in app.schfiles_set.all():
-            if file_obj.file_type == "f":
+            if file_obj.file_type in ("U", "C", "J", "P", "R", "I", "O", "B"):
+                _handle_static_file(file_obj, base_path, prj, app)
+                continue
+            elif file_obj.file_type == "f":
                 file_name = (
                     base_path
                     + "/"
@@ -954,10 +1062,6 @@ def build_prj(pk):
                     codejs = pytigon_lib.schindent.indent_style.py_to_js(
                         file_obj.content, None
                     )
-                    codejs = codejs.replace(
-                        "./org.transcrypt.__runtime__.js",
-                        "../../pytigon_js/org.transcrypt.__runtime__.js",
-                    ).replace("__globals__,", "")
                 except:
                     codejs = ""
                 f = open_and_create_dir(file_name, "wb")
@@ -1021,163 +1125,28 @@ def build_prj(pk):
 
     static_files = prj.schstatic_set.all()
 
-    static_root = os.path.join(base_path, "static", prj.name)
-    static_scripts = os.path.join(static_root, "js")
-    static_style = os.path.join(static_root, "css")
-    static_components = os.path.join(static_root, "components")
-
     offline_support = False
 
     for static_file in static_files:
-        txt = static_file.code
-        typ = static_file.type
-        dest_path = None
-        if static_file.name == "sw.js":
-            offline_support = True
-
-        if static_file.type == "U":
-            dest_path = os.path.join(static_root, static_file.name)
-            if ".pyj" in static_file.name:
-                dest_path = os.path.join(
-                    static_root, static_file.name.replace(".pyj", ".js")
-                )
-                typ = "P"
-            elif ".sass" in static_file.name:
-                dest_path = os.path.join(
-                    static_root, static_file.name.replace(".sass", ".css")
-                )
-                typ = "I"
-            elif ".webc" in static_file.name:
-                dest_path = os.path.join(
-                    static_root, static_file.name.replace(".webc", ".js")
-                )
-                typ = "R"
-
-        if typ == "C":
-            t = Template(txt)
-            txt2 = t.render(Context({"prj": prj}))
-            f = open_and_create_dir(
-                os.path.join(static_style, static_file.name + ".css"), "wb"
-            )
-            f.write(txt2.encode("utf-8"))
-            f.close()
-        if typ == "J":
-            t = Template(txt)
-            txt2 = t.render(Context({"prj": prj}))
-            f = open_and_create_dir(
-                os.path.join(static_scripts, static_file.name + ".js"), "wb"
-            )
-            f.write(txt2.encode("utf-8"))
-            f.close()
-        if typ == "P":
-            t = Template(txt)
-            txt2 = t.render(Context({"prj": prj}))
-            try:
-                codejs = pytigon_lib.schindent.indent_style.py_to_js(txt2, None)
-                codejs = codejs.replace(
-                    "./org.transcrypt.__runtime__.js",
-                    "../../pytigon_js/org.transcrypt.__runtime__.js",
-                ).replace("__globals__,", "")
-            except:
-                codejs = ""
-            print(
-                dest_path
-                if dest_path
-                else os.path.join(static_scripts, static_file.name + ".js")
-            )
-            f = open_and_create_dir(
-                dest_path
-                if dest_path
-                else os.path.join(static_scripts, static_file.name + ".js"),
-                "wb",
-            )
-            f.write(codejs.encode("utf-8"))
-            f.close()
-        if typ == "R":
-            try:
-                codejs = pytigon_lib.schindent.indent_style.py_to_js(txt, None)
-                codejs = codejs.replace(
-                    "./org.transcrypt.__runtime__.js",
-                    "../../pytigon_js/org.transcrypt.__runtime__.js",
-                ).replace("__globals__,", "")
-            except:
-                codejs = ""
-            print(
-                dest_path
-                if dest_path
-                else os.path.join(static_components, static_file.name + ".js")
-            )
-            f = open_and_create_dir(
-                dest_path
-                if dest_path
-                else os.path.join(static_components, static_file.name + ".js"),
-                "wb",
-            )
-            f.write(codejs.encode("utf-8"))
-            f.close()
-        if typ == "I":
-            if sass:
-                buf = sass.compile(
-                    string=txt,
-                    indented=True,
-                )
-                t = Template(buf)
-                txt2 = t.render(Context({"prj": prj}))
-                f = open_and_create_dir(
-                    dest_path
-                    if dest_path
-                    else os.path.join(static_style, static_file.name + ".css"),
-                    "wb",
-                )
-                f.write(txt2.encode("utf-8"))
-                f.close()
-        if typ == "U":
-            t = Template(txt)
-            txt2 = t.render(Context({"prj": prj}))
-            f = open_and_create_dir(dest_path, "wb")
-            f.write(txt2.encode("utf-8"))
-            f.close()
-        if typ == "O":
-            p = os.path.join(base_path, static_file.name)
-            dname = os.path.dirname(p)
-            os.makedirs(dname, exist_ok=True)
-            with open(p, "wt", encoding="utf-8") as f:
-                f.write(txt)
+        _handle_static_file(static_file, base_path, prj)
 
     component_elements = []
+    static_items = []
 
-    if prj.custom_tags:
-        component_elements += [
-            pos
-            for pos in prj.custom_tags.replace("\n", ";").replace("\r", "").split(";")
-            if pos and "." in pos
-        ]
-    component_elements += [
-        prj.name + "/components/" + pos.name + ".js"
-        for pos in static_files
-        if pos.type in ("R",)
+    prj_tab = [
+        prj.name,
     ]
+    tab = prj.get_ext_pytigon_apps()
+    for pos in tab:
+        if pos:
+            x = pos.split(".")[0]
+            if x not in prj_tab:
+                prj_tab.append(x)
 
-    js_static_files = [pos for pos in static_files if pos.type in ("J", "P")]
-    css_static_files = [pos for pos in static_files if pos.type in ("C", "I")]
-
-    static_for_ext_apps = []
-
-    if prj.ext_apps:
-        prj_tab = []
-        tab = prj.get_ext_pytigon_apps()
-        for pos in tab:
-            if pos:
-                x = pos.split(".")[0]
-                if not x in prj_tab:
-                    prj_tab.append(x)
-
-        for pos in prj_tab:
-            try:
-                prj2 = models.SChAppSet.objects.get(name=pos)
-            except:
-                prj2 = None
-            if prj2:
+    for pos in prj_tab:
+        prj2 = models.SChAppSet.objects.filter(name=pos, main_view=True).first()
+        if prj2:
+            if pos == prj.name:
                 static_files2 = prj2.schstatic_set.all()
                 js_static_files2 = [
                     pos2 for pos2 in static_files2 if pos2.type in ("J", "P")
@@ -1185,19 +1154,41 @@ def build_prj(pk):
                 css_static_files2 = [
                     pos2 for pos2 in static_files2 if pos2.type in ("C", "I")
                 ]
-                static_for_ext_apps.append((pos, js_static_files2, css_static_files2))
-
-                if prj2.custom_tags:
-                    for pos in (
-                        prj2.custom_tags.replace("\n", ";").replace("\r", "").split(";")
-                    ):
-                        if pos and "." in pos and not pos in component_elements:
-                            component_elements.append(pos)
+                static_items.append((pos, js_static_files2, css_static_files2))
                 component_elements += [
                     prj2.name + "/components/" + pos.name + ".js"
                     for pos in static_files2
                     if pos.type in ("R",)
                 ]
+
+                if prj2.custom_tags:
+                    for pos in (
+                        prj2.custom_tags.replace("\n", ";").replace("\r", "").split(";")
+                    ):
+                        if pos and "." in pos and pos not in component_elements:
+                            component_elements.append(pos)
+
+            for app in prj2.schapp_set.all():
+                if pos != prj.name:
+                    test = False
+                    for item in tab:
+                        if item.startswith(prj2.name + "." + app.name):
+                            test = True
+                            break
+                    if not test:
+                        continue
+                component_elements += [
+                    app.name + "/components/" + pos.name + ".js"
+                    for pos in app.schfiles_set.all()
+                    if pos.file_type in ("R",)
+                ]
+                js_app_files = [
+                    pos for pos in app.schfiles_set.all() if pos.file_type in ("J", "P")
+                ]
+                css_app_files = [
+                    pos for pos in app.schfiles_set.all() if pos.file_type in ("C", "I")
+                ]
+                static_items.append((app.name, js_app_files, css_app_files))
 
     template_to_file(
         base_path,
@@ -1205,9 +1196,7 @@ def build_prj(pk):
         "templates_src/theme_base.ihtml",
         {
             "prj": prj,
-            "js_static_files": sorted(set(js_static_files)),
-            "css_static_files": sorted(set(css_static_files)),
-            "static_for_ext_apps": static_for_ext_apps,
+            "static_items": static_items,
             "component_elements": sorted(set(component_elements)),
             "initial_state": prj.components_initial_state,
         },

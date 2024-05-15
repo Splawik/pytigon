@@ -17,7 +17,6 @@ from pytigon_lib.schhtml.htmltools import superstrip
 
 
 class Parameter(models.Model):
-
     class Meta:
         verbose_name = _("Parameter")
         verbose_name_plural = _("Parameter")
@@ -66,7 +65,6 @@ admin.site.register(Parameter)
 
 
 class Autocomplete(models.Model):
-
     class Meta:
         verbose_name = _("Autocomplete")
         verbose_name_plural = _("Autocomplete")

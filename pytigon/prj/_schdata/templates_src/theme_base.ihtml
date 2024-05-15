@@ -22,15 +22,12 @@
 % else:    
     %% js_extrascipts
         {{block.super}}
-        {% module_link '_schdata/js/subdoc.js' %}
-        
         
         {% jscript_link 'system/require.js' %}
         
 
     %% extrastyle
         {{block.super}}
-        
         
 
     %% body_footer_scripts
@@ -45,5 +42,3 @@
             .var initial_state={};
             .GLOBAL_BUS.set_state(initial_state);
             .var component_init = [ "ptig-codeeditor.js", "ptig-wysiwygedit.js",  ];  
-
-

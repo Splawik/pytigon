@@ -24,11 +24,9 @@
         {{block.super}}
         
         
-        
 
     %% extrastyle
         {{block.super}}
-        
         
 
     %% body_footer_scripts
@@ -37,5 +35,3 @@
 
     %% component_init
          .var component_init = []; 
-
-

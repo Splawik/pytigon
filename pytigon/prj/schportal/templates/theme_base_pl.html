@@ -27,6 +27,7 @@
         {% block extrastyle %}
                 {{block.super}}
                 {% css_link 'schportal/css/portal.css' %}
+                {% css_link 'schwiki/css/wiki_editor.css' %}
         {% endblock %}
         {% block body_footer_scripts %}
                 {{block.super}}
@@ -35,14 +36,14 @@
                 {% component '_schcomponents/components/ptig-plotly.js' %}
                 {% component '_schcomponents/components/ptig-time.js' %}
                 {% component '_schcomponents/components/ptig-webrtc.js' %}
-                {% component '_schwiki/components/insert_object.js' %}
                 {% component 'schportal/components/teleconference.js' %}
                 {% component 'schportal/components/timer_init.js' %}
+                {% component 'schwiki/components/insert_object.js' %}
         {% endblock %}
         {% block component_init %}
                         var initial_state = { username: "", theme: "", time_str: "" };
                         GLOBAL_BUS.set_state(initial_state);
-                        var component_init = [ "ptig-codeeditor.js", "ptig-d3.js", "ptig-plotly.js", "ptig-time.js", "ptig-webrtc.js", "insert_object.js", "teleconference.js", "timer_init.js",  ];
+                        var component_init = [ "ptig-codeeditor.js", "ptig-d3.js", "ptig-plotly.js", "ptig-time.js", "ptig-webrtc.js", "teleconference.js", "timer_init.js", "insert_object.js",  ];
         {% endblock %}
 {% endif %}
 
