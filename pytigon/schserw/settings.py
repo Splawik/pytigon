@@ -154,7 +154,7 @@ ROOT_URLCONF = "pytigon.schserw.urls"
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder",
-    #"pytigon_lib.schdjangoext.django_settings.AppPackDirectoriesFinder",
+    # "pytigon_lib.schdjangoext.django_settings.AppPackDirectoriesFinder",
 ]
 
 TEMPLATES = [
@@ -551,20 +551,20 @@ else:
     CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
 DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
-STATICFILES_STORAGE = "pytigon.ext_lib.django_storage.StaticFSStorage"
+# STATICFILES_STORAGE = "pytigon.ext_lib.django_storage.StaticFSStorage"
 
 COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
 
 STATIC_FS = None
 
 
-def STATIC_FILE_STORAGE_FS():
-    static_fs = MultiFS()
-    static_fs.add_fs("static_main", OSFS_EXT(settings.STATIC_ROOT), write=True)
-    p = os.path.join(PRJ_PATH, BASE_PRJ_NAME, "static")
-    if os.path.exists(p):
-        static_fs.add_fs("static_prj", OSFS_EXT(p))
-    return static_fs
+# def STATIC_FILE_STORAGE_FS():
+#    static_fs = MultiFS()
+#    static_fs.add_fs("static_main", OSFS_EXT(settings.STATIC_ROOT), write=True)
+#    p = os.path.join(PRJ_PATH, BASE_PRJ_NAME, "static")
+#    if os.path.exists(p):
+#        static_fs.add_fs("static_prj", OSFS_EXT(p))
+#    return static_fs
 
 
 def DEFAULT_FILE_STORAGE_FS():

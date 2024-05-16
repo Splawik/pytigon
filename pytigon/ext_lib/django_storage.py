@@ -142,16 +142,16 @@ class FSStorage(Storage):
         return filename
 
 
-class StaticFSStorage(FSStorage):
-    def __init__(self, fs=None, base_url=None):
-        if fs is None:
-            fs = settings.STATIC_FILE_STORAGE_FS()
-        self.fs = fs
-        super().__init__(fs, settings.STATIC_URL)
-
-    def generate_filename(self, filename):
-        return "/static/" + filename
-
-    def url(self, *argi, **argv):
-        ret = super().url(*argi, **argv)
-        return ret
+# class StaticFSStorage(FSStorage):
+#    def __init__(self, fs=None, base_url=None):
+#        if fs is None:
+#            fs = settings.STATIC_FILE_STORAGE_FS()
+#        self.fs = fs
+#        super().__init__(fs, settings.STATIC_URL)
+#
+#    def generate_filename(self, filename):
+#        return "/static/" + filename
+#
+#    def url(self, *argi, **argv):
+#        ret = super().url(*argi, **argv)
+#        return ret
