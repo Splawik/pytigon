@@ -203,6 +203,20 @@ consumer_attr = sorted(
         if field.name not in ("parent", "id")
     ]
 )
+locale_attr = sorted(
+    [
+        locale.name
+        for locale in models.SChLocale._meta.fields
+        if locale.name not in ("parent", "id")
+    ]
+)
+translate_attr = sorted(
+    [
+        translate.name
+        for translate in models.SChTranslate._meta.fields
+        if translate.name not in ("parent", "id")
+    ]
+)
 
 
 def callback_fun_tab(obj1, obj2):
@@ -539,6 +553,18 @@ def prj_import_from_str(s, backup_old=False, backup_this=False):
             s.parent = prj_instence
             s.save()
 
+        locales_array = prj[3]
+        for locale_pos in locales_array:
+            locale = models.SChLocale(**locale_pos[0])
+            locale.parent = prj_instence
+            locale.save()
+
+            translates_array = locale_pos[1]
+            for translate_pos in translates_array:
+                translate = models.SChTranslate(**translate_pos)
+                translate.parent = locale
+                translate.save()
+
     if backup_old:
         projects = models.SChAppSet.objects.filter(
             name=prj_instence.name, main_view=True
@@ -663,6 +689,18 @@ def prj_export_to_str(pk):
         statics_array.append(obj_to_dict(static, static_attr))
 
     prj_tab.append(statics_array)
+
+    locales = prj.schlocale_set.all()
+    locales_array = []
+    for locale in locales:
+        tmp = obj_to_dict(locale, locale_attr)
+        translates = locale.schtranslate_set.all()
+        translates_array = []
+        for translate in translates:
+            translates_array.append(obj_to_dict(translate, translate_attr))
+        locales_array.append([tmp, translates_array])
+
+    prj_tab.append(locales_array)
 
     return json.dumps(prj_tab, indent=4)
 
