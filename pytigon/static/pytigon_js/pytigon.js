@@ -4114,7 +4114,7 @@ img_field = function flx_img_field (elem) {
 window.img_field = img_field;
 export {humanFileSize, img_field};
 
-var _on_error, _on_key, _on_popstate, activate_menu, app_init, dom_content_loaded, jquery_ready;
+var _on_error, _on_key, _on_popstate, activate_menu, app_init, dom_content_loaded, jquery_ready, static_path;
 window.PS = null;
 window.MOUNTED_COMPONENTS = 0;
 window.GLOBAL_BUS = new GlobalBus();
@@ -4228,6 +4228,16 @@ app_init = function flx_app_init (prj_name, application_template, menu_id, lang,
 };
 
 window.app_init = app_init;
+static_path = function flx_static_path (path) {
+    if ((_pyfunc_hasattr(window, BASE_PATH) && _pyfunc_truthy(window.BASE_PATH) && (window.BASE_PATH.length > 0))) {
+        return _pyfunc_op_add(window.BASE_PATH, path.slice(1));
+    } else {
+        return path;
+    }
+    return null;
+};
+
+window.static_path = static_path;
 activate_menu = function flx_activate_menu () {
     var a, a_tab, div, event, href, id_elem, li, menu, pathname, pathname2, stub3_seq, stub4_itr, x;
     pathname = window.location.pathname;
@@ -4345,5 +4355,5 @@ _on_popstate = function (e) {
 };
 
 window.addEventListener("popstate", _on_popstate, false);
-export {dom_content_loaded, app_init, activate_menu, jquery_ready};
+export {dom_content_loaded, app_init, static_path, activate_menu, jquery_ready};
 

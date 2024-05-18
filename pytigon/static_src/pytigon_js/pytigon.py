@@ -44,7 +44,6 @@ def app_init(
     gen_time,
     callback=None,
 ):
-
     moment.locale(lang)
     window.ACTIVE_PAGE = None
     window.PRJ_NAME = prj_name
@@ -122,7 +121,18 @@ def app_init(
                     obj.click()
                     break
 
+
 window.app_init = app_init
+
+
+def static_path(path):
+    if hasattr(window, BASE_PATH) and window.BASE_PATH and len(window.BASE_PATH) > 0:
+        return window.BASE_PATH + path[1:]
+    else:
+        return path
+
+
+window.static_path = static_path
 
 
 def activate_menu():
