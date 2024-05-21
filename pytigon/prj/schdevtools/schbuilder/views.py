@@ -98,126 +98,6 @@ _template = """
         [ plugins | {{prj.plugins}} ]
 """
 
-prj_attr = sorted(
-    [
-        field.name
-        for field in models.SChAppSet._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-app_attr = sorted(
-    [
-        field.name
-        for field in models.SChApp._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-choice_attr = sorted(
-    [
-        field.name
-        for field in models.SChChoice._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-choice_item_attr = sorted(
-    [
-        field.name
-        for field in models.SChChoiceItem._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-table_attr = sorted(
-    [
-        field.name
-        for field in models.SChTable._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-field_attr = sorted(
-    [
-        field.name
-        for field in models.SChField._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-view_attr = sorted(
-    [
-        field.name
-        for field in models.SChView._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-static_attr = sorted(
-    [
-        field.name
-        for field in models.SChStatic._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-template_attr = sorted(
-    [
-        field.name
-        for field in models.SChTemplate._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-appmenu_attr = sorted(
-    [
-        field.name
-        for field in models.SChAppMenu._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-form_attr = sorted(
-    [
-        field.name
-        for field in models.SChForm._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-formfield_attr = sorted(
-    [
-        field.name
-        for field in models.SChFormField._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-task_attr = sorted(
-    [
-        field.name
-        for field in models.SChTask._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-files_attr = sorted(
-    [
-        field.name
-        for field in models.SChFiles._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-consumer_attr = sorted(
-    [
-        field.name
-        for field in models.SChChannelConsumer._meta.fields
-        if field.name not in ("parent", "id")
-    ]
-)
-locale_attr = sorted(
-    [
-        locale.name
-        for locale in models.SChLocale._meta.fields
-        if locale.name not in ("parent", "id")
-    ]
-)
-translate_attr = sorted(
-    [
-        translate.name
-        for translate in models.SChTranslate._meta.fields
-        if translate.name not in ("parent", "id")
-    ]
-)
-
 
 def callback_fun_tab(obj1, obj2):
     fields_tmp = []
@@ -419,7 +299,7 @@ def make_messages(src_path, path, name, outpath=None, ext_locales=[]):
 
 
 def locale_gen_internal(pk):
-    prj = models.SChAppSet.objects.get(id=pk)
+    prj = models.SChProject.objects.get(id=pk)
 
     base_path = settings.PRJ_PATH_ALT
     app_path = os.path.join(base_path, prj.name)
@@ -460,113 +340,89 @@ def locale_gen_internal(pk):
     }
 
 
+EX_IMP = {
+    "SChProject": {
+        "SChApp": {
+            "SChChoice": {
+                "SChChoiceItem": {},
+            },
+            "SChTable": {
+                "SChField": {},
+            },
+            "SChView": {},
+            "SChTemplate": {},
+            "SChAppMenu": {},
+            "SChForm": {
+                "SChFormField": {},
+            },
+            "SChTask": {},
+            "SChFile": {},
+            "SChChannelConsumer": {},
+        },
+        "SChStatic": {},
+        "SChLocale": {
+            "SChTranslate": {},
+        },
+    }
+}
+
+
+def get_attributes(model, instance):
+    obj_dict = {}
+    for field in model._meta.fields:
+        if field.name not in ("parent", "id"):
+            obj_dict[field.name] = getattr(instance, field.name)
+    return obj_dict
+
+
+def prepare_export_items(parent, export_struct):
+    tab_obj = []
+    for key, value in export_struct.items():
+        model = getattr(models, key)
+        for obj in model.objects.filter(parent=parent):
+            x = {
+                "model": key,
+                "attributes": get_attributes(model, obj),
+            }
+            if value:
+                x["children"] = prepare_export_items(obj, value)
+            tab_obj.append(x)
+    return tab_obj
+
+
+def prj_export_to_str(pk):
+    prj = models.SChProject.objects.get(id=pk)
+    data = {
+        "model": "SChProject",
+        "attributes": get_attributes(models.SChProject, prj),
+        "children": prepare_export_items(prj, EX_IMP["SChProject"]),
+    }
+    return json.dumps(data, indent=4)
+
+
+def import_children(parent, children):
+    for child in children:
+        model = getattr(models, child["model"])
+        obj = model()
+        for key, value in child["attributes"].items():
+            setattr(obj, key, value)
+        obj.parent = parent
+        obj.save()
+        if "children" in child:
+            import_children(obj, child["children"])
+
+
 def prj_import_from_str(s, backup_old=False, backup_this=False):
     object_list = []
-    prj = json.loads(s)
+    prj_data = json.loads(s)
     with transaction.atomic():
-        prj_instence = models.SChAppSet(**prj[0])
+        prj_instence = models.SChProject(**(prj_data["attributes"]))
         prj_instence.main_view = True
         prj_instence.save()
-
-        apps_array = prj[1]
-        for app_pos in apps_array:
-            app = models.SChApp(**app_pos[0])
-            app.parent = prj_instence
-            app.save()
-
-            tables_array = app_pos[1]
-            for table_pos in tables_array:
-                table = models.SChTable(**table_pos[0])
-                table.parent = app
-                table.save()
-
-                fields_array = table_pos[1]
-                for field_pos in fields_array:
-                    field = models.SChField(**field_pos)
-                    field.parent = table
-                    field.save()
-
-            choices_array = app_pos[2]
-            for choice_pos in choices_array:
-                choice = models.SChChoice(**choice_pos[0])
-                choice.parent = app
-                choice.save()
-
-                choice_item_array = choice_pos[1]
-                for item_pos in choice_item_array:
-                    choice_item = models.SChChoiceItem(**item_pos)
-                    choice_item.parent = choice
-                    choice_item.save()
-
-            views_array = app_pos[3]
-            for view_pos in views_array:
-                view = models.SChView(**view_pos)
-                view.parent = app
-                view.save()
-
-            templates_array = app_pos[4]
-            for template_pos in templates_array:
-                template = models.SChTemplate(**template_pos)
-                template.parent = app
-                template.save()
-
-            appmenus = app.schappmenu_set.all()
-            appmenus_array = app_pos[5]
-            for appmenu_pos in appmenus_array:
-                appmenu = models.SChAppMenu(**appmenu_pos)
-                appmenu.parent = app
-                appmenu.save()
-
-            forms_array = app_pos[6]
-            for form_pos in forms_array:
-                form = models.SChForm(**form_pos[0])
-                form.parent = app
-                form.save()
-
-                formfields_array = form_pos[1]
-                for field_pos in formfields_array:
-                    field = models.SChFormField(**field_pos)
-                    field.parent = form
-                    field.save()
-
-            tasks_array = app_pos[7]
-            for task_pos in tasks_array:
-                task = models.SChTask(**task_pos)
-                task.parent = app
-                task.save()
-
-            consumers_array = app_pos[8]
-            for consumer_pos in consumers_array:
-                consumer = models.SChChannelConsumer(**consumer_pos)
-                consumer.parent = app
-                consumer.save()
-
-            files_array = app_pos[9]
-            for file_pos in files_array:
-                f = models.SChFiles(**file_pos)
-                f.parent = app
-                f.save()
-
-        statics_array = prj[2]
-        for static in statics_array:
-            s = models.SChStatic(**static)
-            s.parent = prj_instence
-            s.save()
-
-        locales_array = prj[3]
-        for locale_pos in locales_array:
-            locale = models.SChLocale(**locale_pos[0])
-            locale.parent = prj_instence
-            locale.save()
-
-            translates_array = locale_pos[1]
-            for translate_pos in translates_array:
-                translate = models.SChTranslate(**translate_pos)
-                translate.parent = locale
-                translate.save()
+        import_children(prj_instence, prj_data["children"])
 
     if backup_old:
-        projects = models.SChAppSet.objects.filter(
+        projects = models.SChProject.objects.filter(
             name=prj_instence.name, main_view=True
         )
         if len(projects) > 0:
@@ -599,112 +455,6 @@ def prj_import_from_str(s, backup_old=False, backup_this=False):
     return {"object_list": object_list, "prj_instance": prj_instence}
 
 
-def prj_export_to_str(pk):
-    prj_tab = []
-    prj = models.SChAppSet.objects.get(id=pk)
-    prj_tab.append(obj_to_dict(prj, prj_attr))
-    apps = prj.schapp_set.all()
-    apps_array = []
-    for app in apps:
-        tables = app.schtable_set.all()
-        tables_array = []
-        for table in tables:
-            tmp = obj_to_dict(table, table_attr)
-            fields = table.schfield_set.all()
-            fields_array = []
-            for field in fields:
-                fields_array.append(obj_to_dict(field, field_attr))
-            tables_array.append([tmp, fields_array])
-
-        choices = app.schchoice_set.all()
-        choices_array = []
-        for choice in choices:
-            tmp = obj_to_dict(choice, choice_attr)
-            choice_items = choice.schchoiceitem_set.all()
-            choice_items_array = []
-            for item in choice_items:
-                choice_items_array.append(obj_to_dict(item, choice_item_attr))
-            choices_array.append([tmp, choice_items_array])
-
-        views = app.schview_set.all()
-        views_array = []
-        for view in views:
-            views_array.append(obj_to_dict(view, view_attr))
-
-        templates = app.schtemplate_set.all()
-        templates_array = []
-        for template in templates:
-            templates_array.append(obj_to_dict(template, template_attr))
-
-        appmenus = app.schappmenu_set.all()
-        appmenus_array = []
-        for appmenu in appmenus:
-            appmenus_array.append(obj_to_dict(appmenu, appmenu_attr))
-
-        forms = app.schform_set.all()
-        forms_array = []
-        for form in forms:
-            tmp = obj_to_dict(form, form_attr)
-            fields = form.schformfield_set.all()
-            fields_array = []
-            for field in fields:
-                fields_array.append(obj_to_dict(field, formfield_attr))
-            forms_array.append([tmp, fields_array])
-
-        tasks = app.schtask_set.all()
-        tasks_array = []
-        for task in tasks:
-            tasks_array.append(obj_to_dict(task, task_attr))
-
-        consumers = app.schchannelconsumer_set.all()
-        consumers_array = []
-        for consumer in consumers:
-            consumers_array.append(obj_to_dict(consumer, consumer_attr))
-
-        files = app.schfiles_set.all()
-        files_array = []
-        for file in files:
-            files_array.append(obj_to_dict(file, files_attr))
-
-        tmp = obj_to_dict(app, app_attr)
-        apps_array.append(
-            [
-                tmp,
-                tables_array,
-                choices_array,
-                views_array,
-                templates_array,
-                appmenus_array,
-                forms_array,
-                tasks_array,
-                consumers_array,
-                files_array,
-            ]
-        )
-    prj_tab.append(apps_array)
-
-    statics = prj.schstatic_set.all()
-    statics_array = []
-    for static in statics:
-        statics_array.append(obj_to_dict(static, static_attr))
-
-    prj_tab.append(statics_array)
-
-    locales = prj.schlocale_set.all()
-    locales_array = []
-    for locale in locales:
-        tmp = obj_to_dict(locale, locale_attr)
-        translates = locale.schtranslate_set.all()
-        translates_array = []
-        for translate in translates:
-            translates_array.append(obj_to_dict(translate, translate_attr))
-        locales_array.append([tmp, translates_array])
-
-    prj_tab.append(locales_array)
-
-    return json.dumps(prj_tab, indent=4)
-
-
 def _handle_static_file(static_file, base_path, prj, app=None):
     file_name = static_file.name
     if app:
@@ -716,12 +466,13 @@ def _handle_static_file(static_file, base_path, prj, app=None):
     static_style = os.path.join(static_root, "css")
     static_components = os.path.join(static_root, "components")
 
-    if isinstance(static_file, models.SChStatic):
-        typ = static_file.type
-        txt = static_file.code
-    else:
-        typ = static_file.file_type
-        txt = static_file.content
+    typ = static_file.type
+    txt = static_file.content
+
+    if txt == None:
+        print(file_name)
+        return
+
     dest_path = None
 
     if typ == "U":
@@ -810,7 +561,7 @@ def _handle_static_file(static_file, base_path, prj, app=None):
 
 
 def build_prj(pk):
-    prj = models.SChAppSet.objects.get(id=pk)
+    prj = models.SChProject.objects.get(id=pk)
 
     if hasattr(pytigon.schserw.settings, "_PRJ_PATH_ALT"):
         base_path = os.path.join(pytigon.schserw.settings._PRJ_PATH_ALT, prj.name)
@@ -989,11 +740,11 @@ def build_prj(pk):
             {"appmenus": appmenus, "app": app, "user_param": user_param},
         )
 
-        for file_obj in app.schfiles_set.all():
-            if file_obj.file_type in ("U", "C", "J", "P", "R", "I", "O", "B"):
+        for file_obj in app.schfile_set.all():
+            if file_obj.type in ("U", "C", "J", "P", "R", "I", "O", "B"):
                 _handle_static_file(file_obj, base_path, prj, app)
                 continue
-            elif file_obj.file_type == "f":
+            elif file_obj.type == "f":
                 file_name = (
                     base_path
                     + "/"
@@ -1002,7 +753,7 @@ def build_prj(pk):
                     + file_obj.name
                     + ".py"
                 )
-            elif file_obj.file_type == "t":
+            elif file_obj.type == "t":
                 file_name = (
                     base_path
                     + "/"
@@ -1011,13 +762,13 @@ def build_prj(pk):
                     + file_obj.name
                     + ".py"
                 )
-            elif file_obj.file_type == "c":
+            elif file_obj.type == "c":
                 init_file = os.path.join(base_path, app.name, "applib", "__init__.py")
                 if not os.path.exists(init_file):
                     f = open_and_create_dir(init_file, "wb")
                     f.close()
                 file_name = base_path + "/" + app.name + "/" + file_obj.name
-            elif file_obj.file_type == "m":
+            elif file_obj.type == "m":
                 f = open_and_create_dir(
                     base_path + "/" + app.name + "/management/__init__.py", "wb"
                 )
@@ -1030,7 +781,7 @@ def build_prj(pk):
                 file_name = (
                     base_path + "/" + app.name + "/management/commands/" + file_obj.name
                 )
-            elif file_obj.file_type == "p":
+            elif file_obj.type == "p":
                 if "/" in file_obj.name:
                     x = file_obj.name.split("/")
                     plugin_name = x[0]
@@ -1048,7 +799,7 @@ def build_prj(pk):
                     + file_name
                     + ".py"
                 )
-            elif file_obj.file_type == "i":
+            elif file_obj.type == "i":
                 if "/" in file_obj.name:
                     x = file_obj.name.split("/")
                     plugin_name = x[0]
@@ -1071,7 +822,7 @@ def build_prj(pk):
                 f.write(content.encode("utf-8"))
                 f.close()
                 file_name = None
-            elif file_obj.file_type == "T":
+            elif file_obj.type == "T":
                 template_name = file_obj.name
                 file_name = (
                     base_path
@@ -1086,7 +837,7 @@ def build_prj(pk):
                 f.write(content.encode("utf-8"))
                 f.close()
                 file_name = None
-            elif file_obj.file_type == "j":
+            elif file_obj.type == "j":
                 template_name = file_obj.name
                 file_name = (
                     base_path
@@ -1106,7 +857,7 @@ def build_prj(pk):
                 f.write(codejs.encode("utf-8"))
                 f.close()
                 file_name = None
-            elif file_obj.file_type == "l":
+            elif file_obj.type == "l":
                 init_file = os.path.join(base_path, app.name, "applib", "__init__.py")
                 if not os.path.exists(init_file):
                     f = open_and_create_dir(init_file, "wb")
@@ -1114,11 +865,11 @@ def build_prj(pk):
                 file_name = os.path.join(base_path, app.name, "applib", file_obj.name)
                 if not file_name.endswith(".py"):
                     file_name += ".py"
-            elif file_obj.file_type == "s":
+            elif file_obj.type == "s":
                 file_name = base_path + "/" + app.name + "/schema.py"
-            elif file_obj.file_type == "r":
+            elif file_obj.type == "r":
                 file_name = base_path + "/" + app.name + "/rest_api.py"
-            elif file_obj.file_type in ("n", "N", "E"):
+            elif file_obj.type in ("n", "N", "E"):
                 file_name = os.path.join(base_path, app.name, "applib", file_obj.name)
                 param = ""
                 if "(" in file_name:
@@ -1129,9 +880,9 @@ def build_prj(pk):
                     file_name += ".nim"
 
                 build_name = "build.ihtml"
-                if file_obj.file_type == "N":
+                if file_obj.type == "N":
                     build_name = "build_exe.ihtml"
-                elif file_obj.file_type == "E":
+                elif file_obj.type == "E":
                     build_name = "build_ext.ihtml"
 
                 file_name2 = os.path.join(
@@ -1182,7 +933,7 @@ def build_prj(pk):
                 prj_tab.append(x)
 
     for pos in prj_tab:
-        prj2 = models.SChAppSet.objects.filter(name=pos, main_view=True).first()
+        prj2 = models.SChProject.objects.filter(name=pos, main_view=True).first()
         if prj2:
             if pos == prj.name:
                 static_files2 = prj2.schstatic_set.all()
@@ -1217,14 +968,14 @@ def build_prj(pk):
                         continue
                 component_elements += [
                     app.name + "/components/" + pos.name + ".js"
-                    for pos in app.schfiles_set.all()
-                    if pos.file_type in ("R",)
+                    for pos in app.schfile_set.all()
+                    if pos.type in ("R",)
                 ]
                 js_app_files = [
-                    pos for pos in app.schfiles_set.all() if pos.file_type in ("J", "P")
+                    pos for pos in app.schfile_set.all() if pos.type in ("J", "P")
                 ]
                 css_app_files = [
-                    pos for pos in app.schfiles_set.all() if pos.file_type in ("C", "I")
+                    pos for pos in app.schfile_set.all() if pos.type in ("C", "I")
                 ]
                 static_items.append((app.name, js_app_files, css_app_files))
 
@@ -1264,7 +1015,7 @@ def build_prj(pk):
     for pos in prj.get_ext_pytigon_apps():
         if pos:
             x = pos.split(".")
-            tab1 = models.SChAppSet.objects.filter(name=x[0])
+            tab1 = models.SChProject.objects.filter(name=x[0])
             for _prj in tab1:
                 tab2 = _prj.schapp_set.filter(name=x[1])
                 for _app in tab2:
@@ -1508,7 +1259,7 @@ def prj_import(request):
 
 @dict_to_template("schbuilder/v_manage.html")
 def manage(request, pk):
-    prj = models.SChAppSet.objects.get(id=pk)
+    prj = models.SChProject.objects.get(id=pk)
     return {"project": prj}
 
     # base_path = os.path.join(settings.PRJ_PATH, prj.name)
@@ -1623,7 +1374,7 @@ def installer(request, pk):
 
     try:
         pki = int(pk)
-        prj = models.SChAppSet.objects.get(id=pki)
+        prj = models.SChProject.objects.get(id=pki)
         name = prj.name
     except:
         name = pk
@@ -1724,7 +1475,7 @@ def installer(request, pk):
         "object_list": list(reversed(buf)),
         "name": name,
         "url": url,
-        "tp": "SChAppSet",
+        "tp": "SChProject",
     }
 
 
@@ -2091,7 +1842,7 @@ def autocomplete(request, id, key):
 def gen_milestone(request, pk):
     object_list = []
 
-    prj = models.SChAppSet.objects.get(id=pk)
+    prj = models.SChProject.objects.get(id=pk)
     root_path = settings.ROOT_PATH
 
     if hasattr(pytigon.schserw.settings, "_PRJ_PATH_ALT"):
@@ -2220,12 +1971,12 @@ def run(request, pk):
     z = t.render(c)
     print(z)
 
-    prj = models.SChAppSet.objects.get(pk=pk)
+    prj = models.SChProject.objects.get(pk=pk)
     return {"project": prj}
 
 
 def run2(request, pk):
-    prj = models.SChAppSet.objects.get(pk=pk)
+    prj = models.SChProject.objects.get(pk=pk)
     environ["PYTHONPATH"] = os.path.join(settings.ROOT_PATH, "..")
     subprocess.run([sys.executable, "-m", "pytigon.ptig", prj.name], shell=False)
     return HttpResponse("")

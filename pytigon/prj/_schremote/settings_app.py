@@ -91,8 +91,10 @@ for app in APPS_EXT:
     if not app in INSTALLED_APPS:
         INSTALLED_APPS.append(app)
 
-STATICFILES_DIRS.append(PRJ_PATH + "/_schtools/static")
-STATICFILES_DIRS.append(PRJ_PATH_ALT + "/_schtools/static")
+if os.path.exists(PRJ_PATH + "/_schtools/static"):
+    STATICFILES_DIRS.append(PRJ_PATH + "/_schtools/static")
+else:
+    STATICFILES_DIRS.append(PRJ_PATH_ALT + "/_schtools/static")
 
 
 TEMPLATES[0]["DIRS"].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
@@ -148,7 +150,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2024.05.15 12:15:13"
+GEN_TIME = "2024.05.21 15:37:02"
 
 
 for key, value in os.environ.items():

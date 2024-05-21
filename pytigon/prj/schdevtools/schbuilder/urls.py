@@ -5,12 +5,12 @@ from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
-    gen_row_action("SChAppSet", "gen", views.gen),
-    gen_row_action("SChAppSet", "prj_export", views.prj_export),
-    gen_tab_action("SChAppSet", "prj_import", views.prj_import),
-    gen_row_action("SChAppSet", "manage", views.manage),
+    gen_row_action("SChProject", "gen", views.gen),
+    gen_row_action("SChProject", "prj_export", views.prj_export),
+    gen_tab_action("SChProject", "prj_import", views.prj_import),
+    gen_row_action("SChProject", "manage", views.manage),
     gen_row_action("SChTable", "template_edit", views.template_edit),
-    gen_tab_action("SChAppSet", "prj_import/edit", views.edit),
+    gen_tab_action("SChProject", "prj_import/edit", views.edit),
     gen_row_action(
         "SChField",
         "field_up",
@@ -54,8 +54,8 @@ urlpatterns = [
         views.change_menu_pos,
         {"app": "schbuilder", "tab": "SChAppMenu", "forward": True, "field": "parent"},
     ),
-    gen_row_action("SChAppSet", "installer", views.installer),
-    gen_tab_action("SChAppSet", "restart_server", views.restart_server),
+    gen_row_action("SChProject", "installer", views.installer),
+    gen_tab_action("SChProject", "restart_server", views.restart_server),
     gen_row_action(
         "SChFormField",
         "field_up",
@@ -79,9 +79,9 @@ urlpatterns = [
         },
     ),
     gen_row_action("SChView", "template_edit3", views.template_edit3),
-    gen_tab_action("SChAppSet", "update", views.update),
+    gen_tab_action("SChProject", "update", views.update),
     gen_row_action("SChLocale", "translate_sync", views.translate_sync),
-    gen_row_action("SChAppSet", "locale_gen", views.locale_gen),
+    gen_row_action("SChProject", "locale_gen", views.locale_gen),
     re_path(
         r"download_installer/(?P<name>\w+)/$",
         views.download_installer,
@@ -116,9 +116,9 @@ urlpatterns = [
         {},
         name="schbuilder_autocomplete",
     ),
-    gen_row_action("SChAppSet", "gen_milestone", views.gen_milestone),
-    gen_tab_action("SChAppSet", "prj_import2", views.prj_import2),
-    gen_row_action("SChAppSet", "run", views.run),
+    gen_row_action("SChProject", "gen_milestone", views.gen_milestone),
+    gen_tab_action("SChProject", "prj_import2", views.prj_import2),
+    gen_row_action("SChProject", "run", views.run),
     gen_row_action(
         "SChApp",
         "app_up",
@@ -131,7 +131,7 @@ urlpatterns = [
         views.change_pos,
         {"app": "schbuilder", "tab": "SChApp", "forward": True, "field": "parent"},
     ),
-    gen_row_action("SChAppSet", "run2", views.run2),
+    gen_row_action("SChProject", "run2", views.run2),
     path(
         "devtools", TemplateView.as_view(template_name="schbuilder/devtools.html"), {}
     ),
@@ -142,7 +142,7 @@ urlpatterns = [
 
 gen = generic_table_start(urlpatterns, "schbuilder", views)
 gen.for_field(
-    "SChAppSet",
+    "SChProject",
     "schapp_set",
     "Applications",
     prefix="up",
@@ -158,7 +158,7 @@ gen.for_field(
 # gen.standard('SChAppMenu', u'SChAppMenu', prefix="wiki")
 
 
-gen.standard("SChAppSet", _("Application package"), _("Application packages"))
+gen.standard("SChProject", _("Pytigon project"), _("Pytigon projects"))
 gen.standard("SChApp", _("SChApp"), _("SChApp"))
 gen.standard("SChChoice", _("SChChoice"), _("SChChoice"))
 gen.standard("SChChoiceItem", _("SChChoiceItem"), _("SChChoiceItem"))
@@ -171,25 +171,25 @@ gen.standard("SChAppMenu", _("SChAppMenu"), _("SChAppMenu"))
 gen.standard("SChForm", _("Form"), _("Form"))
 gen.standard("SChFormField", _("Form field"), _("Form field"))
 gen.standard("SChTask", _("SChTask"), _("SChTask"))
-gen.standard("SChFiles", _("SChFiles"), _("SChFiles"))
+gen.standard("SChFile", _("SChFile"), _("SChFiles"))
 gen.standard("SChLocale", _("Locale"), _("Locales"))
 gen.standard("SChTranslate", _("Translate"), _("Translate"))
 gen.standard("SChChannelConsumer", _("Channel consumer"), _("Channel consumers"))
 
-gen.for_field("SChAppSet", "schapp_set", _("SChApp"), _("SChApp"))
+gen.for_field("SChProject", "schapp_set", _("SChApp"), _("SChApp"))
 gen.for_field("SChApp", "schchoice_set", _("SChChoice"), _("SChChoice"))
 gen.for_field("SChChoice", "schchoiceitem_set", _("SChChoiceItem"), _("SChChoiceItem"))
 gen.for_field("SChApp", "schtable_set", _("SChTable"), _("SChTable"))
 gen.for_field("SChTable", "schfield_set", _("SChField"), _("SChField"))
 gen.for_field("SChApp", "schview_set", _("SChView"), _("SChView"))
-gen.for_field("SChAppSet", "schstatic_set", _("Static file"), _("Static files"))
+gen.for_field("SChProject", "schstatic_set", _("Static file"), _("Static files"))
 gen.for_field("SChApp", "schtemplate_set", _("SChTemplate"), _("SChTemplate"))
 gen.for_field("SChApp", "schappmenu_set", _("SChAppMenu"), _("SChAppMenu"))
 gen.for_field("SChApp", "schform_set", _("Form"), _("Form"))
 gen.for_field("SChForm", "schformfield_set", _("Form field"), _("Form field"))
 gen.for_field("SChApp", "schtask_set", _("SChTask"), _("SChTask"))
-gen.for_field("SChApp", "schfiles_set", _("SChFiles"), _("SChFiles"))
-gen.for_field("SChAppSet", "schlocale_set", _("Locale"), _("Locales"))
+gen.for_field("SChApp", "schfile_set", _("SChFile"), _("SChFiles"))
+gen.for_field("SChProject", "schlocale_set", _("Locale"), _("Locales"))
 gen.for_field("SChLocale", "schtranslate_set", _("Translate"), _("Translate"))
 gen.for_field(
     "SChApp", "schchannelconsumer_set", _("Channel consumer"), _("Channel consumers")

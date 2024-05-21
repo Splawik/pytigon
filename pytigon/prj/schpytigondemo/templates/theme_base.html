@@ -22,6 +22,7 @@
   {% else %}
         {% block js_extrascipts %}
                 {{block.super}}
+                {% module_link 'schdoc/js/subdoc.js' %}
                 {% jscript_link 'system/require.js' %}
         {% endblock %}
         {% block extrastyle %}

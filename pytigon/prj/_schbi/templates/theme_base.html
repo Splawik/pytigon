@@ -29,7 +29,6 @@
         {% endblock %}
         {% block body_footer_scripts %}
                 {{block.super}}
-                {% component '_schbi/components/refresh_bi_charts.js' %}
                 {% component '_schcomponents/components/ptig-codeeditor.js' %}
                 {% component '_schcomponents/components/ptig-form.js' %}
                 {% component '_schcomponents/components/ptig-plotly.js' %}
@@ -37,7 +36,7 @@
         {% block component_init %}
                         var initial_state={};
                         GLOBAL_BUS.set_state(initial_state);
-                        var component_init = [ "refresh_bi_charts.js", "ptig-codeeditor.js", "ptig-form.js", "ptig-plotly.js",  ];
+                        var component_init = [ "ptig-codeeditor.js", "ptig-form.js", "ptig-plotly.js",  ];
         {% endblock %}
 {% endif %}
 

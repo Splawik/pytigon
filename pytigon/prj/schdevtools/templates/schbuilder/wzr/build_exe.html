@@ -1,0 +1,68 @@
+<def build(**argv):>
+        <import os></import>
+        <import subprocess></import>
+        <from django.conf import settings></from>
+        <import pytigon></import>
+        <from pytigon_lib.schtools.nim_integration import install_if_not_exists>
+        </from>
+        <path = argv["path"]></path>
+        <base_name = os.path.split(path)[1].rsplit(".", 1)[0]></base_name>
+        <nim_path = install_if_not_exists(settings.DATA_PATH)>
+        </nim_path>
+        <if os.name ="= "nt":">
+                <os.environ["PATH"] = os.environ["PATH"] + (";%s\\bin\\" % nim_path)></os.environ["PATH"]>
+                <exe = "nim.exe"></exe>
+                <out_path = os.path.join(>
+                        <settings.DATA_PATH,></settings.DATA_PATH,>
+                        "prg",
+                        <settings.PRJ_NAME + "_" + base_name + ".exe",></settings.PRJ_NAME>
+                </out_path>
+                )
+        </if>
+        <else:>
+                <os.environ["PATH"] = os.environ["PATH"] + (":%s/bin/" % nim_path)></os.environ["PATH"]>
+                <exe = "nim"></exe>
+                <out_path = os.path.join(>
+                        <settings.DATA_PATH,></settings.DATA_PATH,>
+                        "prg",
+                        <settings.PRJ_NAME + "_" + base_name,></settings.PRJ_NAME>
+                </out_path>
+                )
+        </else:>
+        <packages = "{PARAM}"></packages>
+        <if packages:>
+                <packages_list = packages.replace(",",";").split(";")></packages_list>
+                <for package in packages_list:>
+                        <subprocess.run(>
+                                [
+                                        <os.path.join(nim_path, "bin", exe.replace("nim", "nimble")),></os.path.join(nim_path,>
+                                        "install",
+                                        <package></package>
+                                ]
+                        </subprocess.run(>
+                        )
+                </for>
+        </if>
+        <subprocess.run(>
+                [
+                        <os.path.join(nim_path, "bin", exe),></os.path.join(nim_path,>
+                        "c",
+                        "--path:" + pytigon.__file__.replace("__init__.py", "ext_lib"),
+                        "--out:" + out_path,
+                        "--cc:clang",
+                        "--clang.exe=zigcc",
+                        "--clang.linkerexe=zigcc",
+                        "-d:release",
+                        "--gc:orc",
+                        "--opt:size",
+                        <path,></path,>
+                ]
+        </subprocess.run(>
+        )
+        <return True>
+        </return>
+</def>
+<if __name__ ="= "__main__":">
+        <build(path=__file__.replace("_build.py", ".nim"))></build(path=__file__.replace("_build.py",>
+</if>
+

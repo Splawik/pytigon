@@ -150,12 +150,18 @@ for app in APPS_EXT:
     if not app in INSTALLED_APPS:
         INSTALLED_APPS.append(app)
 
-STATICFILES_DIRS.append(PRJ_PATH + "/_schsetup/static")
-STATICFILES_DIRS.append(PRJ_PATH_ALT + "/_schsetup/static")
-STATICFILES_DIRS.append(PRJ_PATH + "/_schcomponents/static")
-STATICFILES_DIRS.append(PRJ_PATH_ALT + "/_schcomponents/static")
-STATICFILES_DIRS.append(PRJ_PATH + "/_schwiki/static")
-STATICFILES_DIRS.append(PRJ_PATH_ALT + "/_schwiki/static")
+if os.path.exists(PRJ_PATH + "/_schsetup/static"):
+    STATICFILES_DIRS.append(PRJ_PATH + "/_schsetup/static")
+else:
+    STATICFILES_DIRS.append(PRJ_PATH_ALT + "/_schsetup/static")
+if os.path.exists(PRJ_PATH + "/_schcomponents/static"):
+    STATICFILES_DIRS.append(PRJ_PATH + "/_schcomponents/static")
+else:
+    STATICFILES_DIRS.append(PRJ_PATH_ALT + "/_schcomponents/static")
+if os.path.exists(PRJ_PATH + "/_schwiki/static"):
+    STATICFILES_DIRS.append(PRJ_PATH + "/_schwiki/static")
+else:
+    STATICFILES_DIRS.append(PRJ_PATH_ALT + "/_schwiki/static")
 
 
 TEMPLATES[0]["DIRS"].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
@@ -220,7 +226,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2024.05.18 12:54:47"
+GEN_TIME = "2024.05.21 18:45:52"
 
 
 for key, value in os.environ.items():

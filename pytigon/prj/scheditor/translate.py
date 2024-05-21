@@ -1,4 +1,4 @@
-yti_("New file")
+_("New file")
 _("New directory")
 _("View")
 _("Edit")

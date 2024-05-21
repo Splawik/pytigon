@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 % extends "forms/form.html"
 
 % load exfiltry
@@ -30,7 +29,7 @@
 %% list_row_actions
     % row_actions:
         .edit
-        .field_edit/code,Code,[|client://apps/accessories-text-editor.png],_parent
+        .field_edit/content,Content,[|client://apps/accessories-text-editor.png],_parent
         .delete
 
 %% row_edit

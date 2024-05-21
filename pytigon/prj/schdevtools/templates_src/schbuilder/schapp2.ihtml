@@ -79,7 +79,7 @@
                 CTRL-NOBG_BUTTON_TXT NAME=templates,,,label=_(Templates),,,SRC=png://mimetypes/x-office-presentation.png,,,href={{app_path}}table/SChApp/{id}/schtemplate_set/-/form/list/
             td width=20
             td cellpadding=0,,,width=80
-                CTRL-NOBG_BUTTON_TXT NAME=other_files,,,label=_(Application files),,,SRC=png://places/folder.png,,,href={{app_path}}table/SChApp/{id}/schfiles_set/-/form/list/
+                CTRL-NOBG_BUTTON_TXT NAME=other_files,,,label=_(Application files),,,SRC=png://places/folder.png,,,href={{app_path}}table/SChApp/{id}/schfile_set/-/form/list/
             td width=20
             td cellpadding=0,,,width=80
                 % widget class='menu' id='user_action' title='Other properties' style='toolbar': 
@@ -89,7 +89,7 @@
                 
             td width=30
             td cellpadding=0,,,width=60
-                CTRL-NOBG_BUTTON_TXT NAME=gen,,,label=_(Build),,,SRC=png://categories/applications-multimedia.png,,,href={{app_path}}table/SChAppSet/{{parent.pk}}/action/gen/
+                CTRL-NOBG_BUTTON_TXT NAME=gen,,,label=_(Build),,,SRC=png://categories/applications-multimedia.png,,,href={{app_path}}table/SChProject/{{parent.pk}}/action/gen/
 
             % comment:
                 li:::a class=btn btn-primary btn-sm,,,href={{app_path}}table/SChApp/{id}/model_code/form/editor/..._(Model base file)

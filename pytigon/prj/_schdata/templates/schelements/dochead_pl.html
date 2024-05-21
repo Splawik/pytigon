@@ -36,18 +36,18 @@
         {% if vtype != 'sublist' %}
                 {% with object_list.model|args:filter|call:"get_documents_for_reg" as doctypes %}
                         {% for item in doctypes %}
-                                {% new_row "New document: "|append_str:item.name action="new_row/"|append_str:item.name url="+?after_close=refresh" %}
+                                {% new_row "Nowy dokument "|append_str:item.name action="new_row/"|append_str:item.name url="+?after_close=refresh" %}
                         {% endfor %}
                 {% endwith %}
         {% endif %}
 {% endblock %}
 {% block list_row_header %}
-        <th>Register</th>
-        <th>Target</th>
-        <th>Name</th>
-        <th>Number</th>
-        <th>Description</th>
-        <th>Date</th>
+        <th>Rejestr</th>
+        <th>Cel</th>
+        <th>Nazwa</th>
+        <th>Numer</th>
+        <th>Opis</th>
+        <th>Data</th>
         <th>
         Status
         </th>
@@ -97,7 +97,7 @@
                                         {% if row.for_undo_template %}
                                                 {% subtemplate row.for_undo_template %}
                                           {% else %}
-                                                {% action "decline_status"|append_str:"/"|append_str:row.name "Back to status:"|append_str:row.name row.icon|last_elem target=row.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
+                                                {% action "decline_status"|append_str:"/"|append_str:row.name "Przywróć status"|append_str:row.name row.icon|last_elem target=row.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
                                         {% endif %}
                                 {% endif %}
                         {% endfor %}
@@ -105,7 +105,7 @@
         {% endwith %}
         {% comment %}
                 {% if object|args:request|call:"status_can_be_undo" %}
-                        {% action "decline_status"|append_str:"/"|append_str:object.status "Discard status: "|append_str:object.status "fa fa-undo" target=object.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
+                        {% action "decline_status"|append_str:"/"|append_str:object.status "Odrzuć status "|append_str:object.status "fa fa-undo" target=object.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
                 {% endif %}
         {% endcomment %}
 {% endblock %}

@@ -8,15 +8,15 @@ Perms = True
 Index = ""
 Urls = (
     (
-        "table/SChAppSet/main_view/form/list/?view_in=desktop",
+        "table/SChProject/main_view/form/list/?view_in=desktop",
         _("Projects"),
-        "schbuilder.change_schappset",
+        "schbuilder.change_schproject",
         """client://status/folder-open.png""",
     ),
     (
-        "table/SChAppSet/not_main_view/form/list/?view_in=desktop",
+        "table/SChProject/not_main_view/form/list/?view_in=desktop",
         _("Archived projects"),
-        "schbuilder.change_schappset",
+        "schbuilder.change_schproject",
         """png://actions/edit-delete.png""",
     ),
     (

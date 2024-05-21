@@ -1,4 +1,4 @@
-{% extends default_template %}
+{% extends 'page.html'|translate:lang %}
 {% load exfiltry %}
 {% load exsyntax %}
 {% load django_bootstrap5 %}
@@ -22,15 +22,20 @@
   {% else %}
         {% block js_extrascipts %}
                 {{block.super}}
+                {% jscript_link 'system/require.js' %}
         {% endblock %}
         {% block extrastyle %}
                 {{block.super}}
+                {% css_link 'schwiki/css/wiki_editor.css' %}
         {% endblock %}
         {% block body_footer_scripts %}
                 {{block.super}}
+                {% component 'schwiki/components/insert_object.js' %}
         {% endblock %}
         {% block component_init %}
-                  var component_init = [];
+                        var initial_state={};
+                        GLOBAL_BUS.set_state(initial_state);
+                        var component_init = [ "insert_object.js",  ];
         {% endblock %}
 {% endif %}
 

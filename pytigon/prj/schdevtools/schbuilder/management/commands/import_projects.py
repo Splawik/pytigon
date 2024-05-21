@@ -8,7 +8,7 @@ import getopt
 from django.conf import settings
 
 from schbuilder.views import prj_import_from_str
-from schbuilder.models import SChAppSet
+from schbuilder.models import SChProject
 
 PRJS_TO_IMPORT = [
     "schdevtools",  # prepare with initial data
@@ -34,7 +34,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for prj_name in PRJS_TO_IMPORT:
-            prjs = list(SChAppSet.objects.filter(name=prj_name))
+            prjs = list(SChProject.objects.filter(name=prj_name))
             if len(prjs) == 0:
                 path = os.path.join(
                     os.path.join(settings.ROOT_PATH, "install"), f"{prj_name}.prj"

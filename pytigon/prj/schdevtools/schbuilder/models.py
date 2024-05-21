@@ -323,10 +323,10 @@ GuiElements_CHOICES = [
 ]
 
 
-class SChAppSet(JSONModel):
+class SChProject(JSONModel):
     class Meta:
-        verbose_name = _("Application package")
-        verbose_name_plural = _("Application packages")
+        verbose_name = _("Pytigon project")
+        verbose_name_plural = _("Pytigon projects")
         default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
 
@@ -553,18 +553,6 @@ class SChAppSet(JSONModel):
         else:
             ret = []
         if self.ext_apps:
-            # if self.ext_apps == '*':
-            #    appset_list = SChAppSet.objects.all()
-            #    for pos in appset_list:
-            #        if pos.name == self.name or not pos.public:
-            #            continue
-            #        app_list = pos.schapp_set.all()
-            #        for pos2 in app_list:
-            #            name = pos.name+"."+pos2.name
-            #            if not name in ret:
-            #                ret.append(name)
-            #    return ret
-            # else:
             l = self.ext_apps.replace("\n", ",").replace(";", ",").split(",")
         else:
             return ret
@@ -655,11 +643,11 @@ class SChAppSet(JSONModel):
     @classmethod
     def filter(cls, value, view=None, request=None):
         if value == "main_view":
-            return SChAppSet.objects.filter(main_view=True)
+            return SChProject.objects.filter(main_view=True)
         elif value == "not_main_view":
-            return SChAppSet.objects.filter(main_view=False)
+            return SChProject.objects.filter(main_view=False)
         else:
-            return SChAppSet.objects.all()
+            return SChProject.objects.all()
 
     def get_form_class(self, view, request, create):
         base_form = view.get_form_class()
@@ -677,7 +665,7 @@ class SChAppSet(JSONModel):
         return form_class
 
 
-admin.site.register(SChAppSet)
+admin.site.register(SChProject)
 
 
 class SChApp(JSONModel):
@@ -690,7 +678,7 @@ class SChApp(JSONModel):
         ordering = ["id"]
 
     parent = ext_models.PtigForeignKey(
-        SChAppSet,
+        SChProject,
         on_delete=models.CASCADE,
         null=False,
         blank=False,
@@ -887,8 +875,8 @@ class SChApp(JSONModel):
             if not form.name.startswith("_"):
                 ret.append("form/" + form.name + "/")
 
-        for f in self.schfiles_set.all():
-            if f.file_type == "j":
+        for f in self.schfile_set.all():
+            if f.type == "j":
                 ret.append("../static/" + self.name + "/views/" + f.name + ".fview")
 
         if "_schdata.schelements" in self.parent.ext_apps:
@@ -1580,7 +1568,7 @@ class SChStatic(models.Model):
         ordering = ["id"]
 
     parent = ext_models.PtigHiddenForeignKey(
-        SChAppSet,
+        SChProject,
         on_delete=models.CASCADE,
         null=False,
         blank=False,
@@ -1598,8 +1586,8 @@ class SChStatic(models.Model):
     name = models.CharField(
         "Name", null=False, blank=False, editable=True, max_length=64
     )
-    code = models.TextField(
-        "Code",
+    content = models.TextField(
+        "Content",
         null=True,
         blank=True,
         editable=False,
@@ -2218,9 +2206,9 @@ class SChTask(models.Model):
 admin.site.register(SChTask)
 
 
-class SChFiles(models.Model):
+class SChFile(models.Model):
     class Meta:
-        verbose_name = _("SChFiles")
+        verbose_name = _("SChFile")
         verbose_name_plural = _("SChFiles")
         default_permissions = ("add", "change", "delete", "view", "list", "administer")
         app_label = "schbuilder"
@@ -2235,8 +2223,8 @@ class SChFiles(models.Model):
         editable=True,
         verbose_name="Parent",
     )
-    file_type = models.CharField(
-        "File  type",
+    type = models.CharField(
+        "type",
         null=False,
         blank=False,
         editable=True,
@@ -2252,16 +2240,22 @@ class SChFiles(models.Model):
         blank=True,
         editable=False,
     )
+    doc = models.TextField(
+        "Doc",
+        null=True,
+        blank=True,
+        editable=False,
+    )
 
     def save(self, *argi, **argv):
-        if self.file_type == "r" and not self.content:
+        if self.type == "r" and not self.content:
             self.content = render_to_string("schbuilder/wzr/rest_api.html", {})
-        elif self.file_type == "s" and not self.content:
+        elif self.type == "s" and not self.content:
             self.content = render_to_string("schbuilder/wzr/graphql_api.html", {})
         super().save(*argi, **argv)
 
 
-admin.site.register(SChFiles)
+admin.site.register(SChFile)
 
 
 class SChLocale(models.Model):
@@ -2274,7 +2268,7 @@ class SChLocale(models.Model):
         ordering = ["id"]
 
     parent = ext_models.PtigHiddenForeignKey(
-        SChAppSet,
+        SChProject,
         on_delete=models.CASCADE,
         null=False,
         blank=False,
