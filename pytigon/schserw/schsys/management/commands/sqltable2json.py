@@ -1,7 +1,8 @@
-from django.core.management.base import BaseCommand, CommandError
-from django.db import connection
-
+import sys
 import json
+
+from django.core.management.base import BaseCommand
+from django.db import connection
 
 
 def get_table(table_name):
@@ -26,9 +27,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if not options["table_name"]:
-            raise CommandError("required table name")
+            self.print_help("manage.py", "<your command name>")
+            sys.exit(1)
 
-        print(options)
         if "output" in options and options["output"]:
             o = options["output"]
         else:
