@@ -44,7 +44,10 @@ if not LOCAL_ROOT_PATH in sys.path:
     sys.path.append(LOCAL_ROOT_PATH)
 
 if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
-    URL_ROOT_FOLDER = "schdevtools"
+    if ENV("PUBLISH_IN_SUBFOLDER") == "_":
+        URL_ROOT_FOLDER = PRJ_NAME
+    else:
+        URL_ROOT_FOLDER = ENV("PUBLISH_IN_SUBFOLDER")
     URL_ROOT_PREFIX = URL_ROOT_FOLDER + "/"
     STATIC_URL = URL_ROOT_FOLDER + "/static/"
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
@@ -189,7 +192,13 @@ if setup_databases:
     if db_setup[1]:
         AUTHENTICATION_BACKENDS = db_setup[1]
 else:
-    if "DATABASE_URL" in os.environ:
+    if PRJ_NAME.upper() + "_DATABASE_URL" in os.environ:
+        db_local = DATABASES["default"]
+        DATABASES["default"] = ENV.db(
+            var=os.environ[PRJ_NAME.upper() + "_DATABASE_URL"]
+        )
+        DATABASES["local"] = db_local
+    elif "DATABASE_URL" in os.environ:
         db_local = DATABASES["default"]
         DATABASES["default"] = ENV.db()
         DATABASES["local"] = db_local
@@ -226,12 +235,15 @@ try:
 except:
     pass
 
-GEN_TIME = "2024.05.21 18:45:52"
+GEN_TIME = "2024.05.28 19:34:44"
 
 
 for key, value in os.environ.items():
-    if key.startswith("PYTIGON_"):
-        key2 = key[8:]
+    if key.startswith("PYTIGON_") or key.startswith("PYTIGON" + PRJ_NAME.upper() + "_"):
+        if key.startswith("PYTIGON_"):
+            key2 = key[8:]
+        else:
+            key2 = key[8 + len(PRJ_NAME) :]
         if value.startswith("[") or value.startswith("{") or value.startswith(":"):
             try:
                 globals()[key2] = json.loads(
