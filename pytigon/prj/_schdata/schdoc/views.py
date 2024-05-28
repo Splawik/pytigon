@@ -174,7 +174,7 @@ def edit__doc(request, doc_id, doc=None):
         data = doc.get_json_data()
 
         data_form = run_code_from_db_field(
-            f"docdef__save_fun_{doc_def.pk}.py", doc_def, "load_fun", "load", data=data
+            f"docdef__load_fun_{doc_def.pk}.py", doc_def, "load_fun", "load", data=data
         )
 
         if data_form == None:
