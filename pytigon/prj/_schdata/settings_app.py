@@ -43,6 +43,7 @@ URL_ROOT_PREFIX = ""
 if not LOCAL_ROOT_PATH in sys.path:
     sys.path.append(LOCAL_ROOT_PATH)
 
+URL_ROOT_FOLDER = ""
 if ENV("PUBLISH_IN_SUBFOLDER"):
     if ENV("PUBLISH_IN_SUBFOLDER") == "_":
         URL_ROOT_FOLDER = PRJ_NAME
@@ -113,7 +114,9 @@ TEMPLATES[0]["DIRS"].insert(
 )
 LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
 
-_NAME = os.path.join(DATA_PATH, "%s/%s.db" % (PRJ_NAME, PRJ_NAME))
+_NAME = os.path.join(
+    DATA_PATH, "%s/%s.db" % (URL_ROOT_FOLDER if URL_ROOT_FOLDER else PRJ_NAME, PRJ_NAME)
+)
 
 DATABASES["default"] = {
     "ENGINE": "django.db.backends.sqlite3",
@@ -151,7 +154,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2024.05.29 10:29:08"
+GEN_TIME = "2024.05.29 17:15:18"
 
 
 for key, value in os.environ.items():
