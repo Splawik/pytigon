@@ -28,7 +28,7 @@ from pytigon_lib.schtools.platform_info import platform_name
 
 from pytigon.schserw.settings import *
 
-from apps import APPS, APPS_EXT, PUBLIC, MAIN_PRJ
+from apps import APPS, APPS_EXT, PUBLIC
 
 try:
     from global_db_settings import setup_databases
@@ -43,7 +43,7 @@ URL_ROOT_PREFIX = ""
 if not LOCAL_ROOT_PATH in sys.path:
     sys.path.append(LOCAL_ROOT_PATH)
 
-if ENV("PUBLISH_IN_SUBFOLDER") and not MAIN_PRJ:
+if ENV("PUBLISH_IN_SUBFOLDER"):
     if ENV("PUBLISH_IN_SUBFOLDER") == "_":
         URL_ROOT_FOLDER = PRJ_NAME
     else:
@@ -147,7 +147,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2024.05.28 19:35:42"
+GEN_TIME = "2024.05.29 10:28:50"
 
 
 for key, value in os.environ.items():
