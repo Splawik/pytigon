@@ -35,8 +35,6 @@ try:
 except:
     setup_databases = None
 
-MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, PRJ_NAME), "media")
-UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 LOCAL_ROOT_PATH = os.path.abspath(os.path.join(_lp, ".."))
 ROOT_PATH = _rp
 URL_ROOT_PREFIX = ""
@@ -52,6 +50,14 @@ if ENV("PUBLISH_IN_SUBFOLDER"):
     STATIC_URL = URL_ROOT_FOLDER + "/static/"
     MEDIA_URL = URL_ROOT_FOLDER + "/site_media/"
     MEDIA_URL_PROTECTED = URL_ROOT_FOLDER + "/site_media_protected/"
+    SESSION_COOKIE_NAME = URL_ROOT_FOLDER.lower() + "_sessionid"
+    CSRF_COOKIE_NAME = URL_ROOT_FOLDER.lower() + "_csrftoken"
+
+MEDIA_ROOT = os.path.join(
+    os.path.join(DATA_PATH, URL_ROOT_FOLDER if URL_ROOT_FOLDER else PRJ_NAME), "media"
+)
+UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
+
 if platform_name() != "Android":
     INSTALLED_APPS.append("easy_thumbnails")
 
@@ -170,17 +176,14 @@ try:
 except:
     pass
 
-GEN_TIME = "2024.05.30 08:45:46"
+GEN_TIME = "2024.05.30 11:26:37"
 
 
 for key, value in os.environ.items():
     if key.startswith("PYTIGON_") or key.startswith(
         "PYTIGON" + (URL_ROOT_FOLDER if URL_ROOT_FOLDER else PRJ_NAME).upper() + "_"
     ):
-        if key.startswith("PYTIGON_"):
-            key2 = key[8:]
-        else:
-            key2 = key[8 + len(URL_ROOT_FOLDER if URL_ROOT_FOLDER else PRJ_NAME) :]
+        key2 = key.split("_", 1)[1]
         if value.startswith("[") or value.startswith("{") or value.startswith(":"):
             try:
                 globals()[key2] = json.loads(
