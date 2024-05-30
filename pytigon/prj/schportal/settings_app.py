@@ -43,7 +43,6 @@ URL_ROOT_PREFIX = ""
 if not LOCAL_ROOT_PATH in sys.path:
     sys.path.append(LOCAL_ROOT_PATH)
 
-URL_ROOT_FOLDER = ""
 if ENV("PUBLISH_IN_SUBFOLDER"):
     if ENV("PUBLISH_IN_SUBFOLDER") == "_":
         URL_ROOT_FOLDER = PRJ_NAME
@@ -210,15 +209,17 @@ try:
 except:
     pass
 
-GEN_TIME = "2024.05.29 17:14:37"
+GEN_TIME = "2024.05.30 08:44:54"
 
 
 for key, value in os.environ.items():
-    if key.startswith("PYTIGON_") or key.startswith("PYTIGON" + PRJ_NAME.upper() + "_"):
+    if key.startswith("PYTIGON_") or key.startswith(
+        "PYTIGON" + (URL_ROOT_FOLDER if URL_ROOT_FOLDER else PRJ_NAME).upper() + "_"
+    ):
         if key.startswith("PYTIGON_"):
             key2 = key[8:]
         else:
-            key2 = key[8 + len(PRJ_NAME) :]
+            key2 = key[8 + len(URL_ROOT_FOLDER if URL_ROOT_FOLDER else PRJ_NAME) :]
         if value.startswith("[") or value.startswith("{") or value.startswith(":"):
             try:
                 globals()[key2] = json.loads(
