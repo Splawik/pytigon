@@ -27,7 +27,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if not options["table_name"]:
-            self.print_help("manage.py", "<your command name>")
+            self.print_help("manage.py", "sqltable2json")
             sys.exit(1)
 
         if "output" in options and options["output"]:

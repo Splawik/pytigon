@@ -3687,7 +3687,7 @@
                         "name": "clock",
                         "consumer_type": "AsyncJsonWebsocketConsumer",
                         "url": "clock",
-                        "consumer_code": "print(\"A1\")\nCOUNT=1\n\nasync def connect(self): \n    await self.accept()\n \nasync def receive_json(self, content):\n    print(\"RECEIVED: \", content)\n    await self.send_json({ \"status\": \"pong\", \"data\": \"hello world\"})\n\n    for i in range(0,3):\n        await asyncio.sleep(1)\n        await self.send_json({\"status\": \"clock\", \"data\": self.COUNT })\n        self.COUNT+=1\n\nasync def disconnect(self, close_code):\n    print(\"Websocket closed\", close_code)\n\nprint(\"A2\")\n",
+                        "consumer_code": "COUNT=1\n\nasync def connect(self): \n    await self.accept()\n \nasync def receive_json(self, content):\n    print(\"RECEIVED: \", content)\n    await self.send_json({ \"status\": \"pong\", \"data\": \"hello world\"})\n\n    for i in range(0,3):\n        await asyncio.sleep(1)\n        await self.send_json({\"status\": \"clock\", \"data\": self.COUNT })\n        self.COUNT+=1\n\nasync def disconnect(self, close_code):\n    print(\"Websocket closed\", close_code)\n",
                         "doc": null
                     }
                 }

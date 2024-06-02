@@ -38,7 +38,7 @@
         "template_smartfon": null,
         "template_tablet": null,
         "template_schweb": null,
-        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exfiltry\n% load exsyntax\n\n%% ext_css_links\n    {% css_link 'explorer/css/explorer.css' %}\n    {{block.super}}\n\n"
+        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exfiltry\n% load exsyntax\n\n%% ext_css_links\n    {% css_link 'explorer/styles.css' %}\n    {{block.super}}\n\n"
     },
     "children": [
         {
