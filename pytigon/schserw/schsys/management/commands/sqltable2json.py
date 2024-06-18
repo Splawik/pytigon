@@ -41,3 +41,4 @@ class Command(BaseCommand):
                 f.write(json.dumps(t))
         else:
             print(json.dumps(t))
+

@@ -1338,7 +1338,7 @@ class DocHead(JSONModel):
         max_length=16,
     )
     operator = models.CharField(
-        "Operator", null=True, blank=True, editable=False, max_length=32
+        "Operator", null=True, blank=True, editable=False, max_length=255
     )
     param1 = models.CharField(
         "Parameter 1",
@@ -2820,7 +2820,7 @@ class DocHeadStatus(JSONModel):
         "Description", null=True, blank=True, editable=False, max_length=64
     )
     operator = models.CharField(
-        "Operator", null=True, blank=True, editable=True, max_length=32
+        "Operator", null=True, blank=True, editable=True, max_length=255
     )
 
     def __str__(self):
