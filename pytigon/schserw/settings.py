@@ -711,3 +711,28 @@ else:
         "bulk": 10,
         "orm": "default",
     }
+
+SENTRY_ENABLED = False
+if ENV("SENTRY_ENABLED"):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    SENTRY_ENABLED = True
+
+    sentry_sdk.init(
+        dsn=ENV("SENTRY_DSN"),
+        integrations=[DjangoIntegration()],
+        auto_session_tracking=False,
+        environment="production",
+    )
+
+PROMETEUS_ENABLED = False
+if ENV("PROMETEUS_ENABLED"):
+    PROMETEUS_ENABLED = True
+    INSTALLED_APPS.append("django_prometheus")
+
+
+def finish(settings):
+    if ENV("PROMETEUS_ENABLED"):
+        MIDDLEWARE.insert(0, "django_prometheus.middleware.PrometheusBeforeMiddleware")
+        MIDDLEWARE.append("django_prometheus.middleware.PrometheusAfterMiddleware")

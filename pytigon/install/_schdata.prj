@@ -1480,7 +1480,7 @@
                                 "help_text": null,
                                 "choices": null,
                                 "rel_to": null,
-                                "param": "max_length=32",
+                                "param": "max_length=255",
                                 "url_params": null
                             }
                         },
@@ -2218,7 +2218,7 @@
                                 "help_text": null,
                                 "choices": null,
                                 "rel_to": null,
-                                "param": "max_length=32",
+                                "param": "max_length=255",
                                 "url_params": null
                             }
                         }

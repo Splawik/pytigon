@@ -200,6 +200,13 @@ if settings.PWA:
         ]
     )
 
+if settings.PROMETEUS_ENABLED:
+    _urlpatterns.extend(
+        [
+            path(r"", include("django_prometheus.urls")),
+        ]
+    )
+
 _urlpatterns.append(
     re_path(
         r"^site_media/(?P<path>.*)$",

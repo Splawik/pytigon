@@ -165,3 +165,5 @@ for key, value in os.environ.items():
             globals()[key2] = value
 
 {{prj.additional_settings|second_section|safe}}
+
+finish(globals())
