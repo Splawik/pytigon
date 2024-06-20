@@ -200,12 +200,6 @@ if settings.PWA:
         ]
     )
 
-if settings.PROMETEUS_ENABLED:
-    _urlpatterns.extend(
-        [
-            path(r"", include("django_prometheus.urls")),
-        ]
-    )
 
 _urlpatterns.append(
     re_path(
@@ -344,3 +338,10 @@ for item in tmp:
                 break
     item.pattern._route = item.pattern._route.replace("../", "")
     _urlpatterns.append(item)
+
+if settings.PROMETHEUS_ENABLED:
+    _urlpatterns.extend(
+        [
+            path(r"", include("django_prometheus.urls")),
+        ]
+    )

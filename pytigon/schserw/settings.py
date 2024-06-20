@@ -726,13 +726,13 @@ if ENV("SENTRY_ENABLED"):
         environment="production",
     )
 
-PROMETEUS_ENABLED = False
-if ENV("PROMETEUS_ENABLED"):
-    PROMETEUS_ENABLED = True
+PROMETHEUS_ENABLED = False
+if ENV("PROMETHEUS_ENABLED"):
+    PROMETHEUS_ENABLED = True
     INSTALLED_APPS.append("django_prometheus")
 
 
 def finish(settings):
-    if ENV("PROMETEUS_ENABLED"):
+    if ENV("PROMETHEUS_ENABLED"):
         MIDDLEWARE.insert(0, "django_prometheus.middleware.PrometheusBeforeMiddleware")
         MIDDLEWARE.append("django_prometheus.middleware.PrometheusAfterMiddleware")
