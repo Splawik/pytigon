@@ -737,13 +737,13 @@ def finish(settings):
         MIDDLEWARE.insert(0, "django_prometheus.middleware.PrometheusBeforeMiddleware")
         MIDDLEWARE.append("django_prometheus.middleware.PrometheusAfterMiddleware")
         if "default" in DATABASES:
-            engine = DATABASES["default"]["engine"]
+            engine = DATABASES["default"]["ENGINE"]
             if engine in (
                 "django.db.backends.sqlite3",
                 "django.db.backends.postgresql",
                 "django.db.backends.mysql",
             ):
-                DATABASES["default"]["engine"] = engine.replace(
+                DATABASES["default"]["ENGINE"] = engine.replace(
                     "django.db.backends", "django_prometheus.db.backends"
                 )
         if "default" in CACHES:
