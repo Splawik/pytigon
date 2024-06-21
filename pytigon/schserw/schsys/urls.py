@@ -27,10 +27,14 @@ from django.contrib.auth import authenticate, login, logout
 from django.views.generic import TemplateView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 
 from pytigon_lib.schdjangoext.tools import make_href
 
 from pytigon_lib.schtools.tools import is_in_dicts, get_from_dicts
+
+from django.conf import settings
 
 from . import views
 
@@ -94,8 +98,15 @@ def sch_logout(request):
 
 urlpatterns = [
     path("ok/", views.ok, name="ok"),
-    #path("<int:id>/<str:title>/new_row_ok/", views.ret_ok, name="new_row_ok"),
-    path("login/", TemplateView.as_view(template_name="schsys/app/login.html")),
+    # path("<int:id>/<str:title>/new_row_ok/", views.ret_ok, name="new_row_ok"),
+    path(
+        "login/",
+        cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
+            vary_on_headers("User-Agent", "Cookie")(
+                TemplateView.as_view(template_name="schsys/app/login.html")
+            )
+        ),
+    ),
     path("do_login/", sch_login),
     path("do_logout/", sch_logout),
     path("change_password/", views.change_password),

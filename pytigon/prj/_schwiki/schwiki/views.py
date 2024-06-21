@@ -75,9 +75,7 @@ template_simple = """
 """
 
 
-# @cache_page(60 * 15)
-
-
+@cache_page(settings.CACHE_MIDDLEWARE_SECONDS)
 def view_page(request, app_or_subject, page_path):
     transfer_to_cache = False
     key = ""

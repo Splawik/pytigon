@@ -30,6 +30,8 @@ import django_select2.urls
 import django.contrib.staticfiles
 from django.contrib.staticfiles import views
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_headers
 
 from django.urls import path
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -296,17 +298,24 @@ if len(settings.PRJS) > 0:
         if test:
             u = path(
                 prj + "/",
-                TemplateView.as_view(template_name="schsys/app/index.html"),
+                cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
+                    vary_on_headers("User-Agent", "Cookie")(
+                        TemplateView.as_view(template_name="schsys/app/index.html")
+                    )
+                ),
                 {"start_page": True},
                 name="start" + prj,
             )
             _urlpatterns.append(u)
 
     prjs = [(pos, app_description(pos)) for pos in settings.PRJS]
-
     u = path(
         "",
-        TemplateView.as_view(template_name="schsys/app/index_all.html"),
+        cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
+            vary_on_headers("User-Agent", "Cookie")(
+                TemplateView.as_view(template_name="schsys/app/index_all.html")
+            )
+        ),
         {"prjs": prjs},
         name="start",
     )
@@ -325,7 +334,11 @@ else:
     if test:
         u = path(
             "",
-            TemplateView.as_view(template_name="schsys/app/index.html"),
+            cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
+                vary_on_headers("User-Agent", "Cookie")(
+                    TemplateView.as_view(template_name="schsys/app/index.html")
+                )
+            ),
             name="start",
         )
         _urlpatterns.append(u)
