@@ -41,6 +41,8 @@ from pytigon_lib.schtools.schjson import json_loads, json_dumps
 from pytigon_lib.schtools.tools import bencode, bdecode, is_null
 
 from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_exempt
+
 from django.core.cache import cache
 
 from schwiki.applib import makdown_obj_simple, markdown_obj_subblocks
@@ -76,6 +78,7 @@ template_simple = """
 
 
 @cache_page(settings.CACHE_MIDDLEWARE_SECONDS)
+@csrf_exempt
 def view_page(request, app_or_subject, page_path):
     transfer_to_cache = False
     key = ""
@@ -156,6 +159,10 @@ def view_page(request, app_or_subject, page_path):
         conf_list = models.WikiConf.objects.filter(subject=page.subject)
         if len(conf_list) > 0:
             conf = conf_list[0]
+
+        if not page.rights_group:
+            if hasattr(request, "set_vary"):
+                request.set_vary = []
 
     c = {
         "page_name": page_name,
