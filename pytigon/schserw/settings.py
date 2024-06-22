@@ -211,7 +211,7 @@ if ENV("EMBEDED_DJANGO_SERVER"):
     ]
 else:
     MIDDLEWARE = [
-        "schserw.schmiddleware.vary.VaryMiddleware",
+        "pytigon.schserw.schmiddleware.vary.VaryMiddleware",
         "corsheaders.middleware.CorsMiddleware",
         "django.middleware.common.CommonMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
