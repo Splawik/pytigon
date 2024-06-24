@@ -396,7 +396,7 @@ def isoformat(value):
             value2 = value
         try:
             iso = value2.isoformat()[:19].replace("T", " ")
-            if len(value) <= 10:
+            if  isinstance(value, str) and len(value) <= 10:
                 return iso[:10]
             else:
                 return iso
