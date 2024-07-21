@@ -9,6 +9,7 @@ APPS = [
     "schworkflow",
     "schcomments",
     "schactions",
+    "schai",
     "_schdata.schelements",
     "_schdata.schprofile",
 ]

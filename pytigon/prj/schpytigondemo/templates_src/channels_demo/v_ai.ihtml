@@ -1,0 +1,12 @@
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    % with show_title_bar=1 title='Ai chat example'
+        {{ block.super }}
+
+%% content
+    ptig-ai websocket_href={{base_path}}schai/ai/channel/

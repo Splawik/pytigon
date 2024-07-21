@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2024-02-18 15:04+0100\n"
+"POT-Creation-Date: 2024-07-21 19:50+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,48 +27,50 @@ msgid "Config"
 msgstr ""
 
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:6
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:146
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:144
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:13
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:15
 msgid "Actions"
 msgstr ""
 
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:12
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:51
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:50
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:12
 msgid "Action types"
 msgstr ""
 
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/__init__.py:18
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:145
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:143
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:13
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:15
 msgid "Action"
 msgstr ""
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:50
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/models.py:49
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schactions/urls.py:12
 msgid "Action type"
 msgstr ""
 
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schai/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schai/__init__.py:6
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/__init__.py:4
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/__init__.py:6
+msgid "Tools"
+msgstr ""
+
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/__init__.py:6
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/__init__.py:12
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/models.py:49
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/models.py:48
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/urls.py:14
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/urls.py:17
 msgid "Attachements"
 msgstr ""
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/models.py:48
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/models.py:47
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/urls.py:14
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schattachements/urls.py:17
 msgid "Attachement"
-msgstr ""
-
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/__init__.py:4
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/__init__.py:4
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/__init__.py:6
-msgid "Tools"
 msgstr ""
 
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcommander/__init__.py:6
@@ -116,12 +118,12 @@ msgstr ""
 
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/__init__.py:6
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/__init__.py:12
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/models.py:25
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/models.py:24
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/urls.py:12
 msgid "Comments"
 msgstr ""
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/models.py:24
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/models.py:23
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schcomments/urls.py:12
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:12
 msgid "Comment"
@@ -132,19 +134,19 @@ msgid "International descriptions"
 msgstr ""
 
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/__init__.py:12
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/models.py:23
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/models.py:22
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/urls.py:12
 msgid "Descriptions"
 msgstr ""
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/models.py:22
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/models.py:21
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schdescriptions/urls.py:12
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:36
 msgid "Description"
 msgstr ""
 
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/__init__.py:6
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/models.py:25
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/models.py:24
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/urls.py:12
 msgid "Log"
 msgstr ""
@@ -153,7 +155,7 @@ msgstr ""
 msgid "Logs"
 msgstr ""
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/models.py:26
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/models.py:25
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schlog/urls.py:12
 msgid "Logi"
 msgstr ""
@@ -163,12 +165,12 @@ msgid "Simple scripts"
 msgstr ""
 
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/__init__.py:12
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/models.py:36
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/models.py:35
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/urls.py:20
 msgid "Scripts"
 msgstr ""
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/models.py:35
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/models.py:34
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schsimplescripts/urls.py:20
 msgid "Script"
 msgstr ""
@@ -177,14 +179,14 @@ msgstr ""
 msgid "Tasks"
 msgstr ""
 
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/models.py:21
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/models.py:22
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/models.py:23
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/urls.py:28
 msgid "Parameter"
 msgstr ""
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/models.py:71
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/models.py:72
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/models.py:69
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schtools/models.py:70
 msgid "Autocomplete"
 msgstr ""
 
@@ -197,26 +199,26 @@ msgid "Workflow"
 msgstr ""
 
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:12
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:98
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:97
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:15
 msgid "Workflow types"
 msgstr ""
 
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/__init__.py:18
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:248
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:246
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:16
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:19
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:51
 msgid "Workflow items"
 msgstr ""
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:97
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:96
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:15
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:15
 msgid "Workflow type"
 msgstr ""
 
-#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:247
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/models.py:245
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:16
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/schworkflow/urls.py:19
 msgid "Workflow item"
@@ -432,5 +434,9 @@ msgstr ""
 
 #: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:58
 msgid "Script for handle refresh event"
+msgstr ""
+
+#: /home/sch/prj/pytigon/pytigon/prj/_schtools/translate.py:59
+msgid "Preview"
 msgstr ""
 

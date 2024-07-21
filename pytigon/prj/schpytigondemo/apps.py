@@ -28,6 +28,7 @@ APPS = [
     "_schsetup.schadmin",
     "_schtools.schtasks",
     "_schtools.schactions",
+    "_schtools.schai",
 ]
 APPS_EXT = []
 PUBLIC = True

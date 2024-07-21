@@ -6,6 +6,7 @@ from . import views
 
 urlpatterns = [
     path("clock/", views.clock, {}, name="channels_demo_clock"),
+    path("ai/", views.ai, {}, name="channels_demo_ai"),
 ]
 
 gen = generic_table_start(urlpatterns, "channels_demo", views)

@@ -41,6 +41,7 @@
         {% component '_schcomponents/components/ptig-plotly.js' %}
         {% component '_schcomponents/components/ptig-time.js' %}
         {% component '_schcomponents/components/ptig-webrtc.js' %}
+        {% component '_schcomponents/components/ptig-xterm.js' %}
         {% component 'schportal/components/teleconference.js' %}
         {% component 'schportal/components/timer_init.js' %}
         {% component 'schwiki/components/insert_object.js' %}
@@ -50,4 +51,4 @@
     %% component_init
             .var initial_state = { username: "", theme: "", time_str: "" };
             .GLOBAL_BUS.set_state(initial_state);
-            .var component_init = [ "ptig-codeeditor.js", "ptig-d3.js", "ptig-plotly.js", "ptig-time.js", "ptig-webrtc.js", "teleconference.js", "timer_init.js", "insert_object.js",  ];  
+            .var component_init = [ "ptig-codeeditor.js", "ptig-d3.js", "ptig-plotly.js", "ptig-time.js", "ptig-webrtc.js", "ptig-xterm.js", "teleconference.js", "timer_init.js", "insert_object.js",  ];  

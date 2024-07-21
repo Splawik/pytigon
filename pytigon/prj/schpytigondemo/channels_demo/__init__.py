@@ -13,5 +13,6 @@ Urls = (
         None,
         """png://actions/appointment-new.png""",
     ),
+    ("ai/", _("AI chat"), None, """png://apps/help-browser.png"""),
 )
 UserParam = {}
