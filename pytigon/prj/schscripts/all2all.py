@@ -110,6 +110,22 @@ def main():
                 f2.write(buf)
         return
 
+    if (
+        ".md" in input_filename or ".imd" in input_filename
+    ) and ".html" in output_filename:
+        with open(input_filename, "rt", encoding="utf-8") as f:
+            buf = f.read()
+            if ".md" in input_filename:
+                buf = markdown_to_html(buf)
+                buf = "<html><body class='wiki'>" + buf + "</body></html>"
+            else:
+                x = IndentMarkdownProcessor(output_format="html")
+                buf = x.convert(buf)
+                buf = "<html><body class='wiki'>" + buf + "</body></html>"
+            with open(output_filename, "wt", encoding="utf-8") as f2:
+                f2.write(buf)
+            return
+
     p = HtmlViewerParser(dc=dc, calc_only=False, init_css_str=init_css_str, css_type=1)
 
     with open(input_filename, "rt", encoding="utf-8") as f:

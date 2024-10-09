@@ -18,10 +18,7 @@
 # version: "0.1a"
 
 
-"""Module contains standard context processors
-
-"""
-
+"""Module contains standard context processors"""
 
 import uuid
 import time
@@ -29,7 +26,7 @@ from urllib.parse import urlparse
 
 import traceback
 import sys
-
+import datetime
 
 from django.conf import settings
 from django.urls import get_script_prefix
@@ -802,6 +799,7 @@ def sch_standard(request):
         "settings": settings,
         "fragment": get_fragment(request) if standard else "",
         "extra_param": extra_param,
+        "datetime": datetime,
     }
     if "client_param" in request.session:
         ret.update(request.session["client_param"])

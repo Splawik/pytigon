@@ -60,6 +60,7 @@ else:
 if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")):
     PRODUCTION_VERSION = False
 
+
 SHOW_LOGIN_WIN = True
 
 paths = get_main_paths()
@@ -73,6 +74,14 @@ PRJ_PATH_ALT = paths["PRJ_PATH_ALT"]
 STATIC_ROOT = paths["STATIC_PATH"]
 STATICFILES_DIRS = paths["STATICFILES_DIRS"]
 ROOT_PATH = paths["ROOT_PATH"]
+
+if ENV("SCRIPT_MODE"):
+    SCRIPT_MODE = True
+    cwd = os.path.abspath(os.getcwd())
+    STATIC_ROOT = os.path.join(cwd, "static")
+    # DATA_PATH = cwd
+else:
+    SCRIPT_MODE = False
 
 PYTIGON_PATH = paths["PYTIGON_PATH"]
 PLATFORM_TYPE = paths["PLATFORM_TYPE"]
@@ -619,6 +628,10 @@ def DEFAULT_FILE_STORAGE_FS():
             _m.mount("osfs", OSFS_EXT("c:\\"))
         else:
             _m.mount("osfs", OSFS_EXT("/"))
+
+    if SCRIPT_MODE:
+        cwd = os.path.abspath(os.getcwd())
+        _m.mount("cwd", cwd)
 
     return _m
 

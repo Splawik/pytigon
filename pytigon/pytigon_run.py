@@ -39,6 +39,10 @@ if "--dev" in sys.argv or "ptig.py" in sys.argv:
     if not os.path.exists(environ["PYTIGON_PRJ_PATH"]):
         environ["PYTIGON_PRJ_PATH"] = environ["START_PATH"]
 
+if "--script-mode" in sys.argv:
+    sys.argv.remove("--script-mode")
+    environ["SCRIPT_MODE"] = "1"
+
 
 def schserw_init_prj_path(paths, app, param=None):
     if app:
