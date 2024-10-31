@@ -201,6 +201,9 @@ TEMPLATES = [
     }
 ]
 
+if "site-packages" in PRJ_PATH and BASE_PRJ_NAME:
+    TEMPLATES[0]["DIRS"].append(os.path.join(PRJ_PATH_ALT, BASE_PRJ_NAME, "templates"))
+
 if DEBUG:
     TEMPLATES[0]["OPTIONS"]["loaders"].insert(
         0, "pytigon_lib.schdjangoext.python_style_template_loader.Loader"
