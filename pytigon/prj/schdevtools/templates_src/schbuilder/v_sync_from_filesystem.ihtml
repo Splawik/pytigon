@@ -1,0 +1,19 @@
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    % with form_width=800 form_height=600 show_title_bar=1 title='Synchronized files'
+        {{ block.super }}
+
+
+%% user_header
+    th...File name
+    th...action
+
+%% user_row
+    tr
+        td...{{object.0}}
+        td

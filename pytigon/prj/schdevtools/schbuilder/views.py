@@ -64,6 +64,7 @@ from pytigon_lib.schfs.vfstools import ZipWriter, open_and_create_dir
 from pytigon_lib.schtools.install import Ptig
 from pytigon_lib.schtools.process import py_run
 from pytigon_lib.schtools.platform_info import platform_name
+from pytigon_lib.schtools.tools import bencode
 
 # from pytigon_lib.schtools.cc import import_plugin, make
 from pytigon_lib.schdjangoext.python_style_template_loader import compile_template
@@ -90,6 +91,9 @@ try:
     import black
 except:
     black = None
+
+import configparser
+
 
 _template = """
         [ gui_style | {{prj.gui_type}}({{prj.gui_elements}}) ]
@@ -570,6 +574,12 @@ def build_prj(pk):
             base_path = os.path.join(environ["START_PATH"], "prj", prj.name)
         else:
             base_path = os.path.join(settings.PRJ_PATH_ALT, prj.name)
+
+    if prj.encoded_zip:
+        bcontent = base64.decodebytes(prj.encoded_zip.encode("utf-8"))
+        bstream = io.BytesIO(bcontent)
+        with zipfile.ZipFile(bstream, "r") as izip:
+            izip.extractall(base_path)
 
     object_list = []
     gmt = time.gmtime()
@@ -1111,12 +1121,6 @@ def build_prj(pk):
 
         if file_name and len(file_content) > 0:
             output(file_name, file_append, file_content)
-
-    if prj.encoded_zip:
-        bcontent = base64.decodebytes(prj.encoded_zip.encode("utf-8"))
-        bstream = io.BytesIO(bcontent)
-        with zipfile.ZipFile(bstream, "r") as izip:
-            izip.extractall(base_path)
 
     # (exit_code, output_tab, err_tab) = make(settings.DATA_PATH, base_path, prj.name)
     # if output_tab:
@@ -1980,3 +1984,78 @@ def run2(request, pk):
     environ["PYTHONPATH"] = os.path.join(settings.ROOT_PATH, "..")
     subprocess.run([sys.executable, "-m", "pytigon.ptig", prj.name], shell=False)
     return HttpResponse("")
+
+
+@dict_to_template("schbuilder/v_sync_from_filesystem.html")
+def sync_from_filesystem(request, pk):
+    tab = []
+    prj = models.SChProject.objects.get(id=pk)
+    if prj:
+        build_prj(pk)
+
+        if hasattr(pytigon.schserw.settings, "_PRJ_PATH_ALT"):
+            base_path = os.path.join(pytigon.schserw.settings._PRJ_PATH_ALT, prj.name)
+        else:
+            if os.path.exists(os.path.join(environ["START_PATH"], "prj")):
+                base_path = os.path.join(environ["START_PATH"], "prj", prj.name)
+            else:
+                base_path = os.path.join(settings.PRJ_PATH_ALT, prj.name)
+
+        itemplate_path = os.path.join(base_path, "templates_src")
+        l = len(base_path)
+        compiled = []
+        for root, dirs, files in os.walk(itemplate_path):
+            for f in files:
+                if f.endswith(".ihtml"):
+                    p = os.path.join(root, f)
+                    x = p[l + 15 :]
+                    compile_template(
+                        x,
+                        template_dirs=[
+                            itemplate_path.replace("templates_src", "templates"),
+                        ],
+                        compiled=compiled,
+                        force=True,
+                    )
+
+        config_file = os.path.join(base_path, "install.ini")
+        if os.path.exists(config_file):
+            config = configparser.ConfigParser()
+            config.read(config_file)
+            time = config["DEFAULT"]["GEN_TIME"].replace("'", "")
+            dt = datetime.datetime.fromisoformat(
+                time.replace(".", "-").replace(" ", "T") + "Z"
+            )
+
+        for dirpath, dirnames, filenames in os.walk(base_path):
+            for f in filenames:
+                file_name = os.path.join(dirpath, f)
+                if (
+                    "__pycache__" in file_name
+                    or file_name.endswith(".pyc")
+                    or file_name.endswith(".prj")
+                    or file_name.endswith(".bak")
+                ):
+                    continue
+                timestamp = os.path.getmtime(file_name)
+                datestamp = datetime.datetime.fromtimestamp(timestamp)
+                datestamp_utc = timezone.make_aware(
+                    datestamp, timezone.get_default_timezone()
+                )
+                c = datestamp_utc - dt
+                if abs(c.total_seconds()) > 60:
+                    with open(file_name, "rb") as f:
+                        tab.append((file_name[len(base_path) + 1 :], f.read()))
+                        print(file_name)
+
+    if len(tab) > 0:
+        bstream = io.BytesIO()
+        z = zipfile.ZipFile(bstream, "a", zipfile.ZIP_DEFLATED)
+        for pos in tab:
+            z.writestr(pos[0], pos[1])
+        z.close()
+
+        prj.encoded_zip = bencode(bstream.getvalue())
+        prj.save()
+
+    return {"object_list": tab}

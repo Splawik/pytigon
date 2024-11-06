@@ -1,4 +1,4 @@
-// Sketchy 5.3.0
+// Sketchy 5.3.3
 // Bootswatch
 
 
@@ -6,7 +6,7 @@
 
 $web-font-path: "https://fonts.googleapis.com/css?family=Neucha|Cabin+Sketch&display=swap" !default;
 @if $web-font-path {
-  @import url($web-font-path);
+  @import url("#{$web-font-path}");
 }
 
 // stylelint-disable scss/dollar-variable-default
@@ -14,10 +14,6 @@ $border-radius-sketchy:    255px 25px 225px 25px / 25px 225px 25px 255px;
 $border-radius-lg-sketchy: 55px 225px 15px 25px / 25px 25px 35px 355px;
 $border-radius-sm-sketchy: 255px 25px 225px 25px / 25px 225px 25px 255px;
 // style-enable scss/dollar-variable-default
-
-:root {
-  color-scheme: light;
-}
 
 // Navbar
 
@@ -153,6 +149,15 @@ table {
   }
 }
 
+.table-primary,
+.table-secondary,
+.table-success,
+.table-warning,
+.table-danger,
+.table-info,
+.table-light {
+  --#{$prefix}table-color: #{$body-color};
+}
 
 // Forms
 
@@ -173,9 +178,9 @@ select.form-control {
   position: relative;
   width: 0;
   height: 0;
+  appearance: none;
   cursor: pointer;
   border: none;
-  appearance: none;
 
   &::before {
     position: absolute;
@@ -223,9 +228,9 @@ select.form-control {
   position: relative;
   width: 0;
   height: 0;
+  appearance: none;
   cursor: pointer;
   border: none;
-  appearance: none;
 
   &::before {
     position: absolute;

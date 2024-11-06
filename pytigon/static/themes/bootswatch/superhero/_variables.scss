@@ -1,4 +1,4 @@
-// Superhero 5.3.0
+// Superhero 5.3.3
 // Bootswatch
 
 $theme: "superhero" !default;
@@ -24,13 +24,13 @@ $indigo:  #6610f2 !default;
 $purple:  #6f42c1 !default;
 $pink:    #e83e8c !default;
 $red:     #d9534f !default;
-$orange:  #f0ad4e !default;
+$orange:  #df6919 !default;
 $yellow:  #ffc107 !default;
 $green:   #5cb85c !default;
 $teal:    #20c997 !default;
 $cyan:    #5bc0de !default;
 
-$primary:       $blue !default;
+$primary:       $orange !default;
 $secondary:     $gray-600 !default;
 $success:       $green !default;
 $info:          $cyan !default;
@@ -62,6 +62,7 @@ $text-muted:                  rgba(255, 255, 255, .4) !default;
 
 // Tables
 
+$table-color:                 initial !default;
 $table-accent-bg:             rgba($white, .05) !default;
 $table-hover-bg:              rgba($white, .075) !default;
 $table-border-color:          rgba($black, .15) !default;
@@ -80,7 +81,6 @@ $input-disabled-bg:                 $gray-100 !default;
 
 $input-color:                       $gray-900 !default;
 $input-border-color:                transparent !default;
-$input-border-width:                0 !default;
 
 $input-placeholder-color:               $gray-500 !default;
 
@@ -93,7 +93,9 @@ $form-select-disabled-color:        $input-disabled-color !default;
 $form-check-input-bg:                     $white !default;
 $form-check-input-border:                 none !default;
 
-$form-file-button-color:          $body-color !default;
+$form-file-button-color:          $input-group-addon-color !default;
+$form-file-button-bg:             $input-group-addon-bg !default;
+$form-file-button-hover-bg:       darken($form-file-button-bg, 5%) !default;
 
 $form-floating-label-opacity:     1 !default;
 
@@ -105,12 +107,17 @@ $dropdown-link-color:               $body-color !default;
 $dropdown-link-hover-color:         $dropdown-link-color !default;
 $dropdown-link-hover-bg:            $table-hover-bg !default;
 
+$dropdown-header-color:             $gray-500 !default;
+
 // Navs
 
 $nav-link-disabled-color:           rgba(255, 255, 255, .4) !default;
 $nav-tabs-border-color:             $gray-600 !default;
+$nav-tabs-link-hover-border-color:  $nav-tabs-border-color !default;
 $nav-tabs-link-active-color:        $body-color !default;
 $nav-tabs-link-active-border-color: $gray-600 !default;
+
+$nav-underline-link-active-color:   $white !default;
 
 // Navbar
 
