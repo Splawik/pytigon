@@ -583,7 +583,7 @@ def build_prj(pk):
 
     object_list = []
     gmt = time.gmtime()
-    gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (
+    gmt_str = "%04d-%02d-%02d %02d:%02d:%02d" % (
         gmt[0],
         gmt[1],
         gmt[2],
@@ -606,7 +606,7 @@ def build_prj(pk):
     with open(os.path.join(base_path, "install.ini"), "wt") as f:
         f.write("[DEFAULT]\nPRJ_NAME=%s\n" % prj.name)
         f.write("PRJ_TITLE=%s\n" % prj.title)
-        f.write("GEN_TIME='%s'\n" % gmt_str)
+        f.write("GEN_TIME=%s\n" % gmt_str)
         if prj.install_file:
             f.write(prj.install_file)
 
