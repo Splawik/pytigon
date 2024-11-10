@@ -564,7 +564,7 @@ def _handle_static_file(static_file, base_path, prj, app=None):
             f.write(base64.b64decode(txt.en))
 
 
-def build_prj(pk):
+def build_prj(pk, config={}):
     prj = models.SChProject.objects.get(id=pk)
 
     if hasattr(pytigon.schserw.settings, "_PRJ_PATH_ALT"):
@@ -575,11 +575,12 @@ def build_prj(pk):
         else:
             base_path = os.path.join(settings.PRJ_PATH_ALT, prj.name)
 
-    if prj.encoded_zip:
-        bcontent = base64.decodebytes(prj.encoded_zip.encode("utf-8"))
-        bstream = io.BytesIO(bcontent)
-        with zipfile.ZipFile(bstream, "r") as izip:
-            izip.extractall(base_path)
+    if "extract-zip" not in config or config["extract-zip"]:
+        if prj.encoded_zip:
+            bcontent = base64.decodebytes(prj.encoded_zip.encode("utf-8"))
+            bstream = io.BytesIO(bcontent)
+            with zipfile.ZipFile(bstream, "r") as izip:
+                izip.extractall(base_path)
 
     object_list = []
     gmt = time.gmtime()
@@ -597,36 +598,39 @@ def build_prj(pk):
 
     apps = prj.schapp_set.all()
 
-    with open(os.path.join(base_path, "README.md"), "wt") as f:
-        if prj.readme_file:
-            f.write(prj.readme_file)
-    with open(os.path.join(base_path, "LICENSE"), "wt") as f:
-        if prj.license_file:
-            f.write(prj.license_file)
-    with open(os.path.join(base_path, "install.ini"), "wt") as f:
-        f.write("[DEFAULT]\nPRJ_NAME=%s\n" % prj.name)
-        f.write("PRJ_TITLE=%s\n" % prj.title)
-        f.write("GEN_TIME=%s\n" % gmt_str)
-        if prj.install_file:
-            f.write(prj.install_file)
+    if "install" not in config or config["install"]:
+        with open(os.path.join(base_path, "README.md"), "wt") as f:
+            if prj.readme_file:
+                f.write(prj.readme_file)
+        with open(os.path.join(base_path, "LICENSE"), "wt") as f:
+            if prj.license_file:
+                f.write(prj.license_file)
+        with open(os.path.join(base_path, "install.ini"), "wt") as f:
+            f.write("[DEFAULT]\nPRJ_NAME=%s\n" % prj.name)
+            f.write("PRJ_TITLE=%s\n" % prj.title)
+            f.write("GEN_TIME=%s\n" % gmt_str)
+            if prj.install_file:
+                f.write(prj.install_file)
 
-    template_to_file(base_path, "manage", "manage.py", {"prj": prj})
-    template_to_file(base_path, "init", "__init__.py", {"prj": prj})
-    template_to_file(
-        base_path,
-        "wsgi",
-        "wsgi.py",
-        {"prj": prj, "base_path": base_path.replace("\\", "/")},
-    )
-    template_to_file(
-        base_path,
-        "asgi",
-        "asgi.py",
-        {"prj": prj, "base_path": base_path.replace("\\", "/")},
-    )
+        template_to_file(base_path, "manage", "manage.py", {"prj": prj})
+        template_to_file(base_path, "init", "__init__.py", {"prj": prj})
+        template_to_file(
+            base_path,
+            "wsgi",
+            "wsgi.py",
+            {"prj": prj, "base_path": base_path.replace("\\", "/")},
+        )
+        template_to_file(
+            base_path,
+            "asgi",
+            "asgi.py",
+            {"prj": prj, "base_path": base_path.replace("\\", "/")},
+        )
 
     app_names = []
     for app in apps:
+        if "app" in config and app not in config["app"].split(","):
+            continue
         object_list.append((datetime.datetime.now(), "create app:", app.name))
         os.makedirs(base_path + "/" + app.name, exist_ok=True)
         os.makedirs(base_path + "/templates_src/" + app.name, exist_ok=True)
@@ -920,99 +924,107 @@ def build_prj(pk):
                     f.write(file_obj.content)
                 f.close()
 
-    template_to_file(base_path, "apps", "apps.py", {"prj": prj, "app_names": app_names})
+    if "app" not in config:
+        template_to_file(
+            base_path, "apps", "apps.py", {"prj": prj, "app_names": app_names}
+        )
 
-    static_files = prj.schstatic_set.all()
+    if "static" not in config or config["static"]:
+        static_files = prj.schstatic_set.all()
 
-    offline_support = False
+        offline_support = False
 
-    for static_file in static_files:
-        _handle_static_file(static_file, base_path, prj)
+        for static_file in static_files:
+            _handle_static_file(static_file, base_path, prj)
 
-    component_elements = []
-    static_items = []
+        component_elements = []
+        static_items = []
 
-    prj_tab = [
-        prj.name,
-    ]
-    tab = prj.get_ext_pytigon_apps()
-    for pos in tab:
-        if pos:
-            x = pos.split(".")[0]
-            if x not in prj_tab:
-                prj_tab.append(x)
+        prj_tab = [
+            prj.name,
+        ]
+        tab = prj.get_ext_pytigon_apps()
+        for pos in tab:
+            if pos:
+                x = pos.split(".")[0]
+                if x not in prj_tab:
+                    prj_tab.append(x)
 
-    for pos in prj_tab:
-        prj2 = models.SChProject.objects.filter(name=pos, main_view=True).first()
-        if prj2:
-            if pos == prj.name:
-                static_files2 = prj2.schstatic_set.all()
-                js_static_files2 = [
-                    pos2 for pos2 in static_files2 if pos2.type in ("J", "P")
-                ]
-                css_static_files2 = [
-                    pos2 for pos2 in static_files2 if pos2.type in ("C", "I")
-                ]
-                static_items.append((pos, js_static_files2, css_static_files2))
-                component_elements += [
-                    prj2.name + "/components/" + pos.name + ".js"
-                    for pos in static_files2
-                    if pos.type in ("R",)
-                ]
+        for pos in prj_tab:
+            prj2 = models.SChProject.objects.filter(name=pos, main_view=True).first()
+            if prj2:
+                if pos == prj.name:
+                    static_files2 = prj2.schstatic_set.all()
+                    js_static_files2 = [
+                        pos2 for pos2 in static_files2 if pos2.type in ("J", "P")
+                    ]
+                    css_static_files2 = [
+                        pos2 for pos2 in static_files2 if pos2.type in ("C", "I")
+                    ]
+                    static_items.append((pos, js_static_files2, css_static_files2))
+                    component_elements += [
+                        prj2.name + "/components/" + pos.name + ".js"
+                        for pos in static_files2
+                        if pos.type in ("R",)
+                    ]
 
-                if prj2.custom_tags:
-                    for pos in (
-                        prj2.custom_tags.replace("\n", ";").replace("\r", "").split(";")
-                    ):
-                        if pos and "." in pos and pos not in component_elements:
-                            component_elements.append(pos)
+                    if prj2.custom_tags:
+                        for pos in (
+                            prj2.custom_tags.replace("\n", ";")
+                            .replace("\r", "")
+                            .split(";")
+                        ):
+                            if pos and "." in pos and pos not in component_elements:
+                                component_elements.append(pos)
 
-            for app in prj2.schapp_set.all():
-                if pos != prj.name:
-                    test = False
-                    for item in tab:
-                        if item.startswith(prj2.name + "." + app.name):
-                            test = True
-                            break
-                    if not test:
-                        continue
-                component_elements += [
-                    app.name + "/components/" + pos.name + ".js"
-                    for pos in app.schfile_set.all()
-                    if pos.type in ("R",)
-                ]
-                js_app_files = [
-                    pos for pos in app.schfile_set.all() if pos.type in ("J", "P")
-                ]
-                css_app_files = [
-                    pos for pos in app.schfile_set.all() if pos.type in ("C", "I")
-                ]
-                static_items.append((app.name, js_app_files, css_app_files))
+                for app in prj2.schapp_set.all():
+                    if pos != prj.name:
+                        test = False
+                        for item in tab:
+                            if item.startswith(prj2.name + "." + app.name):
+                                test = True
+                                break
+                        if not test:
+                            continue
+                    component_elements += [
+                        app.name + "/components/" + pos.name + ".js"
+                        for pos in app.schfile_set.all()
+                        if pos.type in ("R",)
+                    ]
+                    js_app_files = [
+                        pos for pos in app.schfile_set.all() if pos.type in ("J", "P")
+                    ]
+                    css_app_files = [
+                        pos for pos in app.schfile_set.all() if pos.type in ("C", "I")
+                    ]
+                    static_items.append((app.name, js_app_files, css_app_files))
 
-    template_to_file(
-        base_path,
-        "theme_base",
-        "templates_src/theme_base.ihtml",
-        {
-            "prj": prj,
-            "static_items": static_items,
-            "component_elements": sorted(set(component_elements)),
-            "initial_state": prj.components_initial_state,
-        },
-    )
-    for field, file_path in (
-        (prj.template_desktop, "theme/desktop.ihtml"),
-        (prj.template_smartfon, "theme/smartfon.ihtml"),
-        (prj.template_tablet, "theme/tablet.ihtml"),
-        (prj.template_schweb, "theme/schweb.ihtml"),
-        (prj.template_theme, "theme.ihtml"),
-    ):
-        if field:
-            _file_name = os.path.join(
-                base_path, "templates_src", *(file_path.split("/"))
-            )
-            with open(_file_name, "wt") as f:
-                f.write(field)
+        template_to_file(
+            base_path,
+            "theme_base",
+            "templates_src/theme_base.ihtml",
+            {
+                "prj": prj,
+                "static_items": static_items,
+                "component_elements": sorted(set(component_elements)),
+                "initial_state": prj.components_initial_state,
+            },
+        )
+
+    if "theme" not in config or config["theme"]:
+        for field, file_path in (
+            (prj.template_desktop, "theme/desktop.ihtml"),
+            (prj.template_smartfon, "theme/smartfon.ihtml"),
+            (prj.template_tablet, "theme/tablet.ihtml"),
+            (prj.template_schweb, "theme/schweb.ihtml"),
+            (prj.template_theme, "theme.ihtml"),
+        ):
+            if field:
+                _file_name = os.path.join(
+                    base_path, "templates_src", *(file_path.split("/"))
+                )
+                with open(_file_name, "wt") as f:
+                    f.write(field)
 
     consumers_dict = {}
     for _app in apps:
@@ -1035,103 +1047,107 @@ def build_prj(pk):
                             _app.name + ".consumers." + consumer.name
                         )
 
-    template_to_file(
-        base_path,
-        "settings_app",
-        "settings_app.py",
-        {
-            "prj": prj,
-            "gmtime": gmt_str,
-            "offline_support": offline_support,
-            "consumers": consumers_dict.items(),
-        },
-    )
+    if "settings" not in config or config["settings"]:
+        template_to_file(
+            base_path,
+            "settings_app",
+            "settings_app.py",
+            {
+                "prj": prj,
+                "gmtime": gmt_str,
+                "offline_support": offline_support,
+                "consumers": consumers_dict.items(),
+            },
+        )
 
-    base_path_src = base_path + "/src"
+    if "files" not in config or config["files"]:
+        base_path_src = base_path + "/src"
 
-    if os.path.exists(base_path_src):
-        copy_files_and_dirs(base_path_src, base_path)
+        if os.path.exists(base_path_src):
+            copy_files_and_dirs(base_path_src, base_path)
 
-    file_name = None
-    file_content = []
-    file_append = -1
+        file_name = None
+        file_content = []
+        file_append = -1
 
-    def output(file_name, file_append, file_content):
-        os.makedirs(os.path.dirname(os.path.join(base_path, file_name)), exist_ok=True)
-        if file_append == -1:
-            f = open(os.path.join(base_path, file_name), "wb")
-            f.write(("\n".join(file_content)).encode("utf-8"))
-            f.close()
-        elif file_append == -2:
-            f = open(os.path.join(base_path, file_name), "ab")
-            f.write(("\n".join(file_content)).encode("utf-8"))
-            f.close()
-        else:
-            f = open(os.path.join(base_path, file_name), "rb")
-            txt = f.read().decode("utf-8").split("\n")
-            f.close()
-            try:
-                file_append_pos = int(file_append)
-            except:
-                if file_append.startswith("|"):
-                    f = file_append[1:]
-                    delta = 0
-                elif file_append.endswith("|"):
-                    f = file_append[:-1]
-                    delta = 1
-                else:
-                    f = file_append
-                    delta = 1
-
-                file_append_pos = delta
-                for buf in txt:
-                    if f in buf:
-                        break
-                    file_append_pos += 1
-
-            if file_append_pos < len(txt):
-                txt = txt[:file_append_pos] + file_content + txt[file_append_pos:]
+        def output(file_name, file_append, file_content):
+            os.makedirs(
+                os.path.dirname(os.path.join(base_path, file_name)), exist_ok=True
+            )
+            if file_append == -1:
+                f = open(os.path.join(base_path, file_name), "wb")
+                f.write(("\n".join(file_content)).encode("utf-8"))
+                f.close()
+            elif file_append == -2:
+                f = open(os.path.join(base_path, file_name), "ab")
+                f.write(("\n".join(file_content)).encode("utf-8"))
+                f.close()
             else:
-                txt = txt + file_content
-            f = open(os.path.join(base_path, file_name), "wb")
-            f.write(("\n".join(txt)).encode("utf-8"))
-            f.close()
+                f = open(os.path.join(base_path, file_name), "rb")
+                txt = f.read().decode("utf-8").split("\n")
+                f.close()
+                try:
+                    file_append_pos = int(file_append)
+                except:
+                    if file_append.startswith("|"):
+                        f = file_append[1:]
+                        delta = 0
+                    elif file_append.endswith("|"):
+                        f = file_append[:-1]
+                        delta = 1
+                    else:
+                        f = file_append
+                        delta = 1
 
-    if prj.user_app_template and len(prj.user_app_template) > 0:
-        txt = prj.user_app_template
-        tab = txt.split("\n")
-        for row in tab:
-            if row.startswith("###"):
-                if file_name and len(file_content) > 0:
-                    output(file_name, file_append, file_content)
-                file_content = []
-                file_name = row[3:]
-                if file_name.startswith(">"):
-                    file_name = file_name[1:].strip()
-                    file_append = -2
-                elif file_name.startswith("<") and ">" in file_name:
-                    f = file_name[1:].split(">")
-                    file_name = f[1].strip()
-                    file_append = f[0]
+                    file_append_pos = delta
+                    for buf in txt:
+                        if f in buf:
+                            break
+                        file_append_pos += 1
+
+                if file_append_pos < len(txt):
+                    txt = txt[:file_append_pos] + file_content + txt[file_append_pos:]
                 else:
-                    file_name = file_name.strip()
-                    file_append = -1
-            else:
-                file_content.append(row)
+                    txt = txt + file_content
+                f = open(os.path.join(base_path, file_name), "wb")
+                f.write(("\n".join(txt)).encode("utf-8"))
+                f.close()
 
-        if file_name and len(file_content) > 0:
-            output(file_name, file_append, file_content)
+        if prj.user_app_template and len(prj.user_app_template) > 0:
+            txt = prj.user_app_template
+            tab = txt.split("\n")
+            for row in tab:
+                if row.startswith("###"):
+                    if file_name and len(file_content) > 0:
+                        output(file_name, file_append, file_content)
+                    file_content = []
+                    file_name = row[3:]
+                    if file_name.startswith(">"):
+                        file_name = file_name[1:].strip()
+                        file_append = -2
+                    elif file_name.startswith("<") and ">" in file_name:
+                        f = file_name[1:].split(">")
+                        file_name = f[1].strip()
+                        file_append = f[0]
+                    else:
+                        file_name = file_name.strip()
+                        file_append = -1
+                else:
+                    file_content.append(row)
 
-    # (exit_code, output_tab, err_tab) = make(settings.DATA_PATH, base_path, prj.name)
-    # if output_tab:
-    #    for pos in output_tab:
-    #        if pos:
-    #            object_list.append((datetime.datetime.now(), "compile info", pos))
-    # if err_tab:
-    #    for pos in err_tab:
-    #        if pos:
-    #            object_list.append((datetime.datetime.now(), "compile error", pos))
-    #            success = False
+            if file_name and len(file_content) > 0:
+                output(file_name, file_append, file_content)
+
+        # (exit_code, output_tab, err_tab) = make(settings.DATA_PATH, base_path, prj.name)
+        # if output_tab:
+        #    for pos in output_tab:
+        #        if pos:
+        #            object_list.append((datetime.datetime.now(), "compile info", pos))
+        # if err_tab:
+        #    for pos in err_tab:
+        #        if pos:
+        #            object_list.append((datetime.datetime.now(), "compile error", pos))
+        #            success = False
 
     return object_list
 
@@ -1991,7 +2007,7 @@ def sync_from_filesystem(request, pk):
     tab = []
     prj = models.SChProject.objects.get(id=pk)
     if prj:
-        build_prj(pk)
+        build_prj(pk, {"extract-zip": False})
 
         if hasattr(pytigon.schserw.settings, "_PRJ_PATH_ALT"):
             base_path = os.path.join(pytigon.schserw.settings._PRJ_PATH_ALT, prj.name)
