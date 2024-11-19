@@ -11,13 +11,17 @@
         {{ block.super }}
 
 %% body
-    div class=login_background
+    %% login_background
+        div class=login_background
     div class=container login-container
         div class=row align-items-center
             div class=col
             div class=col-lg-6 col-xl-5
                 div class=card card-inverse login-card
-                    %% content
+                    div class=card-header
+                        {{prj_title|upper}}
+                    div class=card-block                
+                        %% content
             div class=col
     %% body_desktop_cd
     

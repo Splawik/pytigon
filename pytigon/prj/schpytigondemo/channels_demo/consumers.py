@@ -17,6 +17,7 @@ from channels.generic.http import AsyncHttpConsumer
 
 
 class clock(AsyncJsonWebsocketConsumer):
+
     COUNT = 1
 
     async def connect(self):

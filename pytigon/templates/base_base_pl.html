@@ -6,7 +6,9 @@
 {% block login %}
         {% if not user.is_authenticated or FORCE_LOGIN_WIN %}
                 {% if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN %}
-                        <div class="login_background"></div>
+                        {% block login_background %}
+                                <div class="login_background"></div>
+                        {% endblock %}
                         <div class="container login-container">
                                 <div class="row align-items-center">
                                         <div class="col"></div>
@@ -180,7 +182,7 @@
                                 {% if standard_web_browser %}
                                         {% if title %}
                                                 {% if settings.DEBUG %}
-                                                        <set-field element="#ModalLabelInfo" title="{{title}}:[xxx{{object_list.model|class_name}}]"></set-field>
+                                                        <set-field element="#ModalLabelInfo" title="{{title}}:[{{object_list.model|class_name}}]"></set-field>
                                                   {% else %}
                                                         <set-field element="#ModalLabelInfo" title="{{title}}"></set-field>
                                                 {% endif %}

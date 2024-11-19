@@ -263,6 +263,10 @@ for app in settings.INSTALLED_APPS:
             m = importlib.import_module(module_name)
             if hasattr(m, "gen"):
                 _urlpatterns.append(path("%s/" % str(elementy[-1]), include(m)))
+            if hasattr(m, "process_main_urls"):
+                ret = m.process_main_urls(_urlpatterns)
+                if ret:
+                    _urlpatterns = ret
     except ModuleNotFoundError as e:
         x = pos.split(".")[0]
         y = e.name.split(".")[0]

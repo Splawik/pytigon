@@ -94,6 +94,8 @@ FILER_DEBUG = True
 
 EXPLORER_CONNECTIONS = {"Default": "default"}
 EXPLORER_DEFAULT_CONNECTION = "default"
+
+ACCOUNT_EMAIL_REQUIRED = True
 from pytigon_lib.schtools.install_init import init
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
@@ -212,7 +214,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2024.11.06 18:14:43"
+GEN_TIME = "2024-11-19 16:01:49"
 
 
 for key, value in os.environ.items():

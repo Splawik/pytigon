@@ -9,7 +9,8 @@
 %% login
     % if not user.is_authenticated or FORCE_LOGIN_WIN:
         % if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
-            div class=login_background
+            %% login_background
+                div class=login_background
             div class=container login-container
                 div class=row align-items-center
                     div class=col
@@ -126,7 +127,7 @@
                 % if standard_web_browser:
                     % if title:
                         % if settings.DEBUG:
-                            set-field element=#ModalLabelInfo,,,title={{title}}:[xxx{{object_list.model|class_name}}]
+                            set-field element=#ModalLabelInfo,,,title={{title}}:[{{object_list.model|class_name}}]
                         % else:
                             set-field element=#ModalLabelInfo,,,title={{title}}
             % else:

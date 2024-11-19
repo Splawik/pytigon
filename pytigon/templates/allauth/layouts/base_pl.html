@@ -10,13 +10,20 @@
         {% endwith %}
 {% endblock %}
 {% block body %}
-        <div class="login_background"></div>
+        {% block login_background %}
+                <div class="login_background"></div>
+        {% endblock %}
         <div class="container login-container">
                 <div class="row align-items-center">
                         <div class="col"></div>
                         <div class="col-lg-6 col-xl-5">
                                 <div class="card card-inverse login-card">
-                                        {% block content %}{% endblock %}
+                                        <div class="card-header">
+                                                {{prj_title|upper}}
+                                        </div>
+                                        <div class="card-block">
+                                                {% block content %}{% endblock %}
+                                        </div>
                                 </div>
                         </div>
                         <div class="col"></div>

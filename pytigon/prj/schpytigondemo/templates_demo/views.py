@@ -34,6 +34,7 @@ from django.utils import timezone
 
 @dict_to_template("templates_demo/v_excel_report.html")
 def excel_report(request, **argv):
+
     object_list = []
 
     for i in range(1, 10000):
@@ -49,6 +50,7 @@ def excel_report(request, **argv):
 
 @dict_to_template("templates_demo/v_odf_report.html")
 def odf_report(request, **argv):
+
     object_list = []
 
     for i in range(1, 10000):
