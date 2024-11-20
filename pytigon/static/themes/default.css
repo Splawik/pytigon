@@ -558,8 +558,6 @@ div.login-container > .row {
 
 .login-card {
   min-width: 250px;
-  background: #357;
-  color: #dff;
   box-shadow: 5px 5px 2px #112233;
   padding: 20px; }
   .login-card card-header {

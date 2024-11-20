@@ -81,21 +81,6 @@
                         {% block body_init %}
                         {% endblock %}
                         {% block messages %}
-                                {% if messages %}
-                                        {% for message in messages %}
-                                                {% if message|slice:"-1:" == '!' %}
-                                                                <ul class="errorlist">
-                                                                        <li>{{message}}</li>
-                                                                </ul>
-                                                        {% else %}
-                                                                <ul class="messagelist">
-                                                                        <li>
-                                                                        {{message}}
-                                                                        </li>
-                                                                </ul>
-                                                {% endif %}
-                                        {% endfor %}
-                                {% endif %}
                         {% endblock %}
                         {% block body_desktop %}
                                 {% if user.is_authenticated or not settings.SHOW_LOGIN_WIN or NO_CHECK_AUTH %}

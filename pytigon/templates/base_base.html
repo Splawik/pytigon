@@ -13,12 +13,12 @@
                                 <div class="row align-items-center">
                                         <div class="col"></div>
                                         <div class="col-lg-6 col-xl-5">
-                                                <div class="card card-inverse login-card">
+                                                <div class="card text-bg-dark mb-3">
                                                         {% block login_card %}
                                                                 <div class="card-header">
                                                                         {{prj_title|upper}}
                                                                 </div>
-                                                                <div class="card-block">
+                                                                <div class="card-body">
                                                                         <br />
                                                                         <p id="login_txt1">Sign in:</p>
                                                                         <p id="login_txt2" class="d-none">Wrong login or password, try again:</p>
@@ -47,7 +47,7 @@
                                                                         </form>
                                                                 </div>
                                                                 {% if app_manager.login_providers %}
-                                                                        <div class="card-block">
+                                                                        <div class="card-body">
                                                                                 <br />
                                                                                 or sign in with:
                                                                                 <br />
@@ -59,7 +59,7 @@
                                                                         </div>
                                                                 {% endif %}
                                                                 {% if settings.ACCOUNT_EMAIL_REQUIRED %}
-                                                                        <div class="card-block">
+                                                                        <div class="card-body">
                                                                                 <br />
                                                                                 <a href="{{base_path}}accounts/password/reset/">
                                                                                         I forgot my password
@@ -117,26 +117,6 @@
                                         </form>
                                 </div>
                         </div>
-                </div>
-        {% endif %}
-{% endblock %}
-{% block messages %}
-        {% if messages %}
-                <div class="alert alert-danger" role="alert">
-                        <a href="#" class="close" data-bs-dismiss="alert"> &times;</a>
-                        {% for message in messages %}
-                                {% if message|slice:"-1:" == '!' %}
-                                                <ul class="errorlist">
-                                                        <li>{{message}}</li>
-                                                </ul>
-                                        {% else %}
-                                                <ul class="messagelist">
-                                                        <li>
-                                                        {{message}}
-                                                        </li>
-                                                </ul>
-                                {% endif %}
-                        {% endfor %}
                 </div>
         {% endif %}
 {% endblock %}

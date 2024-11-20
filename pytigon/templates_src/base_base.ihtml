@@ -15,11 +15,11 @@
                 div class=row align-items-center
                     div class=col
                     div class=col-lg-6 col-xl-5
-                        div class=card card-inverse login-card
+                        div class=card text-bg-dark mb-3
                             %% login_card
                                 div class=card-header
                                     {{prj_title|upper}}
-                                div class=card-block
+                                div class=card-body
                                     br
                                     p id=login_txt1..._(Sign in):
                                     p id=login_txt2,,,class=d-none..._(Wrong login or password, try again):
@@ -40,7 +40,7 @@
                                                 button type=submit,,,class=btn btn-primary btn-lg ...OK
                                             div class=col
                                 % if app_manager.login_providers:
-                                    div class=card-block
+                                    div class=card-body
                                         br
                                         ._(or sign in with):
                                         br
@@ -48,7 +48,7 @@
                                             a href={% provider_login_url pos.0 %},,,class=btn btn-secondary my-1
                                                 {{pos.1}}
                                 % if settings.ACCOUNT_EMAIL_REQUIRED:
-                                    div class=card-block
+                                    div class=card-body
                                         br
                                         a href={{base_path}}accounts/password/reset/
                                             ._(I forgot my password)
@@ -84,18 +84,6 @@
                         div class=modal-footer
                             button href=#,,,class=btn btn-secondary,,,data-bs-dismiss=modal..._(Cancel)
                             button type=submit,,,class=btn btn-primary..._(OK)
-
-%% messages
-    % if messages:
-        div class=alert alert-danger,,,role=alert
-            a href=#,,,class=close,,,data-bs-dismiss=alert... &times;
-            % for message in messages:
-                % if message|slice:"-1:" == '!':
-                        ul class=errorlist
-                            li...{{message}}
-                    {% else %}
-                        ul class=messagelist
-                            li...{{message}}
 
 %% body
     %% body_body_start

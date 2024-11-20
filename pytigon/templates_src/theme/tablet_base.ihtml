@@ -162,6 +162,8 @@
                 div class=navbar-nav tabbable,,,id=tab_tabs2
                     ul class=nav nav-tabs,,,role=tablist,,,id=tabs2
 
+            ptig-frame src={{base_path}}schsys/messages/,,,timeout=7
+
             div class=navbar-collapse align-self-end
                 ul class=nav
                     % if settings.SEARCH_PATH:

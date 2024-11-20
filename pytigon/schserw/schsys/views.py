@@ -77,7 +77,7 @@ APP = None
 # </body>
 # """
 
-MESSAGE_LIST = {"null": "", "error": "Program error", "warning": "Program warning"}
+# MESSAGE_LIST = {"null": "", "error": "Program error", "warning": "Program warning"}
 
 
 def change_password(request):
@@ -134,22 +134,26 @@ def ok(request):
 #        return HttpResponse(_RET_OK_HTML % (id, title))
 
 
-def message(request, titleid, messageid, id):
-    """View to show messages
+# def message(request, titleid, messageid, id):
+#    """View to show messages
+#
+#    Args:
+#        titleid - title id
+#        messageid - message id
+#        id - id
+#    """
+#    global MESSAGE_LIST
+#    title = MESSAGE_LIST[titleid]
+#    if id != "0":
+#        message = MESSAGE_LIST[messageid] % id
+#    else:
+#        message = MESSAGE_LIST[messageid]
+#    c = {"title": title.decode("utf-8"), "message": message.decode("utf-8")}
+#    return render_to_response("schsys/message.html", context=c, request=request)
 
-    Args:
-        titleid - title id
-        messageid - message id
-        id - id
-    """
-    global MESSAGE_LIST
-    title = MESSAGE_LIST[titleid]
-    if id != "0":
-        message = MESSAGE_LIST[messageid] % id
-    else:
-        message = MESSAGE_LIST[messageid]
-    c = {"title": title.decode("utf-8"), "message": message.decode("utf-8")}
-    return render_to_response("schsys/message.html", context=c, request=request)
+
+def get_messages(request):
+    return render_to_response("schsys/messages.html", context={}, request=request)
 
 
 def tbl(request, app, tab, value=None, template_name=None):
