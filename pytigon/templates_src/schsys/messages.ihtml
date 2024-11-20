@@ -1,14 +1,9 @@
 % if messages:
-    % for message in messages:
-        div class=position-fixed bottom-0 end-0 p-3 m-3,,,style=z-index: 11
-            div class=toast show,,,role=alert,,,aria-live=assertive,,,aria-atomic=true
+    div class=position-fixed bottom-0 end-0 p-3 m-3,,,style=z-index: 11
+        div class=toast show,,,role=alert,,,aria-live=assertive,,,aria-atomic=true
+            % for message in messages:
                 div class=toast-header
-                    img src=..,,,class=rounded me-2,,,alt=..
-                    strong class=me-auto...Message
-                    small...11 mins ago
+                    strong class=me-auto..._(Message)
                     button type=button,,,class=btn-close,,,data-bs-dismiss=toast,,,aria-label=Close
-                div class=toast-body
+                div class=toast-body {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}text-bg-danger{% endif %}
                     {{message}}
-                    {{message.level}}
-                    {{message.message}}
-                    {{message.extra_tags}}
