@@ -1,0 +1,9 @@
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_title_bar=1 title='test' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+

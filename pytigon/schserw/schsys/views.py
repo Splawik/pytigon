@@ -152,8 +152,32 @@ def ok(request):
 #    return render_to_response("schsys/message.html", context=c, request=request)
 
 
+MSG_MAP = {
+    messages.DEBUG: "",
+    messages.INFO: "text-bg-info",
+    messages.SUCCESS: "",
+    messages.WARNING: "text-bg-warning",
+    messages.ERROR: "text-bg-danger",
+}
+
+
 def get_messages(request):
-    return render_to_response("schsys/messages.html", context={}, request=request)
+    tab = []
+    for message in messages.get_messages(request):
+        tab.append(
+            {
+                "level": message.level,
+                "message": message.message,
+                "extra_tags": message.extra_tags,
+                "class": MSG_MAP[message.level],
+            }
+        )
+    if tab:
+        return render_to_response(
+            "schsys/messages.html", context={"messages": tab}, request=request
+        )
+    else:
+        return HttpResponse("")
 
 
 def tbl(request, app, tab, value=None, template_name=None):

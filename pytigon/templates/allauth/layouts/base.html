@@ -1,17 +1,20 @@
-{% extends default_template %}
+{% extends "theme.html"|translate:lang %}
 {% load exfiltry %}
 {% load django_bootstrap5 %}
 {% load i18n %}
 {% load account %}
 {% load exsyntax %}
 {% block all %}
-        {% with NO_CHECK_AUTH=True SHOW_LOGIN_WIN=False show_form=False %}
+          {% with NO_CHECK_AUTH=True SHOW_LOGIN_WIN=False show_form=False fragment=all %}
                 {{ block.super }}
-        {% endwith %}
+          {% endwith %}
 {% endblock %}
 {% block body %}
+        {% block body_body_start %}
+                {{ block.super }}
+        {% endblock %}
         {% block login_background %}
-                <div class="login_background"></div>
+                {{ block.super }}
         {% endblock %}
         <div class="container login-container">
                 <div class="row align-items-center">
@@ -29,7 +32,9 @@
                         <div class="col"></div>
                 </div>
         </div>
-        {% block body_desktop_cd %}
+        {% block body_desktop_cd %}{% endblock %}
+        {% block body_body_end %}
+                {{ block.super }}
         {% endblock %}
 {% endblock %}
 {% block nav %}

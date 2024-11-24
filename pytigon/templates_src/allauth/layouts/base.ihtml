@@ -1,4 +1,4 @@
-% extends default_template
+% extends "theme.html"|translate:lang
 
 % load exfiltry
 % load django_bootstrap5
@@ -7,12 +7,14 @@
 % load exsyntax
 
 %% all
-    % with NO_CHECK_AUTH=True SHOW_LOGIN_WIN=False show_form=False:
+     % with NO_CHECK_AUTH=True SHOW_LOGIN_WIN=False show_form=False fragment=all: 
         {{ block.super }}
 
 %% body
+    %% body_body_start
+        {{ block.super }}
     %% login_background
-        div class=login_background
+        {{ block.super }}
     div class=container login-container
         div class=row align-items-center
             div class=col
@@ -24,7 +26,9 @@
                         %% content
             div class=col
     %% body_desktop_cd
-    
+    %% body_body_end
+        {{ block.super }}
+
 %% nav
 
 %% body_footer_scripts

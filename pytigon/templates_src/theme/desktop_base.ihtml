@@ -269,7 +269,7 @@
                         {% icon "fa-power-off fa-lg" %}
         % else:
             li class=nav-item dropdown user user-menu
-                a class=system_menu,,,href={{base_path}}schsys/login/,,,target=_top,,,title=_(Login)
+                a class=system_menu,,,href={{base_path}}{% if settings.ALLAUTH and standard_web_browser %}accounts/login/{% else %}schsys/login/{% endif %},,,target=_top,,,title=_(Login)
                     {% icon "fa-sign-in fa-lg" %}
 
     <perfectscrollbar></perfectscrollbar>

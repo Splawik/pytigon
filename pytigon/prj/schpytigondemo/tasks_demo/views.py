@@ -32,7 +32,9 @@ import datetime
 from django.utils import timezone
 
 from django_q.tasks import async_task, result
-import time
+import asyncio
+from django.contrib import messages
+from asgiref.sync import sync_to_async
 
 
 @dict_to_template("tasks_demo/v_test_task.html")
@@ -46,3 +48,26 @@ def test_task(request, **argv):
 def test_task2(request, **argv):
     task_id = async_task("tasks_demo.tasks.test_task2")
     return {"ret": task_id}
+
+
+async def test_messages(request, **argv):
+    response = HttpResponse("Hello, async Django!")
+    messages.add_message(request, messages.ERROR, "Hello world 1")
+    request._messages.update(response)
+    await asyncio.sleep(5)
+    messages.add_message(request, messages.INFO, "Hello world 1.1")
+    messages.add_message(request, messages.SUCCESS, "Hello world 2")
+    request._messages.update(response)
+    await asyncio.sleep(5)
+    messages.add_message(request, messages.WARNING, "Hello world 3")
+    request._messages.update(response)
+    await asyncio.sleep(5)
+    messages.add_message(request, messages.DEBUG, "Hello world 4")
+    request._messages.update(response)
+    await asyncio.sleep(5)
+    messages.add_message(request, messages.INFO, "Hello world 5")
+    request._messages.update(response)
+    await asyncio.sleep(5)
+    messages.add_message(request, messages.SUCCESS, "Hello world 6")
+    request._messages.update(response)
+    return response

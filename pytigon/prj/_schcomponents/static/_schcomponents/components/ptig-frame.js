@@ -14,7 +14,7 @@ try {
         _on_time = (function flx__on_time () {
             var on_load;
             on_load = (function flx_on_load (data) {
-                div.innerHTML = data;
+                window.mount_html(div, data);
                 return null;
             }).bind(this);
 

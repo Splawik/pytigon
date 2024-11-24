@@ -1,3 +1,0 @@
-{% load exfiltry %}
-<input type="date" pattern="\d{4}-\d{2}-\d{2}" name="{{ widget.name }}" {% if widget.value != None %} value="{{ widget.value|isoformat }}"{% endif %}{% include "django/forms/widgets/attrs.html" %}>
-

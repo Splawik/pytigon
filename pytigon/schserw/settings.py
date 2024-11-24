@@ -95,7 +95,10 @@ LANGUAGE_CODE = "pl"
 USE_I18N = True
 USE_L10N = False
 SITE_ID = 1
-LANGUAGES = [["en", "English"], ["pl", "Polish"]]
+LANGUAGES = [
+    ["en", "English"],
+    ["pl", "Polish"],
+]
 LOGIN_REDIRECT_URL = "/"
 TEST_RUNNER = "django.test.runner.DiscoverRunner"
 
@@ -254,6 +257,12 @@ INSTALLED_APPS = [
     "pytigon.schserw.schsys",
 ]
 
+LOCALE_PATHS = [
+    os.path.join(SERW_PATH, "locale"),
+    os.path.join(PRJ_PATH, get_prj_name(), "locale"),
+]
+
+
 if DEBUG:
     INSTALLED_APPS.append("django_extensions")
 
@@ -317,6 +326,11 @@ if ENV("ALLAUTH"):
         "allauth.account.auth_backends.AuthenticationBackend"
     )
     MIDDLEWARE.append("allauth.account.middleware.AccountMiddleware")
+
+    import allauth
+
+    LOCALE_PATHS.append(os.path.join(os.path.dirname(allauth.__file__), "locale"))
+
 else:
     ALLAUTH = False
     INSTALLED_APPS.append("pytigon.schserw.nosocial")
@@ -511,10 +525,6 @@ if ENV("LOG_VIEWER"):
 else:
     LOGVIEWER = False
 
-LOCALE_PATHS = [
-    os.path.join(SERW_PATH, "locale"),
-    os.path.join(PRJ_PATH, get_prj_name(), "locale"),
-]
 
 # CSRF_USE_SESSIONS = True
 
@@ -680,6 +690,10 @@ except:
             "OPTIONS": {"size_limit": 2**30},  # 1 gigabyte
         },
     }
+
+
+MESSAGE_STORAGE = "pytigon.schserw.schsys.cache_message_storage.CacheStorage"
+# "django.contrib.messages.storage.session.SessionStorage"
 
 SOCIALACCOUNT_ADAPTER = "pytigon_lib.schdjangoext.allauth.SocialAccountAdapter"
 if DEBUG:

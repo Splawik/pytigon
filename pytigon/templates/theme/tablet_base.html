@@ -298,7 +298,7 @@
                                                 {% endif %}
                                           {% else %}
                                                 <li class="nav-item dropdown user user-menu">
-                                                        <a class="system_menu" href="{{base_path}}schsys/login/" target="_top" title="Login">
+                                                        <a class="system_menu" href="{{base_path}}{% if settings.ALLAUTH and standard_web_browser %}accounts/login/{% else %}schsys/login/{% endif %}" target="_top" title="Login">
                                                                 {% icon "fa-sign-in fa-lg" %}
                                                         </a>
                                                 </li>
