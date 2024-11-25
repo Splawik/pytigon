@@ -331,9 +331,18 @@ if ENV("ALLAUTH"):
 
     LOCALE_PATHS.append(os.path.join(os.path.dirname(allauth.__file__), "locale"))
 
+    CAN_RESET_PASSWORD = True
+    CAN_CHANGE_PASSWORD = True
+    CAN_REGISTER = True
+
 else:
     ALLAUTH = False
     INSTALLED_APPS.append("pytigon.schserw.nosocial")
+
+    CAN_RESET_PASSWORD = False
+    CAN_CHANGE_PASSWORD = True
+    CAN_REGISTER = False
+
 
 if ENV("COMPRESS_ENABLED"):
     COMPRESS_ENABLED = True

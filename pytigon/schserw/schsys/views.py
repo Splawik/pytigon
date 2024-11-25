@@ -500,3 +500,12 @@ def site_media_protected(request, *argi, **argv):
 def change_profile_variant(request, variant_name):
     request.user.profile.set_active_variant(variant_name)
     return HttpResponseRedirect(make_href("/"))
+
+
+def start(request, start_page=False):
+    if not request.user.is_authenticated and settings.SHOW_LOGIN_WIN:
+        return HttpResponseRedirect(make_href("/accounts/login/"))
+    else:
+        return render_to_response(
+            "schsys/app/index.html", context={"start_page": start_page}, request=request
+        )

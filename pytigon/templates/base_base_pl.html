@@ -46,30 +46,40 @@
                                                                                 </div>
                                                                         </form>
                                                                 </div>
-                                                                {% if app_manager.login_providers %}
-                                                                        <div class="card-body">
-                                                                                <br />
-                                                                                or sign in with:
-                                                                                <br />
-                                                                                {% for pos in app_manager.login_providers %}
-                                                                                        <a href="{% provider_login_url pos.0 %}" class="btn btn-secondary my-1">
-                                                                                                {{pos.1}}
-                                                                                        </a>
-                                                                                {% endfor %}
-                                                                        </div>
-                                                                {% endif %}
-                                                                {% if settings.ACCOUNT_EMAIL_REQUIRED %}
-                                                                        <div class="card-body">
-                                                                                <br />
-                                                                                <a href="{{base_path}}accounts/password/reset/">
-                                                                                        I forgot my password
-                                                                                </a>
-                                                                                |
-                                                                                <a href="{{base_path}}accounts/signup/">
-                                                                                        Register
-                                                                                </a>
-                                                                        </div>
-                                                                {% endif %}
+                                                                {% block login_providers %}
+                                                                        {% if app_manager.login_providers %}
+                                                                                <div class="card-body">
+                                                                                        <br />
+                                                                                        or sign in with:
+                                                                                        <br />
+                                                                                        {% for pos in app_manager.login_providers %}
+                                                                                                <a href="{% provider_login_url pos.0 %}" class="btn btn-secondary my-1">
+                                                                                                        {{pos.1}}
+                                                                                                </a>
+                                                                                        {% endfor %}
+                                                                                </div>
+                                                                        {% endif %}
+                                                                {% endblock %}
+                                                                {% block login_extensions %}
+                                                                        {% if settings.CAN_RESET_PASSWORD or settings.CAN_REGISTER %}
+                                                                                {% if settings.ACCOUNT_EMAIL_REQUIRED %}
+                                                                                        <div class="card-body">
+                                                                                                <br />
+                                                                                                {% if settings.CAN_RESET_PASSWORD %}
+                                                                                                        <a href="{{base_path}}accounts/password/reset/">
+                                                                                                                I forgot my password
+                                                                                                        </a>
+                                                                                                        &nbsp;
+                                                                                                {% endif %}
+                                                                                                {% if settings.CAN_REGISTER %}
+                                                                                                        <a href="{{base_path}}accounts/signup/">
+                                                                                                                Register
+                                                                                                        </a>
+                                                                                                {% endif %}
+                                                                                        </div>
+                                                                                {% endif %}
+                                                                        {% endif %}
+                                                                {% endblock %}
                                                         {% endblock %}
                                                 </div>
                                         </div>

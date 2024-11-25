@@ -300,12 +300,20 @@ if len(settings.PRJS) > 0:
                 test = False
                 break
         if test:
+            # u = path(
+            #    prj + "/",
+            #    cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
+            #        vary_on_headers("User-Agent", "Cookie")(
+            #            TemplateView.as_view(template_name="schsys/app/index.html")
+            #        )
+            #    ),
+            #    {"start_page": True},
+            #    name="start" + prj,
+            # )
             u = path(
                 prj + "/",
                 cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
-                    vary_on_headers("User-Agent", "Cookie")(
-                        TemplateView.as_view(template_name="schsys/app/index.html")
-                    )
+                    vary_on_headers("User-Agent", "Cookie")(views.start)
                 ),
                 {"start_page": True},
                 name="start" + prj,
@@ -336,12 +344,19 @@ else:
                 test = False
                 break
     if test:
+        # u = path(
+        #    "",
+        #    cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
+        #        vary_on_headers("User-Agent", "Cookie")(
+        #            TemplateView.as_view(template_name="schsys/app/index.html")
+        #        )
+        #    ),
+        #    name="start",
+        # )
         u = path(
             "",
             cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
-                vary_on_headers("User-Agent", "Cookie")(
-                    TemplateView.as_view(template_name="schsys/app/index.html")
-                )
+                vary_on_headers("User-Agent", "Cookie")(views.start)
             ),
             name="start",
         )

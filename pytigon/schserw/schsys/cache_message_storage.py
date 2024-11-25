@@ -18,7 +18,6 @@ class CacheStorage(SessionStorage):
     def _store(self, messages, response, *args, **kwargs):
         if self.request.session and self.request.session.session_key:
             if messages:
-                print(self.session_key + "_" + self.request.session.session_key)
                 cache.set(
                     self.session_key + "_" + self.request.session.session_key,
                     self.serialize_messages(messages),
