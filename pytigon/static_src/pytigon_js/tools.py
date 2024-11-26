@@ -1046,3 +1046,13 @@ def join_urls(url1, url2):
 
 
 window.join_urls = join_urls
+
+
+def add_param2url(url, param):
+    if "?" in url:
+        return url + "&" + param
+    else:
+        return url + "?" + param
+
+
+window.add_param2url = add_param2url

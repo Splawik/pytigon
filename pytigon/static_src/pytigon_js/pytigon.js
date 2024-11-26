@@ -29,7 +29,7 @@ INLINE_INFO = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(I
 INLINE_DELETE = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", DELETE_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_ERROR = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", ERROR_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 
-var LOADED_FILES, Loading, TEMPLATES, _OPERATOR, _req_post, ajax_get, ajax_json, ajax_post, ajax_submit, animate_combo, can_popup, correct_href, download_binary_file, element_get_url, element_set_url, frontend_view, get_elem_from_string, get_page, get_table_type, get_template, history_push_state, inline_maximize, inline_minimize, is_hidden, is_visible, join_urls, load_css, load_js, load_many_js, on_load_js, process_resize, remove_element, remove_page_from_href, save_as, send_to_dom, standard_error_handler, super_insert, super_query_selector;
+var LOADED_FILES, Loading, TEMPLATES, _OPERATOR, _req_post, add_param2url, ajax_get, ajax_json, ajax_post, ajax_submit, animate_combo, can_popup, correct_href, download_binary_file, element_get_url, element_set_url, frontend_view, get_elem_from_string, get_page, get_table_type, get_template, history_push_state, inline_maximize, inline_minimize, is_hidden, is_visible, join_urls, load_css, load_js, load_many_js, on_load_js, process_resize, remove_element, remove_page_from_href, save_as, send_to_dom, standard_error_handler, super_insert, super_query_selector;
 LOADED_FILES = ({});
 Loading = function () {
     _pyfunc_op_instantiate(this, arguments);
@@ -1122,7 +1122,17 @@ join_urls = function flx_join_urls (url1, url2) {
 };
 
 window.join_urls = join_urls;
-export {Loading, save_as, standard_error_handler, download_binary_file, frontend_view, ajax_get, ajax_post, ajax_json, ajax_submit, load_css, on_load_js, load_js, load_many_js, history_push_state, get_elem_from_string, animate_combo, is_hidden, is_visible, get_template, super_query_selector, super_insert, send_to_dom, remove_element, process_resize, get_page, get_table_type, can_popup, correct_href, remove_page_from_href, inline_maximize, inline_minimize, element_get_url, element_set_url, join_urls};
+add_param2url = function flx_add_param2url (url, param) {
+    if (_pyfunc_op_contains("?", url)) {
+        return (url + "&") + param;
+    } else {
+        return (url + "?") + param;
+    }
+    return null;
+};
+
+window.add_param2url = add_param2url;
+export {Loading, save_as, standard_error_handler, download_binary_file, frontend_view, ajax_get, ajax_post, ajax_json, ajax_submit, load_css, on_load_js, load_js, load_many_js, history_push_state, get_elem_from_string, animate_combo, is_hidden, is_visible, get_template, super_query_selector, super_insert, send_to_dom, remove_element, process_resize, get_page, get_table_type, can_popup, correct_href, remove_page_from_href, inline_maximize, inline_minimize, element_get_url, element_set_url, join_urls, add_param2url};
 
 var DefineWebComponent, GlobalBus, set_state;
 set_state = function flx_set_state (component, state) {
@@ -4188,11 +4198,7 @@ app_init = function flx_app_init (prj_name, application_template, menu_id, lang,
                 return null;
             }).bind(this);
 
-            if (_pyfunc_truthy(_pymeth_endswith.call(window.location.pathname, "index.html"))) {
-                p = start_page + "?only_content";
-            } else {
-                p = _pyfunc_op_add(base_path, start_page) + "?only_content";
-            }
+            p = _pyfunc_op_add(base_path, start_page);
             ajax_load(document.querySelector("#body_desktop"), p, _on_load);
         }
         return null;

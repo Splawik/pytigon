@@ -503,7 +503,11 @@ def change_profile_variant(request, variant_name):
 
 
 def start(request, start_page=False):
-    if not request.user.is_authenticated and settings.SHOW_LOGIN_WIN:
+    if (
+        not request.user.is_authenticated
+        and settings.SHOW_LOGIN_WIN
+        and settings.ALLAUTH
+    ):
         return HttpResponseRedirect(make_href("/accounts/login/"))
     else:
         return render_to_response(

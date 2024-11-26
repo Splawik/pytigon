@@ -91,10 +91,11 @@ def app_init(
             def _on_load(responseText, status, response):
                 print("_init_strart_page::_on_load")
 
-            if window.location.pathname.endswith("index.html"):
-                p = start_page + "?only_content"
-            else:
-                p = base_path + start_page + "?only_content"
+            # if window.location.pathname.endswith("index.html"):
+            #    p = start_page + "?only_content"
+            # else:
+            #    p = base_path + start_page + "?only_content"
+            p = base_path + start_page
 
             ajax_load(document.querySelector("#body_desktop"), p, _on_load)
 
