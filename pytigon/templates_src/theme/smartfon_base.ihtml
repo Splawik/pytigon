@@ -47,7 +47,7 @@
                     % if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN:
                         %if user and user.get_username != 'auto':
                             a class=dropdown-item system_menu,,,href=={{base_path}}schsys/do_logout/,,,title=_(Logout),,,target=_top..._(Logout)
-                        % if settings.CAN_CHANGE_PASSWORD:
+                        % if settings.CAN_CHANGE_PASSWORD and request.user|user_can_change_password:
                             a class=dropdown-item,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)
                     % if user.is_superuser:
                         a class=dropdown-item system_menu,,,href={{base_path}}schmanage/,,,title=_(Manage),,,target=_top..._(Manage)

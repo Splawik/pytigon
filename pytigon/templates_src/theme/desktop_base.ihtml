@@ -255,7 +255,7 @@
                             span class=navbar-toggler-icon
                         div class=collapse navbar-collapse,,,id=navbar_setup
                             ul class=navbar-nav mr-auto
-                                % if settings.CAN_CHANGE_PASSWORD:
+                                % if settings.CAN_CHANGE_PASSWORD and request.user|user_can_change_password:
                                     li class=nav-item active
                                         a class=nav-link,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)
                                 % if user.is_superuser:
