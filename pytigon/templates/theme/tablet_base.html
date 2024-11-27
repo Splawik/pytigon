@@ -200,12 +200,24 @@
                                                 <li id="search" class="nav-item search">
                                                         <form action="{{base_path}}schsys/search/" title="Search results" target="_parent">
                                                                 {% csrf_token %}
-                                                                <div class="input-group">
-                                                                        <input class="form-control" placeholder="Search" name="q" />
-                                                                        <div class="input-group-addon">
-                                                                                {% icon "fa-search fa-lg" %}
+                                                                <div class="input-group mt-1">
+                                                                        <div class="form-outline">
+                                                                                <input type="search" class="form-control form-control-sm text-body" placeholder="Search" name="q" />
                                                                         </div>
+                                                                        <button type="button" class="btn btn-primary btn-sm">
+                                                                                {% icon "fa-search fa-lg" %}
+                                                                        </button>
                                                                 </div>
+                                                                {% comment %}
+                                                                        <div class="input-group mt-1">
+                                                                                <input class="form-control form-control-sm bg-transparent" placeholder="Search" name="q" />
+                                                                                <span class="input-group-append">
+                                                                                        <button class="btn btn-outline-secondary" type="button">
+                                                                                                {% icon "fa-search fa-lg" %}
+                                                                                        </button>
+                                                                                </span>
+                                                                        </div>
+                                                                {% endcomment %}
                                                         </form>
                                                 </li>
                                         {% endif %}
@@ -272,7 +284,7 @@
                                                                         </button>
                                                                         <div class="collapse navbar-collapse" id="navbar_setup">
                                                                                 <ul class="navbar-nav mr-auto">
-                                                                                        {% if settings.CAN_CHANGE_PASSWORD %}
+                                                                                        {% if settings.CAN_CHANGE_PASSWORD and request.user|user_can_change_password %}
                                                                                                 <li class="nav-item active">
                                                                                                         <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#change_passwd">Change password</a>
                                                                                                 </li>

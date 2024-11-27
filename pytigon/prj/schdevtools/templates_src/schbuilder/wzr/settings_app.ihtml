@@ -57,7 +57,7 @@ UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 from pytigon_lib.schtools.install_init import init
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
-START_PAGE = '{{prj.start_page}}'
+START_PAGE = '{{prj.start_page|safe}}'
 SHOW_LOGIN_WIN = {% if prj.login_required %}True{% else %}False{% endif %}
 PACKS = []
 

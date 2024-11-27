@@ -691,14 +691,15 @@ try:
     CACHES = {"default": ENV.cache()}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 except:
-    CACHES = {
-        "default": {
-            "BACKEND": "diskcache.DjangoCache",
-            "LOCATION": TEMP_PATH,
-            "TIMEOUT": 3000,
-            "OPTIONS": {"size_limit": 2**30},  # 1 gigabyte
-        },
-    }
+    # CACHES = {
+    #    "default": {
+    #        "BACKEND": "diskcache.DjangoCache",
+    #        "LOCATION": TEMP_PATH,
+    #        "TIMEOUT": 3000,
+    #        "OPTIONS": {"size_limit": 2**30},  # 1 gigabyte
+    #    },
+    # }
+    pass
 
 
 MESSAGE_STORAGE = "pytigon.schserw.schsys.cache_message_storage.CacheStorage"

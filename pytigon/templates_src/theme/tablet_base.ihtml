@@ -170,10 +170,17 @@
                         li id=search,,,class=nav-item search
                             form action={{base_path}}schsys/search/,,,title=_(Search results),,,target=_parent
                                 {% csrf_token %}
-                                div class=input-group
-                                    input class=form-control,,,placeholder=_(Search),,,name=q
-                                    div class=input-group-addon
+                                div class=input-group mt-1
+                                    div class=form-outline
+                                        input type=search,,,class=form-control form-control-sm text-body,,,placeholder=_(Search),,,name=q
+                                    button type=button,,,class=btn btn-primary btn-sm
                                         {% icon "fa-search fa-lg" %}
+                                % comment:
+                                    div class=input-group mt-1
+                                        input class=form-control form-control-sm bg-transparent,,,placeholder=_(Search),,,name=q
+                                        span class=input-group-append
+                                            button class=btn btn-outline-secondary,,,type=button
+                                                {% icon "fa-search fa-lg" %}
 
                     %% drop_down_blocks
                     % if user.is_authenticated:

@@ -253,7 +253,7 @@ def publish(request, pk):
 
 @dict_to_template("schwiki/v_search.html")
 def search(request, q):
-    search_txt = bdecode(q).decode("utf-8")
+    search_txt = bdecode(q)
     object_list = Page.objects.filter(content__iregex=search_txt)
     return {"object_list": object_list, "q": search_txt}
 
