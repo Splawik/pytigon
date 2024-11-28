@@ -29,6 +29,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
+from django.contrib.auth import get_user_model
 
 from pytigon_lib.schdjangoext.tools import make_href
 
@@ -61,7 +62,29 @@ def sch_login(request, *argi, **argv):
         username = get_from_dicts("username", (request.POST, request.GET))
         if is_in_dicts("password", (request.POST, request.GET)):
             password = get_from_dicts("password", (request.POST, request.GET))
-            user = authenticate(request, username=username, password=password)
+
+            if settings.ACCOUNT_AUTHENTICATION_METHOD == "email":
+                obj = get_user_model().objects.filter(email=username).first()
+                if obj:
+                    username = obj.username
+                else:
+                    username = None
+            if username:
+                user = authenticate(request, username=username, password=password)
+            else:
+                user = None
+
+            if (
+                user is None
+                and settings.ACCOUNT_AUTHENTICATION_METHOD == "username_email"
+            ):
+                obj = get_user_model().objects.filter(email=username).first()
+                if obj:
+                    username = obj.username
+                    user = authenticate(request, username=username, password=password)
+                else:
+                    user = None
+
             if user is not None:
                 login(request, user)
                 parm = request.POST.get("client_param", "")
