@@ -12,13 +12,17 @@ try {
         timeout = _pyfunc_int(component.getAttribute("timeout"));
         div = component.root.querySelector("div");
         _on_time = (function flx__on_time () {
-            var on_load;
+            var on_error, on_load;
             on_load = (function flx_on_load (data) {
                 window.mount_html(div, data);
                 return null;
             }).bind(this);
 
-            ajax_get(component.getAttribute("src"), on_load);
+            on_error = (function flx_on_error (data) {
+                return null;
+            }).bind(this);
+
+            ajax_get(component.getAttribute("src"), on_load, on_error);
             return null;
         }).bind(this);
 

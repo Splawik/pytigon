@@ -24,7 +24,7 @@
                                                                         <p id="login_txt2" class="d-none">Wrong login or password, try again:</p>
                                                                         <form class="login-form" fragment="all" action="{{base_path}}schsys/do_login/?next={% if "schsys/login" in request.path %}{{base_path}}{% else %}{{request.get_full_path|bencode}}{% endif %}&no_scripts=1" method="post" name="signin" target="_top">
                                                                                 <div class="form-group mb-3">
-                                                                                        <label class="control-label" for="username_ ">{% if settings.ACCOUNT_AUTHENTICATION_METHOD == "email" %} User email { % elif settings.ACCOUNT_AUTHENTICATION_METHOD == "username" %} User name {% else %} User name or email {% endif %}</label>
+                                                                                        <label class="control-label" for="username_ ">{% if settings.ACCOUNT_AUTHENTICATION_METHOD == "email" %} User email {% elif settings.ACCOUNT_AUTHENTICATION_METHOD == "username" %} User name {% else %} User name or email {% endif %}</label>
                                                                                         <div class="input-group mb-3">
                                                                                                 <div class="input-group-addon fa fa-user"></div>
                                                                                                 <input class="form-control" type="text" size="25" maxlength="30" id="username_" name="username" value="" autocomplete="username" />

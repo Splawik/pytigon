@@ -10,5 +10,4 @@
     %if standard_web_browser:
         {% css_link 'themes/wiki.css' %}
         {% css_link 'vanillajs_plugins/pygments/manni.css' %}
-        {% css_link 'explorer/styles.css' %}
     {{ block.super }}

@@ -4,6 +4,5 @@
 % load exsyntax
 
 %% ext_css_links
-    {% css_link 'explorer/styles.css' %}
     {{block.super}}
 

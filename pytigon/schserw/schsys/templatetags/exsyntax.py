@@ -906,7 +906,7 @@ def spec(format):
 def include_wiki(context, wiki_str, from_wiki_page, path=None, only_header=True):
     ret = ""
     if "request" in context:
-        username = context["request"].user.username
+        username = context["request"].user.get_username()
     subpage = from_wiki_page.get_page_for_wiki(wiki_str, username)
     if subpage and subpage.content:
         if only_header:

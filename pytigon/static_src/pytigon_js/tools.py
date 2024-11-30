@@ -71,13 +71,17 @@ def standard_error_handler(req):
 
         def _on_reader_load():
             nonlocal req, reader
-            Swal.fire(
-                {
-                    "icon": "error",
-                    "title": "Error: %d" % req.status,
-                    "text": reader.result,
-                }
-            )
+            if req.status == 500:
+                console.log(reader.result)
+                window.open().document.write(reader.result)
+            else:
+                Swal.fire(
+                    {
+                        "icon": "error",
+                        "title": "Error: %d" % req.status,
+                        "text": reader.result,
+                    }
+                )
 
         reader.onload = _on_reader_load
         reader.readAsText(req.response)
@@ -166,7 +170,7 @@ def ajax_get(url, complete, callback_on_error=None, process_req=None):
     def _onload():
         nonlocal complete, callback_on_error, process_blob, req
 
-        if not req.status in (200, 500):
+        if req.status != 200:
             if callback_on_error:
                 callback_on_error(req)
             else:

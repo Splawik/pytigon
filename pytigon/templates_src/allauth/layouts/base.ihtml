@@ -15,7 +15,7 @@
         {{ block.super }}
     %% login_background
         {{ block.super }}
-    div class=container login-container
+    div class=container login-container,,,data-bs-theme=dark
         div class=row align-items-center
             div class=col
             div class=col-lg-6 col-xl-5

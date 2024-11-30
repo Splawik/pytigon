@@ -66,7 +66,7 @@ def sch_login(request, *argi, **argv):
             if settings.ACCOUNT_AUTHENTICATION_METHOD == "email":
                 obj = get_user_model().objects.filter(email=username).first()
                 if obj:
-                    username = obj.username
+                    username = obj.get_username()
                 else:
                     username = None
             if username:
@@ -80,7 +80,7 @@ def sch_login(request, *argi, **argv):
             ):
                 obj = get_user_model().objects.filter(email=username).first()
                 if obj:
-                    username = obj.username
+                    username = obj.get_username()
                     user = authenticate(request, username=username, password=password)
                 else:
                     user = None

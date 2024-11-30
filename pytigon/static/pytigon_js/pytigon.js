@@ -126,7 +126,12 @@ standard_error_handler = function flx_standard_error_handler (req) {
     if ((!_pyfunc_op_equals(req.status, 200))) {
         reader = new FileReader();
         _on_reader_load = (function flx__on_reader_load () {
-            Swal.fire(({icon: "error", title: _pymeth_format.call("Error: {:d}", req.status), text: reader.result}));
+            if (_pyfunc_op_equals(req.status, 500)) {
+                console.log(reader.result);
+                (window.open().document.write)(reader.result);
+            } else {
+                Swal.fire(({icon: "error", title: _pymeth_format.call("Error: {:d}", req.status), text: reader.result}));
+            }
             return null;
         }).bind(this);
 
@@ -226,7 +231,7 @@ ajax_get = function flx_ajax_get (url, complete, callback_on_error, process_req)
     }
     _onload = (function flx__onload () {
         var _on_reader_load, disp, reader;
-        if ((!_pyfunc_op_contains(req.status, [200, 500]))) {
+        if ((!_pyfunc_op_equals(req.status, 200))) {
             if (_pyfunc_truthy(callback_on_error)) {
                 callback_on_error(req);
             } else {

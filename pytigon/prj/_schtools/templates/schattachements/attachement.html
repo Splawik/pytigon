@@ -1,0 +1,77 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load thumbnail %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "download": "client://status/mail-attachment.png",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with form_width=800 form_height=600 %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block enctype %}
+        multipart/form-data
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New attachement" action="new_row/{{filter}}" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+        <th>
+        ext
+        </th>
+{% endblock %}
+{% block id_extra %}
+        {{ block.super }}
+        {% block related_workflow %}
+                {% comment %}
+                        {% row_related_list "schworkflow/WorkflowItem" title="Workflow items" filter=app_name|append_str:"__"|append_str:table_name|append_str:"__"|append_str:object.id|append_str:"__"|append_str:object.application|append_str:"_"|append_str:object.table icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}" %}
+                {% endcomment %}
+                {% row_related_list "schworkflow/WorkflowItem" title="Workflow items" icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}" %}
+        {% endblock %}
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+        <td>
+                {% if object.is_image %}
+                        <img src="{% thumbnail object.file 40x40 crop %}" alt="" />
+                  {% else %}
+                        {{object.ext}}
+                {% endif %}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% if object.is_image %}
+                {% with url=object.file|thumbnail_url:'large' %}
+                        {% row_actions %}
+                                preview,Preview,,_blank,,,{url}
+                        {% endrow_actions %}
+                {% endwith %}
+        {% endif %}
+        {% row_actions %}
+                download,Download,,_blank
+        {% endrow_actions %}
+        {% row_actions %}
+                ?:edit
+                ?:delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

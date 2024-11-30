@@ -1,0 +1,64 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_row_header %}
+        {% if vtype != "sublist" %}
+                <th>Application {{target}}</th>
+                <th>Table</th>
+                <th>Group</th>
+                <th>Parent id</th>
+        {% endif %}
+        <th>Date {{type}}</th>
+        <th>Description</th>
+        <th>Operator</th>
+        {% if vtype != "sublist" %}
+                <th>
+                Operator id
+                </th>
+        {% endif %}
+{% endblock %}
+{% block list_row %}
+        {% if vtype != "sublist" %}
+                <td>{{object.application }}</td>
+                <td>{{ object.table }}</td>
+                <td>{{ object.group }}</td>
+                <td>{{ object.parent_id }}</td>
+        {% endif %}
+        <td>{{ object.date|isoformat }}</td>
+        <td>{{ object.description }}</td>
+        <td>{{ object.operator }}</td>
+        {% if vtype != "sublist" %}
+                <td>
+                {{ object.operator_id }}
+                </td>
+        {% endif %}
+{% endblock %}
+{% block list_row_header_end %}
+        {% if vtype != "sublist" or target == "json" %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block list_row_end2 %}
+        {% if vtype != "sublist" %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                ?:edit
+                ?:delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                "application","table","group","parent_id","date","description","operator","operator_id"
+        {% endform %}
+{% endblock %}
+
