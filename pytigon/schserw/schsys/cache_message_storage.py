@@ -23,7 +23,5 @@ class CacheStorage(SessionStorage):
                     self.serialize_messages(messages),
                 )
             else:
-                cache.pop(
-                    self.session_key + "_" + self.request.session.session_key, None
-                )
+                cache.delete(self.session_key + "_" + self.request.session.session_key)
         return []
