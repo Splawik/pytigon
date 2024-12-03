@@ -776,6 +776,10 @@ if ENV("PROMETHEUS_ENABLED"):
 
 
 def finish(settings):
+    global LOGIN_REDIRECT_URL, URL_ROOT_FOLDER
+    if settings["URL_ROOT_FOLDER"] and len(settings["URL_ROOT_FOLDER"]) > 0:
+        settings["LOGIN_REDIRECT_URL"] = "/" + settings["URL_ROOT_FOLDER"] + "/"
+
     if ENV("PROMETHEUS_ENABLED"):
         MIDDLEWARE.insert(0, "django_prometheus.middleware.PrometheusBeforeMiddleware")
         MIDDLEWARE.append("django_prometheus.middleware.PrometheusAfterMiddleware")
