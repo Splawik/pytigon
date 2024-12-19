@@ -1,0 +1,19 @@
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block extrahead %}
+        {% if OK %}
+                <meta name="target" content="_parent_refr">
+                </meta>
+        {% endif %}
+{% endblock %}
+{% block form_content_schbutton %}
+        <input type="submit" value="OK" class="btn btn-info" target="_self" height="64">
+        </input>
+{% endblock %}
+{% block all %}
+        {% with show_title_bar=1 title='Make directory' vform=True %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+

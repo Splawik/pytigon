@@ -1,0 +1,22 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_title_bar=1 title='Table import form' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block user_header %}
+        <th>
+        x1
+        </th>
+{% endblock %}
+{% block user_row %}
+        <tr>
+                <td>
+                 {{object}}
+                </td>
+        </tr>
+{% endblock %}
+

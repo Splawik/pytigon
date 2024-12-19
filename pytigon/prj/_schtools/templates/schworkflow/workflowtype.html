@@ -1,0 +1,41 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New workflow type" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>
+        Name
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>
+        {{ object.name }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                ?:edit
+                field_list/workflowitem_set,Workflow items
+                field_edit/script_for_new_item,Script for new item
+                field_edit/script_for_accept_item,Script for accept item
+                field_edit/script_for_reject_item,Script for reject item
+                field_edit/script_for_refresh_queue,Script for refresh queue
+                field_edit/script_for_handle_event,Script for handle refresh event
+                ?:delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                name
+        {% endform %}
+{% endblock %}
+

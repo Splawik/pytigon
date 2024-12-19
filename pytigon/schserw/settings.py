@@ -582,8 +582,19 @@ if PLATFORM_TYPE == "webserver":
 else:
     CHANNEL_LAYERS = {"default": {"BACKEND": "channels.layers.InMemoryChannelLayer"}}
 
-DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
+# DEFAULT_FILE_STORAGE = "pytigon.ext_lib.django_storage.FSStorage"
 # STATICFILES_STORAGE = "pytigon.ext_lib.django_storage.StaticFSStorage"
+
+
+STORAGES = {
+    "default": {
+        "BACKEND": "pytigon.ext_lib.django_storage.FSStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
+
 
 COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
 
@@ -645,7 +656,7 @@ def DEFAULT_FILE_STORAGE_FS():
     except:
         print("mount error: ")
 
-    if sys.argv and sys.argv[0].endswith("pytigon"):
+    if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")):
         if platform_name() == "Windows":
             _m.mount("osfs", OSFS_EXT("c:\\"))
         else:

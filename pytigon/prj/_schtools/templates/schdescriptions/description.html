@@ -1,0 +1,36 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New comment" action="new_row/{{filter}}" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Language code</th>
+        <th>
+        Description
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.lang }}</td>
+        <td>
+        {{ object.description }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                ?:edit
+                ?:delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

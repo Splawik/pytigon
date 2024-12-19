@@ -1,0 +1,538 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        from pytigon_lib.schtools.schhtmlgen import ITemplate, Html as Hgen
+        from PIL import Image
+        from pytigon_lib.schtools.tools import extend_fun_to, bencode, bdecode
+        from pytigon_gui.guilib.image import bitmap_from_href
+        from wx.lib import platebtn
+        from pytigon_lib.schtools import schjson
+
+
+        IHTML_1 = """
+            html
+                body width=100%,,,bgcolor=[{body_bg_color}]
+                    [%] for item in items:
+                        p bgcolor=[{item.item_bg_color}],,,width=100%,,,border=0
+                            a href=[{item.id}],,,width=100%
+                                [%] if 'bold' in item:
+                                    b...[{item.txt}]
+                                [%] else
+                                    span...[{item.txt}]
+        """
+        HGEN_1 = ITemplate(IHTML_1)
+
+
+        def init_form(self):
+            self.panels_dir=[]
+            self.panels_state=[]
+            self.tab  = 0
+            self.tab2 = 1
+            for pos in range(0,2):
+                self.panels_dir.append([pos+1, 0, "/", False])
+                self.panels_state.append(None)
+
+            self.panels_to_refresh=[]
+
+            self.aTable = [
+                    (0, wx.WXK_F1,  self.on_help),
+                    (0, wx.WXK_F2,  self.on_rename),
+                    (0, wx.WXK_F3,  self.on_view),
+                    (0, wx.WXK_F4,  self.on_edit),
+                    (0, wx.WXK_F5,  self.on_copy),
+                    (0, wx.WXK_F6,  self.on_move),
+                    (0, wx.WXK_F7,  self.on_mkdir),
+                    (0, wx.WXK_F8,  self.on_delete),
+                    (0, wx.WXK_F9,  self.on_setup),
+                    (0, wx.WXK_F10, self.on_user_menu),
+                    (0, wx.WXK_F11, self.on_newfile),
+                    (0, wx.WXK_TAB, self.on_tab),
+                    (0, wx.WXK_BACK, self.on_back),
+                    (0, wx.WXK_HOME, lambda event: self.CMD.goto_first_row()),
+                    (0, wx.WXK_END, lambda event: self.CMD.goto_last_row())
+                     ]
+            self.set_acc_key_tab(self, self.aTable)
+
+            self.map_commands = {
+                "HELP": self.on_help,
+                "RENAME": self.on_rename,
+                "VIEW": self.on_view,
+                "EDIT": self.on_edit,
+                "COPY": self.on_copy,
+                "MOVE": self.on_move,
+                "MKDIR": self.on_mkdir,
+                "DELETE": self.on_delete,
+                "SETUP": self.on_setup,
+                "NEWFILE": self.on_newfile,
+            }
+
+            self.CMD.GetTable().can_append=False
+            self.CMD.Bind(wx.EVT_CHAR, self.on_char)
+            self.CMD.DisableCellEditControl()
+            self.CMD.GetTable().proxy.set_address("../../"+bencode(self.panels_dir[0][2])+"/_/")
+            self.CMD.GetTable().refresh(0)
+
+            self.PANELS.body.Bind(wx.EVT_SET_FOCUS, self.on_panels_set_focus)
+
+            self.refresh_html()
+            Image.init()
+            self.edit_img_win = None
+            wx.grid.EVT_GRID_SELECT_CELL(self.CMD, self.on_select_cell)
+            self.PANELS.body.filter_url = self.filter_url
+            self.child_win = None
+
+            self.search_win = None
+            self.search_win_starting = False
+            self.search_buffor = []
+
+            self.waiting_proc = []
+
+            self._make_process_info_button()
+
+            self.GetParent().register_signal(self, "child_closed_with_ok")
+            self.GetParent().register_signal(self, "child_canceled")
+            self.tasks = []
+            self.msg.SetItemCount(len(self.msg.choices))
+
+        def filter_child_url(self, child, url):
+            try:
+                cmd = url.split('/form/')[-1].split("/")[0].upper()
+            except:
+                pass
+            if cmd in ('COPY', 'MOVE', 'MKDIR', 'RENAME', 'NEWFILE'):
+                ret = self.CMD.GetTable().run_cmd(cmd, ( bencode(self.panels_dir[self.tab][2]), bencode(child.dest.GetValue())), 1)
+            elif cmd in ('DELETE',):
+                ret = self.CMD.GetTable().run_cmd(cmd, ( bencode(self.panels_dir[self.tab][2]),), 1)
+            else:
+                return
+
+            def _exit():
+                self.any_parent_command('on_child_form_cancel')
+                self.child_win = None
+
+            wx.CallAfter(_exit)
+
+            if ret and 'process_id' in ret:
+                commander_form = self
+                def _refresh_panels():
+                    nonlocal commander_form, cmd
+                    if cmd in ("MOVE", "DELETE"):
+                        commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab][2])
+                    if cmd in ("MOVE", "COPY"):
+                        commander_form.panels_to_refresh.append(commander_form.panels_dir[commander_form.tab2][2])
+                    commander_form._refresh_panels()
+                self.connect_to_task(ret['process_id'], refresh_callback=_refresh_panels)
+            else:
+                self.panels_to_refresh.append(self.panels_dir[self.tab][2])
+                wx.CallAfter(self._refresh_panels)
+
+            return ret
+
+        def connect_to_task(self, process_id, refresh_callback=None):
+            form = self
+            app = wx.GetApp()
+            self.pbutton.Enable()
+            class callback:
+                def on_websocket_message(msg):
+                    nonlocal form
+                    msg2 = schjson.loads(msg)
+                    if msg2['status'] == 'event':
+                        form.msg.append_html(msg2['data'])
+                        form.msg.SetItemCount(len(self.msg.choices))
+                        form.msg.scroll_to_line(1000000)
+                    elif msg2['status'] == 'stop':
+                        self.CMD.GetTable().clear_state()
+                        if refresh_callback:
+                            refresh_callback()
+                        form.pbutton.Disable()
+                        form.msg.append_html("stop")
+                        form.msg.SetItemCount(len(self.msg.choices))
+                        form.msg.scroll_to_line(1000000)
+            url = '{{base_path}}schtasks/show_task_events/channel/'
+            self.create_websocket(url, callback)
+            self.websocket_send(url, {'id': process_id, })
+
+        def child_closed_with_ok(self, win):
+            self._refresh_panels()
+            self.child_win = None
+
+        def child_canceled(self, win):
+            self.child_win = None
+            self.search_win = None
+            self.search_win_starting = None
+            self.search_buffor = []
+            print("child_canceled", win, type(win))
+
+        def _make_process_info_button(self):
+            page = self.page.GetParent()
+            notebook = page.GetParent()
+            id = notebook.GetPageIndex(page)
+
+            b = bitmap_from_href("client://actions/media-record.png", 0)
+            image = wx.ImageFromBitmap(b)
+            image = image.Scale(16, 12, wx.IMAGE_QUALITY_HIGH)
+            bmp = wx.BitmapFromImage(image)
+
+            self.pbutton = platebtn.PlateButton(notebook, wx.ID_ANY, "", bmp, style=platebtn.PB_STYLE_NOBG|platebtn.PB_STYLE_SQUARE)
+            self.pbutton.SetWindowVariant(wx.WINDOW_VARIANT_SMALL)
+            self.pbutton.Disable()
+
+            notebook.AddControlToPage(id, self.pbutton)
+            self.pbutton.Bind(wx.EVT_BUTTON, self.on_pbutton)
+
+        def on_pbutton(self, event):
+            wx.GetApp().GetTopWindow().new_main_page("{{base_path}}tasks/form/TaskListForm/", "Task list", view_in="desktop")
+
+        def _transform_item(self, item):
+            from pytigon_lib.schfs.vfstools import norm_path
+            item2 = norm_path(item)
+            if len(item2)>32:
+                x = item2[-28:]
+                id = x.find('/')
+                if id>0:
+                    item2 = '...'+x[id+1:]
+                else:
+                    item2 = '...'+item[-27:]
+            return item2
+
+        def on_panels_set_focus(self, evt):
+            print("ON_SET_FOCUS")
+            self.CMD.SetFocus()
+
+        def get_item_dict(self, nr, item):
+            ret = {}
+            ret['id'] = str(nr)
+
+            bold = False
+            if nr == self.tab:
+                color = wx.GetApp().COLOUR_HIGHLIGHT
+            elif nr == self.tab2:
+                bold = True
+                color = wx.GetApp().COLOUR_BACKGROUND
+            else:
+                color = wx.GetApp().COLOUR_BACKGROUND
+
+            if bold:
+                ret['bold'] = '1'
+
+            ret['item_bg_color'] = color
+
+            txt = self._transform_item(item)
+            ret['txt'] = str(nr+1) + ". " + txt
+
+            if len(txt)>32:
+                ret['small'] = "1"
+
+            return ret
+
+        def refresh_html(self):
+            argv = {}
+            argv["body_bg_color"] = wx.GetApp().COLOUR_BACKGROUND
+
+            items = []
+            for i in range(2):
+                items.append(self.get_item_dict(i, self.panels_dir[i][2]) )
+            argv["items"] = items
+
+            self.PANELS.set_page(HGEN_1.gen(argv))
+
+        def filter_url(self, target, href):
+            if href in self.map_commands:
+                self.map_commands[href](None)
+                return True
+            else:
+                id = int(href)
+                if id != self.tab:
+                    self.tab2 = self.tab
+                    self.tab = id
+                    self.change_panel()
+                return True
+
+        def change_panel(self):
+            self.panels_state[self.tab2]=self.CMD.get_table_and_state()
+            if self.panels_state[self.tab]==None:
+                self.CMD.duplicate_table_and_state()
+                self.CMD.GetTable().proxy.set_address("../../"+bencode(self.panels_dir[self.tab][2])+"/_/")
+                self.panels_state[self.tab]=self.CMD.get_table_and_state()
+                self.CMD.GetTable().refresh(0)
+            else:
+                self.CMD.set_table_and_state(self.panels_state[self.tab])
+                if self.panels_dir[self.tab][3]:
+                    self.panels_dir[self.tab][3]=False
+                    self.CMD.GetTable().refresh(0)
+            self.refresh_html()
+
+        def on_search(self, key):
+            if (not self.search_win) or self.search_win_starting:
+                if key:
+                    self.search_buffor.append(key)
+                if not self.search_win_starting:
+                    self.search_win_starting = True
+                    def _callback(win):
+                        nonlocal self
+                        self.search_win.set_acc_key_tab(self.search_win.SEARCH, self.aTable[:-4])
+                        if hasattr(self.CMD, 'grid_aTable'):
+                            self.search_win.set_acc_key_tab(self.search_win.SEARCH, self.CMD.grid_aTable)
+                        for pos in self.search_buffor:
+                            win.start_key(pos)
+                        self.search_buffor = []
+
+                    win = self.new_child_page("^standard/tablefilter/tablefilter.html", title="Filter", callback = _callback)
+                    self.search_win = win.body
+                    self.search_win_starting = False
+            else:
+                if key:
+                    self.search_buffor.append(key)
+                for pos in self.search_buffor:
+                    win.start_key(pos)
+                self.search_buffor = []
+                # self.search_win.start_key(key)
+
+        def on_char(self, evt):
+            if evt.KeyCode >= ord('1') and evt.KeyCode <= ord('2'):
+                i = evt.KeyCode - ord('1')
+                if evt.ControlDown():
+                    if i != self.tab2:
+                        self.tab2 = i
+                        self.refresh_html()
+                else:
+                    if i != self.tab:
+                        self.tab2 = self.tab
+                        self.tab = i
+                        self.change_panel()
+            elif chr(evt.KeyCode).isascii() or chr(evt.KeyCode).isdigit():
+                self.search_buffor.append(evt.KeyCode)
+                wx.CallAfter(self.on_search, None)
+            else:
+                evt.Skip()
+
+        def _refresh_panels(self):
+            for panel in self.panels_dir:
+                if panel[2] in self.panels_to_refresh:
+                    panel[3]=True
+                    if self.tab+1 == panel[0]:
+                        self.CMD.GetTable().refresh(0)
+                        self.refresh_html()
+            self.panels_to_refresh=[]
+
+        def on_back(self, url):
+            if self.CMD.GetTable().key:
+                self.CMD.GetTable().filter("")
+            else:
+                try:
+                    row = self.CMD.GetTable().get_rec(0)
+                    if row[1][0]=='..':
+                        self.CMD.goto_first_row()
+                        self.CMD.action("edit")
+                except:
+                    pass
+
+        def table_url(self, url):
+            self.panels_dir[self.tab][2] = bdecode(url.split('/')[-3])
+            self.CMD.GetTable().clear_state()
+            self.CMD.GetTable().filter("")
+            self.CMD.SetGridCursor(0, 0)
+            self.CMD.MakeCellVisible(0, 0)
+            self.refresh_html()
+
+        def table_command(self, url):
+            self.on_edit(None)
+
+        def on_help(self, event):
+            pass
+
+
+        def get_name_and_ext(self, row=None):
+            if row==None:
+                row = self.CMD.GetGridCursorRow()
+            rec = self.CMD.GetTable().get_rec(row)
+            file_name = rec[0] #.decode('utf-8')
+            href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+file_name+"/"
+            href2 = self.CMD.GetTable().proxy.tabaddress+"/../../../../save/"+file_name+"/"
+            try:
+                name = bdecode(file_name).split('/')[-1]
+            except:
+                name = bdecode(rec[0]).split('/')[-1]
+            ext = name.split(".")
+            if len(ext)>1:
+                return (file_name, name, ext[-1])
+            else:
+                return (file_name, name, "")
+
+        def is_image(self, row=None):
+            id,name,ext = self.get_name_and_ext(row)
+            if '.'+ext.lower() in Image.EXTENSION:
+                return True
+            else:
+                return False
+
+        def exec_editor(self, row):
+            id, name, ext = self.get_name_and_ext(row)
+            href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
+            href2 = self.CMD.GetTable().proxy.tabaddress+"/../../../../save/"+id+"/"
+            if ('.'+ext.lower() in Image.EXTENSION or ext.lower() == 'svg') and ext.lower() != "pdf":
+                if self.edit_img_win:
+                    okno = self.edit_img_win
+                    okno.change_notebook_page_title(name)
+                else:
+                    okno = self.new_main_page("^standard/image_viewer/viewer.html", name, view_in="desktop")
+                    self.edit_img_win=okno
+            else:
+                if ext.lower() in ('txt', 'py', 'c', 'cpp', 'h', 'hpp', 'java', 'js', 'ihtml', 'html', 'imd', 'md', 'css', 'icss'):
+
+                    href_view = self.CMD.GetTable().proxy.tabaddress+"/../../../../view/"+id+"/"
+                    href_html = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_html/"+id+"/"
+                    # href_pdf = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_spdf/"+id+"/?print=1"
+                    href_pdf = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_pdf/"+id+"/"
+                    href_spdf = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_spdf/"+id+"/"
+                    href_docx = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_docx/"+id+"/"
+                    href_xlsx = self.CMD.GetTable().proxy.tabaddress+"/../../../../convert_xlsx/"+id+"/"
+
+                    p = {}
+                    if ext.lower() in ('ihtml', 'html', 'imd', 'md'):
+                        p['href_view'] = href_view
+
+                        p['href_pdf'] = href_pdf
+                        p['href_spdf'] = href_spdf
+                        p['href_docx'] = href_docx
+                        p['href_xlsx'] = href_xlsx
+                        if ext.lower() != 'html':
+                            p['href_html'] = href_html
+
+                    okno = self.new_main_page("^standard/editor/editor.html", name, parameters=p, view_in="desktop")
+                elif ext.lower() in ('pdf',):
+                    href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
+                    wx.GetApp().GetTopWindow().open_page(href)
+                    return
+                    #okno = self.new_main_page(href, name, view_in="desktop")
+                elif ext.lower() in ('spdf',):
+                    href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
+                    wx.GetApp().GetTopWindow().open_page(href)
+                    return
+                    #okno = self.new_main_page(href, name, view_in="desktop")
+                elif ext.lower() in ('docx', 'xlsx',):
+                    href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
+                    http = wx.GetApp().get_http_for_adr(href)
+                    response = http.get(self, href)
+                    wx.GetApp().GetTopWindow().show_document(response, name)
+                    return
+                else:
+                    href = self.CMD.GetTable().proxy.tabaddress+"/../../../../open/"+id+"/"
+                    http = wx.GetApp().get_http_for_adr(href)
+                    response = http.get(self, href)
+                    wx.GetApp().GetTopWindow().download_data(response, name)
+                    return
+
+            if hasattr(okno.body, "EDITOR"):
+                ed = okno.body.EDITOR
+                ed.load_from_url(href, ext)
+                if hasattr(ed, 'GotoPos'):
+                    ed.GotoPos(0)
+                if hasattr(ed, 'set_save_path'):
+                    okno.body.EDITOR.set_save_path(href2)
+                if hasattr(ed, 'set_view_path'):
+                    okno.body.EDITOR.set_view_path(href_view)
+
+        def on_edit(self, evt):
+            row = self.CMD.GetGridCursorRow()
+            return self.exec_editor(row)
+
+        def on_view(self, evt):
+            row = self.CMD.GetGridCursorRow()
+            if row==None:
+                row = self.CMD.GetGridCursorRow()
+            id, name, ext = self.get_name_and_ext(row)
+
+            rec = self.CMD.GetTable().get_rec(row)
+            file_name = bdecode(rec[0])
+            okno = self.new_main_page("file://"+file_name, name, view_in="desktop")
+
+
+        def _on_base(self, event, command):
+            self.child_win = self.new_child_page("{{base_path}}schcommander/form/%s/" % command, parameters={'dir': self.panels_dir[self.tab2][2], })
+
+        def on_rename(self, event):
+            self._on_base(event, "Rename")
+
+        def on_copy(self, event):
+            self._on_base(event, "Copy")
+
+        def on_move(self, event):
+            self._on_base(event, "Move")
+
+        def on_newfile(self, event):
+            self._on_base(event, "NewFile")
+
+        def on_mkdir(self, event):
+            self._on_base(event, "MkDir")
+
+        def on_delete(self, event):
+            self._on_base(event, "Delete")
+
+        def on_setup(self, event):
+            win = self.new_child_page("{{base_path}}schcommander/form/Setup/", parameters={'dir': ";".join([ pos[2] for pos in self.panels_dir]), })
+
+        def on_user_menu(self, event):
+            pass
+
+        def on_tab(self, evt):
+            i = self.tab2
+            self.tab2 = self.tab
+            self.tab =i
+            self.change_panel()
+
+        def on_select_cell(self, evt):
+            row = evt.GetRow()
+            if self.edit_img_win and self.is_image(row):
+                self.exec_editor(row)
+            evt.Skip()
+
+
+</script>
+{% endblock %}
+{% block form_title %}
+        Commander
+{% endblock %}
+{% block content %}
+        <table width="100%">
+                <tr>
+                        <td>
+                                <CTRL-HTML name="PANELS" width="100%" height="42"></CTRL-HTML>
+                        </td>
+                </tr>
+                <tr>
+                        <td>
+                                {% widget id='commander_new' class='menu' title='New' style='xtoolbar' %}
+                                        <li><a class="btn btn-primary btn-sm" href="NEWFILE">New file</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="MKDIR">New directory</a></li>
+                                {% endwidget %}
+                                {% widget id='commander_operations' class='menu' title='Operations' style='xtoolbar' %}
+                                        <li><a class="btn btn-primary btn-sm" href="VIEW">View</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="EDIT">Edit</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="RENAME">Rename</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="COPY">Copy</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="MOVE">Move</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="DELETE">Delete</a></li>
+                                {% endwidget %}
+                                {% widget id='commander_other' class='menu' title='Other' style='xtoolbar' %}
+                                        <li><a class="btn btn-primary btn-sm" href="SETUP">Setup</a></li>
+                                        <li><a class="btn btn-primary btn-sm" href="HELP">Help</a></li>
+                                {% endwidget %}
+                        </td>
+                </tr>
+                <tr>
+                        <td>
+                                <CTRL-GRID name="CMD" width="100%" height="100%-48" READONLY="1" src="{{base_path}}schcommander/grid/_/_/" keymap="standard">
+                                </CTRL-GRID>
+                        </td>
+                </tr>
+                <tr>
+                        <td>
+                                <ctrl-htmllistbox name="msg" width="100%" height="45"></ctrl-htmllistbox>
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+

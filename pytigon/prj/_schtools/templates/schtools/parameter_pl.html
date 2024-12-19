@@ -1,0 +1,41 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {% block.super %}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New parameter" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Typ parametru</th>
+        <th>Podtyp parametru</th>
+        <th>Klucz</th>
+        <th>
+        Wartość
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{% object.type %}</td>
+        <td>{% object.subtype %}</td>
+        <td>{% object.key %}</td>
+        <td>
+        {% object.value %}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                "type","subtype","key","value"
+        {% endform %}
+{% endblock %}
+

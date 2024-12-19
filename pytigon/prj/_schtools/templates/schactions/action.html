@@ -1,0 +1,50 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block id_extra %}
+        {{ block.super }}
+        {% row_related_list "schworkflow/WorkflowItem" title="Workflow items" filter="actions__Action__{{object.id}}__default" icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="actions__" %}
+        {% row_related_list "schattachements/Attachement" title="Attachements" filter="actions__Action__{{object.id}}__default" icon_name="fa fa-lg fa-paperclip" tag_class="+class='btn-info'" version="actions__" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Type</th>
+        <th>Description</th>
+        <th>Start date</th>
+        <th>Deadline</th>
+        <th>Email - action owner</th>
+        <th>Email - action done</th>
+        <th>
+        Email - deadline exceeded
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.action_type.name }}</td>
+        <td>{{ object.description }}</td>
+        <td>{{ object.start_date | isoformat }}</td>
+        <td>{{ object.deadline | isoformat }}</td>
+        <td>{{ object.email_action_owner }}</td>
+        <td>{{ object.email_action_done }}</td>
+        <td>
+        {{ object.email_deadline_exceeded }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                ?:edit
+                ?:delete
+                field_edit/info,Additional info
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                action_type,application,table,group,parent_id,description,deadline,email_action_owner,email_action_done,email_deadline_exceeded
+        {% endform %}
+{% endblock %}
+

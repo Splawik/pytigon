@@ -1,0 +1,39 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New action type" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>
+        Nazwa
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>
+        {{ object.name }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+                field_list/action_set,Actions
+                field_edit/script_for_new_item,Script for new action
+                field_edit/script_for_close_item,Script for close action
+                field_edit/script_for_email_text,Script for get email action
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                name
+        {% endform %}
+{% endblock %}
+

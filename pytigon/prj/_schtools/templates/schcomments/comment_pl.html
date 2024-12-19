@@ -1,0 +1,42 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "Nowy komentarz" action="new_row/{{filter}}" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Komentarz</th>
+        <th>Nadawca</th>
+        <th>Odbiorca</th>
+        <th>Odbiorca</th>
+        <th>
+        Czas
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.comment }}</td>
+        <td>{{ object.sender }}</td>
+        <td>{{ object.recipient }}</td>
+        <td>{{ object.recipients }}</td>
+        <td>
+        {{ object.time|isoformat }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                ?:edit
+                ?:delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

@@ -1,0 +1,41 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "Nowy typ przepływu pracy" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>
+        Nazwa
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>
+        {{ object.name }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                ?:edit
+                field_list/workflowitem_set,Pozycje przepływu pracy
+                field_edit/script_for_new_item,Skrypt dla nowych pozycji
+                field_edit/script_for_accept_item,Skrypt dla akceptacji pozycji
+                field_edit/script_for_reject_item,Skrypt dla odrzucenia pozycji
+                field_edit/script_for_refresh_queue,Skrypt dla odświeżenia kolejki
+                field_edit/script_for_handle_event,Skypt dla przechwycenia zdarzenia odśwież
+                ?:delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                name
+        {% endform %}
+{% endblock %}
+
