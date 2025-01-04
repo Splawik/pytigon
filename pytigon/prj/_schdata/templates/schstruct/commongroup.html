@@ -1,0 +1,67 @@
+{% extends "forms/tree.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with form_width=800 form_height=600 table_type='scrolled' title="Common Groups" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions_new_row %}
+        <div class="tr d-inline">
+                {% with object_list.model|args:parent_pk|call:"get_group_types" as tab %}
+                        {% if tab %}
+                                New:
+                                {% for pos in tab %}
+                                        {% new_row_inline pos.description "" "" "" "" table_path|append_str:"../../new_group/"|append_str:pos.name|append_str:"/"|append_str:parent_pk|append_str:"/?after_close=refresh" %}
+                                {% endfor %}
+                        {% endif %}
+                {% endwith %}
+        </div>
+{% endblock %}
+{% block list_row_header %}
+        <th>
+        Title
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>
+        {{object.to_str|safe }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% if object.get_def.action_template %}
+                {% subtemplate object.get_def.get_action_template %}
+          {% else %}
+                {% row_actions %}
+                        edit-inline,Update,,,,,{{base_path}}schstruct/table/CommonGroup/{id}/edit__group/
+                        pdf
+                        odf
+                        field_edit/data,Data,data
+                        delete
+                {% endrow_actions %}
+        {% endif %}
+{% endblock %}
+{% block id_extra %}
+        {{ block.super }}
+        {% if object.get_def.info_template %}
+                {% subtemplate object.get_def.get_info_template %}
+        {% endif %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

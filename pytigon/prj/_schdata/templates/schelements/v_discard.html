@@ -1,0 +1,36 @@
+{% extends 'forms/form.html' %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_form=True form_edit=True %}
+                {% if errors %}
+                        <meta name="RETURN" content="$$RETURN_HTML_ERROR" />
+                {% endif %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block form_action %}
+        {{request.path}}?x1={{ action_name }}
+{% endblock %}
+{% block row_edit_form %}
+        {% if errors %}
+                {% for error in errors %}
+                        <div class="alert alert-secondary" role="alert">
+                                {{ error|safe }}
+                        </div>
+                {% endfor %}
+          {% else %}
+                {% if description %}
+                        {{ description|safe }}
+                  {% else %}
+                        <h3>Are you sure you want to discard the document? <br></h3>
+                        <h4>You discard the status: {{ action_name }}</h4>
+                {% endif %}
+        {% endif %}
+        {% if form %}
+                <br />
+                {% form %}
+                {% endform %}
+        {% endif %}
+{% endblock %}
+

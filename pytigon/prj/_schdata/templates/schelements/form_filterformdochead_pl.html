@@ -1,0 +1,26 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_title_bar=1 title='<<form_title>>' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block user_header %}
+        <th><<col_name1>></th>
+        <th><<col_name2>></th>
+        <th>
+        <<col_name3>>
+        </th>
+{% endblock %}
+{% block user_row %}
+        <tr>
+                <td> {{object.0}}</td>
+                <td align="right"> {{object.1|floatnullformat}}</td>
+                <td align="right">
+                 {{object.2|to_int}}
+                </td>
+        </tr>
+{% endblock %}
+

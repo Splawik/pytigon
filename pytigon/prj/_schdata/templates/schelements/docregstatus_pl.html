@@ -1,0 +1,72 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with table_type='scrolled' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New status" %}
+        <ptig-paste href="{{table_path_and_filter}}form/table_action/">
+        </ptig-paste>
+{% endblock %}
+{% block list_row_header %}
+        <th>Order</th>
+        <th>Name</th>
+        <th>
+        Description
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.order}}</td>
+        <td>{{object.name}}</td>
+        <td>
+        {{object.description}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% if not forloop.first %}
+                {% row_actions %}
+                doc_reg_status_up,Move up,fa fa-caret-square-o-down
+                {% endrow_actions %}
+        {% endif %}
+        {% if not forloop.last %}
+                {% row_actions %}
+                doc_reg_status_down,Move down,fa fa-caret-square-o-down
+                {% endrow_actions %}
+        {% endif %}
+        {% row_actions %}
+                edit
+                field_edit/accept_proc,Accept procedure,accept_proc
+                field_edit/undo_proc,Undo procedure,undo_proc
+                field_edit/can_set_proc,Check if status can be set
+                field_edit/can_undo_proc,Check if status can be removed
+                field_edit/accept_form,Form for acceptance process
+                field_edit/undo_form,Form for acceptance withdrawal process
+                field_edit/for_accept_template,Template for acceptance action
+                field_edit/for_undo_template,Template for undo action
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

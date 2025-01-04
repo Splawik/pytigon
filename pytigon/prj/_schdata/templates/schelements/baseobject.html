@@ -1,0 +1,68 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "<<new_row_title>>" %}
+        {% list_action "<<action>>" "<<action_description>>" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Application</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Declaration</th>
+        <th>Template source</th>
+        <th>Template</th>
+        <th>Convert fields to html</th>
+        <th>Save function</th>
+        <th>Load function</th>
+        <th>Object to str function</th>
+        <th>Action template</th>
+        <th>
+        Info template
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.app }}</td>
+        <td>{{ object.name }}</td>
+        <td>{{ object.description }}</td>
+        <td>{{ object.declaration }}</td>
+        <td>{{ object.template_src }}</td>
+        <td>{{ object.template }}</td>
+        <td>{{ object.to_html_rec }}</td>
+        <td>{{ object.save_fun }}</td>
+        <td>{{ object.load_fun }}</td>
+        <td>{{ object.to_str_fun }}</td>
+        <td>{{ object.action_template }}</td>
+        <td>
+        {{ object.info_template }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+                field_edit/declaration,<description>
+                field_edit/template_src,<description>
+                field_edit/template,<description>
+                field_edit/to_html_rec,<description>
+                field_edit/save_fun,<description>
+                field_edit/load_fun,<description>
+                field_edit/to_str_fun,<description>
+                field_edit/action_template,<description>
+                field_edit/info_template,<description>
+                <<action_name>>,<<description>>
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                app,name,description,declaration,template_src,template,to_html_rec,save_fun,load_fun,to_str_fun,action_template,info_template
+        {% endform %}
+{% endblock %}
+

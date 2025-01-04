@@ -1,0 +1,74 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load contenttypes %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with table_type='simple' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_header_first_row %}
+{% endblock %}
+{% block list_content_header_second_row %}
+{% endblock %}
+{% block list_content_actions %}
+        {% with parent.doc_type_parent.parent.name|lower as reg_name %}
+                {% with reg_name|append_str:"docitem" as doc_name %}
+                        {% if doc_name|table_exists %}
+                                {% with "new_row/"|append_str:reg_name as action %}
+                                        {% new_row "New document item" action=action %}
+                                {% endwith %}
+                          {% else %}
+                                {% new_row "New document item" %}
+                        {% endif %}
+                {% endwith %}
+        {% endwith %}
+{% endblock %}
+{% block list_row_header %}
+        <th>order</th>
+        <th>description</th>
+        <th>item</th>
+        <th>
+        quantity
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.order}}</td>
+        <td>{{object.description}}</td>
+        <td>{{object.item}}</td>
+        <td>
+        {{object.qty}}
+        </td>
+{% endblock %}
+{% block id_extra %}
+        {% row_actions %}
+                field_list-parent/accountoperation_set,Account operations,fa fa-lg fa-plus/fa fa-list-ol,url=+?fragment=page
+        {% endrow_actions %}
+        {{ block.super }}
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

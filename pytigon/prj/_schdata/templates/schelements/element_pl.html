@@ -1,0 +1,146 @@
+{% extends "forms/tree.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "name1": "image_path1",
+                    "name2": "image_path2",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block on_dialog_load  %}
+    function show_hide(typ){
+        if (typ=='S'){
+            $('label[for|="id_grand_parent"]').show();
+            $('label[for|="id_description"]').show();
+            $('select[name^="grand_parent"]').show();
+            $('input[name="description"]').show();
+            $('#id_key').show()
+        }
+        else{
+            $('label[for|="id_grand_parent"]').hide();
+            $('label[for|="id_description"]').hide();
+            $('select[name^="grand_parent"]').hide();
+            $('input[name="description"]').hide();
+            $('#id_key').hide()
+        }
+    }
+    $('#id_type').change(
+        function(){
+            var typ;
+            typ = $(this)[0].options[$(this)[0].selectedIndex].value;
+            show_hide(typ);
+            return false
+        }
+    );
+    var id_type=$('#id_type')[0].options[$('#id_Typ')[0].selectedIndex].value;
+    show_hide(id_type);
+    if(id_type!=""){
+        $('label[for|="id_type"]').hide();
+        $('select[name="type"]').hide()
+    }
+
+{% endblock %}
+{% block all %}
+        {% with table_type='datatable' title="Elements" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions_new_row %}
+        {% if not readonly %}
+                {% if parent_pk > 0 %}
+                        {% with buttons=parent.get_new_buttons %}
+                                {% if buttons %}
+                                        {% for button in buttons %}
+                                                {% new_row "new "|append_str:button.title url=base_path|append_str:button.app|append_str:"/table/"|append_str:button.table|append_str:'/%d/this/'|format:parent_pk|append_str:button.type|append_str:"/add/" %}
+                                        {% endfor %}
+                                  {% else %}
+                                        {% if parent_pk %}
+                                                {% new_row "New element" url=table_path|append_str:'%d/this/-/add/'|format:parent_pk %}
+                                        {% endif %}
+                                {% endif %}
+                        {% endwith %}
+                  {% else %}
+                        {% with buttons=model.get_root_new_buttons %}
+                                {% if buttons %}
+                                        {% for button in buttons %}
+                                                {% new_row "new "|append_str:button.title url=base_path|append_str:button.app|append_str:"/table/"|append_str:button.table|append_str:'/0/this/'|append_str:button.type|append_str:"/add/" %}
+                                        {% endfor %}
+                                  {% else %}
+                                        {% new_row "New element" url=table_path|append_str:'0/this/-/add/' %}
+                                {% endif %}
+                        {% endwith %}
+                {% endif %}
+        {% endif %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Type</th>
+        <th>Code</th>
+        <th>
+        Name
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>
+                <img src="{{ STATIC_URL }}icons/struct/elm_{{object.type}}.png"></img>
+        </td>
+        <td>{{object.code}}</td>
+        <td>
+        {{object.name}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% comment %}
+                {% if object.call__can_change|call_with:user and perms.can_change|call_with:object %}
+                        {% row_actions %}
+                                edit
+                        {% endrow_actions %}
+                {% endif %}
+                {% if object.call__can_delete|call_with:user and perms.can_delete|call_with:object %}
+                        {% row_actions %}
+                                delete
+                        {% endrow_actions %}
+                {% endif %}
+        {% endcomment %}
+        {% if object.call__can_change %}
+                {% row_actions %}
+                        edit
+                {% endrow_actions %}
+        {% endif %}
+        {% if object.call__can_delete %}
+                {% row_actions %}
+                        delete
+                {% endrow_actions %}
+        {% endif %}
+{% endblock %}
+{% block row_edit %}
+        {% if form_add %}
+                {% form %}
+                        parent:!, type
+                {% endform %}
+          {% else %}
+                {% form %}
+                        parent,type:!
+                {% endform %}
+        {% endif %}
+        {% form %}
+                "code", "name", "can_delete_permission", "can_add_permission", "can_change_permission", "can_delete_permission"
+        {% endform %}
+        {% if not object.type or object.type == 'S' %}
+                {% form %}
+                        "grand_parent1", "grand_parent2", "grand_parent3", "grand_parent4"
+                {% endform %}
+        {% endif %}
+        {% form %}
+                "description"
+        {% endform %}
+{% endblock %}
+

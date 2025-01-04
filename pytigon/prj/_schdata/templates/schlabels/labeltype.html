@@ -1,0 +1,37 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New label type" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+        <th>
+        Title
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.name }}</td>
+        <td>
+        {{ object.title }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                name,title
+        {% endform %}
+{% endblock %}
+

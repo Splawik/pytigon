@@ -1,0 +1,72 @@
+{% extends "forms/user_tab.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with show_title_bar=1 title='Instalation' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_header %}
+        {% if status != 2 %}
+                {{ block.super }}
+        {% endif %}
+{% endblock %}
+{% block list_content_header_first_row %}
+        {% if status == 1 %}
+                <div class="row">
+                        <div class="jumbotron">
+                                <p>{{readmedata|markdown|safe}}</p>
+                        </div>
+                </div>
+                <div class="row">
+                        <div class="card">
+                                <div class="card-header">License</div>
+                                <div class="card-block pre-scrollable" style="padding:0 1rem;">
+                                        <p class="card-text">{{licensedata|markdown|safe}}</p>
+                                </div>
+                        </div>
+                </div>
+                <br>
+                </br>
+        {% endif %}
+{% endblock %}
+{% block list_content_header_third_row %}
+        <br>
+        </br>
+{% endblock %}
+{% block form_table_filter %}
+        {% if status %}
+                {% if status == 1 %}
+                        <input type="hidden" name="status" id="id_status" value="1" />
+                        {% inline_form %}
+                                accept_license
+                        {% endinline_form %}
+                {% endif %}
+          {% else %}
+                <div class="m-3">
+                        <input type="hidden" name="status" id="id_status" value="" />
+                        {% inline_form %}
+                                ptig
+                        {% endinline_form %}
+                </div>
+        {% endif %}
+{% endblock %}
+{% block form_content_button %}
+        <button type="submit" value="Next" class="btn btn-fab btn-raised btn-info ladda-button refresh-button" data-style="slide-left" title="Next">
+                <span class="fa fa-arrow-right">
+                </span>
+        </button>
+{% endblock %}
+{% block user_header %}
+        <th>
+        Instalation report
+        </th>
+{% endblock %}
+{% block user_row %}
+        <tr>
+                <td>
+                 {{object}}
+                </td>
+        </tr>
+{% endblock %}
+

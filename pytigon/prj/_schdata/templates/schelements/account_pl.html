@@ -1,0 +1,109 @@
+{% extends "forms/tree.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "name1": "image_path1",
+                    "name2": "image_path2",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block on_dialog_load  %}
+    function show_hide(typ){
+        if (typ=='S'){
+            $('label[for|="id_grand_parent"]').show();
+            $('label[for|="id_description"]').show();
+            $('select[name^="grand_parent"]').show();
+            $('input[name="description"]').show();
+            $('#id_key').show()
+        }
+        else{
+            $('label[for|="id_grand_parent"]').hide();
+            $('label[for|="id_description"]').hide();
+            $('select[name^="grand_parent"]').hide();
+            $('input[name="description"]').hide();
+            $('#id_key').hide()
+        }
+    }
+    $('#id_type').change(
+        function(){
+            var typ;
+            typ = $(this)[0].options[$(this)[0].selectedIndex].value;
+            show_hide(typ);
+            return false
+        }
+    );
+    var id_type=$('#id_type')[0].options[$('#id_Typ')[0].selectedIndex].value;
+    show_hide(id_type);
+    if(id_type!=""){
+        $('label[for|="id_type"]').hide();
+        $('select[name="type"]').hide()
+    }
+
+{% endblock %}
+{% block all %}
+        {% with table_type='datatable' title="Accounts" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block id_extra_tree %}
+        {% view_row object object.name %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Description</th>
+        <th>Type 1</th>
+        <th>Type 2</th>
+        <th>Classifier 1</th>
+        <th>Classifier 2</th>
+        <th>
+        Classifier 3
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.description}}</td>
+        <td>{{object.type1}}</td>
+        <td>{{object.type2}}</td>
+        <td>{{object.root_classifier1|none_to_empty}}</td>
+        <td>{{object.root_classifier2|none_to_empty}}</td>
+        <td>
+        {{object.root_classifier3|none_to_empty}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% if form_add %}
+                {% form %}
+                        parent:!
+                {% endform %}
+          {% else %}
+                {% form %}
+                        parent
+                {% endform %}
+        {% endif %}
+        {% if object.parent %}
+                {% form %}
+                        type2:!
+                {% endform %}
+          {% else %}
+                {% form %}
+                        type2
+                {% endform %}
+        {% endif %}
+        {% form %}
+                name,description,correctness_rule,root_classifier1,root_classifier2,root_classifier3
+        {% endform %}
+{% endblock %}
+

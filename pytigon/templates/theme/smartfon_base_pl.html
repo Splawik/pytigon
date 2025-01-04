@@ -52,7 +52,7 @@
                                                 {% if user and user.get_username != 'auto' %}
                                                         <a class="dropdown-item system_menu" href="={{base_path}}schsys/do_logout/" title="Logout" target="_top">Logout</a>
                                                 {% endif %}
-                                                {% if request.user|user_can_change_password %}
+                                                {% if settings.CAN_CHANGE_PASSWORD and request.user|user_can_change_password %}
                                                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#change_passwd">Change password</a>
                                                 {% endif %}
                                         {% endif %}
@@ -66,7 +66,7 @@
           {% else %}
                 {% if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN %}
                         <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="{{base_path}}schsys/login/" title="Login">
+                                <a class="nav-link dropdown-toggle" href="{{base_path}}{% if settings.ALLAUTH and standard_web_browser %}accounts/login/{% else %}schsys/login/{% endif %}" title="Login">
                                         {% icon "fa-sing-in fa-lg" %}
                                         Login
                                 </a>

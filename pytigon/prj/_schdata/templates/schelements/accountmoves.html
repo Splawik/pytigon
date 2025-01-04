@@ -1,0 +1,67 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "<<name1>>": "<<image_path1>>",
+                    "<<name2>>": "<<image_path2>>",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with form_width=<<dx>> form_height=<<dy>> %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "<<new_row_title>>" %}
+        {% action_table "<<action>>" "<<action_title>>" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>
+        <<col_name>>
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>
+        {{object.<<object_name>>}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% if not forloop.first %}
+                {% row_actions %}
+                 field_up,Move up
+                {% endrow_actions %}
+        {% endif %}
+        {% if not forloop.last %}
+                {% row_actions %}
+                field_down,Move down
+                {% endrow_actions %}
+        {% endif %}
+        {% row_actions %}
+                edit
+                field_edit/<<field_name>>,<<name>>,<<field_id>>
+                field_list/<<child_name>>_set,<<field_title>>,<<field_id>>
+                <<action_name>>,<<action_title>>
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+        {% form %}
+                        "<<field_1>>", "<<field_2>>"
+        {% endform %}
+{% endblock %}
+

@@ -1,0 +1,60 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "Account state" %}
+        {% list_action "refresh_account_states" "Refresh account states" target="refresh_frame" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+        <th>Account name</th>
+        <th>Period</th>
+        <th data-align="right">debit</th>
+        <th data-align="right">credit</th>
+        <th data-align="right">
+        balance
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object}}</td>
+        <td>{{object.parent}}</td>
+        <td>{{object.period|none_to_empty}}</td>
+        <td>{{object.debit}}</td>
+        <td>{{object.credit}}</td>
+        <td>
+                <strong>
+                {{object.credit|fsubtract:object.debit}}
+                </strong>
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

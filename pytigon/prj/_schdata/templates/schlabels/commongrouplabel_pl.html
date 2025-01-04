@@ -1,0 +1,30 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Group</th>
+        <th>
+        Type
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{ object.parent.name }}</td>
+        <td>
+        {{ object.type.name }}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                delete
+        {% endrow_actions %}
+{% endblock %}
+

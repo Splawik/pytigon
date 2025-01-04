@@ -1,0 +1,144 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% if vtype == 'sublist' %}
+                {% with table_type='datatable' %}
+                        {{ block.super }}
+                {% endwith %}
+          {% else %}
+                {% with table_type='datatable' table_subtype='table_with_details' table_details_height="40vh" %}
+                        {{ block.super }}
+                {% endwith %}
+        {% endif %}
+{% endblock %}
+{% block list_content_header %}
+      {% if vtype != 'sublist' %}
+              {{ block.super }}
+      {% endif %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% if vtype != 'sublist' %}
+                {% with object_list.model|args:filter|call:"get_documents_for_reg" as doctypes %}
+                        {% for item in doctypes %}
+                                {% new_row "New document: "|append_str:item.name action="new_row/"|append_str:item.name url="+?after_close=refresh" %}
+                        {% endfor %}
+                {% endwith %}
+        {% endif %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Register</th>
+        <th>Target</th>
+        <th>Name</th>
+        <th>Number</th>
+        <th>Description</th>
+        <th>Date</th>
+        <th>
+        Status
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.doc_type_parent.name}}</td>
+        <td>{{object.org_chart_parent.name}}</td>
+        <td>{{object.name}}</td>
+        <td>{{object.number}}</td>
+        <td>{{object.description}}</td>
+        <td>{{object.date|isoformat}}</td>
+        <td>
+        {{object.status}}
+        </td>
+{% endblock %}
+{% block id_extra %}
+        {% row_actions %}
+                field_list/docitem_set,Document items,fa fa-lg fa-plus/fa fa-list-ol
+        {% endrow_actions %}
+        {% row_related_list "schlog/Log" title="Operation log" filter="schelements__DocHead__{{object.id}}__default" icon_name="fa fa-lg fa-street-view" tag_class="+class='btn-info'" version="schelements__" %}
+        {{ block.super }}
+{% endblock %}
+{% block list_row_actions %}
+        {% if object.status == "" or object.status == 'draft' %}
+                {% row_actions %}
+                        edit-inline
+                        delete
+                {% endrow_actions %}
+        {% endif %}
+        {% with object|args:request|call:"get_visible_statuses" as vs %}
+                {% if vs %}
+                        {% for row in vs reversed %}
+                                {% if row.order > object.get_reg_status.order %}
+                                        {% if row.for_accept_template %}
+                                                {% subtemplate row.for_accept_template %}
+                                          {% else %}
+                                                {% action "approve_status"|append_str:"/"|append_str:row.name row.description row.icon|first_elem target=row.get_accept_target url=table_path|append_str:"{id}/action/approve/" %}
+                                        {% endif %}
+                                {% endif %}
+                        {% endfor %}
+                {% endif %}
+        {% endwith %}
+        {% with object|args:request|call:"get_visible_statuses" as vs %}
+                {% if vs %}
+                        {% for row in vs reversed %}
+                                {% if row.order < object.get_reg_status.order %}
+                                        {% if row.for_undo_template %}
+                                                {% subtemplate row.for_undo_template %}
+                                          {% else %}
+                                                {% action "decline_status"|append_str:"/"|append_str:row.name "Back to status:"|append_str:row.name row.icon|last_elem target=row.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
+                                        {% endif %}
+                                {% endif %}
+                        {% endfor %}
+                {% endif %}
+        {% endwith %}
+        {% comment %}
+                {% if object|args:request|call:"status_can_be_undo" %}
+                        {% action "decline_status"|append_str:"/"|append_str:object.status "Discard status: "|append_str:object.status "fa fa-undo" target=object.get_undo_target tag_class="+btn-danger" url=table_path|append_str:"{id}/action/discard/" %}
+                {% endif %}
+        {% endcomment %}
+{% endblock %}
+{% block list_page_footer %}
+        {% if vtype != 'sublist' %}
+                {% row_details %}
+                        *Items:schelements/table/DocHead/[[table_row_pk]]/docitem_set/-/form/sublist/
+                        (schelements)Sources:schelements/table/DocHead//_parents_[[table_row_pk]]/form/sublist/
+                        (schelements)Dependence:schelements/table/DocHead//_children_[[table_row_pk]]/form/sublist/
+                        (schlog)Logs:schlog/table/Log//schelements__DocHead__[[table_row_pk]]__default/form__schelements__/sublist/
+                        (schattachements)Attachements:schattachements/table/Attachement//schelements__DocHead__[[table_row_pk]]__default/form__schattachements__/sublist/
+                        (schworkflow)Acceptances:schworkflow/table/WorkflowItem//schelements__DocHead__[[table_row_pk]]__default/form__schworkflow__/sublist/
+                        (schcomments)Comments:schcomments/table/Comment//schelements__DocHead__[[table_row_pk]]__default/form__schcomments__/sublist/
+                {% endrow_details %}
+        {% endif %}
+{% endblock %}
+{% block dialog_type %}
+        modal-xl
+{% endblock %}
+{% block row_edit %}
+        {% block dochead_edit %}
+                {% form "^/6" %}
+                {% endform %}
+        {% endblock %}
+{% endblock %}
+{% block row_edit_footer %}
+        {% if object.id %}
+                {% block docitem_list %}
+                        <hr style="height:10px;background:gray;border:0px;"></hr>
+                        {% frame table_path|append_str:object.id|append_str:"/docitem_set/-/form/sublist/?only_content=1" "200px" %}
+                {% endblock %}
+          {% else %}
+                <button type="button" class="btn btn-warning" target="refresh_frame" rettype="RETURN_HTML" data-region="page-content" get-param="redirect='1'" style="width:100%"> << Expand >> </button>
+        {% endif %}
+{% endblock %}
+
