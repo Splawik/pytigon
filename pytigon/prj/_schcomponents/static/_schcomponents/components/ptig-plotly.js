@@ -1,10 +1,10 @@
-var BASE_PATH, BASE_PLOTLY_PATH, TAG, TEMPLATE, comp, from_dict, init, on_plotly, process_response_data, stub5_context, stub6_err, transform_event_data;
+var BASE_PATH, BASE_PLOTLY_PATH, TAG, TEMPLATE, attributeChangedCallback, comp, from_dict, init, on_plotly, process_response_data, stub5_context, stub6_err, transform_event_data;
 TAG = "ptig-plotly";
 TEMPLATE = '        <div name=\"plotlydiv\" data-bind:style-width:width;style-height:height></div>\n' +
     '\n' +
     '';
 BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins";
-BASE_PLOTLY_PATH = window.BASE_PATH + "schdoc/plot_service/";
+BASE_PLOTLY_PATH = window.BASE_PATH + "schchart/plot_service/";
 from_dict = function flx_from_dict (d, name) {
     if (_pyfunc_op_contains(name, d)) {
         return d[name];
@@ -106,7 +106,7 @@ process_response_data = function flx_process_response_data (component, data) {
 stub5_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/plotly/plotly.min.js", BASE_PATH + "/d3/d3.v3.min.js"], [BASE_PATH + "/plotly/plotly.css"]));
 comp = stub5_context.__enter__();
 try {
-    comp.options["attributes"] = ({width: null, height: null});
+    comp.options["attributes"] = ({width: null, height: null, param: null});
     comp.options["template"] = TEMPLATE;
     on_plotly = function flx_on_plotly (component, data) {
         if ((_pyfunc_op_contains("destination", data) && ((_pyfunc_op_equals(data["destination"], (("plotly/" + component.getAttribute("plotly-name")) + "/")))))) {
@@ -124,7 +124,7 @@ try {
             plotly_name = component.getAttribute("plotly-name");
             url = _pyfunc_op_add(BASE_PLOTLY_PATH, plotly_name) + "/";
             if (_pyfunc_truthy(component.hasAttribute("param"))) {
-                url = _pyfunc_op_add(url, "?param=" + component.getAttribute(param));
+                url = _pyfunc_op_add(url, "?param=" + component.getAttribute("param"));
             }
         } else {
             url = null;
@@ -162,7 +162,7 @@ try {
                         make_callback = (function flx_make_callback (event_name) {
                             var _callback;
                             _callback = (function flx__callback (data2) {
-                                var _on_server_response;
+                                var _on_server_response, plotly_name, url;
                                 data2["event_name"] = event_name;
                                 _on_server_response = (function flx__on_server_response (server_data) {
                                     server_data["event_name"] = event_name;
@@ -170,7 +170,17 @@ try {
                                     return null;
                                 }).bind(this);
 
-                                ajax_json(url, ({name: component.getAttribute("plotly-name"), action: "on_event", event_name: event_name, data: transform_event_data(data2)}), _on_server_response);
+                                if (_pyfunc_truthy(component.hasAttribute("plotly-name"))) {
+                                    plotly_name = component.getAttribute("plotly-name");
+                                    url = _pyfunc_op_add(BASE_PLOTLY_PATH, plotly_name) + "/";
+                                    if (_pyfunc_truthy(component.hasAttribute("param"))) {
+                                        url = _pyfunc_op_add(url, "?param=" + component.getAttribute("param"));
+                                    }
+                                } else {
+                                    url = null;
+                                    plotly_name = "";
+                                }
+                                ajax_json(url, ({name: plotly_name, action: "on_event", event_name: event_name, data: transform_event_data(data2)}), _on_server_response);
                                 return null;
                             }).bind(this);
 
@@ -195,6 +205,7 @@ try {
             return null;
         }).bind(this);
 
+        component.on_data_loaded = on_data_loaded;
         on_layout_loaded = (function flx_on_layout_loaded (_data) {
             layout = _data;
             if ((((!_pyfunc_op_equals(data, null))) && ((!_pyfunc_op_equals(config, null))))) {
@@ -246,6 +257,18 @@ try {
     };
 
     comp.options["init"] = init;
+    attributeChangedCallback = function flx_attributeChangedCallback (component, name, old_val, new_val) {
+        var plotly_name, url;
+        if ((_pyfunc_op_equals(name, "param") && ((!_pyfunc_op_equals(old_val, null))))) {
+            plotly_name = component.getAttribute("plotly-name");
+            url = _pyfunc_op_add(BASE_PLOTLY_PATH, plotly_name) + "/";
+            url = _pyfunc_op_add(url, "?param=" + component.getAttribute("param"));
+            ajax_json(url, ({name: plotly_name, action: "get_data"}), component.on_data_loaded);
+        }
+        return null;
+    };
+
+    comp.options["attributeChangedCallback"] = attributeChangedCallback;
 } catch(err_0)  { stub6_err=err_0;
 } finally {
     if (stub6_err) { if (!stub5_context.__exit__(stub6_err.name || "error", stub6_err, null)) { throw stub6_err; }

@@ -44,6 +44,7 @@ def app_init(
     gen_time,
     callback=None,
 ):
+    window.IN_MORPH_PROCESS = False
     moment.locale(lang)
     window.ACTIVE_PAGE = None
     window.PRJ_NAME = prj_name

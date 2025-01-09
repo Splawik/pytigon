@@ -93,7 +93,9 @@ def mount_html(dest_elem, data_or_html, link=None):
         if dest_elem.children.length > 0:
             elem2 = dest_elem.cloneNode()
             if jQuery.type(data_or_html) == "string":
+                window.IN_MORPH_PROCESS = True
                 elem2.innerHTML = data_or_html
+                window.IN_MORPH_PROCESS = False
                 if replace:
                     if elem2.children.length > 0:
                         elem2 = elem2.children[0]

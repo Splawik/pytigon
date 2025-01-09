@@ -879,7 +879,7 @@ class SChApp(JSONModel):
             if f.type == "j":
                 ret.append("../static/" + self.name + "/views/" + f.name + ".fview")
 
-        if "_schdata.schelements" in self.parent.ext_apps:
+        if self.parent.ext_apps and "_schdata.schelements" in self.parent.ext_apps:
             ret.append(
                 "../schelements/table/DocHead/[[docreg_name/form/docheadlist/?view_in=desktop"
             )
@@ -908,12 +908,12 @@ class SChApp(JSONModel):
                 "../schstruct/list_group_by_tag/[[tag]]/[[app_name]]__[[target_name]]/?view_in=desktop"
             )
 
-        if "_schdata.schstruct" in self.parent.ext_apps:
+        if self.parent.ext_apps and "_schdata.schstruct" in self.parent.ext_apps:
             ret.append(
                 "../schstruct/list_group_by_tag/[[element_type]]/[[app_name]]__[[target_name]]/?view_in=desktop"
             )
 
-        if "_schtools.schworkflow" in self.parent.ext_apps:
+        if self.parent.ext_apps and "_schtools.schworkflow" in self.parent.ext_apps:
             ret.append(
                 "../schworkflow/table/WorkflowItem//[app_name]__[[taable_name]]__0__[[filter]]/form__[[target]]/sublist/?fragment=page"
             )

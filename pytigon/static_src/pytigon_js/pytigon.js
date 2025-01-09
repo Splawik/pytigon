@@ -1504,7 +1504,9 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
         if ((dest_elem.children.length > 0)) {
             elem2 = dest_elem.cloneNode();
             if ((_pyfunc_op_equals(jQuery.type(data_or_html), "string"))) {
+                window.IN_MORPH_PROCESS = true;
                 elem2.innerHTML = data_or_html;
+                window.IN_MORPH_PROCESS = false;
                 if (_pyfunc_truthy(replace)) {
                     if ((elem2.children.length > 0)) {
                         elem2 = elem2.children[0];
@@ -4161,6 +4163,7 @@ dom_content_loaded = function flx_dom_content_loaded () {
 app_init = function flx_app_init (prj_name, application_template, menu_id, lang, base_path, base_fragment_init, component_init, offline_support, start_page, gen_time, callback) {
     var _init_start_page, _on_sync, desktop, href, obj, objects, stub1_seq, stub2_itr;
     callback = (callback === undefined) ? null: callback;
+    window.IN_MORPH_PROCESS = false;
     moment.locale(lang);
     window.ACTIVE_PAGE = null;
     window.PRJ_NAME = prj_name;

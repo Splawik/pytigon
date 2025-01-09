@@ -1,0 +1,417 @@
+{# -*- coding: utf-8 -*- #}
+% extends "base_pdf.html"
+
+% load exfiltry
+% load exsyntax
+% load subreport
+
+%% css
+    style type=text/css{:}
+        body:
+            font-family:sans-serif
+            font-size:80%
+            padding:20
+
+        table:
+            border:0
+            vertical-align:top
+            padding:3
+
+        td table:
+            padding: 1
+            border: 0
+
+        th:
+            cellpadding:3
+            font-weight:bold
+            border: 0
+
+        td:
+            vertical-align:top
+            cellpadding:3
+            border: 0
+
+        strong,b:
+            font-weight:bold
+
+        p:
+            cellpadding:2
+            border:0
+            width:100%
+
+        a:
+            color:#0000ff
+            text-decoration: underline
+
+        strong a:
+            color:#00ffff
+
+        ul:
+            border:0
+
+        li:
+            cellpadding:5
+            width:95%-60
+
+        ul li:
+            font-style: italic
+
+        em:
+            font-style: italic
+
+        b:
+            font-weight: bold
+
+        td:hover.test:
+            bgcolor: #ff0000
+
+        h1:
+            font-size:300%
+            font-weight:bold
+            cellpadding:12 2 12 2
+
+        h2:
+            font-size:240%
+            font-weight:bold
+            cellpadding:10 2 50 2
+
+        h3:
+            font-size:190%
+            font-weight: bold
+            cellpadding:8 2 8 2
+            width: 100%
+            align: center
+
+        h4:
+            font-size:150%
+            font-weight: bold
+            cellpadding:6 2 6 2
+
+        h5:
+            font-size:120%
+            font-weight: bold
+            cellpadding:4 2 4 2
+
+        h6:
+            font-size:100%
+            font-weight: bold
+            cellpadding:2 2 2 2
+
+
+        table.tabdel:
+            border:1
+            width:100%
+
+        table.tabdel tr th:
+            bgcolor:#ccc
+            border:1
+            padding:5
+            cellpadding:5
+
+        table.tabdel tr td:
+            bgcolor:#eee
+            border:1
+            padding:5
+            cellpadding:5
+
+        .helptext:
+            font-size:120%
+            font-style:italic
+            
+        i:
+            font-style:italic
+            
+        .podpis:
+            align: center
+
+        table.simple:
+            border:0
+            padding:0
+        
+        table.simple tr td:
+            cellpadding:0
+            
+        table.tab_header:
+            font-size:60%
+        
+        table.with_border:
+            border:1
+            
+        table.with_border tr td:
+            border:1
+            margins:1
+        
+        table.for_img:
+            border:1
+            margins:0
+            padding:0
+            
+            
+        table.for_img tr td:
+            border:1
+            margins:0
+            padding:0
+            cellpadding:0
+
+        img:
+            margins:0
+            padding:0
+        
+        td.x11:
+            width: 69
+            height: 69
+            margins: 0
+            padding: 0
+        
+        td.x21:
+            width: 138
+            height: 69
+            margins: 0
+            padding: 0
+
+        td.x12:
+            width: 69
+            height: 138
+            margins: 0
+            padding: 0
+        
+        td.x22:
+            width: 138
+            height: 138
+            margins: 0
+            padding: 0
+
+        td.x23:
+            width: 138
+            height: 207
+            margins: 0
+            padding: 0
+
+        td.x11 img:
+            width: 67
+            height: 67
+            margins: 0
+            padding: 0
+        
+        td.x21 img:
+            width: 136
+            height: 67
+            margins: 0
+            padding: 0
+
+        td.x12 img:
+            width: 67
+            height: 136
+            margins: 0
+            padding: 0
+        
+        td.x22 img:
+            width: 136
+            height: 136
+            margins: 0
+            padding: 0
+
+        td.x23 img:
+            width: 136
+            height: 205
+            margins: 0
+            padding: 0
+
+        img.checkbox:
+            width: 12
+            height: 12
+            margin: 20
+
+%% page_setup
+    page
+        %% page_header
+            header height=100        
+                table width=100%,,,class=tab_header
+                    tr
+                        td width=25%
+                            .POLBRUK S.A.
+                        td width=50%
+                            .BEZPIECZEŃSTWO I CHIGIENA PRACY
+                        td width=25%
+                            .Linia: {{object.json_nag1}}
+                    tr
+                        td...NAZWA PROCESU:
+                        td...{{object.json_nag2}}
+                        td...X
+                    tr
+                        td...NUMER DOKUMENTU: {{object.json_st1}}
+                        td
+                            table width=50%,,,class=simple
+                                tr 
+                                    td width=50%
+                                        .WYDANIE: {{object.json_st2}}
+                                    td width=50%
+                                        .DATA WYDANIA: {{object.json_st3}}
+                        td...Łączny czas trwania:
+        %% page_footer
+
+
+%% content 
+
+    table width=100%,,,class=with_border
+        tr height=100
+            td width=33%,,,height=40
+                .Opracował:
+            td  width=33%
+                .Sprawdził:
+            td width=34%
+                .Zatwierdził:
+        tr 
+            td height=40
+                .Data i podpis:
+            td...Data i podpis:
+            td...Data i podpis:
+        
+    p...{{object.json_ostrz1}}
+    p...{{object.json_ostrz2}}
+    
+    %check object.json_so1
+    .X1 <br>                
+                
+    table width=100%,,,class=simple
+        %for subrep in object|args:"etap"|call:"getsubreps":
+            %if forloop.counter0|divisibleby:"4":
+                <tr>            
+            td width=25%
+                table class=for_img
+                    %if subrep.json_view_type == '1234'    
+                            tr 
+                                td class=x11
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek1 }}
+                                td class=x11
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek2 }}
+                            tr 
+                                td class=x11
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek3 }}
+                                td class=x11
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek4 }}
+                            tr
+                                td colspan=2,,,class=x21                                    
+                                    {{ subrep.json_opis }}
+                        %elif subrep.json_view_type == '1123'
+                            tr 
+                                td colspan=2,,,class=x21
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek1 }}
+                            tr
+                                td class=x11
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek2 }}
+                                td class=x11
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek3 }}
+                            tr
+                                td colspan=2,,,class=x21
+                                    {{ subrep.json_opis }}
+                        %elif subrep.json_view_type == '1213'
+                            tr
+                                td rowspan=2,,,class=x12
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek1 }}
+                                td class=x11
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek2 }}
+                            tr 
+                                td class=x11
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek3 }}
+                            tr 
+                                td colspan=2,,,class=x21
+                                    {{ subrep.json_opis }}
+                        %elif subrep.json_view_type == '1122'
+                            tr
+                                td class=x21
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek1 }}
+                            tr 
+                                td class=x21
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek2 }}
+                            tr 
+                                td class=x21
+                                    {{ subrep.json_opis }}
+                        %elif subrep.json_view_type == '1212'
+                            tr
+                                td class=x12
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek1 }}
+                                td class=x12
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek2 }}
+                            tr 
+                                td colspan=2,,,class=x21
+                                    {{ subrep.json_opis }}
+                        %elif subrep.json_view_type == '1111'
+                            tr 
+                                td  class=x22
+                                    img src=data:image/png;base64,{{ subrep.json_obrazek1 }}
+                            tr 
+                                td class=x21
+                                    {{ subrep.json_opis }}
+                        %elif subrep.json_view_type == '0000'
+                            tr 
+                                td class=x23
+                                    {{ subrep.json_opis }}
+                        %else
+                            tr 
+                                td class=x23
+                                    {{ subrep.json_opis }}                
+
+            %if forloop.counter0|add:"1"|divisibleby:"4" or forloop.last:
+                </tr>
+        
+    table width=100%,,,class=tab_body
+        tr
+            td width=25%
+                strong...Sprzęt ochronny: 
+                <br>
+                %check object.json_so1 "ochronniki słuchu<br>" 
+                %check object.json_so2 "maski przeciwpyłowe<br>" 
+                %check object.json_so3 "maski przeciwchemiczne<br>" 
+                %check object.json_so4 "szelki i linka bezpieczeństwa<br>" 
+                %check object.json_so5 "okulary ochronne<br>" 
+                %check object.json_so6 "rękawice ochronne<br>" 
+                %check object.json_so7 "kask ochronny<br>" 
+                %check object.json_so8 "dzież, obuwie i sprzęt ochronny w EX<br>" 
+                %check object.json_so9 "inny sprzęt ochronny <br>" 
+                <br>&nbsp;<br>
+                strong...Sprzęt specjalistyczny
+                <br>
+                %check object.json_ss1 "drabina <br>" 
+                %check object.json_ss2 "pomost <br>" 
+                %check object.json_ss3 "rusztowanie <br>" 
+                %check object.json_ss4 "wysięgnik z koszem <br>" 
+                %check object.json_ss5 "podnośniki/wciągniki <br>" 
+                %check object.json_ss6 "wózek widłowy <br>" 
+                %check object.json_ss7 "zawiesie <br>" 
+                <br>&nbsp;<br>
+                strong...Stosowane substancje niebezpieczne
+                <br>
+                .Nazwa: {{sn1}} <br>
+                %check object.json_sn2 "karty substancji niebezpiecznych <br>"
+
+            td width=75%
+                table width=100%
+                    tr
+                        td width=33%
+                            .Prace na wysokości:
+                        td width=67%
+                            table width=100%
+                                tr
+                                    td width=50%
+                                        .Szczególne zabezpieczenia w przestrzeniach zamkniętych
+                                    td width=50%
+                                        .X
+
+    table width=100%,,,class=podpisy            
+        tr
+            td class=podpis...<br />.........................................................................
+            td class=podpis...<br />.........................................................................
+        tr
+            td class=podpis...(sporządził – data i podpis) 
+            td class=podpis...(zatwierdził – data i podpis)              
+        tr
+            td height=80
+            td
+        tr
+            td class=podpis...<br />.........................................................................
+            td
+        tr
+            td class=podpis...(wykonał - data i podpis)
+            td
+            
