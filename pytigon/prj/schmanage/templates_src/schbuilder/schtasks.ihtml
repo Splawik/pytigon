@@ -1,0 +1,84 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+ 
+%% pythoncode
+    % if form_list
+        script language=python
+            def init_form(self):
+                self.tabsort.grid.default_command = 'fields'
+                
+            def signal_from_child(self, child, signal):
+                if signal=='set_bitmap_list':
+                    bitmaps = {
+                        "task_code":"client://mimetypes/text-x-generic-template.png",
+                        "tasks":"client://actions/format-indent-more.png",
+                        "doc":"client://apps/help-browser.png",
+                    }
+                    child.set_bitmaps(bitmaps)
+
+   
+%% all
+    %with form_width=720 form_height=480 show_title_bar=0 title=_("Tasks") vform=True
+        {{ block.super }}
+
+
+%% list_content_actions
+    % new_row _("New task")
+
+
+%% list_row_header
+    th...Name
+    th...Generic
+
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.generic}}
+
+
+%% list_row_actions
+    {% if not forloop.first %}
+        % row_actions:... field_up,Move up
+    {% endif %}
+    {% if not forloop.last %}
+        % row_actions:...field_down,Move down
+    {% endif %}
+
+    % row_actions:
+        .edit
+        .field_edit/table_code,Code,code
+        .field_list/schfield_set,Fields,fields
+        .field_edit/doc,Documentation,doc
+        .template_edit,Template
+        .delete
+
+%% table_header_edit
+  h2..._(Table list)
+
+
+%% row_edit
+    % form:
+        'parent', 'name'
+    
+    % form_item base_table.select:
+        %if not object.base_table or object.base_table == ""
+            option selected=selected,,,value=...---------
+        %else
+            option value=...---------
+        %if object.base_table == 'MPTTModel'
+            option value=MPTTModel...MPTTModel,,,selected=selected
+        %else
+            option value=MPTTModel...MPTTModel                    
+            
+        %for model in object.get_models
+            %if model == object.base_table
+                option value={{model}},,,selected=selected...{{model}}
+            %else
+                option value={{model}}...{{model}}
+            
+    % form:
+        'verbose_name', 'verbose_name_plural', 'generic'

@@ -10,17 +10,17 @@
 {% endblock %}
 {% block list_row_header %}
         {% if vtype != "sublist" %}
-                <th>Aplikacja {{target}}</th>
-                <th>Tabela</th>
-                <th>Grupa</th>
-                <th>ID przodka</th>
+                <th>Application {{target}}</th>
+                <th>Table</th>
+                <th>Group</th>
+                <th>Parent id</th>
         {% endif %}
-        <th>Data {{type}}</th>
-        <th>Opis</th>
+        <th>Date {{type}}</th>
+        <th>Description</th>
         <th>Operator</th>
         {% if vtype != "sublist" %}
                 <th>
-                ID operatora
+                Operator id
                 </th>
         {% endif %}
 {% endblock %}

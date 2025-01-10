@@ -705,7 +705,7 @@
                         "view_type": "u",
                         "param": "q",
                         "url": "(?P<q>.*)/search/$",
-                        "view_code": "search_txt = bdecode(q).decode('utf-8')\nobject_list = Page.objects.filter(content__iregex=search_txt)\nreturn { \"object_list\": object_list, 'q': search_txt }",
+                        "view_code": "search_txt = bdecode(q)\nobject_list = Page.objects.filter(content__iregex=search_txt)\nreturn { \"object_list\": object_list, 'q': search_txt }",
                         "url_params": "{}",
                         "ret_type": "T",
                         "asynchronous": false,

@@ -6,7 +6,7 @@
         "title": "Pytigon demo",
         "version": "latest",
         "main_view": true,
-        "ext_apps": "_schwiki.schwiki\n_schtools.schsimplescripts\n_schtools.schlog\n_schtools.schcommander\n_schtools.schtools\n_schtools.schattachements\n_schtools.schworkflow\n_schdata.schdoc\n_schdata.schelements\n_schcomponents.standard_components\n_schdata.schprofile\n_schsetup.schadmin\n_schtools.schtasks\n_schtools.schactions",
+        "ext_apps": "_schwiki.schwiki\n_schtools.schsimplescripts\n_schtools.schlog\n_schtools.schcommander\n_schtools.schtools\n_schtools.schattachements\n_schtools.schworkflow\n_schdata.schdoc\n_schdata.schchart\n_schdata.schelements\n_schcomponents.standard_components\n_schdata.schprofile\n_schsetup.schadmin\n_schtools.schtasks\n_schtools.schactions\n_schtools.schai",
         "plugins": "standard/keymap;standard/tablefilter;standard/image_viewer;standard/hexview;standard/shell;",
         "gui_type": "modern",
         "gui_elements": null,
@@ -20,8 +20,8 @@
         "desktop_gui_type": "tablet_modern",
         "smartfon_gui_type": "tablet_standard",
         "tablet_gui_type": "auto",
-        "additional_settings": "#BOOTSTRAP_TEMPLATE = \"bootswatch/zephyr\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/minty\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/pulse\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/journal\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/united\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/cosmo\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/litera\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/default\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/sandstone\"\n\n#BOOTSTRAP_TEMPLATE = \"bootswatch/flatly\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/yeti\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/materia\"\n\nXMLRPC_PORT = 7080\n#PYODIDE = True\n#PYODIDE = False\n\nINSTALLED_APPS.append('explorer')\n\nif platform_name()!='Android':\n    INSTALLED_APPS.append('easy_thumbnails')\n    INSTALLED_APPS.append('filer')\n\n    THUMBNAIL_PROCESSORS = (\n        'easy_thumbnails.processors.colorspace',\n        'easy_thumbnails.processors.autocrop',\n        #'easy_thumbnails.processors.scale_and_crop',\n        'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n        'easy_thumbnails.processors.filters',\n    )\n\nFILER_DEBUG = True\n\nEXPLORER_CONNECTIONS = { 'Default': 'default' } \nEXPLORER_DEFAULT_CONNECTION = 'default'",
-        "custom_tags": "_schcomponents/components/ptig-webrtc.js\n_schcomponents/components/ptig-codeeditor.js\n_schcomponents/components/ptig-d3.js\n_schcomponents/components/ptig-leaflet.js\n_schcomponents/components/ptig-video.js\n_schcomponents/components/ptig-pivottable.js\n_schcomponents/components/ptig-plotly.js\n_schcomponents/components/ptig-xterm.js\n_schcomponents/components/ptig-spreadsheet.js\n_schcomponents/components/ptig-calendar.js\n_schcomponents/components/ptig-mask.js\n_schcomponents/components/ptig-scroll-action.js\n_schcomponents/components/ptig-margin-left.js\n_schcomponents/components/ptig-wysiwygedit.js\n_schcomponents/components/ptig-svg.js\n_schcomponents/components/ptig-task.js\n_schcomponents/components/ptig-select2.js\n_schcomponents/components/ptig-form.js\n_schcomponents/components/ptig-codemirror.js\n_schcomponents/components/ptig-time.js\n_schcomponents/components/ptig-event-calendar.js",
+        "additional_settings": "#BOOTSTRAP_TEMPLATE = \"bootswatch/zephyr\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/minty\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/pulse\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/journal\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/united\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/cosmo\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/litera\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/default\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/sandstone\"\n\n#BOOTSTRAP_TEMPLATE = \"bootswatch/flatly\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/yeti\"\n#BOOTSTRAP_TEMPLATE = \"bootswatch/materia\"\n\nXMLRPC_PORT = 7080\n#PYODIDE = True\n#PYODIDE = False\n\nINSTALLED_APPS.append('explorer')\n\nif platform_name()!='Android':\n    INSTALLED_APPS.append('easy_thumbnails')\n    INSTALLED_APPS.append('filer')\n\n    THUMBNAIL_PROCESSORS = (\n        'easy_thumbnails.processors.colorspace',\n        'easy_thumbnails.processors.autocrop',\n        #'easy_thumbnails.processors.scale_and_crop',\n        'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n        'easy_thumbnails.processors.filters',\n    )\n\nFILER_DEBUG = True\n\nEXPLORER_CONNECTIONS = { 'Default': 'default' } \nEXPLORER_DEFAULT_CONNECTION = 'default'\n\nACCOUNT_EMAIL_REQUIRED = True",
+        "custom_tags": "_schcomponents/components/ptig-webrtc.js\n_schcomponents/components/ptig-codeeditor.js\n_schcomponents/components/ptig-d3.js\n_schcomponents/components/ptig-leaflet.js\n_schcomponents/components/ptig-video.js\n_schcomponents/components/ptig-pivottable.js\n_schcomponents/components/ptig-plotly.js\n_schcomponents/components/ptig-xterm.js\n_schcomponents/components/ptig-spreadsheet.js\n_schcomponents/components/ptig-calendar.js\n_schcomponents/components/ptig-mask.js\n_schcomponents/components/ptig-scroll-action.js\n_schcomponents/components/ptig-margin-left.js\n_schcomponents/components/ptig-wysiwygedit.js\n_schcomponents/components/ptig-svg.js\n_schcomponents/components/ptig-task.js\n_schcomponents/components/ptig-select2.js\n_schcomponents/components/ptig-form.js\n_schcomponents/components/ptig-codemirror.js\n_schcomponents/components/ptig-time.js\n_schcomponents/components/ptig-event-calendar.js\n_schcomponents/components/ptig-ai.js\n_schcomponents/components/ptig-frame.js",
         "readme_file": null,
         "license_file": null,
         "install_file": null,
@@ -38,7 +38,7 @@
         "template_smartfon": null,
         "template_tablet": null,
         "template_schweb": null,
-        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exsyntax\n\n%% component_init\n    .var component_init = { graphql_pub: 'https://www.pytigon.eu/graphql_public/', graphql_prv: 'https://www.pytigon.eu/graphql/', }\n\n%% js_app_init__out\n    ===>\n        function base_fragment_init() {\n            let paths = [\n                '/',\n                '/schcomponents/*',\n                '/schelements/*',\n                '/static/*',\n            ]\n            \n            set_pyodide_paths(paths)\n\n            async function home_callback(response) {\n                let txt = await response.text();\n                let data_element = window.get_elem_from_string(txt)\n                mount_html(\n                    document.querySelector(\"body\"),\n                    data_element,\n                    null\n                )\n            }\n            async function home() {\n                await pyodide_app_init(\"schpytigondemo\", \"{{base_path}}\", \"/\", \"{{application_type}}\", \"{{ lang }}\", \"auto\", \"anawa\", home_callback)\n            }\n            home();            \n        };\n\n%% ext_css_links\n    {% css_link 'explorer/styles.css' %}\n    {{block.super}}\n\n%% ext_js_scripts\n    {{ block.super }}\n    {% jscript_link 'vanillajs_plugins/nunjucks/nunjucks.min.js' %}\n    {% jscript_link 'vanillajs_plugins/pouchdb/pouchdb-7.3.0.min.js' %}\n    {% jscript_link 'vanillajs_plugins/graphql/graphql.min.js' %}\n\n"
+        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exsyntax\n\n%% component_init\n    .var component_init = { graphql_pub: 'https://www.pytigon.eu/graphql_public/', graphql_prv: 'https://www.pytigon.eu/graphql/', }\n\n%% js_app_init__out\n    ===>\n        function base_fragment_init() {\n            let paths = [\n                '/',\n                '/schcomponents/*',\n                '/schelements/*',\n                '/static/*',\n            ]\n            \n            set_pyodide_paths(paths)\n\n            async function home_callback(response) {\n                let txt = await response.text();\n                let data_element = window.get_elem_from_string(txt)\n                mount_html(\n                    document.querySelector(\"body\"),\n                    data_element,\n                    null\n                )\n            }\n            async function home() {\n                await pyodide_app_init(\"schpytigondemo\", \"{{base_path}}\", \"/\", \"{{application_type}}\", \"{{ lang }}\", \"auto\", \"anawa\", home_callback)\n            }\n            home();            \n        };\n\n%% ext_css_links\n    {{block.super}}\n\n%% ext_js_scripts\n    {{ block.super }}\n    {% jscript_link 'vanillajs_plugins/nunjucks/nunjucks.min.js' %}\n    {% jscript_link 'vanillajs_plugins/pouchdb/pouchdb-7.3.0.min.js' %}\n    {% jscript_link 'vanillajs_plugins/graphql/graphql.min.js' %}\n\n\n%% login_background\n        div class=login_background,,,style=background-image: url({{base_path}}static/schpytigondemo/kandinsky-style-desk.svg);background-size: 100% auto;background-position: center;\n"
     },
     "children": [
         {
@@ -3507,7 +3507,7 @@
                 "perms": false,
                 "index": null,
                 "model_code": null,
-                "view_code": "from django_q.tasks import async_task, result\nimport time",
+                "view_code": "from django_q.tasks import async_task, result\nimport asyncio\nfrom django.contrib import messages\nfrom asgiref.sync import sync_to_async",
                 "urls_code": null,
                 "tasks_code": "",
                 "consumer_code": "",
@@ -3549,6 +3549,21 @@
                     }
                 },
                 {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "test_messages",
+                        "view_type": "u",
+                        "param": "**argv",
+                        "url": "test_messages",
+                        "view_code": "response = HttpResponse(\"Hello, async Django!\")\nmessages.add_message(request, messages.ERROR, \"Hello world 1\")\nrequest._messages.update(response)\nawait asyncio.sleep(5)\nmessages.add_message(request, messages.INFO, \"Hello world 1.1\")\nmessages.add_message(request, messages.SUCCESS, \"Hello world 2\")\nrequest._messages.update(response)\nawait asyncio.sleep(5)\nmessages.add_message(request, messages.WARNING, \"Hello world 3\")\nrequest._messages.update(response)\nawait asyncio.sleep(5)\nmessages.add_message(request, messages.DEBUG, \"Hello world 4\")\nrequest._messages.update(response)\nawait asyncio.sleep(5)\nmessages.add_message(request, messages.INFO, \"Hello world 5\")\nrequest._messages.update(response)\nawait asyncio.sleep(5)\nmessages.add_message(request, messages.SUCCESS, \"Hello world 6\")\nrequest._messages.update(response)\nreturn response",
+                        "url_params": "{}",
+                        "ret_type": "U",
+                        "asynchronous": true,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
                     "model": "SChTemplate",
                     "attributes": {
                         "name": "v_test_task",
@@ -3573,6 +3588,18 @@
                     }
                 },
                 {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "v_test_messages",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    %with show_title_bar=1 title='test'\n        {{ block.super }}\n\n\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
                     "model": "SChAppMenu",
                     "attributes": {
                         "name": "Task1",
@@ -3592,6 +3619,18 @@
                         "url_type": "-",
                         "perms": null,
                         "icon": "png://actions/media-skip-forward.png",
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "Test messages",
+                        "url": "test_messages",
+                        "url_type": "-",
+                        "perms": null,
+                        "icon": "png://categories/applications-other.png",
                         "icon_size": "1",
                         "icon_code": null
                     }
@@ -3658,6 +3697,21 @@
                     }
                 },
                 {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "ai",
+                        "view_type": "u",
+                        "param": "**argv",
+                        "url": "ai/",
+                        "view_code": "return {}\n",
+                        "url_params": "{}",
+                        "ret_type": "T",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
                     "model": "SChTemplate",
                     "attributes": {
                         "name": "v_clock",
@@ -3670,6 +3724,18 @@
                     }
                 },
                 {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "v_ai",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    % with show_title_bar=1 title='Ai chat example'\n        {{ block.super }}\n\n%% content\n    ptig-ai websocket_href={{base_path}}schai/ai/channel/\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
                     "model": "SChAppMenu",
                     "attributes": {
                         "name": "Clock channel example",
@@ -3677,6 +3743,18 @@
                         "url_type": "-",
                         "perms": null,
                         "icon": "png://actions/appointment-new.png",
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "AI chat",
+                        "url": "ai/",
+                        "url_type": "-",
+                        "perms": null,
+                        "icon": "png://apps/help-browser.png",
                         "icon_size": "1",
                         "icon_code": null
                     }
@@ -4019,8 +4097,8 @@
             "model": "SChStatic",
             "attributes": {
                 "type": "O",
-                "name": "env",
-                "content": "GRAPHQL=:true\nREST=:true\nCORS_ALLOWED_ORIGINS=[\"https://pytigon.eu\",\"http://127.0.0.1:8000\",]\nCORS_ALLOW_ALL_ORIGINS=:true\n",
+                "name": ".env",
+                "content": "GRAPHQL=True\nREST=True\nCORS_ALLOWED_ORIGINS=[\"https://pytigon.cloud\",\"http://127.0.0.1:8000\",]\nCORS_ALLOW_ALL_ORIGINS=True\nALLAUTH=True",
                 "doc": null
             }
         }

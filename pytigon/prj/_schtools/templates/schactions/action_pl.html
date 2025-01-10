@@ -14,14 +14,14 @@
         {% row_related_list "schattachements/Attachement" title="Attachements" filter="actions__Action__{{object.id}}__default" icon_name="fa fa-lg fa-paperclip" tag_class="+class='btn-info'" version="actions__" %}
 {% endblock %}
 {% block list_row_header %}
-        <th>Typ</th>
-        <th>Opis</th>
-        <th>Data startu</th>
-        <th>Wymagana data zakończenia</th>
-        <th>Email - właściciel akcji</th>
-        <th>Email - akcja zrealizowana</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Start date</th>
+        <th>Deadline</th>
+        <th>Email - action owner</th>
+        <th>Email - action done</th>
         <th>
-        Email - czas przekroczony
+        Email - deadline exceeded
         </th>
 {% endblock %}
 {% block list_row %}
@@ -39,7 +39,7 @@
         {% row_actions %}
                 ?:edit
                 ?:delete
-                field_edit/info,Dodatkowe informacje
+                field_edit/info,Additional info
         {% endrow_actions %}
 {% endblock %}
 {% block row_edit %}

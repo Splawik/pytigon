@@ -1,0 +1,46 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def filter_url(self, target, href):
+            return href
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with table_type='datatable' %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New translation" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>Description</th>
+        <th>Translation</th>
+        <th>
+        Status
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.description}}</td>
+        <td>{{object.translation}}</td>
+        <td>
+        {{object.status}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                edit
+                delete
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

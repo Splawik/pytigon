@@ -1,0 +1,38 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% pythoncode
+    script language=python
+        def filter_url(self, target, href):
+            return href
+
+%% all
+    %with form_width=800 form_height=600
+        {{ block.super }}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "New file"
+
+%% list_row_header
+    th..._(File type)
+    th..._(Name)
+
+%% list_row
+    td...{{object.get_file_type_display}}
+    td...{{object.name}}
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .field_edit/content,Content,content
+        .delete
+
+%% row_edit
+    % form:
+        "parent", "file_type", "name"
+

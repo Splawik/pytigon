@@ -1,0 +1,35 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    %with form_width=720 form_height=480 show_title_bar=0 title=_("Choices")
+        {{ block.super }}
+
+
+%% list_content_actions
+    % new_row _("New choice")
+
+
+%% list_row_header
+    th..._(Name)
+
+
+%% list_row
+    td...{{object.name}}
+
+%% list_row_actions
+    {{block.super}}
+    % row_actions:...field_list/schchoiceitem_set,Fields,[|client://actions/format-indent-more.png]
+
+
+%% table_header_edit
+  h2..._(Choice list)
+
+
+%% row_edit
+    % form:
+        'parent', 'name', 'verbose_name'
+        

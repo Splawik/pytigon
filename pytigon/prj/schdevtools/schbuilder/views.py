@@ -1152,6 +1152,43 @@ def build_prj(pk, config={}):
     return object_list
 
 
+def gen_file_list(prj_path):
+    object_list = os.walk(prj_path)
+
+    l = []
+    for root, dirs, files in object_list:
+        if ".git" not in root and "__pycache__" not in root:
+            for file_name in files:
+                if file_name.endswith(".pyc") or file_name.endswith(".pyo"):
+                    continue
+                l.append(os.path.join(root, file_name))
+    return l
+
+
+def gen_list_for_delete(l_new, l_old):
+    l = []
+    for item in l_old:
+        if item not in l_new:
+            l.append(item)
+    return l
+
+
+def gen_list_for_new(l_new, l_old):
+    l = []
+    for item in l_new:
+        if item not in l_old:
+            l.append(item)
+    return l
+
+
+def gen_list_for_update(l_new, l_old):
+    l = []
+    for item in l_new:
+        if item in l_old:
+            l.append(item)
+    return l
+
+
 PFORM = form_with_perms("schbuilder")
 
 
@@ -1555,7 +1592,12 @@ def update(request):
         "schpytigondemo",
     )
 
-    base_url = "https://splawik:GanawaanawaT1@git.pytigon.cloud/pytigon/"
+    git_user = None
+    if hasattr(settings, "SYS_GIT_USER"):
+        git_user = settings.SYS_GIT_USER
+    else:
+        if "SYS_GIT_USER" in environ:
+            git_user = environ["SYS_GIT_USER"]
 
     object_list = []
 
@@ -1565,7 +1607,12 @@ def update(request):
         base_path = settings.PRJ_PATH_ALT
 
     for prj_name in prj_names:
-        git_repository = base_url + prj_name + ".git"
+        prj = models.SChProject.objects.get(name=prj_name, main_view=True)
+        if not prj.git_repository:
+            continue
+        x = prj.git_repository.split("//", 1)
+        git_repository = x[0] + "//" + git_user + "@" + x[1]
+
         prj_path = os.path.join(base_path, prj_name)
         git_path = os.path.join(prj_path, ".git")
         success = True
@@ -1870,12 +1917,48 @@ def gen_milestone(request, pk):
     else:
         base_path = os.path.join(settings.PRJ_PATH_ALT, prj.name)
 
+    object_list.extend(build_prj(pk))
+
+    itemplate_path = os.path.join(base_path, "templates_src")
+    l = len(base_path)
+    compiled = []
+    for root, dirs, files in os.walk(itemplate_path):
+        for f in files:
+            if f.endswith(".ihtml"):
+                p = os.path.join(root, f)
+                x = p[l + 15 :]
+                compile_template(
+                    x,
+                    template_dirs=[
+                        itemplate_path.replace("templates_src", "templates"),
+                    ],
+                    compiled=compiled,
+                    force=True,
+                )
+
+    object_list.append(
+        (
+            datetime.datetime.now(),
+            "compile templates",
+            ", ".join([pos.split("/")[-1] for pos in set(compiled)]),
+        )
+    )
+
+    l_start = gen_file_list(base_path)
+
     git_path = os.path.join(base_path, ".git")
 
     if prj.git_repository:
-        if hasattr(settings, "SYS_GIT_USER") and "//" in prj.git_repository:
+        git_user = None
+        if hasattr(settings, "SYS_GIT_USER"):
+            git_user = settings.SYS_GIT_USER
+        else:
+            if "SYS_GIT_USER" in environ:
+                git_user = environ["SYS_GIT_USER"]
+
+        if git_user and "//" in prj.git_repository:
             x = prj.git_repository.split("//", 1)
-            git_repository = x[0] + "//" + settings.SYS_GIT_USER + "@" + x[1]
+            git_repository = x[0] + "//" + git_user + "@" + x[1]
         else:
             git_repository = prj.git_repository
 
@@ -1908,7 +1991,8 @@ def gen_milestone(request, pk):
             except Exception as e:
                 object_list.append((datetime.datetime.now(), "git clone error", str(e)))
 
-    object_list.extend(build_prj(pk))
+    build_prj(pk)
+    l_end = gen_file_list(base_path)
 
     content = prj_export_to_str(prj.pk)
 
@@ -1923,31 +2007,6 @@ def gen_milestone(request, pk):
     prj2 = x["prj_instance"]
 
     object_list.append((datetime.datetime.now(), "prj copied to version:", prj.version))
-
-    itemplate_path = os.path.join(base_path, "templates_src")
-    l = len(base_path)
-    compiled = []
-    for root, dirs, files in os.walk(itemplate_path):
-        for f in files:
-            if f.endswith(".ihtml"):
-                p = os.path.join(root, f)
-                x = p[l + 15 :]
-                compile_template(
-                    x,
-                    template_dirs=[
-                        itemplate_path.replace("templates_src", "templates"),
-                    ],
-                    compiled=compiled,
-                    force=True,
-                )
-
-    object_list.append(
-        (
-            datetime.datetime.now(),
-            "compile templates",
-            ", ".join([pos.split("/")[-1] for pos in set(compiled)]),
-        )
-    )
 
     if prj.git_repository:
         repo = Repo(base_path)
@@ -1967,6 +2026,22 @@ def gen_milestone(request, pk):
                     ):
                         p = os.path.join(root, file)
                         porcelain.add(repo, p)
+
+        x = gen_list_for_delete(l_start, l_end)
+        print("TO DELETE: ", x)
+
+        for file_name in x:
+            porcelain.remove(
+                repo,
+                [
+                    file_name,
+                ],
+            )
+            try:
+                os.unlink(file_name)
+            except:
+                pass
+
         try:
             porcelain.commit(repo, "New milestone version: " + prj2.version)
             porcelain.push(repo, git_repository)

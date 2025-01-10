@@ -1,0 +1,34 @@
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+%% all
+    % with table_type='datatable':
+        {% templatetag openvariable %} block.super {% templatetag closevariable %}
+
+%% scroll
+
+%% list_content_actions
+    % new_row "<<new_row_title>>"
+    % list_action "<<action>>" "<<action_description>>"
+
+%% list_row_header
+    {% for field in template.get_table_fields %}th..._({{field.description}})
+    {% endfor %}
+
+%% list_row
+    {% for field in template.get_table_fields %}td...{% templatetag openvariable %} object.{{field.name}} {% templatetag closevariable %}
+    {% endfor %}
+
+%% list_row_actions
+    % row_actions:
+        .edit
+        .delete
+        {% for field_name in template.get_table_rel_fields %}.field_list/{{field_name}},<<description>
+        {% endfor %}{% for field_name in template.get_edit_table_fields %}.field_edit/{{field_name}},<description>
+        {% endfor %}.<<action_name>>,<<description>>
+
+%% row_edit
+    % form:
+        .{% for field in template.get_table_fields %}{{field.name}}{% if not forloop.last %},{% endif %}{% endfor %}

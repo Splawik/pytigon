@@ -1,0 +1,39 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block all %}
+        {% with form_width=720 form_height=480 show_title_bar=0 title="Choices" %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_actions %}
+        {% new_row "New choice" %}
+{% endblock %}
+{% block list_row_header %}
+        <th>
+        Name
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>
+        {{object.name}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {{block.super}}
+        {% row_actions %}
+        field_list/schchoiceitem_set,Fields,[|client://actions/format-indent-more.png]
+        {% endrow_actions %}
+{% endblock %}
+{% block table_header_edit %}
+    <h2>
+    Choice list
+    </h2>
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+                'parent', 'name', 'verbose_name'
+        {% endform %}
+{% endblock %}
+

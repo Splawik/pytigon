@@ -6,7 +6,7 @@
         "title": "Setup application",
         "version": "latest",
         "main_view": true,
-        "ext_apps": "_schtools.schcommander",
+        "ext_apps": "_schtools.schcommander\n_schtools.schtools",
         "plugins": null,
         "gui_type": "modern",
         "gui_elements": null,
@@ -38,7 +38,7 @@
         "template_smartfon": null,
         "template_tablet": null,
         "template_schweb": null,
-        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exfiltry\n% load exsyntax\n\n%% ext_css_links\n    {% css_link 'explorer/styles.css' %}\n    {{block.super}}\n\n"
+        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exfiltry\n% load exsyntax\n\n%% ext_css_links\n    {{block.super}}\n\n"
     },
     "children": [
         {

@@ -1,0 +1,176 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        {% if form_edit %}
+                <script language="python">
+            def Init(self):
+                self.retdate = None
+                self.param.EventObject=self
+
+            def OnBeforeButtonClick(self):
+                print('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
+                self.param.set_new_href('/schbuilder/field_param/edit/'+self.type.GetValue()+'/')
+</script>
+          {% else %}
+                <script language="python">
+            def init_form(self):
+                #self['add_field'].Bind(wx.EVT_BUTTON, self.OnClick)
+                pass
+
+            def filter_http_result(self, target, href, mp):
+                if 'field_down' in href or 'field_up' in href:
+                    if 'YES' in str(mp.get_body()[0]):
+                        if 'field_down' in href:
+                            self.tabsort.grid.goto_next_row()
+                        else:
+                            self.tabsort.grid.goto_prev_row()
+                elif 'field_duplicate' in href:
+                    if 'YES' in str(mp.get_body()[0]):
+                        self.tabsort.grid.SetFocus()
+                        self.GetParent().refresh_html()
+                        self.tabsort.grid.goto_last_row()
+
+</script>
+        {% endif %}
+{% endblock %}
+{% block all %}
+        {% with form_width=720 form_height=480 show_title_bar=1 title="Fields" vform=True %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block list_content_header2 %}
+        <table>
+                <tr>
+                        <th>
+                                <label for="id_field_list">Select field type:</label>
+                        </th>
+                        <td width="210">
+                                <select name="field_list" id="id_field_list" width="200">
+                                        {% for item in object_list.model|choices_from_field:"type" %}
+                                                <option value="{{item.0}}">
+                                                        {{item.0}}
+                                                </option>
+                                        {% endfor %}
+                                </select>
+                        </td>
+                        <td align="left">
+                                {% list_action "add_field" "New field" %}
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+{% block list_content_header %}
+        <table width="100%">
+                <tr>
+                        <td>
+                                {% widget class='menu' id='add_field' title='New field' %}
+                                        {% for item in object_list.model|choices_from_field:"type" %}
+                                                <li>
+                                                        <a class="btn btn-primary btn-sm" href="../../../{{item.0}}/add/">
+                                                                {{item.0}}
+                                                        </a>
+                                                </li>
+                                        {% endfor %}
+                                {% endwidget %}
+                        </td>
+                </tr>
+        </table>
+{% endblock %}
+{% block list_row_header %}
+        <th>Name</th>
+        <th>Description</th>
+        <th>Type</th>
+        <th>Connected to</th>
+        <th>Null</th>
+        <th>Blank</th>
+        <th>Editable</th>
+        <th>
+        Unique
+        </th>
+{% endblock %}
+{% block list_row %}
+        <td>{{object.name}}</td>
+        <td>{{object.description|default_if_none:""}}</td>
+        <td>{{object.get_type_display}}</td>
+        <td>{% if object.rel_to %}{{object.rel_to}}{% endif %}{% if object.choices %}{{object.choices}}{% endif %}</td>
+        <td align="center">{% if object.null %}X{% endif %}</td>
+        <td align="center">{% if object.blank %}X{% endif %}</td>
+        <td align="center">{% if object.editable %}X{% endif %}</td>
+        <td align="center">
+        {% if object.unique %}X{% endif %}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {{block.super}}
+        {% if not forloop.first %}
+                {% row_actions %}
+                field_up,Move up,[|client://actions/go-up.png],refresh_page
+                {% endrow_actions %}
+        {% endif %}
+        {% if not forloop.last %}
+                {% row_actions %}
+                field_down,Move down,[|client://actions/go-down.png],refresh_page
+                {% endrow_actions %}
+        {% endif %}
+        {% row_actions %}
+        field_duplicate,Duplicate,[|client://actions/go-bottom.png]
+        {% endrow_actions %}
+{% endblock %}
+{% block table_header_edit %}
+    <h2>
+    Table field list
+    </h2>
+{% endblock %}
+{% block row_edit %}
+        {% if object.is_rel or object.has_choices %}
+                {% form %}
+                                "parent", "name", "description", "null", "blank", "editable", "unique", "db_index", "default",  "help_text"
+                {% endform %}
+                {% if object.is_rel %}
+                        {% form_item rel_to %}
+                                <select name="rel_to" id="id_rel_to" class="select form-control">
+                                        {% if not object.rel_to or object.rel_to == "" %}
+                                                <option selected="selected" value="">---------</option>
+                                          {% else %}
+                                                <option value="">---------</option>
+                                        {% endif %}
+                                        {% for model in object.get_models %}
+                                                {% if model == object.rel_to %}
+                                                        <option value="{{model|safe}}" selected="selected">{{model|safe}}</option>
+                                                  {% else %}
+                                                        <option value="{{model|safe}}">{{model|safe}}</option>
+                                                {% endif %}
+                                        {% endfor %}
+                                </select>
+                        {% endform_item %}
+                  {% else %}
+                        {% form_item rel_to %}
+                                <select name="choices" id="id_choices" class="select form-control">
+                                        {% if not object.choices or object.choices == "" %}
+                                                <option selected="selected" value="">---------</option>
+                                          {% else %}
+                                                <option value="">---------</option>
+                                        {% endif %}
+                                        {% for choice in object.parent.parent.schchoice_set.all %}
+                                                {% if choice.name == object.choices %}
+                                                        <option value="{{choice.name}}" selected="selected">{{choice.name}}</option>
+                                                  {% else %}
+                                                        <option value="{{choice.name}}">{{choice.name}}</option>
+                                                {% endif %}
+                                        {% endfor %}
+                                </select>
+                        {% endform_item %}
+                {% endif %}
+                {% form %}
+                                "param"
+                {% endform %}
+          {% else %}
+                {% form %}
+                                "parent", "name", "description", "null", "blank", "editable", "unique", "db_index", "default",  "help_text", "param"
+                {% endform %}
+        {% endif %}
+        {{form.type.as_hidden}}
+{% endblock %}
+

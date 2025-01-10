@@ -27,12 +27,12 @@
         multipart/form-data
 {% endblock %}
 {% block list_content_actions %}
-        {% new_row "Nowy załącznik" action="new_row/{{filter}}" %}
+        {% new_row "New attachement" action="new_row/{{filter}}" %}
 {% endblock %}
 {% block list_row_header %}
-        <th>Nazwa</th>
+        <th>Name</th>
         <th>
-        rozszerzenie
+        ext
         </th>
 {% endblock %}
 {% block id_extra %}
@@ -41,7 +41,7 @@
                 {% comment %}
                         {% row_related_list "schworkflow/WorkflowItem" title="Workflow items" filter=app_name|append_str:"__"|append_str:table_name|append_str:"__"|append_str:object.id|append_str:"__"|append_str:object.application|append_str:"_"|append_str:object.table icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}" %}
                 {% endcomment %}
-                {% row_related_list "schworkflow/WorkflowItem" title="Pozycje przepływu pracy" icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}" %}
+                {% row_related_list "schworkflow/WorkflowItem" title="Workflow items" icon_name="fa fa-lg fa-tasks" tag_class="+class='btn-info'" version="{{version}}" %}
         {% endblock %}
 {% endblock %}
 {% block list_row %}
@@ -63,7 +63,7 @@
                 {% endwith %}
         {% endif %}
         {% row_actions %}
-                download,Pobierz,,_blank
+                download,Download,,_blank
         {% endrow_actions %}
         {% row_actions %}
                 ?:edit

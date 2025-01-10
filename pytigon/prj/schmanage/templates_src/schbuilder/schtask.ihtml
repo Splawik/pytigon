@@ -1,0 +1,49 @@
+{# -*- coding: utf-8 -*- #}
+
+% extends "forms/form.html"
+
+% load exfiltry
+% load exsyntax
+
+ 
+%% pythoncode
+    % if form_list
+        script language=python
+            def init_form(self):
+                self.tabsort.grid.default_command = 'code'
+                                
+%% all
+    %with form_width=960 form_height=1200 show_title_bar=0 title=_("Tasks") vform=True
+        {{ block.super }}
+
+%% list_content_actions
+    table
+        tr
+            td
+                % new_row _("New task")
+            td 
+                % action "header" title="tasks - header" url="{{app_path}}table/SChApp/{parent.id}/tasks_code/form/editor/?fragment=header"
+            td
+                % action "footer" title="tasks - footer" url="{{app_path}}table/SChApp/{parent.id}/tasks_code/form/editor/?fragment=footer"
+        
+%% list_row_header
+    th..._(Name)
+    th..._(Permission)
+    th..._(Publish)
+    th..._(Published group)
+
+%% list_row
+    td...{{object.name}}
+    td...{{object.perms|default_if_none:""}}
+    td align=center...{% if object.publish %}X{% endif %}
+    td...{{object.publish_group|default_if_none:""}}
+
+%% list_row_actions
+    {{ block.super }}
+    % row_actions:
+        .field_edit/code,Code,[|client://mimetypes/text-x-generic-template.png],_parent
+        .field_edit/doc,Doc,[|client://apps/help-browser.png],_parent
+    
+%% row_edit                
+    % form:
+        "parent", "name", "perms", "publish", "publish_group"

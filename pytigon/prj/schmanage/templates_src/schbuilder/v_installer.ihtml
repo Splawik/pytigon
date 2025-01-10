@@ -1,0 +1,29 @@
+{# -*- coding: utf-8 -*- #}
+% extends "forms/user_tab.html"
+
+% load exfiltry
+% load exsyntax
+
+
+%% all
+    %with form_width=800 form_height=600 show_title_bar=1 title='Build result'
+        {{ block.super }}
+
+%% list_content_header
+    table width=100%
+        tr
+            td
+                % list_action "download" _("Download installer") target="_parent" url=url
+
+
+%% user_header
+    th...Description
+    th...action
+
+
+%% user_row
+    %if object:
+        tr
+            td...{{object}}
+            td
+        

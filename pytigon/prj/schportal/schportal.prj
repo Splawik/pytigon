@@ -38,7 +38,7 @@
         "template_smartfon": null,
         "template_tablet": "% extends 'theme/tablet_base.html'\n\n%% logo\n    img src={{base_path}}static/favicon.ico\n    {{block.super}}\n",
         "template_schweb": null,
-        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exfiltry\n% load exsyntax\n\n%% botstrap_css\n    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}\n\n%% ext_css_links\n    %if standard_web_browser:\n        {% css_link 'themes/wiki.css' %}\n        {% css_link 'vanillajs_plugins/pygments/manni.css' %}\n        {% css_link 'explorer/styles.css' %}\n    {{ block.super }}\n"
+        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exfiltry\n% load exsyntax\n\n%% botstrap_css\n    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}\n\n%% ext_css_links\n    %if standard_web_browser:\n        {% css_link 'themes/wiki.css' %}\n        {% css_link 'vanillajs_plugins/pygments/manni.css' %}\n    {{ block.super }}\n"
     },
     "children": [
         {
@@ -108,6 +108,15 @@
                 "type": "R",
                 "name": "timer_init",
                 "content": "def _on_time():\n    nonlocal GLOBAL_BUS \n    d = Date()\n    GLOBAL_BUS.emit(\"time_str\", d.toISOString().replace('T', ' ')[:19])\n    \nGLOBAL_TIMER = setInterval(_on_time, 1000)\n\n",
+                "doc": null
+            }
+        },
+        {
+            "model": "SChStatic",
+            "attributes": {
+                "type": "O",
+                "name": ".env",
+                "content": "ALLAUTH=True",
                 "doc": null
             }
         }

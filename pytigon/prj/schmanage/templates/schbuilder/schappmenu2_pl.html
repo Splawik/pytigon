@@ -1,0 +1,39 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "schbuilder/schappmenu.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def filter_url(self, target, href):
+            url = '../schwiki/%s/%s/view/' % (self.subject.GetValue(), self.name.GetValue())
+            self.url.SetValue(url)
+            return href
+
+
+</script>
+{% endblock %}
+{% block url_select %}
+        <tr>
+                <th align="left">
+                        <em>
+                                <label for="id_url">Subject:</label>
+                        </em>
+                </th>
+                <td>
+                        <input type="text" id="id_subject" name="subject" {%if not object.url %}value="{{object.parent.name}}{% endif %}" />
+                </td>
+        </tr>
+        <tr>
+                <th align="left">
+                        <em>
+                                <label for="id_url">Wiki name:</label>
+                        </em>
+                </th>
+                <td>
+                        <input type="text" id="id_name" name="name" />
+                        <input type="hidden" name="url" id="id_url" />
+                        <input type="hidden" name="parent" value="{{object.parent.id}}" id="id_parent" />
+                </td>
+        </tr>
+{% endblock %}
+
