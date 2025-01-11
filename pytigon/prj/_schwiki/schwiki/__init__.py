@@ -17,13 +17,13 @@ Urls = (
 )
 UserParam = {}
 
-#from django.utils.translation import gettext_lazy as _
+# from django.utils.translation import gettext_lazy as _
 
-#ModuleTitle = _("main tools")
-#Title = _("Wiki")
-#Perms = True
-#Index = "None"
-#Urls = (
+# ModuleTitle = _("main tools")
+# Title = _("Wiki")
+# Perms = True
+# Index = "None"
+# Urls = (
 #    ("table/Page/-/form/list/?view_in=desktop", _("Wiki"), "wiki.change_page", """"""),
 #    (
 #        "table/WikiConf/-/form/list/?view_in=desktop",
@@ -31,10 +31,10 @@ UserParam = {}
 #        None,
 #        """png://categories/applications-system.png""",
 #    ),
-#)
-#UserParam = {}
+# )
+# UserParam = {}
 
-#from django.utils.translation import gettext_lazy as _
+# from django.utils.translation import gettext_lazy as _
 
 
 def AdditionalUrls(prj_name, lang):

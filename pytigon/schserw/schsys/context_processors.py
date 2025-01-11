@@ -411,6 +411,9 @@ class AppManager:
                             app_info.icon = pos[3]
                             app_info.app_perms = None
                             app_info.user_param = None
+                            if app_info.module_name == "config":
+                                app_info.module_name = app_info.sys_module_name
+
                             id = -1
                             test = 0
                             i = 0

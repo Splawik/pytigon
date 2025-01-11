@@ -39,6 +39,8 @@ import duckdb
 import numpy
 import plotly
 
+from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
+
 
 @dict_to_json
 def plot_service(request, **argv):
@@ -65,12 +67,14 @@ def plot_service(request, **argv):
     if obj:
         if action == "get_config":
             if obj.get_config:
-                tmp = "def _get_config(obj, request_param):\n" + "\n".join(
-                    ["    " + pos for pos in obj.get_config.split("\n")]
+                config = run_code_from_db_field(
+                    f"plot__get_config{obj.pk}.py",
+                    obj,
+                    "get_config",
+                    "get_config",
+                    obj=obj,
+                    request_param=request_param,
                 )
-                l = locals()
-                exec(tmp, globals(), l)
-                config = l["_get_config"](obj, request_param)
             else:
                 config = {
                     "displayModeBar": False,
@@ -82,34 +86,41 @@ def plot_service(request, **argv):
             return config
         elif action == "get_data":
             if obj.get_data:
-                tmp = "def _get_data(obj, request_param):\n" + "\n".join(
-                    ["    " + pos for pos in obj.get_data.split("\n")]
+                data = run_code_from_db_field(
+                    f"plot__get_data{obj.pk}.py",
+                    obj,
+                    "get_data",
+                    "get_data",
+                    obj=obj,
+                    request_param=request_param,
                 )
-                l = locals()
-                exec(tmp, globals(), l)
-                data = l["_get_data"](obj, request_param)
             else:
                 data = {}
             return data
         elif action == "get_layout":
             if obj.get_layout:
-                tmp = "def _get_layout(obj, request_param):\n" + "\n".join(
-                    ["    " + pos for pos in obj.get_layout.split("\n")]
+                layout = run_code_from_db_field(
+                    f"plot__get_layout{obj.pk}.py",
+                    obj,
+                    "get_layout",
+                    "get_layout",
+                    obj=obj,
+                    request_param=request_param,
                 )
-                l = locals()
-                exec(tmp, globals(), l)
-                layout = l["_get_layout"](obj, request_param)
             else:
                 layout = {}
             return layout
         elif action == "on_event":
             if obj.on_event:
-                tmp = "def _on_event(obj, data, request_param):\n" + "\n".join(
-                    ["    " + pos for pos in obj.on_event.split("\n")]
+                ret = run_code_from_db_field(
+                    f"plot__on_event{obj.pk}.py",
+                    obj,
+                    "on_event",
+                    "on_event",
+                    obj=obj,
+                    data=param,
+                    request_param=request_param,
                 )
-                l = locals()
-                exec(tmp, globals(), l)
-                ret = l["_on_event"](obj, param, request_param)
                 return ret
             else:
                 return {}

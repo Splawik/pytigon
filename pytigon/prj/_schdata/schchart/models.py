@@ -24,6 +24,64 @@ from django.db.models import Max, Min
 
 from schelements.models import *
 
+GET_CONFIG = """
+def get_config(obj, request_param):
+    config = {
+        'displaylogo': True, 
+    }
+    return config
+"""
+
+GET_DATA = """
+def get_data(obj, request_param):
+    prj = apps.get_model("schbi", "project").objects.get(name="test_bi_prj")
+    tbl_year = prj.get_data()["year_sample"]
+
+    yy = request_param["param"].split("-")
+
+    x = "select year as x, y1 as y from tbl_year"
+    x += " where" if yy[0] or yy[1] else ""
+    x += (" year >= " + yy[0]) if yy[0] else ""
+    if yy[1]:
+        if yy[0]:
+            x += " and"
+        x += " year <= " + yy[1]
+
+    data = duckdb.execute(x).fetchnumpy()
+    data['type'] = 'bar'
+
+    return {
+        'data': [data,],
+        'events': ['click', 'hover=>plotly/plotly-status/',]
+    }
+"""
+
+GET_LAYOUT = """
+def get_layout(obj, request_param):
+    layout = {
+      "title": {
+        "text": 'title'
+      },
+      "font": {"size": 18}
+    };
+    return layout
+"""
+
+ON_EVENT = """
+def on_event(obj, data, request_param):
+    ret = {
+        'function': 'react',
+        'data': [
+            {
+            'x': ['giraffes', 'monkeys'],
+            'y': [20, 23],
+            'type': 'bar',
+            }
+        ],
+    }
+    return ret
+"""
+
 
 class Plot(models.Model):
     class Meta:
@@ -67,6 +125,22 @@ class Plot(models.Model):
     permission = models.CharField(
         "Permission", null=True, blank=True, editable=True, max_length=64
     )
+
+    def get_get_config_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return GET_CONFIG
+
+    def get_get_data_if_empty(self, request, template_name, ext, extra_context, target):
+        return GET_DATA
+
+    def get_get_layout_if_empty(
+        self, request, template_name, ext, extra_context, target
+    ):
+        return GET_LAYOUT
+
+    def get_on_event_if_empty(self, request, template_name, ext, extra_context, target):
+        return ON_EVENT
 
 
 admin.site.register(Plot)

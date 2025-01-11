@@ -29,20 +29,52 @@ import os.path as os_path
 PROJECTS_DATA = {}
 PROJECTS_DATA_VERSION = {}
 
-REFRESH_DATA = """
-
+PRJ_REFRESH_DATA = """
+#def refresh_data(module, prj, refresh_type):
+#    if refresh_type == 'begin':
+#        prj.load_data()
 """
 
-FORM = """
-
+PRJ_FORM = """
+Year::[2020;2021;2022;2023;2024;2025;2026]
 """
 
-VIEW = """
-
+PRJ_VIEW = """
+#def view(request, module, prj):
+#    return {}
 """
 
-TEMPLATE = """
+PRJ_TEMPLATE = """
+% extends "schbi/base_project.html"
+"""
 
+PAGE_FORM = """
+Year from::[2020;2021;2022;2023;2024;2025;2026]
+Year to::[2020;2021;2022;2023;2024;2025;2026]
+"""
+
+PAGE_VIEW = """
+#def view(request, module, page):
+#    return {}
+"""
+
+PAGE_TEMPLATE = """
+% extends "schbi/base_page.html"
+"""
+
+
+CHART_FORM = """
+Year from::[2020;2021;2022;2023;2024;2025;2026]
+Year to::[2020;2021;2022;2023;2024;2025;2026]
+"""
+
+CHART_VIEW = """
+#def view(request, module, page):
+#    return {}
+"""
+
+CHART_TEMPLATE = """
+% extends "schbi/base_chart.html"
 """
 
 
@@ -161,16 +193,16 @@ class Project(JSONModel):
     def get_refresh_data_if_empty(
         self, request, template_name, ext, extra_context, target
     ):
-        return REFRESH_DATA
+        return PRJ_REFRESH_DATA
 
     def get_form_if_empty(self, request, template_name, ext, extra_context, target):
-        return FORM
+        return PRJ_FORM
 
     def get_view_if_empty(self, request, template_name, ext, extra_context, target):
-        return VIEW
+        return PRJ_VIEW
 
     def get_template_if_empty(self, request, template_name, ext, extra_context, target):
-        return TEMPLATE
+        return PRJ_TEMPLATE
 
 
 admin.site.register(Project)
@@ -217,6 +249,15 @@ class Page(models.Model):
         blank=True,
         editable=False,
     )
+
+    def get_form_if_empty(self, request, template_name, ext, extra_context, target):
+        return PAGE_FORM
+
+    def get_view_if_empty(self, request, template_name, ext, extra_context, target):
+        return PAGE_VIEW
+
+    def get_template_if_empty(self, request, template_name, ext, extra_context, target):
+        return PAGE_TEMPLATE
 
 
 admin.site.register(Page)
@@ -266,6 +307,15 @@ class Chart(models.Model):
 
     def get_prj(self):
         return self.parent.parent
+
+    def get_form_if_empty(self, request, template_name, ext, extra_context, target):
+        return CHART_FORM
+
+    def get_view_if_empty(self, request, template_name, ext, extra_context, target):
+        return CHART_VIEW
+
+    def get_template_if_empty(self, request, template_name, ext, extra_context, target):
+        return CHART_TEMPLATE
 
 
 admin.site.register(Chart)
