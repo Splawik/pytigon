@@ -7,18 +7,19 @@ class Command(createsuperuser.Command):
 
     def handle(self, *args, **options):
         d = {self.UserModel.USERNAME_FIELD: "auto"}
-        # user = self.UserModel.objects.filter(username="auto")
-        user = self.UserModel.objects.filter(**d)
+        user = self.UserModel.objects.filter(**d).first()
         if not user:
-            super(Command, self).handle(
-                username="auto",
-                database=DEFAULT_DB_ALIAS,
-                email="none@none.none",
-                interactive=False,
-                noinput=True,
-                verbosity=False,
-            )
-        # user = self.UserModel.objects.get(username="auto")
-        user = self.UserModel.objects.filter(**d)
+            dd = {
+                self.UserModel.USERNAME_FIELD: "auto",
+                "database": DEFAULT_DB_ALIAS,
+                "interactive": False,
+                "noinput": True,
+                "verbosity": False,
+            }
+            if self.UserModel.USERNAME_FIELD != "email":
+                dd["email"] = "none@none.none"
+
+            super(Command, self).handle(**dd)
+        user = self.UserModel.objects.filter(**d).first()
         user.set_password("anawa")
         user.save()
