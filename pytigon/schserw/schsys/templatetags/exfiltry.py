@@ -71,10 +71,17 @@ def is_private(value):
 @register.filter(name="get_value")
 def getvalue(value, argv):
     """Returns value[argv]"""
-    if argv in value:
-        return value[argv]
+    if isinstance(value, dict):
+        if argv in value:
+            return value[argv]
+        else:
+            return ""
     else:
-        return ""
+        try:
+            ret = value[argv]
+        except:
+            ret = ""
+        return ret
 
 
 @register.filter(name="get_attr")

@@ -6,7 +6,9 @@ class Command(createsuperuser.Command):
     help = "Crate a auto user (superuser)"
 
     def handle(self, *args, **options):
-        user = self.UserModel.objects.filter(username="auto")
+        d = {self.UserModel.USERNAME_FIELD: "auto"}
+        # user = self.UserModel.objects.filter(username="auto")
+        user = self.UserModel.objects.filter(**d)
         if not user:
             super(Command, self).handle(
                 username="auto",
@@ -16,6 +18,7 @@ class Command(createsuperuser.Command):
                 noinput=True,
                 verbosity=False,
             )
-        user = self.UserModel.objects.get(username="auto")
+        # user = self.UserModel.objects.get(username="auto")
+        user = self.UserModel.objects.filter(**d)
         user.set_password("anawa")
         user.save()

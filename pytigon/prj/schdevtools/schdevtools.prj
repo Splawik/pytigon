@@ -7091,6 +7091,1294 @@
                         "translation": "",
                         "status": ""
                     }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Pytigon project",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Pytigon projects",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "SChFile",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Search results",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Search",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Workflow type",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Creation date",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Acceptance date",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Email",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Item type",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New attachement",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Download",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Parameter type",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Parameter subtype",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Key",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Application",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Group",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Parent id",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Date",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Operator",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Operator id",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "get row",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "new row",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Whole Word",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Regular Expression",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Model base file",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "View base file",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Url base file",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Task base file",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Channel consumer base file",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Build",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Application files",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Icon code",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New status",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Order",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Type 1",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Type 2",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Classifier 1",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Classifier 2",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Classifier 3",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Wiki pages",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New wiki page",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Modify or create a wiki object",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "User defined blocks",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Common Groups",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Update",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "name",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "description",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Report type",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "group",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "permission",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Owner",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Config",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "User type",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Allowed document registers",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Allowed document types",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Allowed accounts",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New account operation",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Payment",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Account state",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Sign",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Amount",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Account",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Subcode",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Account name",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Target",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Period",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "debit",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "credit",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "element",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "classifier1value",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "classifier2value",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "classifier3value",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Data",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Classifier",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Are you sure you want to accept the document",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "You accept the status",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Document type",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Correction",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Are you sure you want to discard the document",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "You discard the status",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New document register",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New document:",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Number",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Back to status:",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Discard status:",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New element",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Code",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New document item",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "order",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "amount",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "level",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Wiki subject",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Group of rigths to view",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Group of rigths to edit",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "backup_copies",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "This is the title.",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "This is full line translated text",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Serial number",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "IP",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Active",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New tag",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Tag",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New group",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Main parameter",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Release date",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Artist",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Genre",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "release_date",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "artist",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "genre",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Parent",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Param",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Next",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New wiki class",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Report from publication",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Edit page",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Edit page source",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "This page do not exists yet!",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New comment",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Comment",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Sender",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Recipient",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "External id",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Conversion factor",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Measurement point",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Time",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Attribute",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Product",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Location",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "RFID",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Feature",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Last operation",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Previous operation",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Company",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Facility",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "MP state:  <i>{{ object.measurementpointstate.jsondata }}</i><br />",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "MP control queue status: <i>{{ object.mpointcontrolqueuestatus.jsondata }}</i><br />",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "MP input queue status: <i>{{ object.mpointinputqueuestatus.jsondata }}</i><br />",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "MP output queue status: <i>{{ object.mpointoutputqueuestatus.jsondata }}</i>",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Template",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Refresh data",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Abstract",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Element",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "New label type",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Item",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Refresh account states",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "balance",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Name of payment",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Quantity",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Declaration",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Template source",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Convert fields to html",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Save function",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Load function",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Object to str function",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Action template",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Info template",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "item",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "quantity",
+                        "translation": "",
+                        "status": ""
+                    }
                 }
             ]
         }
