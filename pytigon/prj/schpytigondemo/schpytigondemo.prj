@@ -3699,10 +3699,25 @@
                 {
                     "model": "SChView",
                     "attributes": {
-                        "name": "ai",
+                        "name": "openai",
                         "view_type": "u",
                         "param": "**argv",
                         "url": "ai/",
+                        "view_code": "return {}\n",
+                        "url_params": "{}",
+                        "ret_type": "T",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "ollama_ai",
+                        "view_type": "u",
+                        "param": "**argv",
+                        "url": "ollamaai/",
                         "view_code": "return {}\n",
                         "url_params": "{}",
                         "ret_type": "T",
@@ -3726,11 +3741,23 @@
                 {
                     "model": "SChTemplate",
                     "attributes": {
-                        "name": "v_ai",
+                        "name": "v_openai",
                         "direct_to_template": null,
                         "url": null,
                         "url_parm": null,
-                        "template_code": "% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    % with show_title_bar=1 title='Ai chat example'\n        {{ block.super }}\n\n%% content\n    ptig-ai websocket_href={{base_path}}schai/ai/channel/\n",
+                        "template_code": "% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    % with show_title_bar=1 title='OpenAi chat example'\n        {{ block.super }}\n\n%% content\n    ptig-ai websocket_href={{base_path}}schai/ai/channel/\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "v_ollama_ai",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    % with show_title_bar=1 title='Ai chat example'\n        {{ block.super }}\n\n%% content\n    ptig-ai websocket_href={{base_path}}schai/ollamaai/channel/\n",
                         "tags_mount": null,
                         "asynchronous": false
                     }
@@ -3750,11 +3777,23 @@
                 {
                     "model": "SChAppMenu",
                     "attributes": {
-                        "name": "AI chat",
+                        "name": "OpenAI chat",
                         "url": "ai/",
                         "url_type": "-",
                         "perms": null,
                         "icon": "png://apps/help-browser.png",
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "Ollama ai",
+                        "url": "ollamaai/",
+                        "url_type": "-",
+                        "perms": null,
+                        "icon": "png://actions/mail-reply-all.png",
                         "icon_size": "1",
                         "icon_code": null
                     }
@@ -4098,7 +4137,7 @@
             "attributes": {
                 "type": "O",
                 "name": ".env",
-                "content": "GRAPHQL=True\nREST=True\nCORS_ALLOWED_ORIGINS=[\"https://pytigon.cloud\",\"http://127.0.0.1:8000\",]\nCORS_ALLOW_ALL_ORIGINS=True\nALLAUTH=True",
+                "content": "GRAPHQL=True\nREST=True\nCORS_ALLOWED_ORIGINS=[\"https://pytigon.cloud\",\"http://127.0.0.1:8000\",]\nCORS_ALLOW_ALL_ORIGINS=True\nALLAUTH=True\nOLLAMA_URL=127.0.0.1\nOLLAMA_MODEL=llama3.2:latest\nOPENAI_URL=http://localhost:11434/v1\nOPENAI_MODEL=nezahatkorkmaz/deepseek-v3:latest\nOPENAI_API_KEY=ollama",
                 "doc": null
             }
         }

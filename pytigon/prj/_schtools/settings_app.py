@@ -168,7 +168,8 @@ CHANNELS_URL_TAB += [
         URL_ROOT_PREFIX + "schtasks/show_task_events/channel/",
         "schtasks.consumers.TaskEventsConsumer",
     ),
-    (URL_ROOT_PREFIX + "schai/ai/channel/", "schai.consumers.OllamaConnector"),
+    (URL_ROOT_PREFIX + "schai/ollamaai/channel/", "schai.consumers.OllamaConnector"),
+    (URL_ROOT_PREFIX + "schai/ai/channel/", "schai.consumers.OpenAiConnector"),
 ]
 
 
@@ -177,7 +178,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2025-01-10 19:11:51"
+GEN_TIME = "2025-01-18 13:10:24"
 
 
 for key, value in os.environ.items():

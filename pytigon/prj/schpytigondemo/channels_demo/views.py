@@ -37,6 +37,11 @@ def clock(request, **argv):
     return {}
 
 
-@dict_to_template("channels_demo/v_ai.html")
-def ai(request, **argv):
+@dict_to_template("channels_demo/v_openai.html")
+def openai(request, **argv):
+    return {}
+
+
+@dict_to_template("channels_demo/v_ollama_ai.html")
+def ollama_ai(request, **argv):
     return {}
