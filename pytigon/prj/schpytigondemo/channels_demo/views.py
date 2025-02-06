@@ -34,14 +34,17 @@ from django.utils import timezone
 
 @dict_to_template("channels_demo/v_clock.html")
 def clock(request, **argv):
+
     return {}
 
 
 @dict_to_template("channels_demo/v_openai.html")
 def openai(request, **argv):
+
     return {}
 
 
 @dict_to_template("channels_demo/v_ollama_ai.html")
 def ollama_ai(request, **argv):
+
     return {}

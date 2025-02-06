@@ -29,7 +29,7 @@
         "icon": "None",
         "icon_size": "1",
         "icon_code": null,
-        "git_repository": "https://git.pytigon.eu/pytigon/_schtools.git",
+        "git_repository": "https://git.pytigon.cloud/pytigon/_schtools.git",
         "autor_name": null,
         "autor_email": null,
         "autor_www": null,
@@ -2850,6 +2850,40 @@
             ]
         },
         {
+            "model": "SChApp",
+            "attributes": {
+                "jsondata": null,
+                "name": "schai",
+                "title": "Tools",
+                "module_name": "Tools",
+                "module_title": "Tools",
+                "perms": true,
+                "index": null,
+                "model_code": null,
+                "view_code": null,
+                "urls_code": null,
+                "tasks_code": "",
+                "consumer_code": "try:\n    import ollama\nexcept:\n    print(\"For AI demo you shoud install ollama\")\nfrom pytigon_lib.schtools.env import get_environ\nENV = get_environ()\n",
+                "doc": null,
+                "user_param": "",
+                "icon": "None",
+                "icon_size": "1",
+                "icon_code": null
+            },
+            "children": [
+                {
+                    "model": "SChChannelConsumer",
+                    "attributes": {
+                        "name": "OllamaConnector",
+                        "consumer_type": "AsyncJsonWebsocketConsumer",
+                        "url": "ai",
+                        "consumer_code": "client = None\n\nasync def connect(self):\n    await self.accept()\n\nasync def receive_json(self, content):\n    print(\"A0:\", content)\n    if \"id\" in content:\n        id = content[\"id\"]\n        content_str = content[\"content\"]\n        message = {'role': 'user', 'content': content_str}\n        self.client = ollama.AsyncClient(host=\"127.0.0.1\")\n        model_name = ENV(\"OLLAMA_MODEL\", default=\"llama3\")\n        async for part in await self.client.chat(model=model_name, messages=[message], stream=True):\n            await self.send_json({ \"content\": part['message']['content']})\n        self.client = None\n        await self.send_json({ \"content\": \"\\n----------------------------------------------\\n\"})\n\nasync def disconnect(self, close_code):\n    print(\"dissconnect\")\n    if self.client:\n        print(\"A2\")\n        await self.client.close()\n        print(\"A3\")\n",
+                        "doc": null
+                    }
+                }
+            ]
+        },
+        {
             "model": "SChLocale",
             "attributes": {
                 "name": "pl"
@@ -3581,6 +3615,14 @@
                         "description": "Script for handle refresh event",
                         "translation": "Skypt dla przechwycenia zdarzenia od\u015bwie\u017c",
                         "status": "OK"
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Preview",
+                        "translation": "",
+                        "status": ""
                     }
                 }
             ]

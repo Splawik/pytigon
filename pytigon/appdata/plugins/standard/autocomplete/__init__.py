@@ -1,23 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
-
-#Pytigon - wxpython and django application framework
-
-#author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-#copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-#license: "LGPL 3.0"
-#version: "0.1a"
-
-
 import wx
 from autocomplete import TextCtrlAutoComplete
 
@@ -30,11 +10,11 @@ import pytigon_gui.guictrl.ctrl
 class DbDict(object):
     def __init__(self, href):
         self.href = href
-        self.tab = ['']
+        self.tab = [""]
 
     def filter(self, parent, f):
         http = wx.GetApp().get_http(parent)
-        response = http.get(self, str(self.href), {'query': f.encode('utf-8')})
+        response = http.get(self, str(self.href), {"query": f.encode("utf-8")})
         s = response.str()
         try:
             self.tab = schjson.loads(s)
@@ -42,7 +22,7 @@ class DbDict(object):
             self.tab = []
         self.tab2 = []
         for pos in self.tab:
-            self.tab2.append((pos['value'], ))
+            self.tab2.append((pos["value"],))
         self.tab = self.tab2
 
     def __iter__(self):
@@ -69,23 +49,23 @@ class Autocomplete(TextCtrlAutoComplete, SchBaseCtrl):
     def __init__(self, parent, **kwds):
         SchBaseCtrl.__init__(self, parent, kwds)
         self.dynamic_choices = DbDict(self.src)
-        if 'style' in kwds:
-            style = kwds['style']
+        if "style" in kwds:
+            style = kwds["style"]
             style = style | wx.TE_MULTILINE | wx.TE_PROCESS_ENTER
-            kwds['style'] = style
+            kwds["style"] = style
         else:
-            kwds['style'] = wx.TE_MULTILINE | wx.TE_PROCESS_ENTER
+            kwds["style"] = wx.TE_MULTILINE | wx.TE_PROCESS_ENTER
 
-        kwds['choices'] = self.dynamic_choices
-        TextCtrlAutoComplete.__init__(self, parent, colNames=('label', 'value'), **kwds)
+        kwds["choices"] = self.dynamic_choices
+        TextCtrlAutoComplete.__init__(self, parent, colNames=("label", "value"), **kwds)
         self.SetEntryCallback(self.set_dynamic_choices)
         self.SetMatchFunction(self.match)
-        if 'data' in self.param:
-            self.SetValue(self.param['data'].encode('utf-8'))
+        if "data" in self.param:
+            self.SetValue(self.param["data"].encode("utf-8"))
 
     def SetValue(self, value):
         if value.__class__ == str:
-            return TextCtrlAutoComplete.SetValue(self, value.decode('utf-8'))
+            return TextCtrlAutoComplete.SetValue(self, value.decode("utf-8"))
         else:
             return TextCtrlAutoComplete.SetValue(self, value)
 
@@ -101,11 +81,11 @@ class Autocomplete(TextCtrlAutoComplete, SchBaseCtrl):
         c = choice.lower()
         if c.startswith(t):
             return True
-        if c.startswith(r'http://'):
+        if c.startswith(r"http://"):
             c = c[7:]
         if c.startswith(t):
             return True
-        if c.startswith('www.'):
+        if c.startswith("www."):
             c = c[4:]
         return c.startswith(t)
 

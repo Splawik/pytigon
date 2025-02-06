@@ -24,12 +24,12 @@
         "custom_tags": "_schcomponents/components/ptig-codeeditor.js\n_schcomponents/components/ptig-form.js\n_schcomponents/components/ptig-plotly.js\n_schcomponents/components/ptig-wysiwygedit.js",
         "readme_file": null,
         "license_file": null,
-        "install_file": null,
+        "install_file": "PIP=django-payments",
         "encoded_zip": null,
         "icon": "None",
         "icon_size": "1",
         "icon_code": null,
-        "git_repository": "https://git.pytigon.eu/pytigon/_schbusiness.git",
+        "git_repository": "https://git.pytigon.cloud/pytigon/_schbusiness.git",
         "autor_name": "S\u0142awomir Cho\u0142aj",
         "autor_email": "slawomir.cholaj@gmail.com",
         "autor_www": "https://pytigon.eu",
@@ -4972,7 +4972,7 @@
                         "direct_to_template": null,
                         "url": null,
                         "url_parm": null,
-                        "template_code": "% extends \"schmasterdata/standardemploye.html\"\n",
+                        "template_code": "% extends \"schmasterdata/standardemployee.html\"\n",
                         "tags_mount": null,
                         "asynchronous": false
                     }

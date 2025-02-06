@@ -29,7 +29,7 @@
         "icon": "None",
         "icon_size": "1",
         "icon_code": null,
-        "git_repository": "https://git.pytigon.eu/pytigon/_schdata.git",
+        "git_repository": "https://git.pytigon.cloud/pytigon/_schdata.git",
         "autor_name": null,
         "autor_email": null,
         "autor_www": null,
@@ -45,9 +45,331 @@
             "model": "SChApp",
             "attributes": {
                 "jsondata": null,
+                "name": "schchart",
+                "title": "Charts",
+                "module_name": "config",
+                "module_title": "Config",
+                "perms": true,
+                "index": null,
+                "model_code": "from pytigon_lib.schtools.schjson import json_dumps, json_loads\n#from schlib.schdjangoext.django_ihtml import ihtml_to_html\n#from django.template import Context, Template\nfrom django.db.models import Max, Min\n\nfrom schelements.models import *\n\nGET_CONFIG = \"\"\"\ndef get_config(obj, request_param):\n    config = {\n        'displaylogo': True, \n    }\n    return config\n\"\"\"\n\nGET_DATA = \"\"\"\ndef get_data(obj, request_param):\n    prj = apps.get_model(\"schbi\", \"project\").objects.get(name=\"test_bi_prj\")\n    tbl_year = prj.get_data()[\"year_sample\"]\n\n    yy = request_param[\"param\"].split(\"-\")\n\n    x = \"select year as x, y1 as y from tbl_year\"\n    x += \" where\" if yy[0] or yy[1] else \"\"\n    x += (\" year >= \" + yy[0]) if yy[0] else \"\"\n    if yy[1]:\n        if yy[0]:\n            x += \" and\"\n        x += \" year <= \" + yy[1]\n\n    data = duckdb.execute(x).fetchnumpy()\n    data['type'] = 'bar'\n\n    return {\n        'data': [data,],\n        'events': ['click', 'hover=>plotly/plotly-status/',]\n    }\n\"\"\"\n\nGET_LAYOUT = \"\"\"\ndef get_layout(obj, request_param):\n    layout = {\n      \"title\": {\n        \"text\": 'title'\n      },\n      \"font\": {\"size\": 18}\n    };\n    return layout\n\"\"\"\n\nON_EVENT = \"\"\"\ndef on_event(obj, data, request_param):\n    ret = {\n        'function': 'react',\n        'data': [\n            {\n            'x': ['giraffes', 'monkeys'],\n            'y': [20, 23],\n            'type': 'bar',\n            }\n        ],\n    }\n    return ret\n\"\"\"\n",
+                "view_code": "from pytigon_lib.schtools.schjson import json_loads\n\nfrom django.apps import apps\nimport pyarrow\nimport duckdb\nimport numpy\nimport plotly\n\nfrom pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct\n",
+                "urls_code": null,
+                "tasks_code": "",
+                "consumer_code": "",
+                "doc": null,
+                "user_param": "",
+                "icon": "None",
+                "icon_size": "1",
+                "icon_code": null
+            },
+            "children": [
+                {
+                    "model": "SChTable",
+                    "attributes": {
+                        "base_table": null,
+                        "name": "Plot",
+                        "verbose_name": "Plot",
+                        "verbose_name_plural": "Polts",
+                        "metaclass_code": null,
+                        "table_code": "def get_get_config_if_empty(self, request, template_name, ext, extra_context, target):\n    return GET_CONFIG                    \n        \ndef get_get_data_if_empty(self, request, template_name, ext, extra_context, target):\n    return GET_DATA                    \n        \ndef get_get_layout_if_empty(self, request, template_name, ext, extra_context, target):\n    return GET_LAYOUT                    \n        \ndef get_on_event_if_empty(self, request, template_name, ext, extra_context, target):\n    return ON_EVENT\n",
+                        "ordering": "['id']",
+                        "doc": null,
+                        "generic": true,
+                        "url_params": null,
+                        "proxy_model": null
+                    },
+                    "children": [
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "name",
+                                "description": "Name",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "group",
+                                "description": "Group",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "get_config",
+                                "description": "Get config",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "get_data",
+                                "description": "Get data",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "get_layout",
+                                "description": "Get layout",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "on_event",
+                                "description": "On event",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "permission",
+                                "description": "Permission",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "plot_service",
+                        "view_type": "u",
+                        "param": "**argv",
+                        "url": "plot_service/(?P<name>\\w+)/$",
+                        "view_code": "request_param = { 'argv': argv }\nrequest_param['GET'] = request.GET\nif 'param' in request.GET:\n    request_param[\"param\"] = request.GET[\"param\"]\nelse:\n    request_param[\"param\"] = None\n    \nparam = json_loads(request.body.decode('utf-8'))\n\nrequest_param['body'] = param\n\naction = param['action']\nname = param['name']\n\nobjs = models.Plot.objects.filter(name=name)\nif len(objs) == 1:\n    obj = objs[0]\nelse:\n    obj = None\n\nif obj:\n    if action == 'get_config':\n        if obj.get_config:\n            config = run_code_from_db_field(\n                f\"plot__get_config{obj.pk}.py\",\n                obj,\n                \"get_config\",\n                \"get_config\",\n                obj=obj,\n                request_param=request_param\n            )            \n        else:\n            config = {\n                'displayModeBar': False, \n                'showLink': False, \n                'displaylogo': False, \n                'scrollZoom': True, \n                'modeBarButtonsToRemove': ['sendDataToCloud'],\n            }\n        return config\n    elif action == 'get_data':\n        if obj.get_data:\n            data = run_code_from_db_field(\n                f\"plot__get_data{obj.pk}.py\",\n                obj,\n                \"get_data\",\n                \"get_data\",\n                obj=obj,\n                request_param=request_param\n            )            \n        else:\n            data = {}\n        return data\n    elif action == 'get_layout':\n        if obj.get_layout:\n            layout = run_code_from_db_field(\n                f\"plot__get_layout{obj.pk}.py\",\n                obj,\n                \"get_layout\",\n                \"get_layout\",\n                obj=obj,\n                request_param=request_param\n            )            \n        else:\n            layout = {}\n        return layout\n    elif action == 'on_event':\n        if obj.on_event:\n            ret = run_code_from_db_field(\n                f\"plot__on_event{obj.pk}.py\",\n                obj,\n                \"on_event\",\n                \"on_event\",\n                obj=obj,\n                data=param,\n                request_param=request_param\n            )            \n            return ret\n        else:\n            return {}\n    else:\n        return { 'error': 'Action not found'}\n        \nreturn { 'error': 'Plot object not found'}\n",
+                        "url_params": "{}",
+                        "ret_type": "J",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "ReportDef",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with table_type='datatable':\n        {{ block.super }}\n\n%% scroll\n\n%% list_content_actions\n    % new_row \"New report definition\"\n\n%% list_row_header\n    th...name\n    th...description\n\n%% list_row\n    td...{{object.name}}\n    td...{{object.description}}\n\n%% list_row_actions\n    % row_actions:\n        .edit\n        .field_edit/declaration,Declaration,declaration\n        .field_edit/template,Template,template\n        .field_edit/to_html_rec,To html row,to_html_rec\n        .field_edit/save_fun,Save function,save_fun\n        .field_edit/load_fun,Load function,load_fun\n        .delete\n\n%% row_edit\n    % form:\n        .app,name,description\n\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "Report",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with table_type='simple':\n        {{ block.super }}\n\n%% scroll\n\n%% list_content_actions    \n    div class=tr d-inline\n        .New: \n        % for pos in object_list.model.get_rep_types:        \n            % new_row_inline pos \"\" \"\" \"\" \"\" \"../../../../../new_rep/\"|append_str:pos|append_str:\"/0/\" \n\n\n%% list_row_header\n    th...Report type\n    th...Date\n\n%% list_row\n    td...{{object.report_def_name}}\n    td...{{object.date|isoformat}}\n\n\n%% list_row_actions\n    % row_actions:\n        .edit-inline,_(Update),,,,,../../../../../../schreports/table/Report/{id}/edit__rep/        \n        .pdf\n        .odf        \n        .field_edit/data,Data,data        \n        .delete\n\n%% row_edit\n    % form:\n        \"parent\", \"parent_field_name\", \"order\", \"report_def_name\", \"date\"\n\n%% dialog_type\n    .modal-max\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "subreport",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n\n% load exfiltry\n% load exsyntax\n    \n% subform href\n\n%% dialog_type\n    .modal-max\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "v_edit_subrep",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n\n% load exfiltry\n% load exsyntax\n\n    div class=form-group\n        %% header_new_button\n            div class=row\n                div class=tr d-inline\n                    % new_row \"+ \"|append_str:rep_def.description \"\" \"\" \"\" \"-\" \"{{base_path}}schreports/new_subrep/\"|append_str:parent_rep.id|append_str:\"/\"|append_str:rep_type|append_str:\"/\"            \n        \n        div class=row\n            %% header\n            \n            % for object in reports:\n                div \n                    %% rep_line\n                    div class=fab,,,style=transform:scale(0.5); -webkit-transform:scale(0.5); -moz-transform:scale(0.5); -o-transform:scale(0.5); margin-left: -40px;\n                        nav class=menu\n                            input type=checkbox,,,href=#,,,class=menu-open,,,name=menu-open,,,id=menu-open-subrep-{{forloop.counter0}}\n                            label class=menu-open-button,,,for=menu-open-subrep-{{forloop.counter0}},,,draggable=true,,,ondrop=subreport_drop(event,'{{base_path}}');,,,ondragstart=subreport_dragstart(event);,,,ondragenter=subreport_ondragenter(event);,,,ondragleave=subreport_ondragleave(event);,,,ondragover=subreport_ondragover(event);,,,name={{object.id}}\n                                h4...{{forloop.counter}}\n                                span class=fa fa-bars fa-3x\n                                \n                            a class=menu-item,,,data-inline=,,,true,,,href={{base_path}}schreports/table/Report/{{object.id}}/action/move_up/,,,name=move_up,,,title=Move up,,,target=refresh_frame\n                                i class=fa fa-hand-o-left fa-2x\n\n                            a class=menu-item bg-primary popup,,,href={{base_path}}schreports/table/Report/{{object.id}}/edit__rep/,,,name=update/inline,,,title=update,,,target=popup_edit\n                                i class=fa fa-pencil-square-o fa-2x\n                                \n                            a class=menu-item bg-danger popup,,,href={{base_path}}schreports/table/Report/{{object.id}}/delete/,,,name=delete,,,title=delete,,,target=popup_delete\n                                i class=fa fa-trash-o fa-2x\n                                                                                                \n                            a class=menu-item,,,data-inline=true,,,href={{base_path}}schreports/table/Report/{{object.id}}/action/move_down/,,,name=move_down,,,title=Move down,,,target=refresh_frame\n                                i class=fa fa-hand-o-right fa-2x\n                                \n\n                                \n                                                    \n            %% footer\n            \n        %% footer_new_button\n            div class=row\n                div class=tr d-inline\n                    % new_row \"+ \"|append_str:rep_def.description \"\" \"\" \"\" \"-\" \"{{base_path}}schreports/new_subrep/\"|append_str:parent_rep.id|append_str:\"/\"|append_str:rep_type|append_str:\"/\"            \n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "Form_FilterFormReport",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    %with show_title_bar=1 title='<<form_title>>'\n        {{ block.super }}\n\n\n%% user_header\n    th...<<col_name1>>\n    th...<<col_name2>>\n    th...<<col_name3>>\n\n\n%% user_row\n    tr\n        td... {{object.0}}\n        td align=right... {{object.1|floatnullformat}}\n        td align=right... {{object.2|to_int}}\n\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "report_pdf",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"base_pdf.html\"\n\n% load exfiltry\n% load exsyntax\n% load subreport\n\n%% css\n    style type=text/css{:}\n        body:\n            font-family:sans-serif\n            font-size:80%\n            padding:20\n\n        table:\n            border:0\n            vertical-align:top\n            padding:3\n\n        td table:\n            padding: 1\n            border: 0\n\n        th:\n            cellpadding:3\n            font-weight:bold\n            border: 0\n\n        td:\n            vertical-align:top\n            cellpadding:3\n            border: 0\n\n        strong,b:\n            font-weight:bold\n\n        p:\n            cellpadding:2\n            border:0\n            width:100%\n\n        a:\n            color:#0000ff\n            text-decoration: underline\n\n        strong a:\n            color:#00ffff\n\n        ul:\n            border:0\n\n        li:\n            cellpadding:5\n            width:95%-60\n\n        ul li:\n            font-style: italic\n\n        em:\n            font-style: italic\n\n        b:\n            font-weight: bold\n\n        td:hover.test:\n            bgcolor: #ff0000\n\n        h1:\n            font-size:300%\n            font-weight:bold\n            cellpadding:12 2 12 2\n\n        h2:\n            font-size:240%\n            font-weight:bold\n            cellpadding:10 2 50 2\n\n        h3:\n            font-size:190%\n            font-weight: bold\n            cellpadding:8 2 8 2\n            width: 100%\n            align: center\n\n        h4:\n            font-size:150%\n            font-weight: bold\n            cellpadding:6 2 6 2\n\n        h5:\n            font-size:120%\n            font-weight: bold\n            cellpadding:4 2 4 2\n\n        h6:\n            font-size:100%\n            font-weight: bold\n            cellpadding:2 2 2 2\n\n\n        table.tabdel:\n            border:1\n            width:100%\n\n        table.tabdel tr th:\n            bgcolor:#ccc\n            border:1\n            padding:5\n            cellpadding:5\n\n        table.tabdel tr td:\n            bgcolor:#eee\n            border:1\n            padding:5\n            cellpadding:5\n\n        .helptext:\n            font-size:120%\n            font-style:italic\n            \n        i:\n            font-style:italic\n            \n        .podpis:\n            align: center\n\n        table.simple:\n            border:0\n            padding:0\n        \n        table.simple tr td:\n            cellpadding:0\n            \n        table.tab_header:\n            font-size:60%\n        \n        table.with_border:\n            border:1\n            \n        table.with_border tr td:\n            border:1\n            margins:1\n        \n        table.for_img:\n            border:1\n            margins:0\n            padding:0\n            \n            \n        table.for_img tr td:\n            border:1\n            margins:0\n            padding:0\n            cellpadding:0\n\n        img:\n            margins:0\n            padding:0\n        \n        td.x11:\n            width: 69\n            height: 69\n            margins: 0\n            padding: 0\n        \n        td.x21:\n            width: 138\n            height: 69\n            margins: 0\n            padding: 0\n\n        td.x12:\n            width: 69\n            height: 138\n            margins: 0\n            padding: 0\n        \n        td.x22:\n            width: 138\n            height: 138\n            margins: 0\n            padding: 0\n\n        td.x23:\n            width: 138\n            height: 207\n            margins: 0\n            padding: 0\n\n        td.x11 img:\n            width: 67\n            height: 67\n            margins: 0\n            padding: 0\n        \n        td.x21 img:\n            width: 136\n            height: 67\n            margins: 0\n            padding: 0\n\n        td.x12 img:\n            width: 67\n            height: 136\n            margins: 0\n            padding: 0\n        \n        td.x22 img:\n            width: 136\n            height: 136\n            margins: 0\n            padding: 0\n\n        td.x23 img:\n            width: 136\n            height: 205\n            margins: 0\n            padding: 0\n\n        img.checkbox:\n            width: 12\n            height: 12\n            margin: 20\n\n%% page_setup\n    page\n        %% page_header\n            header height=100        \n                table width=100%,,,class=tab_header\n                    tr\n                        td width=25%\n                            .POLBRUK S.A.\n                        td width=50%\n                            .BEZPIECZE\u0143STWO I CHIGIENA PRACY\n                        td width=25%\n                            .Linia: {{object.json_nag1}}\n                    tr\n                        td...NAZWA PROCESU:\n                        td...{{object.json_nag2}}\n                        td...X\n                    tr\n                        td...NUMER DOKUMENTU: {{object.json_st1}}\n                        td\n                            table width=50%,,,class=simple\n                                tr \n                                    td width=50%\n                                        .WYDANIE: {{object.json_st2}}\n                                    td width=50%\n                                        .DATA WYDANIA: {{object.json_st3}}\n                        td...\u0141\u0105czny czas trwania:\n        %% page_footer\n\n\n%% content \n\n    table width=100%,,,class=with_border\n        tr height=100\n            td width=33%,,,height=40\n                .Opracowa\u0142:\n            td  width=33%\n                .Sprawdzi\u0142:\n            td width=34%\n                .Zatwierdzi\u0142:\n        tr \n            td height=40\n                .Data i podpis:\n            td...Data i podpis:\n            td...Data i podpis:\n        \n    p...{{object.json_ostrz1}}\n    p...{{object.json_ostrz2}}\n    \n    %check object.json_so1\n    .X1 <br>                \n                \n    table width=100%,,,class=simple\n        %for subrep in object|args:\"etap\"|call:\"getsubreps\":\n            %if forloop.counter0|divisibleby:\"4\":\n                <tr>            \n            td width=25%\n                table class=for_img\n                    %if subrep.json_view_type == '1234'    \n                            tr \n                                td class=x11\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek1 }}\n                                td class=x11\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek2 }}\n                            tr \n                                td class=x11\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek3 }}\n                                td class=x11\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek4 }}\n                            tr\n                                td colspan=2,,,class=x21                                    \n                                    {{ subrep.json_opis }}\n                        %elif subrep.json_view_type == '1123'\n                            tr \n                                td colspan=2,,,class=x21\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek1 }}\n                            tr\n                                td class=x11\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek2 }}\n                                td class=x11\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek3 }}\n                            tr\n                                td colspan=2,,,class=x21\n                                    {{ subrep.json_opis }}\n                        %elif subrep.json_view_type == '1213'\n                            tr\n                                td rowspan=2,,,class=x12\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek1 }}\n                                td class=x11\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek2 }}\n                            tr \n                                td class=x11\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek3 }}\n                            tr \n                                td colspan=2,,,class=x21\n                                    {{ subrep.json_opis }}\n                        %elif subrep.json_view_type == '1122'\n                            tr\n                                td class=x21\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek1 }}\n                            tr \n                                td class=x21\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek2 }}\n                            tr \n                                td class=x21\n                                    {{ subrep.json_opis }}\n                        %elif subrep.json_view_type == '1212'\n                            tr\n                                td class=x12\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek1 }}\n                                td class=x12\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek2 }}\n                            tr \n                                td colspan=2,,,class=x21\n                                    {{ subrep.json_opis }}\n                        %elif subrep.json_view_type == '1111'\n                            tr \n                                td  class=x22\n                                    img src=data:image/png;base64,{{ subrep.json_obrazek1 }}\n                            tr \n                                td class=x21\n                                    {{ subrep.json_opis }}\n                        %elif subrep.json_view_type == '0000'\n                            tr \n                                td class=x23\n                                    {{ subrep.json_opis }}\n                        %else\n                            tr \n                                td class=x23\n                                    {{ subrep.json_opis }}                \n\n            %if forloop.counter0|add:\"1\"|divisibleby:\"4\" or forloop.last:\n                </tr>\n        \n    table width=100%,,,class=tab_body\n        tr\n            td width=25%\n                strong...Sprz\u0119t ochronny: \n                <br>\n                %check object.json_so1 \"ochronniki s\u0142uchu<br>\" \n                %check object.json_so2 \"maski przeciwpy\u0142owe<br>\" \n                %check object.json_so3 \"maski przeciwchemiczne<br>\" \n                %check object.json_so4 \"szelki i linka bezpiecze\u0144stwa<br>\" \n                %check object.json_so5 \"okulary ochronne<br>\" \n                %check object.json_so6 \"r\u0119kawice ochronne<br>\" \n                %check object.json_so7 \"kask ochronny<br>\" \n                %check object.json_so8 \"dzie\u017c, obuwie i sprz\u0119t ochronny w EX<br>\" \n                %check object.json_so9 \"inny sprz\u0119t ochronny <br>\" \n                <br>&nbsp;<br>\n                strong...Sprz\u0119t specjalistyczny\n                <br>\n                %check object.json_ss1 \"drabina <br>\" \n                %check object.json_ss2 \"pomost <br>\" \n                %check object.json_ss3 \"rusztowanie <br>\" \n                %check object.json_ss4 \"wysi\u0119gnik z koszem <br>\" \n                %check object.json_ss5 \"podno\u015bniki/wci\u0105gniki <br>\" \n                %check object.json_ss6 \"w\u00f3zek wid\u0142owy <br>\" \n                %check object.json_ss7 \"zawiesie <br>\" \n                <br>&nbsp;<br>\n                strong...Stosowane substancje niebezpieczne\n                <br>\n                .Nazwa: {{sn1}} <br>\n                %check object.json_sn2 \"karty substancji niebezpiecznych <br>\"\n\n            td width=75%\n                table width=100%\n                    tr\n                        td width=33%\n                            .Prace na wysoko\u015bci:\n                        td width=67%\n                            table width=100%\n                                tr\n                                    td width=50%\n                                        .Szczeg\u00f3lne zabezpieczenia w przestrzeniach zamkni\u0119tych\n                                    td width=50%\n                                        .X\n\n    table width=100%,,,class=podpisy            \n        tr\n            td class=podpis...<br />.........................................................................\n            td class=podpis...<br />.........................................................................\n        tr\n            td class=podpis...(sporz\u0105dzi\u0142 \u2013 data i podpis) \n            td class=podpis...(zatwierdzi\u0142 \u2013 data i podpis)              \n        tr\n            td height=80\n            td\n        tr\n            td class=podpis...<br />.........................................................................\n            td\n        tr\n            td class=podpis...(wykona\u0142 - data i podpis)\n            td\n            ",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "check",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% if is_checked:\n    img class=checkbox,,,src=file:///static/fonts/font-awesome/fonts/32x32/check.png\n% else:\n    img class=checkbox,,,src=file:///static/fonts/font-awesome/fonts/32x32/square-o.png\n&nbsp;&nbsp;{{title|safe}}",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "Plot",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with table_type='datatable':\n        {{ block.super }}\n\n%% scroll\n\n%% list_content_actions\n    % new_row \"New plot\"\n\n%% list_row_header\n    th...name\n    th...group\n    th...permission\n\n%% list_row\n    td...{{object.name}}\n    td...{{object.group}}\n    td...{{object.permission}}\n\n\n%% list_row_actions\n    % row_actions:\n        .edit\n        .field_edit/get_config,Get config,get_config\n        .field_edit/get_data,Get data,get_data\n        .field_edit/get_layout,Get layout,get_layout\n        .field_edit/on_event,On event,on_event\n        .delete\n\n%% row_edit\n    % form:\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "CommonGroup",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/tree.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with form_width=800 form_height=600 table_type='simple' title=_(\"Common Groups\"):\n        {{ block.super }}\n\n%% list_content_actions_new_row\n    div class=tr d-inline\n        % with object_list.model|args:parent_pk|call:\"get_group_types\" as tab:\n            % if tab:\n                ._(New): \n                % for pos in tab:\n                    % new_row_inline pos.description \"\" \"\" \"\" \"\" table_path|append_str:\"../../new_group/\"|append_str:pos.name|append_str:\"/\"|append_str:parent_pk|append_str:\"/\"\n\n%% list_row_header\n    th...Title\n\n%% list_row\n    td...{{object.to_str|safe }}\n        \n%% list_row_actions\n    % if object.get_def.action_template:\n        {% subtemplate object.get_def.get_action_template %}\n    % else:\n        % row_actions:\n            .edit-inline,_(Update),,,,,../../../../../../schreports/table/CommonGroup/{id}/edit__group/\n            .pdf\n            .odf        \n            .field_edit/data,Data,data        \n            .delete\n\n%% row_edit\n    % form:\n        \n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "CommonGroupDef",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with table_type='datatable':\n        {{ block.super }}\n\n%% scroll\n\n%% list_content_actions\n    % new_row \"New group definition\"\n\n%% list_row_header\n    th...Name\n    th...Description\n    th...Main group\n\n%% list_row\n    td...{{object.name}}\n    td...{{object.description}}\n    td...{{object.main_group}}\n\n%% list_row_actions\n    % row_actions:\n        .edit\n        .field_edit/declaration,Declaration,declaration\n        .field_edit/template,Template,template\n        .field_edit/to_html_rec,To html row,to_html_rec\n        .field_edit/save_fun,Save function,save_fun\n        .field_edit/load_fun,Load function,load_fun\n        .field_edit/on_new_elem_event,On new element,on_new_elem_event\n        .field_edit/allowed_new_fields,Allowed new fields,allowed_new_fields\n        .field_edit/to_str_fun,Convert to string function,to_str_fun\n        .field_edit/action_template,Action template,action_template\n        .delete\n\n%% row_edit\n    % form:\n        .app,name,description,main_group\n\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "Plots",
+                        "url": "table/Plot/-/form/list/",
+                        "url_type": "desktop",
+                        "perms": null,
+                        "icon": "fa://pencil-square.png",
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                }
+            ]
+        },
+        {
+            "model": "SChApp",
+            "attributes": {
+                "jsondata": null,
                 "name": "schelements",
                 "title": "Elements",
-                "module_name": "Config",
+                "module_name": "config",
                 "module_title": "Config",
                 "perms": true,
                 "index": null,
@@ -6361,6 +6683,94 @@
                         "description": "Date to",
                         "translation": "Data do",
                         "status": "OK"
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Data",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Data od",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Data do",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Data structures",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Reports",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Report definition",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Plots",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Reports definitions",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Report",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Plot",
+                        "translation": "",
+                        "status": ""
+                    }
+                },
+                {
+                    "model": "SChTranslate",
+                    "attributes": {
+                        "description": "Polts",
+                        "translation": "",
+                        "status": ""
                     }
                 }
             ]

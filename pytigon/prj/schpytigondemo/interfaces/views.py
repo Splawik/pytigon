@@ -68,6 +68,7 @@ csum = make_csum_fun()
 
 @dict_to_template("interfaces/v_test_interfaces.html")
 def test_interfaces(request, **argv):
+
     title1 = "wasm from zig"
     import interfaces.applib
     from wasmtime import Store, Module, Instance, Func, FuncType

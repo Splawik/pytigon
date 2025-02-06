@@ -699,7 +699,8 @@ class Element(TreeModel):
                     t = self.type
                     if t in s:
                         if hasattr(self, s[t]["table"].lower()):
-                            return getattr(self, s[t]["table"].lower())
+                            ret = getattr(self, s[t]["table"].lower())
+                            return ret
                         else:
                             if (
                                 s[t]["app"] == "schelements"
@@ -716,7 +717,6 @@ class Element(TreeModel):
                                 )
                                 ret = self
                             return ret
-
         return self
 
     def template_for_object(self, view, context, doc_type):
@@ -2747,7 +2747,6 @@ class DocRegStatus(models.Model):
             and "table" in data
             and data["table"] == "DocRegStatus"
         ):
-            print("X1: ", data)
             try:
                 parent_pk = int(list_view.kwargs["parent_pk"])
             except:

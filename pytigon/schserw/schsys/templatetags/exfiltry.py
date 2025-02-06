@@ -1,23 +1,101 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
+"""
+This module defines custom template filters for use in Django templates.
 
-# Pytigon - wxpython and django application framework
-
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-# license: "LGPL 3.0"
-# version: "0.1a"
-
-"""Standard python template filters"""
+Filters:
+- class_name: Returns the class name of the value.
+- to_console: Prints the value to the console and returns an empty string.
+- is_private: Checks if the function is private.
+- get_value: Returns value[argv] if value is a dictionary, otherwise returns an empty string.
+- get_attr: Returns getattr(value, attr) if possible, otherwise returns None.
+- range: Returns a list of integers from 0 to int(value) - 1.
+- dir: Returns the list of attributes of the value.
+- split: Splits the object by the separator and returns the result.
+- feval: Evaluates the value as a Python expression.
+- left: Returns the leftmost 'arg' characters of the value.
+- truncate: Truncates the value to 'arg' characters, appending '...' if necessary.
+- first_elem: Splits the value by the separator and returns the first element.
+- last_elem: Splits the value by the separator and returns the last element.
+- penultimate_elem: Splits the value by the separator and returns the penultimate element.
+- first_section: Returns the part of the string before '$$$'.
+- second_section: Returns the part of the string after '$$$'.
+- replace: Replaces 'old_value' with 'new_value' in the value.
+- nbsp: Replaces spaces with '&nbsp;'.
+- hasattr: Checks if the object has the specified attribute.
+- has_ext: Checks if the value ends with the specified extension.
+- append_get_param: Appends a GET parameter to the href.
+- call: Calls the method on the object if it exists.
+- args: Adds an argument to the object's __callArg list.
+- call_with: Calls the proxy's call method with the argument.
+- bencode: Returns the base64 encoded value.
+- bdecode: Returns the base64 decoded value.
+- to_str: Converts the value to a string.
+- none_to_empty: Converts None to an empty string, otherwise converts the value to a string.
+- to_int: Converts the value to an integer.
+- to_float: Converts the value to a float.
+- num2str: Converts the number to a string, replacing commas with dots and removing spaces.
+- format: Formats the value using the specified format string.
+- genericfloatformat: Formats the float value using the specified format string.
+- genericfloatnullformat: Formats the float value, returning '-' if the value is zero or invalid.
+- floatformat2: Formats the float value to 2 decimal places.
+- floatformat3: Formats the float value to 3 decimal places.
+- floatnullformat: Formats the float value to 2 decimal places, returning '-' if the value is zero or invalid.
+- floatnullformat3: Formats the float value to 3 decimal places, returning '-' if the value is zero or invalid.
+- amount: Formats the amount with thousand separators.
+- isoformat: Formats the value as an ISO date string.
+- sysisoformat: Formats the value as an ISO date string, handling system-specific formats.
+- isoformat_short: Formats the value as a short ISO date string.
+- d_isoformat: Formats the value as an ISO date string (date only).
+- one_line_block: Cleans the value by removing unnecessary spaces and characters.
+- one_line_code: Cleans the value by removing newlines and tabs.
+- clean: Cleans the value by removing unnecessary spaces and characters.
+- fadd: Returns the sum of value and arg as floats.
+- subtract: Returns the difference between value and arg as integers.
+- fsubtract: Returns the difference between value and arg as floats.
+- multiply: Returns the product of value and arg as integers.
+- fmultiply: Returns the product of value and arg as floats.
+- divide: Returns the quotient of value and arg as integers.
+- fdivide: Returns the quotient of value and arg as floats.
+- append_str: Appends the string s to the value if s is not None or empty.
+- date_inc: Increments the date value by the specified number of days.
+- date_dec: Decrements the date value by the specified number of days.
+- get_model_fields: Returns the fields of the model without many-to-many fields.
+- get_model_meta: Returns the _meta attribute of the model.
+- get_model_app: Returns the app label of the model.
+- get_model_row: Returns a list of field values for the model instance.
+- get_model_ooxml_row: Returns a list of field values formatted for OOXML.
+- get_all_model_fields: Returns all fields of the model, including many-to-many fields.
+- get_all_model_parents: Returns a list of all parent models.
+- get_model_fields_names: Returns a list of field names for the model instance.
+- get_model_fields_verbose_names: Returns a list of verbose names for the model fields.
+- user_in_group: Checks if the user is in the specified group.
+- field_as_widget: Renders the field as a widget with the specified attributes.
+- model_has_children: Checks if the model instance has children.
+- model_can_have_children: Checks if the model instance can have children.
+- choices_from_field: Returns the choices for the specified field.
+- reverse: Returns the reversed URL for the given view name.
+- errormessage: Checks if the value ends with '!'.
+- aggregate: Returns the aggregate value for the specified field.
+- wikify: Converts the value to wiki format.
+- wiki: Converts the value to wiki format.
+- wiki_href: Converts the value to a wiki link.
+- markdown: Converts the value to HTML using Markdown.
+- preferred_enctype: Returns the preferred enctype for the form.
+- to_bootstrap: Converts the form to a Bootstrap-styled form.
+- textfiel_row_col: Sets the rows and cols attributes for the text field.
+- ooxml: Converts the value to a string suitable for OOXML.
+- ihtml2html: Converts iHTML to HTML.
+- get_or_tree: Returns 'gettree' if getattr is True, otherwise returns 'tree'.
+- append_class_to_attrs: Appends a class to the object's attributes.
+- is_menu_checked: Checks if the URL matches the full path.
+- import_var: Imports a variable from a module.
+- json_dumps: Serializes the object to JSON.
+- only_items_containing: Removes items from the select field that do not contain the mask.
+- user_can_change_password: Checks if the user can change their password.
+- prefetch_related: Prefetches related objects for the object list.
+- append_uuid: Appends a UUID to the variable.
+- append_suffix: Appends the suffix to the value.
+- remove_suffix: Removes the suffix from the value.
+"""
 
 from base64 import b64encode, b64decode
 import datetime
@@ -46,86 +124,88 @@ register = template.Library()
 
 @register.filter(name="class_name")
 def class_name(value):
-    """Returns class name of value"""
-    ret = ""
+    """Returns the class name of the value."""
     try:
-        ret = value.__class__.__name__
-    except:
-        pass
-    return ret
+        return value.__class__.__name__
+    except AttributeError:
+        return ""
 
 
 @register.filter(name="to_console")
 def to_console(value):
-    """Returns class name of value"""
+    """Prints the value to the console and returns an empty string."""
     print(value)
     return ""
 
 
 @register.filter(name="is_private")
 def is_private(value):
-    """Check if function is private"""
+    """Checks if the function is private."""
     return value.startswith("_")
 
 
 @register.filter(name="get_value")
-def getvalue(value, argv):
-    """Returns value[argv]"""
+def get_value(value, argv):
+    """Returns value[argv] if value is a dictionary, otherwise returns an empty string."""
     if isinstance(value, dict):
-        if argv in value:
-            return value[argv]
-        else:
-            return ""
-    else:
-        try:
-            ret = value[argv]
-        except:
-            ret = ""
-        return ret
+        return value.get(argv, "")
+    try:
+        return value[argv]
+    except (TypeError, KeyError, IndexError):
+        return ""
 
 
 @register.filter(name="get_attr")
 def get_attr(value, attr):
-    """Returns getattr(value, attr)"""
+    """Returns getattr(value, attr) if possible, otherwise returns None."""
     try:
-        obj = getattr(value, attr)
-    except:
-        obj = None
-    return obj
+        return getattr(value, attr)
+    except AttributeError:
+        return None
 
 
 @register.filter(name="range")
 def _range(value):
-    """Returns list(range(int(value)))"""
-    return list(range(int(value)))
+    """Returns a list of integers from 0 to int(value) - 1."""
+    try:
+        return list(range(int(value)))
+    except (ValueError, TypeError):
+        return []
 
 
 @register.filter(name="dir")
 def f_dir(value):
-    """Returns dir(value)"""
+    """Returns the list of attributes of the value."""
     return dir(value)
 
 
 @register.filter(name="split")
 def filter_split(obj, sep=";"):
-    "split obj and return result"
+    """Splits the object by the separator and returns the result."""
     return obj.split(sep)
 
 
 @register.filter(name="feval")
 def _eval(value):
-    """Returns eval(value)"""
-    return eval(value)
+    """Evaluates the value as a Python expression."""
+    try:
+        return eval(value)
+    except (SyntaxError, NameError):
+        return ""
 
 
 @register.filter(name="left")
 def left(value, arg):
-    return str(value)[: int(arg)]
+    """Returns the leftmost 'arg' characters of the value."""
+    try:
+        return str(value)[: int(arg)]
+    except (ValueError, TypeError):
+        return value
 
 
 @register.filter(name="truncate")
 def truncate(value, arg):
-    """truncate result"""
+    """Truncates the value to 'arg' characters, appending '...' if necessary."""
     try:
         retstr = str(value)
     except:
@@ -139,88 +219,72 @@ def truncate(value, arg):
 
 @register.filter(name="first_elem")
 def first_elem(value, sep="/"):
-    """split value and return first element"""
+    """Splits the value by the separator and returns the first element."""
     return value.split(sep)[0]
 
 
 @register.filter(name="last_elem")
 def last_elem(value, sep="/"):
-    """split value and return last element"""
+    """Splits the value by the separator and returns the last element."""
     return value.split(sep)[-1]
 
 
 @register.filter(name="penultimate_elem")
 def penultimate_elem(value, sep="/"):
-    """split value and return penultimate element"""
+    """Splits the value by the separator and returns the penultimate element."""
     x = value.split(sep)
-    if len(x) > 1:
-        return x[-2]
-    else:
-        return ""
+    return x[-2] if len(x) > 1 else ""
 
 
 @register.filter(name="first_section")
 def first_section(html):
-    """part of string before $$$"""
-    if html:
-        return html.split("$$$")[0]
-    else:
-        return ""
+    """Returns the part of the string before '$$$'."""
+    return html.split("$$$")[0] if html else ""
 
 
 @register.filter(name="second_section")
 def second_section(html):
-    """part of string after $$$"""
+    """Returns the part of the string after '$$$'."""
     if html:
         x = html.split("$$$")
-        if len(x) > 1:
-            return x[1]
-        else:
-            return ""
-    else:
-        return ""
+        return x[1] if len(x) > 1 else ""
+    return ""
 
 
 @register.filter(name="replace")
 def replace(value, replace_str):
     """replace_str: 'old_value|new_value'"""
     l = replace_str.split("|")
-    if len(l) == 2:
-        value2 = value.replace(l[0], l[1])
-        return value2
-    else:
-        return value
+    return value.replace(l[0], l[1]) if len(l) == 2 else value
 
 
 @register.filter(name="nbsp")
 def nbsp(value):
-    """replace_str: 'old_value|new_value'"""
+    """Replaces spaces with '&nbsp;'."""
     return value.replace(" ", "&nbsp;")
 
 
 @register.filter(name="hasattr")
 def filter_hasattr(obj, attr_name):
+    """Checks if the object has the specified attribute."""
     return hasattr(obj, attr_name)
 
 
 @register.filter(name="has_ext")
 def has_ext(value, arg):
-    if value.lower().endswith(arg.lower()):
-        return True
-    else:
-        return False
+    """Checks if the value ends with the specified extension."""
+    return value.lower().endswith(arg.lower())
 
 
 @register.filter(name="append_get_param")
-def append_get_param(href, parm):
-    if "?" in href:
-        return href + "&" + str(parm)
-    else:
-        return href + "?" + str(parm)
+def append_get_param(href, param):
+    """Appends a GET parameter to the href."""
+    return f"{href}&{param}" if "?" in href else f"{href}?{param}"
 
 
 @register.filter(name="call")
 def _call(obj, method_name):
+    """Calls the method on the object if it exists."""
     if hasattr(obj, method_name):
         method = getattr(obj, method_name)
         if hasattr(obj, "__callArg"):
@@ -233,6 +297,7 @@ def _call(obj, method_name):
 
 @register.filter(name="args")
 def args(obj, arg):
+    """Adds an argument to the object's __callArg list."""
     if not hasattr(obj, "__callArg"):
         obj.__callArg = []
     obj.__callArg += [arg]
@@ -241,82 +306,77 @@ def args(obj, arg):
 
 @register.filter(name="call_with")
 def call_with(proxy, arg):
+    """Calls the proxy's call method with the argument."""
     return proxy.call(arg)
 
 
-# conversion functions
+# Conversion functions
+
+
 @register.filter(name="bencode")
 def bencode(value):
-    """Returns b64encode(value)"""
-
-    if value:
-        return b64encode(value.encode("utf-8")).decode("utf-8")
-    else:
-        return b64encode(b"").decode("utf-8")
+    """Returns the base64 encoded value."""
+    return (
+        b64encode(value.encode("utf-8")).decode("utf-8")
+        if value
+        else b64encode(b"").decode("utf-8")
+    )
 
 
 @register.filter(name="bdecode")
 def bdecode(value):
-    """Returns b64decode(value)"""
-
+    """Returns the base64 decoded value."""
     return b64decode(value.encode("utf-8")).decode("utf-8")
 
 
 @register.filter(name="to_str")
 def to_str(value):
-    """Converts value to str"""
+    """Converts the value to a string."""
     try:
-        ret = str(value)
-    except:
-        ret = ""
-    return ret
+        return str(value)
+    except (ValueError, TypeError):
+        return ""
 
 
 @register.filter(name="none_to_empty")
 def none_to_empty(value):
-    """Converts value to str, None to ''"""
-    if value:
-        try:
-            ret = str(value)
-        except:
-            ret = ""
-    else:
-        ret = ""
-    return ret
+    """Converts None to an empty string, otherwise converts the value to a string."""
+    return str(value) if value else ""
 
 
 @register.filter(name="to_int")
 def to_int(value):
+    """Converts the value to an integer."""
     try:
-        ret = int(value)
-    except:
-        ret = 0
-    return ret
+        return int(value)
+    except (ValueError, TypeError):
+        return 0
 
 
 @register.filter(name="to_float")
 def to_float(value):
+    """Converts the value to a float."""
     try:
-        ret = float(value)
-    except:
-        ret = 0.0
-    return ret
+        return float(value)
+    except (ValueError, TypeError):
+        return 0.0
 
 
 @register.filter(name="num2str")
 def num2str(value):
-    buf = str(value)
-    return buf.replace(",", ".").replace(" ", "")
+    """Converts the number to a string, replacing commas with dots and removing spaces."""
+    return str(value).replace(",", ".").replace(" ", "")
 
 
 @register.filter(name="format")
 def format(value, id):
+    """Formats the value using the specified format string."""
     return value % id
 
 
 @register.filter(name="genericfloatformat")
 def genericfloatformat(text, arg="{: .2f}"):
-    space_convert = False
+    """Formats the float value using the specified format string."""
     try:
         f = float(text)
         if ": " in arg:
@@ -335,38 +395,41 @@ def genericfloatformat(text, arg="{: .2f}"):
 
 @register.filter(name="genericfloatnullformat")
 def genericfloatnullformat(text, arg="{: .2f}"):
+    """Formats the float value, returning '-' if the value is zero or invalid."""
     try:
         f = float(text)
-        if not f:
-            return "-"
-        else:
-            return genericfloatformat(text, arg)
-    except:
+        return "-" if not f else genericfloatformat(text, arg)
+    except ValueError:
         return "-"
 
 
 @register.filter(name="floatformat2")
 def floatformat2(text):
+    """Formats the float value to 2 decimal places."""
     return genericfloatformat(text, "{: .2f}")
 
 
 @register.filter(name="floatformat3")
 def floatformat3(text):
+    """Formats the float value to 3 decimal places."""
     return genericfloatformat(text, "{: .3f}")
 
 
 @register.filter(name="floatnullformat")
 def floatnullformat(text):
+    """Formats the float value to 2 decimal places, returning '-' if the value is zero or invalid."""
     return genericfloatnullformat(text, "{: .2f}")
 
 
 @register.filter(name="floatnullformat3")
 def floatnullformat3(text):
+    """Formats the float value to 3 decimal places, returning '-' if the value is zero or invalid."""
     return genericfloatnullformat(text, "{: .3f}")
 
 
 @register.filter(name="amount")
 def amount(text):
+    """Formats the amount with thousand separators."""
     try:
         f = float(text)
     except ValueError:
@@ -383,7 +446,7 @@ def amount(text):
 
 
 def parse_locale_date(formatted_date):
-    parsed_date = None
+    """Parses a locale-specific date string into a datetime object."""
     for date_format in formats.get_format("DATE_INPUT_FORMATS"):
         try:
             parsed_date = datetime.datetime.strptime(formatted_date, date_format)
@@ -394,11 +457,11 @@ def parse_locale_date(formatted_date):
     if not parsed_date:
         raise ValueError
     return parsed_date
-    # return parsed_date.date()
 
 
 @register.filter(name="isoformat")
 def isoformat(value):
+    """Formats the value as an ISO date string."""
     if value:
         if isinstance(value, str):
             value2 = parse_locale_date(value)
@@ -418,6 +481,7 @@ def isoformat(value):
 
 @register.filter(name="sysisoformat")
 def sysisoformat(value):
+    """Formats the value as an ISO date string, handling system-specific formats."""
     if value:
         try:
             if type(value) == str:
@@ -441,25 +505,19 @@ def sysisoformat(value):
 
 @register.filter(name="isoformat_short")
 def isoformat_short(value):
-    if value:
-        iso = value.isoformat()[:16].replace("T", " ")
-        return iso
-    else:
-        return ""
+    """Formats the value as a short ISO date string."""
+    return value.isoformat()[:16].replace("T", " ") if value else ""
 
 
 @register.filter(name="d_isoformat")
 def d_isoformat(value):
-    if value:
-        iso = value.isoformat()[:10]
-        return iso
-    else:
-        return ""
+    """Formats the value as an ISO date string (date only)."""
+    return value.isoformat()[:10] if value else ""
 
 
 @register.filter(name="one_line_block")
 def one_line_block(value):
-    """Clean value by removing unnecessary spaces and characters: '\n', '\t'"""
+    """Cleans the value by removing unnecessary spaces and characters."""
     return (
         value.replace("        ", " ")
         .replace("    ", " ")
@@ -471,81 +529,79 @@ def one_line_block(value):
 
 @register.filter(name="one_line_code")
 def one_line_code(value):
-    """Clean value by removing unnecessary spaces and characters: '\n', '\t'"""
+    """Cleans the value by removing newlines and tabs."""
     return value.replace("\n", "").replace("\r", "").replace("\t", "")
 
 
 @register.filter(name="clean")
 def clean(value):
+    """Cleans the value by removing unnecessary spaces and characters."""
     return " ".join(value.replace("\n", "").replace("\t", "").split())
 
 
-# + - / *
+# Arithmetic operations
 
 
 @register.filter(name="fadd")
 def fadd(value, arg):
-    """Returns int(value) - int(arg)"""
+    """Returns the sum of value and arg as floats."""
     return float(value) + float(arg)
 
 
 @register.filter(name="subtract")
 def subtract(value, arg):
-    """Returns int(value) - int(arg)"""
+    """Returns the difference between value and arg as integers."""
     return int(value) - int(arg)
 
 
 @register.filter(name="fsubtract")
 def fsubtract(value, arg):
-    """Returns int(value) - int(arg)"""
+    """Returns the difference between value and arg as floats."""
     return float(value) - float(arg)
 
 
 @register.filter(name="multiply")
 def multiply(value, arg):
-    """Returns int(value) * int(arg)"""
+    """Returns the product of value and arg as integers."""
     return int(value) * int(arg)
 
 
 @register.filter(name="fmultiply")
 def fmultiply(value, arg):
-    """return fvalue * float"""
+    """Returns the product of value and arg as floats."""
     try:
-        ret = float(value) * float(arg)
-    except:
-        ret = ""
-    return ret
+        return float(value) * float(arg)
+    except (ValueError, TypeError):
+        return ""
 
 
 @register.filter(name="divide")
 def divide(value, arg):
-    """Return int(value) / int(arg)"""
+    """Returns the quotient of value and arg as integers."""
     return int(value) / int(arg)
 
 
 @register.filter(name="fdivide")
 def fdivide(value, arg):
-    """Returns float(value) / float(arg)"""
-    if float(arg) != 0:
-        return float(value) / float(arg)
-    else:
+    """Returns the quotient of value and arg as floats."""
+    try:
+        return float(value) / float(arg) if float(arg) != 0 else ""
+    except (ValueError, TypeError):
         return ""
 
 
 @register.filter(name="append_str")
 def append_str(value, s):
-    if s == None or s == "":
-        return value
-    else:
-        return value + str(s)
+    """Appends the string s to the value if s is not None or empty."""
+    return value + str(s) if s else value
 
 
 @register.filter(name="date_inc")
 def date_inc(value, arg):
-    """Increment date value by timedelta(int(arg))"""
+    """Increments the date value by the specified number of days."""
     try:
-        (date, time) = value.split()
-        (y, m, d) = date.split("-")
+        date, time = value.split()
+        y, m, d = date.split("-")
         return datetime.datetime(int(y), int(m), int(d)) + datetime.timedelta(int(arg))
     except ValueError:
         return None
@@ -553,9 +609,9 @@ def date_inc(value, arg):
 
 @register.filter(name="date_dec")
 def date_dec(value, arg):
-    """Decrement date value by timedelta(int(arg))"""
+    """Decrements the date value by the specified number of days."""
     try:
-        (y, m, d) = value.split("-")
+        y, m, d = value.split("-")
         return (
             datetime.datetime(int(y), int(m), int(d)) - datetime.timedelta(int(arg))
         ).date()
@@ -563,12 +619,12 @@ def date_dec(value, arg):
         return None
 
 
-# models and fields
+# Models and fields
 
 
 @register.filter(name="get_model_fields")
 def get_model_fields(value):
-    """Returns fields for model (value) without many_to_many fields"""
+    """Returns the fields of the model without many-to-many fields."""
     ret = []
     if value and hasattr(value, "_meta"):
         for f in value._meta.fields:
@@ -581,24 +637,19 @@ def get_model_fields(value):
 
 @register.filter(name="get_model_meta")
 def get_model_meta(value):
-    """Returns model _meta"""
-    ret = []
-    if value and hasattr(value, "_meta"):
-        return value._meta
-    return None
+    """Returns the _meta attribute of the model."""
+    return value._meta if value and hasattr(value, "_meta") else None
 
 
 @register.filter(name="get_model_app")
 def get_model_app(value):
-    """Returns model app"""
-    ret = []
-    if value and hasattr(value, "_meta"):
-        return value._meta.app_label
-    return "x"
+    """Returns the app label of the model."""
+    return value._meta.app_label if value and hasattr(value, "_meta") else "x"
 
 
 @register.filter(name="get_model_row")
 def get_model_row(obj):
+    """Returns a list of field values for the model instance."""
     if hasattr(obj, "_meta"):
         ret = []
         for field in obj._meta.get_fields():
@@ -614,6 +665,7 @@ def get_model_row(obj):
 
 @register.filter(name="get_model_ooxml_row")
 def get_model_ooxml_row(obj):
+    """Returns a list of field values formatted for OOXML."""
     if hasattr(obj, "_meta"):
         ret = []
         for field in obj._meta.get_fields():
@@ -629,16 +681,13 @@ def get_model_ooxml_row(obj):
 
 @register.filter(name="get_all_model_fields")
 def get_all_model_fields(value):
-    """Returns all fields for model (value)"""
-    ret = []
-    for f in value._meta.fields + value._meta.many_to_many:
-        ret.append(f)
-    return ret
+    """Returns all fields of the model, including many-to-many fields."""
+    return [f for f in value._meta.fields + value._meta.many_to_many]
 
 
 @register.filter(name="get_all_model_parents")
 def get_all_model_parents(parent):
-    """Returns fields for model (value) without many_to_many fields"""
+    """Returns a list of all parent models."""
     ret = []
     while parent:
         ret.append(parent)
@@ -648,6 +697,7 @@ def get_all_model_parents(parent):
 
 @register.filter(name="get_model_fields_names")
 def get_model_fields_names(obj):
+    """Returns a list of field names for the model instance."""
     ret = []
     for field in obj._meta.get_fields():
         if hasattr(obj, field.name):
@@ -660,7 +710,7 @@ def get_model_fields_names(obj):
 
 @register.filter(name="get_model_fields_verbose_names")
 def get_model_fields_verbose_names(obj):
-    ret = []
+    """Returns a list of verbose names for the model fields."""
     if hasattr(obj, "_meta"):
         for field in obj._meta.get_fields():
             if hasattr(obj, field.name):
@@ -679,11 +729,13 @@ def get_model_fields_verbose_names(obj):
 
 @register.filter(name="user_in_group")
 def user_in_group(user, group_name):
+    """Checks if the user is in the specified group."""
     return user.groups.filter(name=group_name).exists()
 
 
 @register.filter(name="field_as_widget")
 def field_as_widget(value, arg):
+    """Renders the field as a widget with the specified attributes."""
     d = {}
     l = arg.split(",")
     for x in l:
@@ -692,11 +744,9 @@ def field_as_widget(value, arg):
     return value.as_widget(attrs=d)
 
 
-# TODO - zmiana nazwy
-
-
 @register.filter(name="model_has_children")
 def model_has_children(value):
+    """Checks if the model instance has children."""
     if hasattr(value, "has_children"):
         return value.has_children
     set_name = value._meta.model_name
@@ -713,6 +763,7 @@ def model_has_children(value):
 
 @register.filter(name="model_can_have_children")
 def model_can_have_children(value):
+    """Checks if the model instance can have children."""
     if hasattr(value, "can_have_children"):
         if value.can_have_children == False:
             return False
@@ -721,46 +772,32 @@ def model_can_have_children(value):
 
 @register.filter(name="choices_from_field")
 def choices_from_field(obj, field):
+    """Returns the choices for the specified field."""
     return obj._meta.get_field(field).choices
 
 
-# html
+# HTML
 
 
 @register.filter(name="reverse")
 def _reverse(value):
+    """Returns the reversed URL for the given view name."""
     return reverse(value)
 
 
 @register.filter(name="errormessage")
 def errormessage(value):
-    """Returns True if value.endswith('!')"""
+    """Checks if the value ends with '!'."""
+
     if value.endswith("!"):
         return True
     else:
         return False
 
 
-# @register.filter(name='to_html_icon')
-# def to_html_icon(icon_str, additional_class=""):
-#    if icon_str.startswith('fa://'):
-#        return "<i class='fa fa-%s %s'></i>" % (icon_str[5:].replace('.png',''), additional_class)
-#    elif icon_str.startswith('png://'):
-#        src = mhref("/static/icons/22x22/%s" % icon_str[6:])
-#        return "<img src='%s' class='%s'></img>" % (src, additional_class)
-#     elif icon_str.startswith('client://'):
-#         src = mhref("/static/icons/22x22/%s" % icon_str[9:])
-#         return "<img src='%s' class='%s'></img>" % (src, additional_class)
-#     elif icon_str.startswith('data:image/svg+xml'):
-#         x = icon_str.split(',',1)
-#         svg_code = x[1]
-#         return svg_code
-#     else:
-#         return "<i class='fa fa-circle-o fa-lg'></i>"
-
-
 @register.filter(name="aggregate")
 def aggregate(objects, field_name):
+    """Returns the aggregate value for the specified field."""
     if field_name.startswith("max_"):
         field = field_name[4:]
         x = objects.aggregate(Max(field))
@@ -784,21 +821,24 @@ def aggregate(objects, field_name):
     return 0
 
 
-# wiki, markdown
+# Wiki and Markdown
 
 
 @register.filter(name="wikify")
 def _wikify(value, path=None):
+    """Converts the value to wiki format."""
     return wikify(value, path)
 
 
 @register.filter(name="wiki")
 def wiki(value):
+    """Converts the value to wiki format."""
     return wiki_from_str(value)
 
 
 @register.filter(name="wiki_href")
 def wiki_href(value, section="help"):
+    """Converts the value to a wiki link."""
     if section.startswith("+"):
         path = section
         section = "help"
@@ -809,6 +849,7 @@ def wiki_href(value, section="help"):
 
 @register.filter(name="markdown", is_safe=True)
 def _markdown(value):
+    """Converts the value to HTML using Markdown."""
     if value:
         return markdown.markdown(
             value,
@@ -828,11 +869,12 @@ def _markdown(value):
         return ""
 
 
-# forms
+# Forms
 
 
 @register.filter(name="preferred_enctype")
 def _preferred_enctype(form):
+    """Returns the preferred enctype for the form."""
     if hasattr(form, "visible_fields"):
         for field in form.visible_fields():
             if type(field.field).__name__ in ("FileField", "ImageField"):
@@ -845,26 +887,30 @@ class BootstrapForm:
         self.form = form
 
     def as_p(self):
+        """Renders the form as a Bootstrap-styled form."""
         return render_form(self.form)
 
 
 @register.filter(name="to_bootstrap")
 def to_bootstrap(form):
+    """Converts the form to a Bootstrap-styled form."""
     return BootstrapForm(form)
 
 
 @register.filter(name="textfiel_row_col")
 def textfiel_row_col(field, arg):
+    """Sets the rows and cols attributes for the text field."""
     row, col = arg.split("x")
     field.field.widget.attrs["rows"] = int(row)
     field.field.widget.attrs["cols"] = int(col)
     return field
 
 
-# other
+# Other
 
 
 def ooxml(value):
+    """Converts the value to a string suitable for OOXML."""
     if type(value) in (datetime.datetime, datetime.date):
         if value:
             return value.isoformat()
@@ -884,24 +930,25 @@ def ooxml(value):
 
 @register.filter(name="ooxml")
 def _ooxml(value):
+    """Converts the value to OOXML format."""
     return ooxml(value)
 
 
 @register.filter(name="ihtml2html")
 def ihtml2html(html):
+    """Converts iHTML to HTML."""
     return ihtml_to_html(None, input_str=html)
 
 
 @register.filter(name="get_or_tree")
 def get_or_tree(getattr):
-    if getattr:
-        return "gettree"
-    else:
-        return "tree"
+    """Returns 'gettree' if getattr is True, otherwise returns 'tree'."""
+    return "gettree" if getattr else "tree"
 
 
 @register.filter(name="append_class_to_attrs")
 def append_class_to_attrs(obj, arg):
+    """Appends a class to the object's attributes."""
     if obj:
         ret = ""
         test = False
@@ -926,6 +973,7 @@ def append_class_to_attrs(obj, arg):
 
 @register.filter(name="is_menu_checked")
 def is_menu_checked(url, full_path):
+    """Checks if the URL matches the full path."""
     if url and full_path:
         p = full_path.split("?")[0]
         if len(p) > 0 and p[0] == "/":
@@ -949,6 +997,7 @@ def is_menu_checked(url, full_path):
 
 @register.filter(name="import_var")
 def _import_var(obj):
+    """Imports a variable from a module."""
     path = str(obj)
     base_path, item = path.split(":")
     m = importlib.import_module(base_path)
@@ -957,13 +1006,13 @@ def _import_var(obj):
 
 @register.filter(name="json_dumps", is_safe=True)
 def _json_dumps(obj):
-    ret = json_dumps(obj)
-    return ret
+    """Serializes the object to JSON."""
+    return json_dumps(obj)
 
 
 @register.filter(name="only_items_containing")
 def only_items_containing(select_field, mask):
-    """Remove frem select field items not in line with mask"""
+    """Removes items from the select field that do not contain the mask."""
     if mask:
         to_delete = []
         for item in select_field.field.widget.choices:
@@ -976,6 +1025,7 @@ def only_items_containing(select_field, mask):
 
 @register.filter(name="user_can_change_password")
 def user_can_change_password(user):
+    """Checks if the user can change their password."""
     try:
         from allauth.account.models import EmailAddress
     except:
@@ -990,6 +1040,7 @@ def user_can_change_password(user):
 
 @register.filter(name="prefetch_related")
 def prefetch_related(object_list, param):
+    """Prefetches related objects for the object list."""
     l = object_list
     for related in param.replace(",", ";").split(";"):
         if related:
@@ -999,11 +1050,13 @@ def prefetch_related(object_list, param):
 
 @register.filter(name="append_uuid")
 def append_uuid(var):
+    """Appends a UUID to the variable."""
     return str(var) + str(uuid.uuid4())
 
 
 @register.filter(name="append_suffix")
 def append_suffix(value, s):
+    """Appends the suffix to the value."""
     if s == None or s == "":
         return value
     else:
@@ -1015,6 +1068,7 @@ def append_suffix(value, s):
 
 @register.filter(name="remove_suffix")
 def remove_suffix(value, s):
+    """Removes the suffix from the value"""
     if s == None or s == "":
         return value
     else:

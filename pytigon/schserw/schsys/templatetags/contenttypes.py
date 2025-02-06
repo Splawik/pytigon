@@ -1,37 +1,27 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
-
-# Pytigon - wxpython and django application framework
-
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-# license: "LGPL 3.0"
-# version: "0.1a"
-
-""" python template filters
-"""
+"""Python template filters."""
 
 from django import template
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
 
 register = template.Library()
 
 
 @register.filter(name="table_exists")
 def table_exists(table_name):
-    """Returns True if table exists else False"""
-    ret = True
+    """Check if a table exists in the database.
+
+    Args:
+        table_name (str): The name of the table to check.
+
+    Returns:
+        bool: True if the table exists, False otherwise.
+    """
     try:
-        obj = ContentType.objects.get(model=table_name.lower())
-    except:
-        ret = False
-    return ret
+        ContentType.objects.get(model=table_name.lower())
+        return True
+    except ObjectDoesNotExist:
+        return False
+    except Exception as e:
+        # Log the exception if needed
+        return False

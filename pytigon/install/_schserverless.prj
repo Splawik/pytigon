@@ -71,15 +71,6 @@
                         "content": "from django import template\nfrom django.template.base import Node\n\nregister = template.Library()\n\nclass TransparentNode(Node):\n    def __init__(self, nodelist):\n        self.nodelist = nodelist\n\n    def render(self, context):\n        return self.nodelist.render(context).strip()\n\n@register.tag\ndef compress(parser, token):\n    nodelist = parser.parse(('endcompress',))\n    parser.delete_first_token()\n    return TransparentNode(nodelist)\n",
                         "doc": null
                     }
-                },
-                {
-                    "model": "SChFile",
-                    "attributes": {
-                        "type": "t",
-                        "name": "socialaccount",
-                        "content": "from django import template\nfrom django.template.base import Node\n\nregister = template.Library()\n\nclass NoneNode(Node):\n    def __init__(self):\n        pass\n\n    def render(self, context):\n        return \"\"\n\n@register.tag\ndef provider_login_url(parser, token):\n    return NoneNode()\n",
-                        "doc": null
-                    }
                 }
             ]
         }

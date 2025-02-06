@@ -1037,7 +1037,7 @@ def build_prj(pk, config={}):
     for pos in prj.get_ext_pytigon_apps():
         if pos:
             x = pos.split(".")
-            tab1 = models.SChProject.objects.filter(name=x[0], main_view=True)
+            tab1 = models.SChProject.objects.filter(name=x[0])
             for _prj in tab1:
                 tab2 = _prj.schapp_set.filter(name=x[1])
                 for _app in tab2:

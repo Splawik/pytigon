@@ -34,6 +34,7 @@ GenreChoices = [
 
 
 class Album(models.Model):
+
     class Meta:
         verbose_name = _("Album")
         verbose_name_plural = _("Albums")
@@ -102,6 +103,7 @@ admin.site.register(Album)
 
 
 class AlbumProxy(Album):
+
     class Meta:
         verbose_name = _("Album")
         verbose_name_plural = _("Albums")
@@ -117,6 +119,7 @@ admin.site.register(AlbumProxy)
 
 
 class UserGroup(models.Model):
+
     class Meta:
         verbose_name = _("User group")
         verbose_name_plural = _("User groups")
@@ -130,6 +133,7 @@ admin.site.register(UserGroup)
 
 
 class Track(models.Model):
+
     class Meta:
         verbose_name = _("Track")
         verbose_name_plural = _("Tracks")

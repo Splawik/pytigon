@@ -28,6 +28,7 @@ class UserType(DjangoObjectType):
         model = get_user_model()
 
 
+# Define the UserMutation which allows updating or creating a user
 class UserMutation(graphene.Mutation):
     class Arguments:
         id = graphene.ID()
@@ -48,6 +49,7 @@ class UserMutation(graphene.Mutation):
         return UserMutation(user=_user)
 
 
+# Define the base Query class
 class _Query:
     users = graphene.List(UserType)
 
@@ -55,6 +57,7 @@ class _Query:
         return get_user_model().objects.all()
 
 
+# Define the base Mutation class
 class _Mutation:
     pass
 

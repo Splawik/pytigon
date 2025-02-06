@@ -1,23 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
-
-# Pytigon - wxpython and django application framework
-
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-# license: "LGPL 3.0"
-# version: "0.1a"
-
-# from django.conf.urls import url, include
 from base64 import b64decode
 from django.utils.translation import gettext_lazy as _
 
@@ -121,7 +101,6 @@ def sch_logout(request):
 
 urlpatterns = [
     path("ok/", views.ok, name="ok"),
-    # path("<int:id>/<str:title>/new_row_ok/", views.ret_ok, name="new_row_ok"),
     path(
         "login/",
         cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
@@ -134,8 +113,6 @@ urlpatterns = [
     path("do_logout/", sch_logout),
     path("change_password/", views.change_password),
     path("change_profile_variant/<str:variant_name>/", views.change_profile_variant),
-    # path('accounts/', include('allauth.urls')),
-    # path("message/<str:titleid>/(<str:messageid>/<int:id>/", views.message),
     path("messages/", views.get_messages),
     path("datedialog/<str:action>/", views.datedialog),
     path("listdialog/<str:action>/", views.listdialog),

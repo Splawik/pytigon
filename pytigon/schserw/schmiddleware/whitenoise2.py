@@ -9,6 +9,15 @@ from django.http import HttpResponseNotFound
 
 class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
     def __init__(self, get_response=None, settings=settings):
+        """
+        Initialize the WhiteNoiseMiddleware2 instance.
+
+        :param get_response: The callable producing the response for the current
+            request.
+        :param settings: The Django settings module to use when initializing the
+            middleware.
+        :type settings: django.conf.Settings
+        """
         WhiteNoiseMiddleware.__init__(self, get_response, settings)
         if self.static_root:
             maps = {}
@@ -37,6 +46,22 @@ class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
                         fs.add_fs(key, OSFS(pos[0]))
 
     def __call__(self, request):
+        """
+        Process the request and return the response.
+
+        If the request path contains "/static", WhiteNoise will attempt to
+        serve the static file from the configured static root directory.
+        Otherwise, the request will be passed to the next middleware in the
+        chain.
+
+        If the request ends with ".map", WhiteNoise will return a 404 response
+        because source maps are not served by WhiteNoise.
+
+        :param request: The request object.
+        :type request: django.http.HttpRequest
+        :return: The response object.
+        :rtype: django.http.HttpResponse
+        """
         response = None
         if "/static" in request.path:
             response = self.process_request(request)

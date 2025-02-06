@@ -1,22 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
-
-# Pytigon - wxpython and django application framework
-
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-# license: "LGPL 3.0"
-# version: "0.1a"
-
 """Module contains base views for pytigon applications"""
 
 import os
@@ -117,41 +98,6 @@ def ok(request):
     return actions.ok(request)
 
 
-# def ret_ok(request, id, title):
-#    """If form is OK redirect to this view
-#
-#    Args:
-#        request - django request
-#        id
-#        title
-#    """
-#    return actions.new_row_ok(request, id, title)
-
-
-#    if request.META["HTTP_USER_AGENT"].lower().startswith("py"):
-#        return HttpResponse(_RET_OK_SHTML % (id, title))
-#    else:
-#        return HttpResponse(_RET_OK_HTML % (id, title))
-
-
-# def message(request, titleid, messageid, id):
-#    """View to show messages
-#
-#    Args:
-#        titleid - title id
-#        messageid - message id
-#        id - id
-#    """
-#    global MESSAGE_LIST
-#    title = MESSAGE_LIST[titleid]
-#    if id != "0":
-#        message = MESSAGE_LIST[messageid] % id
-#    else:
-#        message = MESSAGE_LIST[messageid]
-#    c = {"title": title.decode("utf-8"), "message": message.decode("utf-8")}
-#    return render_to_response("schsys/message.html", context=c, request=request)
-
-
 MSG_MAP = {
     messages.DEBUG: "",
     messages.INFO: "text-bg-info",
@@ -162,6 +108,7 @@ MSG_MAP = {
 
 
 def get_messages(request):
+    """Retrieve and render messages."""
     tab = []
     for message in messages.get_messages(request):
         tab.append(
@@ -223,14 +170,14 @@ def datedialog(request, action):
     if action == "size":
         return HttpResponse(schjson.dumps((280, 200)))
     if action == "dialog":
-        if value.__class__ == int:
+        if isinstance(value, int):
             d = datetime.date.today()
             d = d + datetime.timedelta(int(value))
             value = d
         c = {"value": value}
         return render_to_response("schsys/date.html", context=c, request=request)
     if action == "test":
-        if value.__class__ == int:
+        if isinstance(value, int):
             d = datetime.date.today()
             d = d + datetime.timedelta(int(value))
             return HttpResponse(schjson.dumps((1, d.isoformat(), (d,))))
@@ -397,10 +344,12 @@ def plugins(request, app, plugin_name):
 
 
 def favicon(request):
+    """Redirect to favicon."""
     return HttpResponseRedirect(make_href("/static/favicon.ico"))
 
 
 def sw(request):
+    """Serve service worker."""
     if settings.STATIC_ROOT:
         _static_root = settings.STATIC_ROOT
     else:
@@ -430,6 +379,7 @@ def sw(request):
 
 @dict_to_json
 def app_time_stamp(request, **argv):
+    """Return application time stamp."""
     if settings.GEN_TIME:
         return {"TIME": settings.GEN_TIME}
     else:
@@ -446,6 +396,7 @@ def app_time_stamp(request, **argv):
 
 
 def search(request, **argv):
+    """Handle search requests."""
     q = request.POST.get("q", "")
     q2 = bencode(q)
     if hasattr(settings, "SEARCH_PATH"):
@@ -457,6 +408,7 @@ def search(request, **argv):
 
 
 def redirect_site_media_protected(request):
+    """Redirect to protected media."""
     url = request.path.replace("site_media_protected", "media_protected")
     if settings.DEBUG:
         return HttpResponseRedirect(url)
@@ -469,6 +421,7 @@ def redirect_site_media_protected(request):
 
 
 def site_media_protected(request, *argi, **argv):
+    """Handle protected media access."""
     if hasattr(settings, "PROTECTED_MEDIA_PERMISSIONS"):
         x = request.path.split("site_media_protected/")
         if len(x) >= 2:
@@ -498,11 +451,13 @@ def site_media_protected(request, *argi, **argv):
 
 
 def change_profile_variant(request, variant_name):
+    """Change user profile variant."""
     request.user.profile.set_active_variant(variant_name)
     return HttpResponseRedirect(make_href("/"))
 
 
 def start(request, start_page=False):
+    """Handle start page."""
     if (
         not request.user.is_authenticated
         and settings.SHOW_LOGIN_WIN

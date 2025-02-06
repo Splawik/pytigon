@@ -1,21 +1,57 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of ERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
+"""
+This module defines custom Django template tags and filters for rendering various UI components and handling dynamic content.
 
-# Pytigon - wxpython and django application framework
-
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-# license: "LGPL 3.0"
-# version: "0.1a"
+Template Tags:
+    - inclusion_tag(file_name): A decorator to create a simple inclusion tag.
+    - row_actions(parser, token): Template tag to render row actions in a table.
+    - action(context, action, title, icon_name, target, attrs, tag_class, url): Renders an action within the given context.
+    - view_row(context, object, title, icon_name, target, attrs, tag_class, url): Renders an action link for viewing an object.
+    - get_row(context, title, icon_name, target, attrs, tag_class, url): Renders a get row action template.
+    - button(context, title, icon_name, target, attrs, tag_class, url): Renders a button template.
+    - new_row(context, title, icon_name, target, attrs, tag_class, url, action): Renders a new row button.
+    - new_row_inline(context, title, icon_name, target, attrs, tag_class, url, action): Renders a new row button for inline use.
+    - row_related_list(context, table_name, title, filter, icon_name, target, attrs, tag_class, url, action, app, version): Renders a related list button for a given table.
+    - list_action(context, action, title, icon_name, target, attrs, tag_class, url, active): Renders a list action button.
+    - wiki_button(context, subject, wiki_description, icon_name, target, attrs, tag_class, url): Renders a wiki button.
+    - wiki_link(context, subject, wiki_description, attrs, target, url): Renders a wiki link.
+    - field(context, form_field, fieldformat, inline): Renders a form field with specified formatting and options.
+    - form(parser, token): Template tag to render a form.
+    - vert_form(parser, token): Template tag to render a vertical form.
+    - inline_form(parser, token): Template tag to render an inline form.
+    - col2_form(parser, token): Template tag to render a two-column form.
+    - form_item(parser, token): Template tag to render a form item.
+    - get_table_row(context, field_or_name, app_name, table_name, search_fields, filter, label, initial, is_get_button, is_new_button, get_target, new_target): Renders a form item with a Select2 widget.
+    - frame(context, href, height): Inclusion tag for embedding HTML content from another URL.
+    - subform(context, name): Inclusion tag for embedding another HTML form within the current form.
+    - require(context, href): Inclusion tag for loading JavaScript modules via RequireJS.
+    - module_link(context, href): Inclusion tag for loading JavaScript modules via a HTML import link.
+    - jscript_link(context, href): Inclusion tag for loading JavaScript modules via a script tag.
+    - css_link(context, href): Inclusion tag for loading CSS modules via a style tag.
+    - link(context, href, rel, typ): Inclusion tag for loading static content via a link tag.
+    - jscript(context, href): Inclusion tag for loading static JavaScript content via a script tag.
+    - component(context, href): Inclusion tag for loading a widget component via a script tag.
+    - spec(format): Replace special characters in the given format string for use in Django templates.
+    - include_wiki(context, wiki_str, from_wiki_page, path, only_header): Simple tag to include wiki content in the template.
+    - markdown2html(context, markdown_str, path, section): Simple tag to convert markdown to HTML in the template.
+    - subtemplate(context, template_string): Simple tag to render a subtemplate string in the current context.
+    - editable(context, name, title, url): Simple tag to render an editable field in the current context.
+    - td_editable(context, name, title): Simple tag to render an editable table cell in the current context.
+    - svg_standard_style(context): Inclusion tag to render SVG standard styles in the template.
+    - id_num(context, name, sorting): Simple tag to render the id_num column in the table.
+    - ok_cancel(context): Inclusion tag to render OK and Cancel buttons in the template.
+    - paginator(context): Inclusion tag to render a paginator widget in the template.
+    - sorted_column(context, name, description): Inclusion tag to render a sorted column header in the template.
+    - comboselect(parser, token): Template tag to render a combo select widget in the template.
+    - do_html_widget(parser, token): Template tag to render a HTML widget in the template.
+    - to_b64(href): Return content of file as base64 encoded string.
+    - icon(context, class_str, width, height): Generate an HTML icon element based on a class string.
+    - show_template_name(parser, token): Django template tag that returns the name of the current template.
+    - do_tree(parser, token): Template tag to render a tree widget in the template.
+    - row_details(parser, token): Template tag to render row details in a table.
+    - v_row_details(parser, token): Template tag to render row details in a table.
+    - modify(parser, token): Template tag to modify a piece of rendered HTML.
+    - show_context(context): Simple tag to show the context of the current template.
+"""
 
 from base64 import b64encode
 import re
@@ -31,7 +67,6 @@ from django.template.base import token_kwargs, TemplateSyntaxError, Node
 from pytigon_lib.schtools.href_action import standard_dict, actions_dict, action_fun
 from pytigon_lib.schdjangoext.tools import import_model, make_href
 
-from pytigon_lib.schdjangoext.tools import make_href
 from pytigon_lib.schdjangoext.models import TreeModel
 from pytigon_lib.schtools.wiki import wiki_from_str, wikify
 from pytigon_lib.schdjangoext.tools import make_href as mhref
@@ -50,6 +85,20 @@ register = template.Library()
 
 
 def inclusion_tag(file_name):
+    """
+    A template tag that renders the given template with the given arguments.
+
+    Use this in your views to define a simple inclusion tag that takes
+    context and arbitrary keyword arguments, and renders the given
+    template with those arguments.
+
+    :param file_name: The name of the template to render.
+    :type file_name: str
+
+    :returns: A decorator that should be applied to a view function.
+    :rtype: callable
+    """
+
     def dec(func):
         def func2(context, *argi, **argv):
             ret = func(context, *argi, **argv)
@@ -68,9 +117,25 @@ def inclusion_tag(file_name):
 
 class RowActionNode(Node):
     def __init__(self, nodelist):
+        """
+        Initializes a RowActionNode with the provided nodelist.
+
+        :param nodelist: The list of nodes that this node will render.
+        :type nodelist: django.template.base.NodeList
+        """
         self.nodelist = nodelist
 
     def render(self, context):
+        """
+        Renders the node list within the given context, processes the output,
+        and returns the rendered template for row actions.
+
+        :param context: The context in which this node should be rendered.
+        :type context: django.template.Context
+        :return: The rendered template as a string.
+        :rtype: str
+        """
+
         output = self.nodelist.render(context)
         if output.replace("\n", ""):
             t = Template(output)
@@ -84,6 +149,21 @@ class RowActionNode(Node):
 
 @register.tag
 def row_actions(parser, token):
+    """
+    Template tag to render row actions in a table.
+
+    Example usage::
+
+        {% row_actions %}
+            <a href="#">Action 1</a>
+            <a href="#">Action 2</a>
+        {% endrow_actions %}
+
+    :param nodelist: The list of nodes that this node will render.
+    :type nodelist: django.template.base.NodeList
+    :return: The rendered template for row actions.
+    :rtype: str
+    """
     nodelist = parser.parse(("endrow_actions",))
     parser.delete_first_token()
     return RowActionNode(nodelist)
@@ -93,6 +173,33 @@ def row_actions(parser, token):
 def action(
     context, action, title="", icon_name="", target="", attrs="", tag_class="", url=""
 ):
+    """
+    Renders an action within the given context using the specified parameters.
+
+    This template tag includes the "widgets/action.html" template, populating it
+    with the provided context and action parameters.
+
+    :param context: The context in which this tag should be rendered.
+    :type context: django.template.Context
+    :param action: The action to be performed.
+    :type action: str
+    :param title: The title of the action.
+    :type title: str, optional
+    :param icon_name: The name of the icon associated with the action.
+    :type icon_name: str, optional
+    :param target: The target attribute for the action link.
+    :type target: str, optional
+    :param attrs: Additional attributes for the action tag.
+    :type attrs: str, optional
+    :param tag_class: CSS class for styling the action tag.
+    :type tag_class: str, optional
+    :param url: The URL for the action.
+    :type url: str, optional
+
+    :return: The rendered action template.
+    :rtype: str
+    """
+
     ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url)
     return ret
 
@@ -111,6 +218,29 @@ def view_row(
     tag_class="",
     url="",
 ):
+    """
+    Renders an action link for viewing an object.
+
+    :param context: The context in which this tag should be rendered.
+    :type context: django.template.Context
+    :param object: The object to be viewed.
+    :type object: object
+    :param title: The title of the action.
+    :type title: str, optional
+    :param icon_name: The name of the icon associated with the action.
+    :type icon_name: str, optional
+    :param target: The target attribute for the action link.
+    :type target: str, optional
+    :param attrs: Additional attributes for the action tag.
+    :type attrs: str, optional
+    :param tag_class: CSS class for styling the action tag.
+    :type tag_class: str, optional
+    :param url: The URL for the action.
+    :type url: str, optional
+
+    :return: The rendered action template.
+    :rtype: str
+    """
     if url:
         href = url
     else:
@@ -144,6 +274,25 @@ def view_row(
 
 @inclusion_tag("widgets/get_row.html")
 def get_row(context, title="", icon_name="", target="", attrs="", tag_class="", url=""):
+    """
+    Renders a get row action template.
+
+    :param title: The title for the action.
+    :type title: str, optional
+    :param icon_name: The icon name for the action.
+    :type icon_name: str, optional
+    :param target: The target for the action.
+    :type target: str, optional
+    :param attrs: The attributes for the action.
+    :type attrs: str, optional
+    :param tag_class: The tag class for the action.
+    :type tag_class: str, optional
+    :param url: The URL for the action.
+    :type url: str, optional
+
+    :return: The rendered action template.
+    :rtype: str
+    """
     ret = action_fun(context, "get", title, icon_name, target, attrs, tag_class, url)
     ret["id"] = context["object"].id
     ret["text"] = str(context["object"])
@@ -152,6 +301,25 @@ def get_row(context, title="", icon_name="", target="", attrs="", tag_class="", 
 
 @inclusion_tag("widgets/button.html")
 def button(context, title="", icon_name="", target="", attrs="", tag_class="", url=""):
+    """
+    Renders a button template.
+
+    :param title: The title for the button.
+    :type title: str, optional
+    :param icon_name: The icon name for the button.
+    :type icon_name: str, optional
+    :param target: The target for the button.
+    :type target: str, optional
+    :param attrs: The attributes for the button.
+    :type attrs: str, optional
+    :param tag_class: The tag class for the button.
+    :type tag_class: str, optional
+    :param url: The URL for the button.
+    :type url: str, optional
+
+    :return: The rendered button template.
+    :rtype: str
+    """
     ret = action_fun(context, "button", title, icon_name, target, attrs, tag_class, url)
     return ret
 
@@ -208,6 +376,29 @@ def new_row(
     url="",
     action="new_row/-",
 ):
+    """
+    Renders a new row button.
+
+    :param context: The context in which this tag should be rendered.
+    :type context: django.template.Context
+    :param title: The title of the button.
+    :type title: str, optional
+    :param icon_name: The name of the icon associated with the button.
+    :type icon_name: str, optional
+    :param target: The target attribute for the button.
+    :type target: str, optional
+    :param attrs: Additional attributes for the button.
+    :type attrs: str, optional
+    :param tag_class: CSS class for styling the button.
+    :type tag_class: str, optional
+    :param url: The URL for the button.
+    :type url: str, optional
+    :param action: The action for the button.
+    :type action: str, optional
+
+    :return: The rendered button template.
+    :rtype: str
+    """
     return new_row_base(
         context, action, title, icon_name, target, attrs, tag_class, url
     )
@@ -224,6 +415,29 @@ def new_row_inline(
     url="",
     action="new_row-inline/-",
 ):
+    """
+    Renders a new row button that can be used as an inline element.
+
+    :param context: The context in which this tag should be rendered.
+    :type context: django.template.Context
+    :param title: The title of the button.
+    :type title: str, optional
+    :param icon_name: The name of the icon associated with the button.
+    :type icon_name: str, optional
+    :param target: The target attribute for the button.
+    :type target: str, optional
+    :param attrs: Additional attributes for the button.
+    :type attrs: str, optional
+    :param tag_class: CSS class for styling the button.
+    :type tag_class: str, optional
+    :param url: The URL for the button.
+    :type url: str, optional
+    :param action: The action for the button.
+    :type action: str, optional
+
+    :return: The rendered button template.
+    :rtype: str
+    """
     return new_row_base(
         context, action, title, icon_name, target, attrs, tag_class, url
     )
@@ -244,6 +458,37 @@ def row_related_list(
     app=None,
     version="",
 ):
+    """
+    Renders a related list button for a given table.
+
+    :param context: The context in which this tag should be rendered.
+    :type context: django.template.Context
+    :param table_name: The name of the table to be listed.
+    :type table_name: str
+    :param title: The title of the button.
+    :type title: str, optional
+    :param filter: The filter to be used for the list.
+    :type filter: str, optional
+    :param icon_name: The name of the icon associated with the button.
+    :type icon_name: str, optional
+    :param target: The target attribute for the button.
+    :type target: str, optional
+    :param attrs: Additional attributes for the button.
+    :type attrs: str, optional
+    :param tag_class: CSS class for styling the button.
+    :type tag_class: str, optional
+    :param url: The URL for the button.
+    :type url: str, optional
+    :param action: The action for the button.
+    :type action: str, optional
+    :param app: The application for the table.
+    :type app: str, optional
+    :param version: The version of the table.
+    :type version: str, optional
+
+    :return: The rendered button template.
+    :rtype: str
+    """
     if app:
         table = table_name
     else:
@@ -297,6 +542,31 @@ def list_action(
     url="",
     active=False,
 ):
+    """
+    Renders a list action button based on the given context and parameters.
+
+    :param context: The Django template context.
+    :type context: dict
+    :param action: The action for the button.
+    :type action: str
+    :param title: The title for the button.
+    :type title: str, optional
+    :param icon_name: The icon name for the button.
+    :type icon_name: str, optional
+    :param target: The target for the button.
+    :type target: str, optional
+    :param attrs: The attributes for the button.
+    :type attrs: str, optional
+    :param tag_class: The tag class for the button.
+    :type tag_class: str, optional
+    :param url: The URL for the button (if not provided, a default URL will be generated).
+    :type url: str, optional
+    :param active: Whether the button should be active or not.
+    :type active: bool, optional
+
+    :return: The rendered button template.
+    :rtype: str
+    """
     if attrs:
         ret = action_fun(
             context,
@@ -344,6 +614,29 @@ def wiki_button(
     tag_class="",
     url="",
 ):
+    """
+    Renders a wiki button based on the given context and parameters.
+
+    :param context: The Django template context.
+    :type context: dict
+    :param subject: The subject for the wiki page.
+    :type subject: str
+    :param wiki_description: The wiki page description.
+    :type wiki_description: str
+    :param icon_name: The icon name for the button.
+    :type icon_name: str, optional
+    :param target: The target for the button.
+    :type target: str, optional
+    :param attrs: The attributes for the button.
+    :type attrs: str, optional
+    :param tag_class: The tag class for the button.
+    :type tag_class: str, optional
+    :param url: The URL for the button (if not provided, a default URL will be generated).
+    :type url: str, optional
+
+    :return: The rendered button template.
+    :rtype: str
+    """
     wiki_name = wiki_from_str(wiki_description)
     wiki_url = "/schwiki/%s/%s/view/" % (subject, wiki_name)
     return action_fun(
@@ -360,6 +653,25 @@ def wiki_button(
 
 @inclusion_tag("widgets/wiki_link.html")
 def wiki_link(context, subject, wiki_description, attrs="", target="_self", url=""):
+    """
+    Renders a wiki link based on the given context and parameters.
+
+    :param context: The Django template context.
+    :type context: dict
+    :param subject: The subject for the wiki page.
+    :type subject: str
+    :param wiki_description: The wiki page description.
+    :type wiki_description: str
+    :param attrs: The attributes for the link.
+    :type attrs: str, optional
+    :param target: The target for the link.
+    :type target: str, optional
+    :param url: The URL for the link (if not provided, a default URL will be generated).
+    :type url: str, optional
+
+    :return: The rendered link template.
+    :rtype: str
+    """
     return wiki_button(context, subject, wiki_description, attrs, target, url)
 
 
@@ -368,6 +680,24 @@ def wiki_link(context, subject, wiki_description, attrs="", target="_self", url=
 
 @inclusion_tag("widgets/field.html")
 def field(context, form_field, fieldformat=None, inline=False):
+    """
+    Renders a form field with specified formatting and options.
+
+    :param context: The Django template context containing the form.
+    :type context: dict
+    :param form_field: The form field to be rendered, either as a string name or a field instance.
+    :type form_field: str or Field
+    :param fieldformat: A string specifying the format of the field layout.
+                        Format: "label:field/addon_after:addon_before".
+                        Example: "12:3:3/12:12:12"
+    :type fieldformat: str, optional
+    :param inline: Flag indicating if the field should be displayed inline.
+    :type inline: bool, optional
+
+    :return: A dictionary containing the rendered field attributes.
+    :rtype: dict
+    """
+
     if type(form_field) in (
         SafeText,
         str,
@@ -579,6 +909,13 @@ class Form(Node):
 
 @register.tag
 def form(parser, token):
+    """
+    Usage:
+        {% form form_name "12:3:3/12:12:12" %}
+            {% field 'name' 'value' %}
+            {% field 'name2' 'value2' %}
+        {% endform %}
+    """
     parm = token.split_contents()
     nodelist = parser.parse(("endform"))
     parser.delete_first_token()
@@ -587,6 +924,13 @@ def form(parser, token):
 
 @register.tag
 def vert_form(parser, token):
+    """
+    Usage:
+        {% vert_form form_name "12:3:3/12:12:12" %}
+            {% field 'name' 'value' %}
+            {% field 'name2' 'value2' %}
+        {% endvert_form %}
+    """
     parm = token.split_contents()
     nodelist = parser.parse(("endvert_form",))
     parser.delete_first_token()
@@ -595,6 +939,13 @@ def vert_form(parser, token):
 
 @register.tag
 def inline_form(parser, token):
+    """
+    Usage:
+        {% inline_form form_name %}
+            {% field 'name' 'value' %}
+            {% field 'name2' 'value2' %}
+        {% endinline_form %}
+    """
     parm = token.split_contents()
     nodelist = parser.parse(("endinline_form",))
     parser.delete_first_token()
@@ -603,6 +954,13 @@ def inline_form(parser, token):
 
 @register.tag
 def col2_form(parser, token):
+    """
+    Usage:
+        {% col2_form form_name %}
+            {% field 'name' 'value' %}
+            {% field 'name2' 'value2' %}
+        {% endcol2_form %}
+    """
     parm = token.split_contents()
     nodelist = parser.parse(("endcol2_form",))
     parser.delete_first_token()
@@ -659,6 +1017,17 @@ class FormItemNode(Node):
 
 @register.tag
 def form_item(parser, token):
+    """
+    Django template tag to render a form item with specified field name and tag.
+
+    :param parser: The template parser.
+    :type parser: django.template.Parser
+    :param token: The token containing tag contents.
+    :type token: django.template.Token
+    :return: A FormItemNode representing the form item.
+    :rtype: FormItemNode
+    """
+
     field_name = token.contents[10:]
     tag = None
     if "." in field_name:
@@ -668,14 +1037,6 @@ def form_item(parser, token):
     nodelist = parser.parse(("endform_item",))
     parser.delete_first_token()
     return FormItemNode(nodelist, field_name, tag)
-
-
-# @inclusion_tag('widgets/form2columns.html')
-# def form2columns(context, fields):
-#    ftab = fields.split(';')
-#    it = iter(ftab)
-#    fields2 = itertools.zip_longest(it,it)
-#    return standard_dict(context, {'fields': ftab, 'fields2': fields2, 'form': context['form']})
 
 
 @inclusion_tag("widgets/get_table_row.html")
@@ -693,6 +1054,35 @@ def get_table_row(
     get_target="popup_edit",
     new_target="inline",
 ):
+    """
+    Django template tag to render a form item with a Select2 widget.
+
+    :param context: The template context.
+    :type context: django.template.Context
+    :param field_or_name: The field name or a form field object.
+    :param app_name: Optional application name.
+    :type app_name: str
+    :param table_name: Optional table name.
+    :type table_name: str
+    :param search_fields: Optional search fields.
+    :type search_fields: str or list
+    :param filter: Optional filter value.
+    :type filter: str
+    :param label: Optional label.
+    :type label: str
+    :param initial: Optional initial value.
+    :type initial: str or object
+    :param is_get_button: Optional flag to show or hide the get button.
+    :type is_get_button: bool
+    :param is_new_button: Optional flag to show or hide the new button.
+    :type is_new_button: bool
+    :param get_target: Optional target for the get button.
+    :type get_target: str
+    :param new_target: Optional target for the new button.
+    :type new_target: str
+    :return: A dictionary containing the form, field, formformat, href1 and href2.
+    :rtype: dict
+    """
     if type(field_or_name) in (
         SafeText,
         str,
@@ -771,11 +1161,37 @@ def get_table_row(
 
 @inclusion_tag("widgets/frame.html")
 def frame(context, href, height):
+    """
+    Inclusion tag for embedding HTML content from another URL.
+
+    Example usage: {% frame context "/schwiki/MyPage/view/" 800 %}
+
+    :param context: The current template context.
+    :type context: dict
+    :param href: The URL of the HTML content to be embedded.
+    :type href: str
+    :param height: The height of the iframe in pixels.
+    :type height: int
+    :return: A dictionary containing the rendered iframe attributes.
+    :rtype: dict
+    """
     return standard_dict(context, {"href": href, "height": height})
 
 
 @inclusion_tag("widgets/subform.html")
 def subform(context, name):
+    """
+    Inclusion tag for embedding another HTML form within the current form.
+
+    Example usage: {% subform context "MyForm" %}
+
+    :param context: The current template context.
+    :type context: dict
+    :param name: The name of the form to be embedded.
+    :type name: str
+    :return: A dictionary containing the rendered iframe attributes.
+    :rtype: dict
+    """
     return standard_dict(
         context,
         {
@@ -786,11 +1202,35 @@ def subform(context, name):
 
 @inclusion_tag("widgets/require.html")
 def require(context, href):
+    """
+    Inclusion tag for loading JavaScript modules via RequireJS.
+
+    Example usage: {% require context "myapp/my_script.js" %}
+
+    :param context: The current template context.
+    :type context: dict
+    :param href: The path to the JavaScript module to be loaded.
+    :type href: str
+    :return: A dictionary containing the rendered script tag attributes.
+    :rtype: dict
+    """
     return {"href": mark_safe(href)}
 
 
 @inclusion_tag("widgets/module_link.html")
 def module_link(context, href):
+    """
+    Inclusion tag for loading JavaScript modules via a HTML import link.
+
+    Example usage: {% module_link context "myapp/my_module.js" %}
+
+    :param context: The current template context.
+    :type context: dict
+    :param href: The path to the JavaScript module to be loaded.
+    :type href: str
+    :return: A dictionary containing the rendered script tag attributes.
+    :rtype: dict
+    """
     if "user_agent" in context and context["user_agent"] == "webviewembeded":
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
@@ -810,6 +1250,18 @@ def module_link(context, href):
 
 @inclusion_tag("widgets/jscript_link.html")
 def jscript_link(context, href):
+    """
+    Inclusion tag for loading JavaScript modules via a script tag.
+
+    Example usage: {% jscript_link context "myapp/my_script.js" %}
+
+    :param context: The current template context.
+    :type context: dict
+    :param href: The path to the JavaScript module to be loaded.
+    :type href: str
+    :return: A dictionary containing the rendered script tag attributes.
+    :rtype: dict
+    """
     if "user_agent" in context and context["user_agent"] == "webviewembeded":
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
@@ -829,6 +1281,18 @@ def jscript_link(context, href):
 
 @inclusion_tag("widgets/css_link.html")
 def css_link(context, href):
+    """
+    Inclusion tag for loading CSS modules via a style tag.
+
+    Example usage: {% css_link context "myapp/my_style.css" %}
+
+    :param context: The current template context.
+    :type context: dict
+    :param href: The path to the CSS module to be loaded.
+    :type href: str
+    :return: A dictionary containing the rendered script tag attributes.
+    :rtype: dict
+    """
     if "user_agent" in context and context["user_agent"] == "webviewembeded":
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
@@ -848,6 +1312,22 @@ def css_link(context, href):
 
 @inclusion_tag("widgets/link.html")
 def link(context, href, rel, typ):
+    """
+    Inclusion tag for loading static content via a link tag.
+
+    Example usage: {% link context "css/myapp/my_style.css" "stylesheet" "text/css" %}
+
+    :param context: The current template context.
+    :type context: dict
+    :param href: The path to the static content to be loaded.
+    :type href: str
+    :param rel: The value of the 'rel' attribute of the link tag.
+    :type rel: str
+    :param typ: The value of the 'type' attribute of the link tag.
+    :type typ: str
+    :return: A dictionary containing the rendered link tag attributes.
+    :rtype: dict
+    """
     return standard_dict(
         context,
         {"href": settings.STATIC_URL + href, "rel": rel, "typ": typ, "content": None},
@@ -856,6 +1336,18 @@ def link(context, href, rel, typ):
 
 @inclusion_tag("widgets/jscript.html")
 def jscript(context, href):
+    """
+    Inclusion tag for loading static JavaScript content via a script tag.
+
+    Example usage: {% jscript context "js/myapp/my_script.js" %}
+
+    :param context: The current template context.
+    :type context: dict
+    :param href: The path to the JavaScript content to be loaded.
+    :type href: str
+    :return: A dictionary containing the rendered script tag content.
+    :rtype: dict
+    """
     content_path = os.path.join(settings.STATIC_ROOT, href)
     content = ""
     with open(content_path, "rt", encoding="utf-8") as f:
@@ -865,6 +1357,18 @@ def jscript(context, href):
 
 @inclusion_tag("widgets/component.html")
 def component(context, href):
+    """
+    Inclusion tag for loading a widget component via a script tag.
+
+    Example usage: {% component context "components/my_component.js" %}
+
+    :param context: The current template context.
+    :type context: dict
+    :param href: The path to the widget component to be loaded.
+    :type href: str
+    :return: A dictionary containing the rendered script tag content.
+    :rtype: dict
+    """
     if "user_agent" in context and context["user_agent"] == "webviewembeded":
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
@@ -881,19 +1385,22 @@ def component(context, href):
     else:
         return {"href": mark_safe(href), "content": None}
 
-    # return standard_dict(
-    #    context,
-    #    {
-    #        "href": href,
-    #    },
-    # )
-
 
 # other tags
 
 
 @register.simple_tag
 def spec(format):
+    """
+    Replace { with {{, } with }}, [ with {% and ] with %} in the given format string.
+
+    This is useful for using format strings with Django's template language.
+
+    :param format: The format string to modify.
+    :type format: str
+    :return: The modified string
+    :rtype: str
+    """
     return (
         format.replace("{", "{{")
         .replace("}", "}}")
@@ -904,6 +1411,29 @@ def spec(format):
 
 @register.simple_tag(takes_context=True)
 def include_wiki(context, wiki_str, from_wiki_page, path=None, only_header=True):
+    """
+    Simple tag to include wiki content in the template.
+
+    This function retrieves content from a specified wiki page and
+    embeds it within the template. It supports fetching only the header
+    or the full content of the page. If the requested page or content
+    is not available, it defaults to a wikified link.
+
+    :param context: The current template context, which must contain the
+                    'request' object to access the username.
+    :type context: dict
+    :param wiki_str: The wiki string identifier for the content to be included.
+    :type wiki_str: str
+    :param from_wiki_page: The source page object from which to retrieve the content.
+    :param path: Optional. The path for generating links within the content.
+    :type path: str or None
+    :param only_header: Optional. If True, only the header of the content is included.
+                        Defaults to True.
+    :type only_header: bool
+    :return: A safe string of the wiki content to be included in the template.
+    :rtype: SafeText
+    """
+
     ret = ""
     if "request" in context:
         username = context["request"].user.get_username()
@@ -928,11 +1458,41 @@ def include_wiki(context, wiki_str, from_wiki_page, path=None, only_header=True)
 
 @register.simple_tag(takes_context=True)
 def markdown2html(context, markdown_str, path=None, section=None):
+    """
+    Simple tag to convert markdown to HTML in the template.
+
+    This function uses the :func:`wikify` function to convert markdown to HTML and
+    returns the result as a safe string to be embedded in the template.
+
+    :param context: The current template context.
+    :type context: dict
+    :param markdown_str: The markdown string to be converted.
+    :type markdown_str: str
+    :param path: Optional. The path for generating links within the content.
+    :type path: str or None
+    :param section: Optional. The section of the wiki to link to.
+    :type section: str or None
+    :return: A safe string of the HTML content to be included in the template.
+    :rtype: SafeText
+    """
     return mark_safe(wikify(markdown_str, path, section))
 
 
 @register.simple_tag(takes_context=True)
 def subtemplate(context, template_string):
+    """
+    Simple tag to render a subtemplate string in the current context.
+
+    This tag allows you to render a template string (e.g. a snippet of HTML)
+    in the current context, without having to define a separate template file.
+
+    :param context: The current template context.
+    :type context: dict
+    :param template_string: The template string to be rendered.
+    :type template_string: str
+    :return: A safe string of the rendered template string.
+    :rtype: SafeText
+    """
     t = Template(template_string)
     return mark_safe(t.render(context))
 
@@ -958,6 +1518,29 @@ def editable_base(context, name, title, url):
 
 @register.simple_tag(takes_context=True)
 def editable(context, name, title="", url=None):
+    """
+    Simple tag to render a editable field in the current context.
+
+    This tag allows you to render a editable field (e.g. a snippet of HTML)
+    in the current context, without having to define a separate template file.
+
+    :param context: The current template context.
+    :type context: dict
+    :param name: The name of the field to be rendered. If the field is a date
+                 field, the name can be in the form "name:date" to indicate
+                 that the field should be rendered as a date combodate.
+    :type name: str
+    :param title: The title of the field to be rendered.
+    :type title: str, optional
+    :param url: The URL to load the editable field from. If the URL is not
+                provided, the editable field will be loaded from the
+                default URL "../../../{oid}/{field_name}/editable/editor/".
+                If the URL is provided, it will be appended to the default
+                URL.
+    :type url: str, optional
+    :return: A safe string of the rendered editable field.
+    :rtype: SafeText
+    """
     if url and not url.startswith("+"):
         url2 = url
     else:
@@ -970,6 +1553,25 @@ def editable(context, name, title="", url=None):
 
 @register.simple_tag(takes_context=True)
 def td_editable(context, name, title=""):
+    """
+    Simple tag to render an editable table cell in the current context.
+
+    This tag checks if the context indicates a standard web browser and
+    renders an editable field within a table cell accordingly. If the
+    context does not indicate a standard web browser, it renders the
+    field value directly in the table cell.
+
+    :param context: The current template context that provides information
+                    about the environment and object properties.
+    :type context: dict
+    :param name: The name of the field to be rendered within the table cell.
+    :type name: str
+    :param title: Optional. The title of the field to be rendered. Defaults to an empty string.
+    :type title: str
+    :return: A safe string of the rendered table cell with the editable field or value.
+    :rtype: SafeText
+    """
+
     if context["standard_web_browser"]:
         url = context["table_path"] + "{oid}/{field_name}/editable/editor/"
         return mark_safe("<td>%s</td>" % editable_base(context, name, title, url))
@@ -982,11 +1584,41 @@ def td_editable(context, name, title=""):
 def svg_standard_style(
     context,
 ):
+    """
+    Inclusion tag to render SVG standard styles in the template.
+
+    This tag includes the SVG standard style template to ensure consistent
+    styling across SVG elements within the rendered content.
+
+    :param context: The current template context.
+    :type context: dict
+    :return: A dictionary for rendering the SVG standard style template.
+    :rtype: dict
+    """
+
     return {}
 
 
 @register.simple_tag(takes_context=True)
 def id_num(context, name, sorting=False):
+    """
+    Simple tag to render the id_num column in the table.
+
+    This tag renders the id_num column in the table. If the context does not
+    indicate a standard web browser or the document type is set to "json",
+    it renders the object count and per page value. If sorting is enabled,
+    it renders the sorted column.
+
+    :param context: The current template context that provides information
+                    about the environment and object properties.
+    :type context: dict
+    :param name: The name of the field to be rendered.
+    :type name: str
+    :param sorting: Optional. Indicates whether sorting is enabled. Defaults to False.
+    :type sorting: bool
+    :return: A safe string of the rendered id_num column.
+    :rtype: SafeText
+    """
     if not context["standard_web_browser"] or (
         "doc_type" in context and context["doc_type"] == "json"
     ):
@@ -1006,16 +1638,55 @@ def id_num(context, name, sorting=False):
 
 @inclusion_tag("widgets/ok_cancel.html")
 def ok_cancel(context):
+    """
+    Inclusion tag to render OK and Cancel buttons in the template.
+
+    This tag includes the OK and Cancel buttons template to provide standard
+    functionality for form submissions and cancellations within the rendered
+    content.
+
+    :param context: The current template context.
+    :type context: dict
+    :return: A dictionary for rendering the OK and Cancel buttons template.
+    :rtype: dict
+    """
     return standard_dict(context, {})
 
 
 @inclusion_tag("widgets/paginator.html")
 def paginator(context):
+    """
+    Inclusion tag to render a paginator widget in the template.
+
+    This tag includes the paginator widget template to provide pagination
+    functionality within the rendered content.
+
+    :param context: The current template context.
+    :type context: dict
+    :return: A flattened context dictionary for rendering the paginator widget.
+    :rtype: dict
+    """
+
     return context.flatten()
 
 
 @inclusion_tag("widgets/sorted_column.html")
 def sorted_column(context, name, description):
+    """
+    Inclusion tag to render a sorted column header in the template.
+
+    This tag includes the sorted column header template to provide standard
+    sorting functionality within the rendered content.
+
+    :param context: The current template context.
+    :type context: dict
+    :param name: The name of the field to be rendered.
+    :type name: str
+    :param description: A description of the field to be rendered.
+    :type description: str
+    :return: A dictionary for rendering the sorted column header template.
+    :rtype: dict
+    """
     ret = standard_dict(context, {})
     ret["column_name"] = name
     ret["column_description"] = description
@@ -1079,6 +1750,20 @@ class ComboSelect(Node):
 
 @register.tag
 def comboselect(parser, token):
+    """
+    Template tag to render a combo select widget in the template.
+
+    This tag parses the template tokens and generates a ComboSelect node that
+    renders a select tag with dynamic options and attributes in the template.
+
+    :param parser: The template parser instance.
+    :type parser: django.template.base.Parser
+    :param token: The template token containing tag contents.
+    :type token: django.template.base.Token
+    :return: A ComboSelect node that renders the combo select widget.
+    :rtype: ComboSelect
+    """
+
     bits = token.split_contents()
     remaining_bits = bits[2:]
     extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
@@ -1086,40 +1771,6 @@ def comboselect(parser, token):
     nodelist = parser.parse(("endcomboselect"))
     parser.delete_first_token()
     return ComboSelect(nodelist, bits[1], extra_context)
-
-
-# @inclusion_tag('widgets/paginator.html')
-# def paginator2(context):
-#    context['page_range'] = []
-
-#    if 'paginator' in context and 'page_obj' in context:
-#        if context['paginator'].page_range[-1] > 15:
-#            nr = context['page_obj'].number
-#            start = nr - 5
-#            end = nr + 5
-#            if start < 0:
-#                end += -1 * start
-#                start = 0
-#            if end > context['paginator'].page_range[-1]:
-#                start -= end - context['paginator'].page_range[-1]
-#                end = context['paginator'].page_range[-1]
-#
-#            context['page_range'] = context['paginator'].page_range[start + 1:end - 1]
-#            context['page_all'] = False
-#        else:
-#            context['page_range'] = context['paginator'].page_range
-#            context['page_all'] = True
-#
-#        context['page_last'] = context['paginator'].page_range[-1]
-#        context['page_number'] = context['page_obj'].number
-#    return context.flatten()
-
-
-# @inclusion_tag('widgets/checkboxselectmultiple.html')
-# def checkboxselectmultiple(context, field, only_field=False):
-#    field.field.widget = CheckboxSelectMultiple(choices=field.field.choices)
-#    field.field.widget.attrs['class'] = "list-group row"
-#    return standard_dict(context, {'field': field, 'only_field': only_field})
 
 
 class HtmlWidgetNode(template.Node):
@@ -1189,6 +1840,19 @@ class HtmlWidgetNode(template.Node):
 
 @register.tag("widget")
 def do_html_widget(parser, token):
+    """
+    Template tag to render a HTML widget in the template.
+
+    This tag parses the template tokens and generates a HtmlWidgetNode that
+    renders a HTML widget with dynamic attributes in the template.
+
+    :param parser: The template parser instance.
+    :type parser: django.template.base.Parser
+    :param token: The template token containing tag contents.
+    :type token: django.template.base.Token
+    :return: A HtmlWidgetNode that renders the HTML widget.
+    :rtype: HtmlWidgetNode
+    """
     bits = token.split_contents()
     remaining_bits = bits[1:]
     extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
@@ -1242,11 +1906,37 @@ def _to_b64(href):
 
 @register.simple_tag(takes_context=False)
 def to_b64(href):
+    """
+    Return content of file as base64 encoded string.
+
+    :param href: relative path to file in static directory
+    :return: base64 encoded string
+    """
     return _to_b64(href)
 
 
 @register.simple_tag(takes_context=True)
 def icon(context, class_str, width=None, height=None):
+    """
+    Generate an HTML icon element based on a class string.
+
+    This function processes the given class string to determine the type of icon
+    to render. It supports various icon formats, including FontAwesome, Bootstrap
+    Icons, SVG, and PNG. The rendered icon can be customized with optional width
+    and height attributes.
+
+    :param context: The current template context, potentially containing the user agent.
+    :type context: dict
+    :param class_str: The class string indicating the icon type and identifier.
+    :type class_str: str
+    :param width: Optional width for the icon, defaults to None.
+    :type width: int, optional
+    :param height: Optional height for the icon, defaults to None.
+    :type height: int, optional
+    :return: A safe HTML string representing the icon element.
+    :rtype: django.utils.safestring.SafeString
+    """
+
     global ICON_CACHE
 
     if class_str.startswith("fa://"):
@@ -1363,6 +2053,19 @@ class TemplateNameNode(Node):
 
 @register.tag
 def show_template_name(parser, token):
+    """
+    Django template tag that returns the name of the current template.
+
+    This tag can be used to display or log the name of the template
+    being processed. It takes no arguments.
+
+    Usage in a template:
+        {% show_template_name %}
+
+    Returns:
+        TemplateNameNode: A node containing the template name.
+    """
+
     return TemplateNameNode(parser.template_name)
 
 
@@ -1414,10 +2117,17 @@ class TreeNode(Node):
 @register.tag("tree")
 def do_tree(parser, token):
     """
-    {% tree treelist %}
-        html
-    {% endtree %}
+    Template tag to render a tree widget in the template.
 
+    This tag parses the template tokens and generates a TreeNode that
+    renders a tree widget with dynamic attributes in the template.
+
+    :param parser: The template parser instance.
+    :type parser: django.template.base.Parser
+    :param token: The template token containing tag contents.
+    :type token: django.template.base.Token
+    :return: A TreeNode that renders the tree widget.
+    :rtype: TreeNode
     """
     parm = token.split_contents()
     nodelist = parser.parse(("endtree"))
@@ -1475,6 +2185,21 @@ class RowDetailsNode(Node):
 
 @register.tag
 def row_details(parser, token):
+    """
+    Template tag to render row details in a table.
+
+    Example usage::
+
+        {% row_details %}
+            <a href="#">Action 1</a>
+            <a href="#">Action 2</a>
+        {% endrow_details %}
+
+    :param nodelist: The list of nodes that this node will render.
+    :type nodelist: django.template.base.NodeList
+    :return: The rendered template for row details.
+    :rtype: str
+    """
     nodelist = parser.parse(("endrow_details",))
     parser.delete_first_token()
     return RowDetailsNode(nodelist, False)
@@ -1482,6 +2207,21 @@ def row_details(parser, token):
 
 @register.tag
 def v_row_details(parser, token):
+    """
+    Template tag to render row details in a table.
+
+    Example usage::
+
+        {% v_row_details %}
+            <a href="#">Action 1</a>
+            <a href="#">Action 2</a>
+        {% endv_row_details %}
+
+    :param nodelist: The list of nodes that this node will render.
+    :type nodelist: django.template.base.NodeList
+    :return: The rendered template for row details.
+    :rtype: str
+    """
     nodelist = parser.parse(("endv_row_details",))
     parser.delete_first_token()
     return RowDetailsNode(nodelist, True)
@@ -1491,10 +2231,6 @@ class ModifyNode(Node):
     def __init__(self, nodelist, arg):
         self.nodelist = nodelist
         self.arg = arg
-        print("=================================")
-        for key, value in self.arg.items():
-            print(key, str(value))
-        print("=================================")
 
     def render(self, context):
         data = self.nodelist.render(context)
@@ -1540,6 +2276,22 @@ class ModifyNode(Node):
 
 @register.tag
 def modify(parser, token):
+    """
+    Template tag to modify a piece of rendered HTML.
+
+    Example usage::
+
+        {% modify addclass="div:myclass;span:myotherclass" %}
+            <div>Hello <span>world</span>!</div>
+        {% endmodify %}
+
+    :param nodelist: The list of nodes that this node will render.
+    :type nodelist: django.template.base.NodeList
+    :param arg: A dictionary of arguments for the tag.
+    :type arg: dict
+    :return: The rendered template for the modification.
+    :rtype: str
+    """
     bits = token.split_contents()
     remaining_bits = bits[1:]
     arg = token_kwargs(remaining_bits, parser, support_legacy=True)
@@ -1558,4 +2310,15 @@ def modify(parser, token):
 
 @register.simple_tag(takes_context=True)
 def show_context(context):
+    """
+    Simple tag to show the context of the current template.
+
+    This tag renders the string representation of the current template
+    context.
+
+    :param context: The current template context.
+    :type context: dict
+    :return: The string representation of the template context.
+    :rtype: str
+    """
     return str(context)

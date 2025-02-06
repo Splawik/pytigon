@@ -1,23 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
-
-# Pytigon - wxpython and django application framework
-
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-# license: "LGPL 3.0"
-# version: "0.1a"
-
-
 """Module contains standard context processors"""
 
 import uuid
@@ -34,7 +14,7 @@ from django.urls import get_script_prefix
 try:
     from django.contrib.auth.models import Permission
     from django.contrib.auth.context_processors import PermWrapper
-except:
+except ImportError:
     pass
 
 from pytigon_lib.schdjangoext.django_init import get_app_name
@@ -49,17 +29,16 @@ else:
 # browser_type: 0 - python client 1 - web client 2 - hybrid - web client in
 # python client 3 - python client -> web client
 
+# List of mobile user agents
 
-mobiles = (
-    """sony,symbian,nokia,samsung,mobile,windows ce,epoc,opera mini,nitro,j2me,midp-,cldc-,netfront,mot,up.browser,
-up.link,audiovox,blackberry,ericsson,panasonic,philips,sanyo,sharp,sie-,portalmmm,blazer,avantgo,danger,palm,series60,
-palmsource,pocketpc,smartphone,rover,ipaq,au-mic,alcatel,ericy,up.link,docomo,vodafone/,wap1.,wap2.,plucker,480x640,sec,
-fennec,android,google wireless transcoder,nintendo,webtv,playstation""".replace(
-        "\n", ""
-    )
-    .replace("\r", "")
-    .split(",")
-)
+MOBILE_USER_AGENTS = (
+    "sony,symbian,nokia,samsung,mobile,windows ce,epoc,opera mini,nitro,j2me,midp-,"
+    "cldc-,netfront,mot,up.browser,up.link,audiovox,blackberry,ericsson,panasonic,"
+    "philips,sanyo,sharp,sie-,portalmmm,blazer,avantgo,danger,palm,series60,palmsource,"
+    "pocketpc,smartphone,rover,ipaq,au-mic,alcatel,ericy,up.link,docomo,vodafone/,"
+    "wap1.,wap2.,plucker,480x640,sec,fennec,android,google wireless transcoder,"
+    "nintendo,webtv,playstation"
+).split(",")
 
 
 def test_mobile(request):
@@ -71,7 +50,7 @@ def test_mobile(request):
             return True
     if "HTTP_USER_AGENT" in request.META and request.META["HTTP_USER_AGENT"]:
         s = request.META["HTTP_USER_AGENT"].lower()
-        for ua in mobiles:
+        for ua in MOBILE_USER_AGENTS:
             if ua in s:
                 return True
     return False
@@ -186,6 +165,8 @@ def has_user_perm(user, perm):
 
 
 class AppInfo:
+    """Class to hold application information."""
+
     def __init__(
         self,
         app_title="",
@@ -209,14 +190,16 @@ class AppInfo:
     def __str__(self):
         return (
             f"sys_module_name: {self.sys_module_name}\n"
-            + f"module_name: {self.module_name}\n"
-            + f"module_title: {self.module_title}\n"
-            + f"app_name: {self.app_name}\n"
-            + f"app_title: {self.app_title}\n"
+            f"module_name: {self.module_name}\n"
+            f"module_title: {self.module_title}\n"
+            f"app_name: {self.app_name}\n"
+            f"app_title: {self.app_title}\n"
         )
 
 
 class AppItemInfo(AppInfo):
+    """Class to hold application item information."""
+
     def __init__(self, app_info, url="", description="", right="", icon=""):
         super().__init__(
             app_info.app_title,
@@ -234,6 +217,7 @@ class AppItemInfo(AppInfo):
         self.icon = icon
 
     def get_app_info(self):
+        """Get the AppInfo object."""
         return AppInfo(
             self.app_title,
             self.app_perms,
@@ -250,10 +234,13 @@ class AppItemInfo(AppInfo):
 
 
 class AppManager:
+    """Class to manage applications."""
+
     def __init__(self, request):
         self.request = request
 
     def appname(self):
+        """Get the application name from the request path."""
         path = self.request.path
         elementy = path.split("/")
         base_url = get_script_prefix()
@@ -261,6 +248,7 @@ class AppManager:
         return elementy[nr]
 
     def appid(self):
+        """Get the application ID from the request path."""
         path = self.request.path
         elementy = path.split("/")
         base_url = get_script_prefix()
@@ -271,6 +259,7 @@ class AppManager:
             return elementy[nr]
 
     def get_main_title(self):
+        """Get the main title of the application."""
         apps = self._get_apps()
         for app in apps:
             if app[4] == "main":

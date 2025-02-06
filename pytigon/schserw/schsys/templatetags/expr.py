@@ -1,22 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of ERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
-
-# Pytigon - wxpython and django application framework
-
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-# license: "LGPL 3.0"
-# version: "0.1a"
-
 import re
 import html
 
@@ -28,20 +9,24 @@ register = template.Library()
 
 
 def mark_safe2(x):
-    if type(x) == str:
+    """Replace '<' and '>' with '[' and ']' to make the string safe."""
+    if isinstance(x, str):
         return mark_safe(x.replace("<", "[").replace(">", "]"))
     else:
         return x
 
 
 class ExprNode(template.Node):
-    def __init__(self, expr_string, var_name, safe=True, escape=False):
+    """Node for evaluating expressions in Django templates."""
+
+    def __init__(self, expr_string, var_name=None, safe=True, escape=False):
         self.expr_string = expr_string
         self.var_name = var_name
         self.safe = safe
         self.escape = escape
 
     def render(self, context):
+        """Render the expression and handle errors."""
         try:
             clist = list(context)
             clist.reverse()
@@ -92,6 +77,7 @@ r_expr = re.compile(r"(.*?)\s+as\s+(\w+)", re.DOTALL)
 
 
 def do_expr(parser, token):
+    """Handle the 'expr' template tag."""
     try:
         (tag_name, arg) = token.contents.split(None, 1)
     except ValueError:
@@ -114,6 +100,7 @@ do_expr = register.tag("expr", do_expr)
 
 
 def do_expr_safe(parser, token):
+    """Handle the 'expr_safe' template tag."""
     try:
         (tag_name, arg) = token.contents.split(None, 1)
     except ValueError:
@@ -136,6 +123,7 @@ do_expr_safe = register.tag("expr_safe", do_expr_safe)
 
 
 def do_expr_escape(parser, token):
+    """Handle the 'expr_escape' template tag."""
     try:
         (tag_name, arg) = token.contents.split(None, 1)
     except ValueError:
@@ -158,6 +146,7 @@ do_expr_escape = register.tag("expr_escape", do_expr_escape)
 
 
 def build_eval(parser, token):
+    """Handle the 'eval' template tag."""
     bits = token.contents.split()
     if len(bits) != 2:
         raise template.TemplateSyntaxError("eval takes one argument")
@@ -166,6 +155,8 @@ def build_eval(parser, token):
 
 
 class GetContext:
+    """Helper class to get context variables."""
+
     def __init__(self, context):
         self.context = context
 
@@ -177,10 +168,13 @@ class GetContext:
 
 
 class EvalObject(template.Node):
+    """Node for evaluating expressions in the context."""
+
     def __init__(self, val_expr):
         self.val_expr = val_expr
 
     def render(self, context):
+        """Render the evaluated expression."""
         output = eval(self.val_expr, {"this": GetContext(context)})
         context["eval"] = output
         return ""

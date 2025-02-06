@@ -1,23 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of ERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
-
-# Pytigon - wxpython and django application framework
-
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-# license: "LGPL 3.0"
-# version: "0.1a"
-
-
 from django import template
 from django.template.base import token_kwargs, TemplateSyntaxError
 
@@ -51,7 +31,7 @@ class HtmlWidgetNode(template.Node):
             .replace("[%", "{%")
             .replace("%]", "%}")
         )
-        id = context["id"]
+        widget_id = context["id"]
         class_name = context["class"]
 
         context["template_name"] = "widgets/html_widgets/" + class_name + ".html"
@@ -99,7 +79,7 @@ def do_widget(parser, token):
         raise TemplateSyntaxError(
             "%r expected at least one variable assignment" % bits[0]
         )
-    if not "id" in extra_context or not "class" in extra_context:
+    if "id" not in extra_context or "class" not in extra_context:
         raise TemplateSyntaxError("id and class parameters are required")
     if remaining_bits:
         raise TemplateSyntaxError(

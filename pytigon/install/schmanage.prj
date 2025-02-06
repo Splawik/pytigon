@@ -29,7 +29,7 @@
         "icon": "None",
         "icon_size": "1",
         "icon_code": null,
-        "git_repository": "https://git.pytigon.eu/pytigon/schmanage.git",
+        "git_repository": "https://git.pytigon.cloud/pytigon/schmanage.git",
         "autor_name": null,
         "autor_email": null,
         "autor_www": null,
@@ -38,7 +38,7 @@
         "template_smartfon": null,
         "template_tablet": null,
         "template_schweb": null,
-        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exsyntax\n\n%% ext_css_links\n    {% css_link 'explorer/styles.css' %}\n    {{block.super}}\n\n\n"
+        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exsyntax\n\n%% ext_css_links\n    {{block.super}}\n\n\n"
     },
     "children": [
         {

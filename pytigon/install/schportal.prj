@@ -21,7 +21,7 @@
         "smartfon_gui_type": "smartfon_standard",
         "tablet_gui_type": "tablet_modern",
         "additional_settings": "BOOTSTRAP_TEMPLATE = \"bootswatch/materia\"\n\nSEARCH_PATH = \"/schwiki/%s/search/\"\n\nif 'EMAIL_HOST_USER' in os.environ:\n    EMAIL_HOST_USER = os.environ['EMAIL_HOST_USER']\nif 'EMAIL_HOST_PASSWORD' in os.environ:\n    EMAIL_HOST_PASSWORD = os.environ['EMAIL_HOST_PASSWORD']\n\nif ENV(\"ALLAUTH\"):\n    INSTALLED_APPS.append('allauth.socialaccount.providers.google')\n    INSTALLED_APPS.append('allauth.socialaccount.providers.facebook')\n    INSTALLED_APPS.append('allauth.socialaccount.providers.github')\n    INSTALLED_APPS.append('allauth.socialaccount.providers.microsoft')\n    INSTALLED_APPS.append('allauth.socialaccount.providers.okta')\n    INSTALLED_APPS.append('allauth.socialaccount.providers.openid')\n    INSTALLED_APPS.append('allauth.socialaccount.providers.windowslive')\n\n\n#EMAIL_HOST = 'smtp.gmail.com'\n#EMAIL_PORT = 587\n#EMAIL_USE_TLS = True\n#EMAIL_IMAP_HOST = 'imap.gmail.com'\n#EMAIL_IMAP_INBOX = 'inbox'\n#EMAIL_IMAP_OUTBOX = 'outbox'\n\n\nINSTALLED_APPS.append('explorer')\n\nif platform_name()!='Android':\n    INSTALLED_APPS.append('easy_thumbnails')\n    INSTALLED_APPS.append('filer')\n\n    THUMBNAIL_PROCESSORS = (\n        'easy_thumbnails.processors.colorspace',\n        'easy_thumbnails.processors.autocrop',\n        #'easy_thumbnails.processors.scale_and_crop',\n        'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n        'easy_thumbnails.processors.filters',\n    )\n\nFILER_DEBUG = True\n\nEXPLORER_CONNECTIONS = { 'Default': 'default' } \nEXPLORER_DEFAULT_CONNECTION = 'default'",
-        "custom_tags": "_schcomponents/components/ptig-d3.js\n_schcomponents/components/ptig-codeeditor.js\n_schcomponents/components/ptig-plotly.js\n_schcomponents/components/ptig-time.js\n_schcomponents/components/ptig-webrtc.js",
+        "custom_tags": "_schcomponents/components/ptig-d3.js\n_schcomponents/components/ptig-codeeditor.js\n_schcomponents/components/ptig-plotly.js\n_schcomponents/components/ptig-time.js\n_schcomponents/components/ptig-webrtc.js\n_schcomponents/components/ptig-xterm.js",
         "readme_file": null,
         "license_file": null,
         "install_file": "",
@@ -29,7 +29,7 @@
         "icon": "None",
         "icon_size": "1",
         "icon_code": null,
-        "git_repository": "https://git.pytigon.eu/pytigon/schportal.git",
+        "git_repository": "https://git.pytigon.cloud/pytigon/schportal.git",
         "autor_name": null,
         "autor_email": null,
         "autor_www": null,
@@ -38,7 +38,7 @@
         "template_smartfon": null,
         "template_tablet": "% extends 'theme/tablet_base.html'\n\n%% logo\n    img src={{base_path}}static/favicon.ico\n    {{block.super}}\n",
         "template_schweb": null,
-        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exfiltry\n% load exsyntax\n\n%% botstrap_css\n    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}\n\n%% ext_css_links\n    %if standard_web_browser:\n        {% css_link 'themes/wiki.css' %}\n        {% css_link 'vanillajs_plugins/pygments/manni.css' %}\n        {% css_link 'explorer/styles.css' %}\n    {{ block.super }}\n"
+        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exfiltry\n% load exsyntax\n\n%% botstrap_css\n    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}\n\n%% ext_css_links\n    %if standard_web_browser:\n        {% css_link 'themes/wiki.css' %}\n        {% css_link 'vanillajs_plugins/pygments/manni.css' %}\n    {{ block.super }}\n"
     },
     "children": [
         {
@@ -108,6 +108,15 @@
                 "type": "R",
                 "name": "timer_init",
                 "content": "def _on_time():\n    nonlocal GLOBAL_BUS \n    d = Date()\n    GLOBAL_BUS.emit(\"time_str\", d.toISOString().replace('T', ' ')[:19])\n    \nGLOBAL_TIMER = setInterval(_on_time, 1000)\n\n",
+                "doc": null
+            }
+        },
+        {
+            "model": "SChStatic",
+            "attributes": {
+                "type": "O",
+                "name": ".env",
+                "content": "ALLAUTH=True",
                 "doc": null
             }
         }
