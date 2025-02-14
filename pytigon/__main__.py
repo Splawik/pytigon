@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU Lesser General Public License as published by the
 # Free Software Foundation; either version 3, or (at your option) any later
@@ -13,9 +12,7 @@
 # Pytigon - wxpython and django application framework
 
 # author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# copyright: "Copyright (C) ????/2013 Slawomir Cholaj"
 # license: "LGPL 3.0"
-# version: "0.1a"
 
 import sys
 import os
