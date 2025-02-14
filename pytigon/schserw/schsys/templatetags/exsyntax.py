@@ -103,7 +103,10 @@ def inclusion_tag(file_name):
         def func2(context, *argi, **argv):
             ret = func(context, *argi, **argv)
             t = get_template(file_name)
-            return t.render(ret, context.request)
+            if hasattr(context, "request"):
+                return t.render(ret, context.request)
+            else:
+                return t.render(ret, None)
 
         return register.simple_tag(
             takes_context=True, name=getattr(func, "_decorated_function", func).__name__
@@ -2316,8 +2319,8 @@ def show_context(context):
     This tag renders the string representation of the current template
     context.
 
-    :param context: The current template context.
-    :type context: dict
+    :param context: The current template context, which contains all the variables and data available to the template.
+    :type context: django.template.Context
     :return: The string representation of the template context.
     :rtype: str
     """
