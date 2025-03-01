@@ -53,6 +53,7 @@ class OdfUploadForm(forms.Form):
     )
 
     def process(self, request, queryset=None):
+
         return {"object": x()}
 
     def render_to_response(self, request, template, context_instance):
@@ -71,4 +72,5 @@ def view_odfuploadform(request, *argi, **argv):
 
 
 def odf_upload(request, *args, **argv):
+
     return PFORM(request, OdfUploadForm, "schodfupload/odf_upload.html", {})
