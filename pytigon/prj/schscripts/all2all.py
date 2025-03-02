@@ -19,7 +19,7 @@ from pytigon_lib.schindent.indent_markdown import (
 BASE_PATH = os.getcwd()
 
 
-def main():
+def main(argv):
     import schwiki.applib.makdown_obj_simple
     import schwiki.applib.markdown_obj_subblocks
 
@@ -32,7 +32,7 @@ def main():
     )
     parser.add_argument("-i", "--icss", help="input icss filename (*.icss)")
 
-    args = parser.parse_args(sys.argv[2:])
+    args = parser.parse_args(argv)
 
     if args.icss:
         if args.icss.startswith("/") or args.icss[1] == ":":
