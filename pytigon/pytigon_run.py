@@ -180,7 +180,7 @@ def run(param=None):
             import django
 
             django.setup()
-            getattr(module, "main")()
+            return getattr(module, "main")()
 
     elif len(argv) > 1 and argv[1].startswith("runserver_"):
         x = argv[1].split("_", 1)
