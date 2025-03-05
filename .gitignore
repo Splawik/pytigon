@@ -37,6 +37,7 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/_schwebtrapper/
 !*pytigon/prj/_schwiki/
 !*pytigon/prj/_schsetup/
+!*pytigon/prj/_schtest/
 !*pytigon/prj/_schplaywright/
 !*pytigon/prj/_schot/
 !*pytigon/prj/_schbi/
@@ -57,6 +58,7 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/_schwebtrapper/*
 !*pytigon/prj/_schwiki/*
 !*pytigon/prj/_schsetup/*
+!*pytigon/prj/_schtest/*
 !*pytigon/prj/_schplaywright/*
 !*pytigon/prj/_schot/*
 !*pytigon/prj/_schbi/*

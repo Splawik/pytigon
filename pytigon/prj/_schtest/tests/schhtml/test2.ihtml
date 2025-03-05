@@ -1,0 +1,345 @@
+html 
+        head 
+            meta http-equiv=Content-Type,,,content=text/html; charset=utf-8
+            meta name=Copyright,,,content=Sławomir Chołaj
+            meta name=description,,,content=schweb
+            title ...Report 2
+        body 
+            page 
+                header 
+                    table border=1,,,width=100%
+                        tr 
+                            td rowspan=2
+                                img src=file://./tests/schhtml/static/pytigon.png
+                            td colspan=7
+                                h1 ...Company name
+                        tr 
+                            td colspan=7
+                                h2 ...Report title
+                        tr 
+                            td ...Object
+                            td colspan=7
+                                h3 ...Description
+                        tr 
+                            td ...Info1
+                            td colspan=7...Info1 description
+                        tr 
+                            td ...Test
+                            td colspan=7...Test lang: ąćęłńóśżźĄĆĘŁŃÓŚŻŹ
+                        tr 
+                            td ...Date
+                            td ...2025-01-01
+                            td ...Version
+                            td ...1
+                            td ...Info 2
+                            td ...Info 3
+                            td ...Page
+                            td 
+                                calc ...body.page
+                footer height=30
+                    p width=100%,,,align=center...Page
+                        calc ...body.page
+            table border=1,,,width=100%
+                tr 
+                    td ...Description
+            br 
+            table border=1,,,width=100%
+                tr 
+                    th ...No.
+                    th colspan=2...xx
+                    th ...xx
+                    th colspan=2...yy yyyyyy y yyy yyyy yyyy
+                        br ...(yyy y yyy yy yy yyyyyyy y y yyyyyyyyyy yy yyyy yy)
+                tr 
+                    td ...1
+                    td ...Vibrations
+                    td 
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/pytigon.png
+                    td ...A
+                    td ...ZZZZZZZZ  zzzzzz zz zzz zszzzzz z zzz zz
+                    td 
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/pytigon.png
+                tr 
+                    td ...2
+                    td ...Noise
+                    td 
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/t1.png
+                    td ...C
+                    td ...During repair and maintenance work causing loud noise, use hearing protection,
+                    td 
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/t2.png
+                tr 
+                    td ...3
+                    td ...Dust
+                    td 
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/t3.png
+                    td ...D
+                    td ...Dust may occur during cleaning work or during fault removal, use dust masks,
+                    td 
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/t4.png
+                tr 
+                    td ...4
+                    td ...Dust
+                    td 
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/t5.png
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...5
+                    td ...Contact with chemical substances and technical oils
+                    td 
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/t1.png
+                    td ...C2
+                    td ...During repair and maintenance work using chemical substances, familiarize yourself with the risk assessment and safety data sheets of the substances used, follow the recommendations contained therein,\n\n                                                Maintain personal hygiene,
+                    td 
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/t2.png
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/t3.png
+                tr 
+                    td ...6
+                    td ...Noise
+                    td 
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/t4.png
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...7
+                    td ...Dust
+                    td 
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/t5.png
+                    td ...A
+                    td ...Dust may occur during cleaning work or during fault removal, use dust masks,
+                    td 
+                        img width=64,,,height=64,,,src=file://./tests/schhtml/static/t1.png
+            br 
+            table border=1,,,width=100%
+                tr 
+                    td rowspan=2...Prepared by
+                    td ...HSE Service:
+                    td width=50%
+                tr 
+                    td ...Shift Manager:
+                    td 
+                tr 
+                    td ...Approved by
+                    td ...Branch Director:
+                    td 
+            newpage 
+            table border=1,,,width=100%
+                tr 
+                    td ...Performed operations, activities, works, tasks:
+                    td ...Tasks
+                tr 
+                    td ...Characteristics (including methods of performing works, used machines, tools, materials)
+                    td ...Characteristics
+                tr 
+                    td ...Working time:
+                    td ...Working time
+            br 
+            table border=1,,,width=100%
+                tr 
+                    th ...Biological hazards
+                    th ...Chemical hazards
+                tr 
+                    td ...Biological hazards
+                    td ...Chemical hazards
+            br 
+            table border=1,,,width=100%
+                tr 
+                    td ...Personal protective equipment
+                    td 
+                        table width=80%
+                            tr 
+                                td 
+                                    img width=64,,,height=64,,,src=file://./tests/schhtml/static/t2.png
+                                td 
+                                    img width=64,,,height=64,,,src=file://./tests/schhtml/static/t3.png
+                                td 
+                                    img width=64,,,height=64,,,src=file://./tests/schhtml/static/t4.png
+                                td 
+                                    img width=64,,,height=64,,,src=file://./tests/schhtml/static/t5.png
+                            tr 
+                                td ...Use hearing protection
+                                td ...Use respiratory protection
+                                td ...Safety data sheets
+                                td ...Personal hygiene
+                tr 
+                    td ...Additional protective measures
+                    td 
+                        table 
+                            tr 
+                                td 
+                                    img width=64,,,height=64,,,src=file://./tests/schhtml/static/t1.png
+                            tr 
+                                td ...Limitation of working time
+                tr 
+                    td ...Prohibitions and restrictions
+                    td 
+                        table 
+                            tr 
+                            tr 
+            br 
+            table border=1,,,width=100%
+                tr 
+                    th ...Harmful factors
+                    th ...Accidents
+                tr 
+                    td 
+                        table border=1
+                            tr 
+                                th ...Type
+                                th ...Frequency NDN/NDS
+                            tr 
+                                td ...noise
+                                td ...3
+                            tr 
+                                td ...humidity
+                                td ...2
+                            tr 
+                                td ...dust
+                                td ...2
+                            tr 
+                                td ...humidity
+                                td ...12
+                            tr 
+                                td ...dust
+                                td ...323
+                    td ...Accidents
+            newpage 
+            br 
+            table border=1,,,width=100%
+                tr 
+                    th ...No.
+                    th ...Name and surname
+                    th ...Date
+                    th ...Signature
+                tr 
+                    td ...1.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...2.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...3.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...4.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...5.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...6.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...7.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...8.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...9.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...10.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...11.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...12.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...13.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...14.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...15.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...16.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...17.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...18.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...19.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...20.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...21.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...22.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...23.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...24.
+                    td 
+                    td 
+                    td 
+                tr 
+                    td ...25.
+                    td 
+                    td 
+                    td 
+            p 
+                calc ...body.page
+            p
+                .finish

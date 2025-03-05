@@ -4081,7 +4081,7 @@ humanFileSize = function flx_humanFileSize (bytes, si) {
 
 img_field = function flx_img_field (elem) {
     var _onload, ext, file_name, img, level, pos, reader, size, stub1_seq, stub2_itr, stub3_, test, txt, x;
-    txt = _pymeth_replace.call((((jQuery(elem).val)())), (new RegExp("^.*[\\\\ /]")), "");
+    txt = _pymeth_replace.call((((jQuery(elem).val)())), (new RegExp("^.*[\\\\\\ /]")), "");
     ((_pymeth_find.call((((jQuery(elem).closest)("label"))), ".upload")).html)(txt);
     if ((_pyfunc_truthy(elem.files) && _pyfunc_truthy(elem.files[0]))) {
         file_name = elem.files[0].name;

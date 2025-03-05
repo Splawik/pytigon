@@ -19,7 +19,7 @@ def humanFileSize(bytes, si):
 
 
 def img_field(elem):
-    txt = jQuery(elem).val().replace(RegExp("^.*[\\\ /]"), "")
+    txt = jQuery(elem).val().replace(RegExp(r"^.*[\\\ /]"), "")
     jQuery(elem).closest("label").find(".upload").html(txt)
 
     if elem.files and elem.files[0]:
