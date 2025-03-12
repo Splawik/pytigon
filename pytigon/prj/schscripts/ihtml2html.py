@@ -1,20 +1,27 @@
-import sys
-import os
+import argparse
 
 from pytigon_lib.schindent.indent_style import ihtml_to_html_base
+from pytigon_lib.schindent.html2ihtml import convert
+from pytigon_lib.schindent.py_to_js import compile
+from pytigon_lib.schindent.indent_tools import convert_js
 
-cwd = os.getcwd()
-file_name = sys.argv[-1]
-print(sys.argv)
-if file_name.endswith(".ihtml"):
-    if file_name.startswith("//") or ":" in file_name:
-        file_name2 = file_name2
-    else:
-        file_name2 = os.path.join(cwd, file_name)
-    file_name3 = file_name2.replace(".ihtml", ".html")
-    with open(file_name2, "rt", encoding="utf-8") as f:
-        buf = f.read()
-        print(buf)
-        buf = ihtml_to_html_base(None, input_str=buf)
-        with open(file_name3, "wt", encoding="utf-8") as f2:
-            f2.write(buf)
+
+def main(argv):
+    parser = argparse.ArgumentParser(description="Converter")
+    parser.add_argument("filename", help="filename to convert (*.ihtml, *.html)")
+    parser.add_argument("-o", "--output", help="output filename (*.ihtml, *.html)")
+
+    args = parser.parse_args(argv)
+
+    if args.filename.endswith(".html"):
+        convert(args.filename, args.output)
+    elif args.filename.endswith(".ihtml"):
+        with open(args.output, "wt") as f:
+            f.write(ihtml_to_html_base(args.filename))
+    elif args.filename.endswith(".py"):
+        with open(args.filename, "rt") as f_in, open(args.output, "wt") as f_out:
+            error, js = compile(f_in.read())
+            f_out.write(js)
+    elif args.filename.endswith(".ijs"):
+        with open(args.filename, "rt") as f_in, open(args.output, "wt") as f_out:
+            convert_js(f_in, f_out)

@@ -1,32 +1,34 @@
-{% extends "base.html" %}
-{% block content %}
-        <h1>Wczytywanie dokumentu odf</h1>
-        <form action="./" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <table>
-                        {{form}}
-                </table>
-                <input type="submit" value="Wczytaj dokument" />
-        </form>
-        <br />
-        <h2>Składnia znaczników w pliku odf:</h2>
-        <br />
-        Pierwszy znak w komórce arkusza:<br>
-            * - wynik w postaci tekstowej<br>
-            : - wynik jako liczba<br>
-            @ - wynik jako formuła<br>
-        Pierwszy znak w notatce:<br>
-            !   - przeniesienie wyrażenia do poziomu aktualnej komórki <br>
-                  element przed komórką oddzielony od elementu za komórką znakiem @<br>
-                  !{% for i in lista %}@{%endfor%}<br>
-           !!   - przeniesienie wyrażenia do poziomu aktualnego wiersza <br>
-         ! !!   - przeniesienie wyrażenia do poziomu aktualnego arkusza<br>
-            <br>
-        W dowolnym miejscu składnia zgodna z django:<br>
-            {&#123;zmienna&#125;], &#123;% blok %&#125; itp. <br>
-        Dodatkowo wyrażenie: _start_ zamieniane jest na: {&#123;<br>
-                             _end_ zamieniane jest na: &#125;}<br>
-                            <br>
-        <br>
-{% endblock %}
+% extends "base.html"
 
+%% content
+    h1...Wczytywanie dokumentu odf
+    form action=./,,,method=post,,,enctype=multipart/form-data
+        % csrf_token
+        table
+            {{form}}
+        input type=submit,,,value=Wczytaj dokument
+    br
+    h2...Składnia znaczników w pliku odf:
+    br    
+    .Pierwszy dwa znaki w komórce arkusza:<br>
+    .    :* - wynik w postaci tekstowej<br>
+    .    :0 - wynik jako liczba<br>
+    .    :? - typ wyniku wybierany atuomatycznie wg zawartości komórki<br>
+    .    := - wynik jako formuła<br>
+    .Pierwszy znak w notatce:<br>
+    .    .   - przeniesienie wyrażenia do poziomu aktualnej komórki <br>
+    .    ^   - przeniesienie wyrażenia do poziomu aktualnej komórki <br>
+    .          ^ przenosi wyrażenie przed aktualną komórkę, $ za aktualną komórkę<br>
+    .          element przed komórką oddzielony od elementu za komórką znakiem @<br>
+    .          ^{% for i in lista %}@{%endfor%}<br>
+    .   ^^   - przeniesienie wyrażenia do poziomu aktualnego wiersza <br>
+    .     - przeniesienie wyrażenia do poziomu aktualnego arkusza<br>
+    .Podobnie jak znak ^ działa $ tylko zamiast przed aktualny element wyrażenie jest przenoszone za aktualny element
+    .    <br>
+    .W dowolnym miejscu składnia zgodna z django:<br>
+    .    {&#123;zmienna&#125;], &#123;% blok %&#125; itp. <br>
+    .Dodatkowo wyrażenie: _start_ zamieniane jest na: {&#123;<br>
+    .                     _end_ zamieniane jest na: &#125;}<br>
+    .                    <br>
+    .<br>
+    

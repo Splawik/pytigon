@@ -1,0 +1,344 @@
+html lang=en
+    head
+        meta charset=utf-8
+        meta name=viewport,,,content=width=device-width, initial-scale=1
+        title...wxPython 4.2.2 Released | wxPython
+        link href=../../assets/css/all-nocdn.css,,,rel=stylesheet,,,type=text/css
+        meta name=theme-color,,,content=#5670d4
+        meta name=generator,,,content=Nikola (getnikola.com)
+        link rel=alternate,,,type=application/rss+xml,,,title=RSS,,,hreflang=en,,,href=../../rss.xml
+        link rel=canonical,,,href=https://wxpython.org/news/2024-09-11-wxpython-422-release/index.html
+        meta name=author,,,content=The wxPython Team
+        link rel=prev,,,href=../2023-06-07-wxpython-411-release/index.html,,,title=wxPython 4.2.1 Released,,,type=text/html
+        meta property=og:site_name,,,content=wxPython
+        meta property=og:title,,,content=wxPython 4.2.2 Released
+        meta property=og:url,,,content=https://wxpython.org/news/2024-09-11-wxpython-422-release/index.html
+        meta property=og:description,,,content=wxPython 4.2.2  is now available at PyPI, with some additional files at Extras
+        meta property=og:type,,,content=article
+        meta property=article:published_time,,,content=2024-09-11T00:00:00Z
+        meta property=article:tag,,,content=Development
+        meta property=article:tag,,,content=Phoenix
+        meta property=article:tag,,,content=Release
+        link href=../../assets/css/font-awesome.min.css,,,rel=stylesheet,,,type=text/css
+        link href=../../assets/css/wxpy.css,,,rel=stylesheet,,,type=text/css
+    body
+        a href=#content,,,class=sr-only sr-only-focusable...Skip to main content
+        nav class=navbar navbar-inverse navbar-static-top
+            div class=container
+                a href=https://wxpython.org/
+                    img src=../../images/header-logo.png
+                div class=navbar-header
+                    button type=button,,,class=navbar-toggle collapsed,,,data-toggle=collapse,,,data-target=#bs-navbar,,,aria-controls=bs-navbar,,,aria-expanded=false
+                        span class=sr-only...Toggle navigation
+                        span class=icon-bar
+                        span class=icon-bar
+                        span class=icon-bar
+                    a class=navbar-brand,,,href=https://wxpython.org/
+                div class=collapse navbar-collapse,,,id=bs-navbar,,,aria-expanded=false
+                    ul class=nav navbar-nav
+                        li class=dropdown
+                            a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown,,,aria-haspopup=true,,,aria-expanded=false
+                                .About
+                                b class=caret
+                            ul class=dropdown-menu
+                                li
+                                    a href=../../pages/overview/...Overview
+                                li
+                                    a href=../../pages/screenshots/...Screenshots
+                                li
+                                    a href=../../pages/license/...License
+                                li
+                                    a href=../../pages/history/...History
+                        li
+                            a href=../...News
+                        li
+                            a href=../../pages/downloads/...Downloads
+                        li class=dropdown
+                            a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown,,,aria-haspopup=true,,,aria-expanded=false
+                                .Documentation
+                                b class=caret
+                            ul class=dropdown-menu
+                                li
+                                    a href=https://docs.wxpython.org/...API Reference
+                                li
+                                    a href=https://wiki.wxpython.org/...wxPython Wiki
+                                li
+                                    a href=../../pages/bookshelf/...wxPython Bookshelf
+                                li
+                                    a href=../../pages/presentations/...Presentations
+                                li
+                                    a href=../../pages/changes/...Full Changelog
+                                li
+                                    a href=https://github.com/wxWidgets/Phoenix/blob/master/README.rst...Project README
+                        li class=dropdown
+                            a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown,,,aria-haspopup=true,,,aria-expanded=false
+                                .Support
+                                b class=caret
+                            ul class=dropdown-menu
+                                li
+                                    a href=https://github.com/wxWidgets/Phoenix/issues...Issue Tracker
+                                li
+                                    a href=https://discuss.wxpython.org/...Discussion Site
+                                li
+                                    a href=../../pages/maillists/...Mail Lists
+                                li
+                                    a href=../../pages/irc/...IRC Channel
+                                li
+                                    a href=https://stackoverflow.com/questions/tagged/wxpython...StackOverflow
+                                li
+                                    a href=../../pages/how-to-submit-issue/...How to report issues
+                        li class=dropdown
+                            a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown,,,aria-haspopup=true,,,aria-expanded=false
+                                .Developers
+                                b class=caret
+                            ul class=dropdown-menu
+                                li
+                                    a href=../../pages/contributor-guide...Contributor Guide
+                                li
+                                    a href=../../pages/changes/...Full Changelog
+                                li
+                                    a href=../../pages/maillists/...wxPython-dev mail list
+                                li
+                                    a href=https://wxpython.org/Phoenix/docs/html/...Docs built daily
+                                li
+                                    a href=http://buildbot.wxpython.org/...Buildbot
+                        li class=dropdown
+                            a href=#,,,class=dropdown-toggle,,,data-toggle=dropdown,,,aria-haspopup=true,,,aria-expanded=false
+                                .Blog
+                                b class=caret
+                            ul class=dropdown-menu
+                                li
+                                    a href=../../blog/...wxForty-Two Blog
+                                li
+                                    a href=../../pages/about-42/...About 42
+                                li
+                                    a href=../../archive.html...Archive
+                                li
+                                    a href=../../categories/...Tags
+                    form method=get,,,action=https://www.google.com/search,,,class=navbar-form navbar-right,,,role=search
+                        div class=form-group
+                            input type=text,,,name=q,,,class=form-control,,,placeholder=Search
+                        button type=submit,,,class=btn btn-primary btn-xs
+                            span class=glyphicon glyphicon-search
+                        input type=hidden,,,name=sitesearch,,,value=https://wxpython.org/
+                    ul class=nav navbar-nav navbar-right
+        div class=container,,,id=content,,,role=main
+            div class=body-content
+                div class=row
+                    div class=col-md-9
+                        div class=wxpy-content-col
+                            article class=post-text h-entry hentry postpage,,,itemscope=itemscope,,,itemtype=http://schema.org/Article
+                                header
+                                    h1 class=p-name entry-title,,,itemprop=headline name
+                                        a href=#,,,class=u-url...wxPython 4.2.2 Released
+                                    div class=metadata
+                                        p class=byline author vcard p-author h-card
+                                            span class=byline-name fn p-name,,,itemprop=author...The wxPython Team
+                                        p class=dateline
+                                            a href=#,,,rel=bookmark
+                                                time class=published dt-published,,,datetime=2024-09-11T00:00:00Z,,,itemprop=datePublished,,,title=2024-09-11 00:00...2024-09-11 00:00
+                                        p class=commentline
+                                            a href=index.html#disqus_thread,,,data-disqus-identifier=cache/posts/news/2024-09-11-wxpython-4.2.2-release.html...Comments
+                                div class=e-content entry-content,,,itemprop=articleBody text
+                                    p
+                                        strong...wxPython 4.2.2
+                                        .is now available at
+                                        a href=https://pypi.org/project/wxPython/4.2.2...PyPI
+                                        ., with some additional files at
+                                        a href=https://extras.wxpython.org/wxPython4/extras/...Extras
+                                    p...Changes in this release:
+                                    ul
+                                        li
+                                            p...This release was built using the wxWidgets' v3.2.6 release tag. This is the first release built using GitHub infrastructure instead of the buildbots. Please report any problems with the wheels.
+                                        li
+                                            p...Fix some Python 3.12 compatibility issues (segfault on exit) by upgrading sip & waf
+                                        li
+                                            p...Fix more float/int conversion issues in wx.lib classes (#2415, #2417, #2429, #2470, #2528, #2542)
+                                        li
+                                            p...Add initialValue argument to wx.lib.DirBrowseButton (#2430)
+                                        li
+                                            p...Fix wxImage.Clear() (#2433)
+                                        li
+                                            p...Fix blurry text in AuiNotebook tab (#2360)
+                                        li
+                                            p...Add support for frozen rows and columns to GridWithLabelRenderersMixin (#2436)
+                                        li
+                                            p...demo: ShortcutEditor: Fix broken call GetMenuBar() (#2412)
+                                        li
+                                            p...Add proper support for DataViewCheckIconTextRenderer (#2425)
+                                        li
+                                            p...Remove legacy macOS logic, use wx.SystemSettings to select colors (#2018)
+                                        li
+                                            p...Build: Use new tarfile.extractall() filter for safer tarfile extraction (#2443)
+                                        li
+                                            p...Fix typo in wx.lib.agw.persist_handlers (#2469)
+                                        li
+                                            p...Fix 'str' to 'wxString' converstation, when emoji is inside string (#2446)
+                                        li
+                                            p...Use unwrap before isbuiltin check (#2487)
+                                        li
+                                            p...Preserve pane icons when loading a perspective in agw.aui (#2494)
+                                        li
+                                            p...wx.agw.aui: don't uninitialize the AuiManager if the window close event is vetoed (#2460)
+                                        li
+                                            p...Pure python AUI: Make behavior in all platforms more equal (#2501)
+                                        li
+                                            p...wx.agw.aui. Do layout as the last step after all pane infos have recomputed their best sizes (#2500)
+                                        li
+                                            p...Fix additional SyntaxWarnings with Python 3.12 (#2502)
+                                        li
+                                            p...Fix wx.lib.agw.ribbon.RibbonButtonBar DeleteButton function (#2511)
+                                        li
+                                            p...UltimateListCtrl: Add support for ULC_AUTO_CHECK_PARENT (#2518)
+                                        li
+                                            p...Remove dependency on distutils (#2519)
+                                        li
+                                            p...Improve wx.lib.agw.FlatMenu memory usage (#2373)
+                                        li
+                                            p...Support NumPy 2.0 (#2580, 2591)
+                                        li
+                                            p...Fix EditLabel on CustomTreeCtrl doesn't automatically select the entire text (#2549)
+                                        li
+                                            p...Fix Widgets placed in the UltimateListControl are drawn in the wrong location (#2410)
+                                        li
+                                            p...Fix wx.lib.agw.aui sometimes shows "ghost" docking guide (#2364)
+                                        li
+                                            p...Fix Thumbnailctrl SetSelection raises exception if it tries to scroll (#2345)
+                                aside class=postpromonav
+                                    nav
+                                        ul itemprop=keywords,,,class=tags
+                                            li
+                                                a class=tag p-category,,,href=../../categories/development/index.html,,,rel=tag...Development
+                                            li
+                                                a class=tag p-category,,,href=../../categories/phoenix/index.html,,,rel=tag...Phoenix
+                                            li
+                                                a class=tag p-category,,,href=../../categories/release/index.html,,,rel=tag...Release
+                                        ul class=pager hidden-print
+                                            li class=previous
+                                                a href=../2023-06-07-wxpython-411-release/index.html,,,rel=prev,,,title=wxPython 4.2.1 Released...Previous post
+                                section class=comments hidden-print
+                                    h2...Comments
+                                    div id=disqus_thread
+                                    script
+                                        >>>
+
+        var disqus_shortname ="wxpython",
+            disqus_url="https://wxpython.org/news/2024-09-11-wxpython-422-release/index.html",
+        disqus_title="wxPython 4.2.2 Released",
+        disqus_identifier="cache/posts/news/2024-09-11-wxpython-4.2.2-release.html",
+        disqus_config = function () {
+            this.language = "en";
+        };
+        (function() {
+            var dsq = document.createElement('script'); dsq.async = true;
+            dsq.src = 'https://' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    
+                                        <<<
+                                    noscript
+                                        .Please enable JavaScript to view the
+                                        a href=https://disqus.com/?ref_noscript,,,rel=nofollow...comments powered by Disqus.
+                                    a href=https://disqus.com,,,class=dsq-brlink,,,rel=nofollow
+                                        .Comments powered by
+                                        span class=logo-disqus...Disqus
+                            script
+                                >>>
+var disqus_shortname="wxpython";(function(){var a=document.createElement("script");a.async=true;a.src="https://"+disqus_shortname+".disqus.com/count.js";(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(a)}());
+                                <<<
+                    div class=col-md-3
+                        aside
+                            div class=panel panel-primary
+                                div class=panel-heading...Quick Links
+                                div class=panel-body
+                                    ul class=nav nav-pills nav-stacked
+                                        li
+                                            a href=../../pages/overview/#hello-world
+                                                i class=fa fa-star fa-fw
+                                                .Hello World
+                                        li
+                                            a href=http://docs.wxpython.org/
+                                                i class=fa fa-book fa-fw
+                                                .API Reference
+                                        li
+                                            a href=https://wiki.wxpython.org/
+                                                i class=fa fa-info fa-fw
+                                                .wxPython Wiki
+                                        li
+                                            a href=https://github.com/wxWidgets/Phoenix/issues
+                                                i class=fa fa-bug fa-fw
+                                                .Report a Bug
+                                        li
+                                            a href=https://github.com/wxWidgets/Phoenix/
+                                                i class=fa fa-github fa-fw
+                                                .GitHub Repository
+                                        li
+                                            a href=https://discuss.wxpython.org/
+                                                i class=fa fa-comments fa-fw
+                                                .Discuss wxPython
+                            div class=panel panel-primary
+                                div class=panel-heading...More wx Goodies
+                                div class=panel-body
+                                    ul class=nav nav-pills nav-stacked
+                                        li
+                                            a href=https://wxwidgets.org/
+                                                i class=fa fa-star fa-fw
+                                                .wxWidgets
+                                        li
+                                            a href=https://github.com/wxFormBuilder/wxFormBuilder
+                                                i class=fa fa-star fa-fw
+                                                .wxFormBuilder
+                                        li
+                                            a href=http://wxglade.sourceforge.net/
+                                                i class=fa fa-star fa-fw
+                                                .wxGlade
+                            div class=panel panel-primary
+                                div class=panel-heading...Friends of wxPython
+                                div class=panel-body
+                                    ul class=nav nav-pills nav-stacked
+                                        li
+                                            a href=https://www.wxwidgets.org/blog/
+                                                i class=fa fa-star fa-fw
+                                                .wxWidgets Blog
+                                        li
+                                            a href=http://www.blog.pythonlibrary.org/
+                                                i class=fa fa-star fa-fw
+                                                .Mouse vs. Python
+                                        li
+                                            a href=https://www.findmyelectric.com/
+                                                i class=fa fa-star fa-fw
+                                                .Find My Electric
+                            div class=panel panel-primary
+                                div class=panel-heading...Follow
+                                div class=panel-body
+                                    ul class=nav nav-pills nav-stacked
+                                        li
+                                            a href=../rss.xml
+                                                i class=fa fa-rss fa-fw
+                                                .News feed
+                                        li
+                                            a href=../../blog/rss.xml
+                                                i class=fa fa-rss fa-fw
+                                                .Blog feed
+                                        li
+                                            a href=../../categories/
+                                                i class=fa fa-check fa-fw
+                                                .Tags
+                                        li
+                                            a href=../../archive.html
+                                                i class=fa fa-check fa-fw
+                                                .Archive
+                footer id=footer
+                    .Contents © 2025 The wxPython Team - Powered by
+                    a href=https://getnikola.com,,,rel=nofollow...Nikola
+                    .,
+                    a href=https://python.org,,,rel=nofollow...Python
+                    .and Magic.
+        script src=../../assets/js/all-nocdn.js
+        script
+            >>>
+
+    moment.locale("en");
+    fancydates(0, "YYYY-MM-DD HH:mm");
+    
+            <<<
