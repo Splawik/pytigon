@@ -10,7 +10,7 @@ from pytigon_lib.schtasks.publish import publish
 
 from pytigon_lib.schhttptools import httpclient
 from html.parser import HTMLParser
-from pytigon_lib.schhtml.parser import Parser
+from pytigon_lib.schparser.parser import Parser
 import re
 from pytigon_lib.schtools.schjson import json_dumps
 import urllib.parse
