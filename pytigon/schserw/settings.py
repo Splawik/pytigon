@@ -599,7 +599,7 @@ STORAGES = {
 COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
 
 STATIC_FS = None
-
+ROOT_FS = None
 
 # def STATIC_FILE_STORAGE_FS():
 #    static_fs = MultiFS()
@@ -611,8 +611,9 @@ STATIC_FS = None
 
 
 def DEFAULT_FILE_STORAGE_FS():
-    global STATIC_FS
+    global STATIC_FS, ROOT_FS
     _m = MountFS()
+    ROOT_FS = _m
     _m.mount("pytigon", OSFS_EXT(settings.ROOT_PATH))
     STATIC_FS = MultiFS()
     STATIC_FS.add_fs("static_main", OSFS_EXT(settings.STATIC_ROOT))
