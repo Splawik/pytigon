@@ -66,7 +66,6 @@ init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_
 START_PAGE = "None"
 SHOW_LOGIN_WIN = False
 PACKS = []
-
 for app in APPS:
     if "." in app:
         pack = app.split(".")[0]
@@ -118,12 +117,10 @@ LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "lo
 _NAME = os.path.join(
     DATA_PATH, "%s/%s.db" % (URL_ROOT_FOLDER if URL_ROOT_FOLDER else PRJ_NAME, PRJ_NAME)
 )
-
 DATABASES["default"] = {
     "ENGINE": "django.db.backends.sqlite3",
     "NAME": _NAME,
 }
-
 if setup_databases:
     db_setup = setup_databases(PRJ_NAME)
     db_local = DATABASES["default"]
@@ -148,7 +145,6 @@ else:
             "ENGINE": "django.db.backends.sqlite3",
             "NAME": _NAME.replace(".db", "_local.db"),
         }
-
 
 try:
     from settings_app_local import *
