@@ -427,15 +427,14 @@ def run(param=None):
         argv[1].endswith(".py")
         or argv[1][-4:-1] == ".py"
         or argv[1] == "-m"
-        or argv[1].startswith("$")
+        or argv[1][:1] in ("$", "*",)
     ):
         from pytigon_lib.schtools.main_paths import get_main_paths
-
         paths = get_main_paths()
         ret = schserw_init_prj_path(paths, None, param)
         if ret:
             argv[1] = ret[0]
-        if argv[1].startswith("$"):
+        if argv[1][:1] in ("$", "*",):
             subprocess.run([get_executable(), "-m", argv[1][1:]] + argv[2:])
         else:
             subprocess.run([get_executable()] + argv[1:])
