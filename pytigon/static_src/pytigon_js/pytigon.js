@@ -163,7 +163,7 @@ frontend_view = function flx_frontend_view (url, complete, callback_on_error, pa
     var _callback, param2, url2, x;
     callback_on_error = (callback_on_error === undefined) ? null: callback_on_error;
     param = (param === undefined) ? null: param;
-    url2 = _pymeth_replace.call(url, ".fview", ".js");
+    url2 = window.process_href(_pymeth_replace.call(url, ".fview", ".js"), null);
     param2 = param;
     if (_pyfunc_truthy(param)) {
         param2 = window.getParamsFromEncodedParams(param);
@@ -215,7 +215,7 @@ ajax_get = function flx_ajax_get (url, complete, callback_on_error, process_req)
     callback_on_error = (callback_on_error === undefined) ? null: callback_on_error;
     process_req = (process_req === undefined) ? null: process_req;
     if (_pyfunc_op_contains(".fview", url)) {
-        return frontend_view(url, complete, null);
+        return frontend_view(url, complete, callback_on_error, null);
     }
     req = new XMLHttpRequest();
     if (_pyfunc_truthy(process_req)) {
@@ -334,7 +334,7 @@ _req_post = function flx__req_post (req, url, data, complete, callback_on_error,
     callback_on_error = (callback_on_error === undefined) ? null: callback_on_error;
     content_type = (content_type === undefined) ? null: content_type;
     if (_pyfunc_op_contains(".fview", url)) {
-        return frontend_view(url, complete, data);
+        return frontend_view(url, complete, callback_on_error, data);
     }
     process_blob = false;
     try {
@@ -2546,7 +2546,12 @@ register_global_event = function flx_register_global_event (event_type, fun, sel
 window.register_global_event = register_global_event;
 _get_value = function flx__get_value (elem, name) {
     var stub3_seq, stub4_itr, x, x1, x2, x3, xx;
-    if ((elem.length > 0)) {
+    if (_pymeth_startswith.call(name, "$")) {
+        name = name.slice(1);
+        if (_pyfunc_hasattr(window, name)) {
+            return _pyfunc_getattr(window, name);
+        }
+    } else if ((elem.length > 0)) {
         x1 = elem.closest(".ajax-region");
         x2 = elem.closest(".page");
         x3 = jQuery(document);

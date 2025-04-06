@@ -3,10 +3,25 @@
 {% load exsyntax %}
 {% load static %}
 {% load compress %}
+{% block js_scripts_base %}
+        {{ block.super }}
+        {% jscript_link 'vanillajs_plugins/pouchdb/pouchdb-7.3.0.min.js' %}
+        {% jscript_link 'vanillajs_plugins/graphql/graphql.min.js' %}
+{% endblock %}
+{% block botstrap_css %}
+        {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
+{% endblock %}
+{% block ext_css_links %}
+        {% if standard_web_browser %}
+                {% css_link 'themes/wiki.css' %}
+                {% css_link 'vanillajs_plugins/pygments/manni.css' %}
+        {% endif %}
+        {{ block.super }}
+{% endblock %}
 {% block component_init %}
         var component_init = { graphql_pub: 'https://www.pytigon.eu/graphql_public/', graphql_prv: 'https://www.pytigon.eu/graphql/', }
 {% endblock %}
-{% block js_scripts_base %}
+{% block js_scripts_base2 %}
         {% if settings.USE_I18N %}
                 <script src="{% url 'javascript-catalog' %}"></script>
         {% endif %}
@@ -28,7 +43,7 @@
                 {% jscript_link 'jquery_plugins/draggable/jquery.draggable.js' %}
                 {% jscript_link 'jquery_plugins/perfect-scrollbar/js/perfect-scrollbar.min.js' %}
                 {% jscript_link 'jquery_plugins/jquery-treegrid/js/jquery.treegrid.min.js' %}
-                {% block bootstrap_js %}
+                {% block bootstrap_js2 %}
                         {% jscript_link 'bootstrap/js/bootstrap.bundle.js' %}
                 {% endblock %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-select/js/bootstrap-select.min.js' %}
@@ -37,13 +52,13 @@
                 {% jscript_link 'bootstrap_plugins/bootstrap-ladda/ladda.min.js' %}
                 {% jscript_link 'bootstrap_plugins/twbs-pagination/jquery.twbsPagination.min.js' %}
                 {% jscript_link 'bootstrap_plugins/bootstrap-sweetalert2/sweetalert2.min.js' %}
-                {% block theme_js_scripts %}{% endblock %}
+                {% block theme_js_scripts2 %}{% endblock %}
                 {% jscript_link 'vanillajs_plugins/pouchdb/pouchdb-7.3.0.min.js' %}
                 {% jscript_link 'vanillajs_plugins/graphql/graphql.min.js' %}
         {% endcompress %}
         {% module_link 'pytigon_js/pytigon.js' %}
 {% endblock %}
-{% block css_links %}
+{% block css_links2 %}
         {% compress css %}
                 {% css_link 'vanillajs_plugins/tether/css/tether.min.css' %}
                 {% css_link 'bootstrap_plugins/bootstrap5-editable/css/bootstrap-editable.css' %}
@@ -56,7 +71,7 @@
                 {% css_link 'jquery_plugins/select2/css/select2.min.css' %}
                 {{ form.media.css }}
                 {% css_link 'bootstrap_plugins/select2-bootstrap-5-theme/select2-bootstrap-5-theme.css' %}
-                {% block botstrap_css %}
+                {% block botstrap_css2 %}
                         {% if settings.BOOTSTRAP_TEMPLATE %}
                                 {% css_link 'themes/'|add:settings.BOOTSTRAP_TEMPLATE|add:'/bootstrap.min.css' %}
                           {% else %}
@@ -64,7 +79,7 @@
                         {% endif %}
                         {% css_link 'vanillajs_plugins/icheck-material-1.0.1/icheck-material.min.css' %}
                 {% endblock %}
-                {% block theme_css_links %}
+                {% block theme_css_links2 %}
                         {% if 'materia' in settings.BOOTSTRAP_TEMPLATE %}
                                 <style >
     span.select2-selection{
@@ -77,7 +92,7 @@
 </style>
                         {% endif %}
                 {% endblock %}
-                {% block theme_css_links_spec %}
+                {% block theme_css_links_spec2 %}
                         {% css_link 'themes/default.css' %}
                         {% css_link 'themes/'|append_str:browser_type|append_str:'.css' %}
                 {% endblock %}

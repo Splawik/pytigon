@@ -112,7 +112,7 @@ def download_binary_file(buf, content_disposition):
 
 
 def frontend_view(url, complete, callback_on_error=None, param=None):
-    url2 = url.replace(".fview", ".js")
+    url2 = window.process_href(url.replace(".fview", ".js"), None)
 
     param2 = param
     if param:
@@ -153,7 +153,7 @@ def frontend_view(url, complete, callback_on_error=None, param=None):
 
 def ajax_get(url, complete, callback_on_error=None, process_req=None):
     if ".fview" in url:
-        return frontend_view(url, complete, None)
+        return frontend_view(url, complete, callback_on_error, None)
 
     req = XMLHttpRequest()
 
@@ -284,7 +284,7 @@ window.ajax_get = ajax_get
 
 def _req_post(req, url, data, complete, callback_on_error=None, content_type=None):
     if ".fview" in url:
-        return frontend_view(url, complete, data)
+        return frontend_view(url, complete, callback_on_error, data)
 
     process_blob = False
     try:

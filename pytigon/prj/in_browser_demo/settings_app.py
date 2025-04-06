@@ -3,9 +3,9 @@ import sys
 import json
 from urllib.parse import urlparse
 
-PRJ_TITLE = "Mobile demo"
-PRJ_NAME = "mobile_demo"
-THEMES = ["smartfon_standard", "smartfon_standard", "smartfon_standard"]
+PRJ_TITLE = "Pyodide demo"
+PRJ_NAME = "in_browser_demo"
+THEMES = ["tablet_modern", "tablet_modern", "smartfon_standard"]
 
 _lp = os.path.dirname(os.path.abspath(__file__))
 
@@ -63,7 +63,7 @@ from pytigon_lib.schtools.install_init import init
 
 init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])
 
-START_PAGE = "static/frontend_demo/views/todo_demo.fview"
+START_PAGE = "None"
 SHOW_LOGIN_WIN = False
 PACKS = []
 
@@ -99,11 +99,6 @@ for app in APPS:
 for app in APPS_EXT:
     if not app in INSTALLED_APPS:
         INSTALLED_APPS.append(app)
-
-if os.path.exists(PRJ_PATH + "/_schcomponents/static"):
-    STATICFILES_DIRS.append(PRJ_PATH + "/_schcomponents/static")
-else:
-    STATICFILES_DIRS.append(PRJ_PATH_ALT + "/_schcomponents/static")
 
 
 TEMPLATES[0]["DIRS"].insert(0, os.path.join(DATA_PATH, PRJ_NAME, "templates"))
@@ -155,7 +150,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2025-04-06 14:49:42"
+GEN_TIME = "2025-04-06 14:42:31"
 
 
 for key, value in os.environ.items():

@@ -80,7 +80,11 @@ window.register_global_event = register_global_event
 
 
 def _get_value(elem, name):
-    if elem.length > 0:
+    if name.startswith("$"):
+        name = name[1:]
+        if hasattr(window, name):
+            return getattr(window, name)
+    elif elem.length > 0:
         x1 = elem.closest(".ajax-region")
         x2 = elem.closest(".page")
         x3 = jQuery(document)

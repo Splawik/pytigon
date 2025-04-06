@@ -48,6 +48,7 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/schportal/
 !*pytigon/prj/schpytigondemo/
 !*pytigon/prj/mobile_demo/
+!*pytigon/prj/in_browser_demo/
 !*pytigon/prj/schscripts/
 !*pytigon/prj/_schall/*
 !*pytigon/prj/_schdata/*
@@ -69,6 +70,7 @@ pytigon/prj/*/prjlib/*
 !*pytigon/prj/schportal/*
 !*pytigon/prj/schpytigondemo/*
 !*pytigon/prj/mobile_demo/*
+!*pytigon/prj/in_browser_demo/*
 !*pytigon/prj/schscripts/*
 
 global_db_settings.py
