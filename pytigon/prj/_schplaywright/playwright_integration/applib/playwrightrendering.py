@@ -37,4 +37,4 @@ class PlayWrightRendering(pytigon_lib.schhtml.htmlviewer.BaseRenderingLib):
             return True
         return False
 
-pytigon_lib.schhtml.htmlviewer.set_endering_lib(PlayWrightRendering)
+pytigon_lib.schhtml.htmlviewer.set_rendering_lib(PlayWrightRendering)
