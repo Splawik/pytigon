@@ -3,6 +3,7 @@ import sys
 
 from pytigon_lib.schtools.main_paths import get_main_paths
 from pytigon_lib.schhttptools import httpclient
+from django.conf import settings
 
 HTTP = None
 
@@ -22,7 +23,8 @@ def init(prj, username, password, user_agent="pytigon"):
         parm = {"username": username, "password": password, "next": "/schsys/ok/"}
         response = HTTP.post(
             None,
-            "/schsys/do_login/",
+            (settings.URL_ROOT_PREFIX if settings.URL_ROOT_FOLDER else "")
+            + "schsys/do_login/",
             parm,
             credentials=(username, password),
             user_agent=user_agent,
