@@ -24,7 +24,7 @@ def init(prj, username, password, user_agent="pytigon"):
         response = HTTP.post(
             None,
             (settings.URL_ROOT_PREFIX if settings.URL_ROOT_FOLDER else "")
-            + "schsys/do_login/",
+            + "/schsys/do_login/",
             parm,
             credentials=(username, password),
             user_agent=user_agent,
