@@ -8,9 +8,6 @@ dj-database-url
 dj-email-url
 django-bootstrap5
 django-cors-headers
-django-mailer
 django_select2
 django-widget-tweaks
-django-q2
 django-cancan
-django-extensions
