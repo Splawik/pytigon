@@ -9,7 +9,8 @@ import django.views.i18n
 import django.conf.urls.i18n
 import django_select2.urls
 import django.contrib.staticfiles
-from django.contrib.staticfiles import views
+
+# from django.contrib.staticfiles import views
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
@@ -52,10 +53,12 @@ _urlpatterns.extend(
     [
         path(
             "schsys/jsi18n.js",
-            django.views.i18n.JavaScriptCatalog.as_view(
-                packages=[
-                    "pytigon.schserw.schsys",
-                ]
+            cache_page(60 * 60 * 24 * 30)(
+                django.views.i18n.JavaScriptCatalog.as_view(
+                    packages=[
+                        "pytigon.schserw.schsys",
+                    ]
+                )
             ),
             name="javascript-catalog",
         ),

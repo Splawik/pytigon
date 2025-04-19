@@ -18,11 +18,6 @@ def init(
 ):
     global HTTP
 
-    paths = get_main_paths(prj)
-    prj_path = os.path.join(paths["PRJ_PATH"], prj)
-    if prj_path not in sys.path:
-        sys.path.append(prj_path)
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
     if ptig_installer:
         from pytigon_lib.schtools.install import Ptig
         import io
@@ -36,6 +31,12 @@ def init(
         else:
             ptig = Ptig(ptig_installer)
         ptig.extract_ptig()
+
+    paths = get_main_paths(prj)
+    prj_path = os.path.join(paths["PRJ_PATH"], prj)
+    if prj_path not in sys.path:
+        sys.path.append(prj_path)
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
 
     httpclient.init_embeded_django()
 

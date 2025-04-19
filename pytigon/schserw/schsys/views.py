@@ -13,6 +13,7 @@ from django.http import (
     HttpResponseRedirect,
     HttpResponseForbidden,
 )
+from django.views.decorators.cache import cache_page
 
 from pytigon_lib.schdjangoext.tools import import_model
 from pytigon_lib.schtable.dbtable import DbTable
@@ -343,11 +344,13 @@ def plugins(request, app, plugin_name):
     return HttpResponse(s, mimetype="application/zip")
 
 
+@cache_page(60 * 60 * 24 * 30)
 def favicon(request):
     """Redirect to favicon."""
     return HttpResponseRedirect(make_href("/static/favicon.ico"))
 
 
+@cache_page(60 * 60 * 24 * 30)
 def sw(request):
     """Serve service worker."""
     if settings.STATIC_ROOT:
