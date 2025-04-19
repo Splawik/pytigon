@@ -9,7 +9,12 @@ HTTP = None
 
 
 def init(
-    prj, username=None, password=None, user_agent="pytigon", create_auto_user=False
+    prj,
+    username=None,
+    password=None,
+    user_agent="pytigon",
+    create_auto_user=False,
+    ptig_installer=None,
 ):
     global HTTP
 
@@ -18,6 +23,20 @@ def init(
     if prj_path not in sys.path:
         sys.path.append(prj_path)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings_app")
+    if ptig_installer:
+        from pytigon_lib.schtools.install import Ptig
+        import io
+
+        if isinstance(ptig_installer, bytes):
+            ptig_file = io.BytesIO(ptig_installer)
+            ptig = Ptig(ptig_file)
+        elif isinstance(ptig_installer, bytes):
+            ptig_file = open(ptig_installer, "rb")
+            ptig = Ptig(ptig_file)
+        else:
+            ptig = Ptig(ptig_installer)
+        ptig.extract_ptig()
+
     httpclient.init_embeded_django()
 
     if create_auto_user:
