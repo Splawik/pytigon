@@ -1,7 +1,11 @@
 """Python template filters."""
 
 from django import template
-from django.contrib.contenttypes.models import ContentType
+
+try:
+    from django.contrib.contenttypes.models import ContentType
+except:
+    ContentType = None
 from django.core.exceptions import ObjectDoesNotExist
 
 register = template.Library()

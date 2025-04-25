@@ -16,7 +16,9 @@ from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 
 from django.urls import path
-from django.contrib.auth.mixins import LoginRequiredMixin
+
+if settings.GRAPHQL:
+    from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import admin
 
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
@@ -40,7 +42,8 @@ if settings.GRAPHQL:
         pass
 
 
-admin.site.enable_nav_sidebar = False
+if "django.contrib.admin" in settings.INSTALLED_APPS:
+    admin.site.enable_nav_sidebar = False
 
 _urlpatterns = []
 
@@ -67,9 +70,13 @@ _urlpatterns.extend(
         path("select2/", include(django_select2.urls)),
         path("favicon.ico", views.favicon),
         path(make_href("sw.js"), views.sw),
-        path("admin/", admin.site.urls),
+        # path("admin/", admin.site.urls),
     ]
 )
+
+if "django.contrib.admin" in settings.INSTALLED_APPS:
+    _urlpatterns.append(path("admin/", admin.site.urls))
+
 
 if settings.LOGVIEWER:
     _urlpatterns.append(path("admin/log_viewer/", include("log_viewer.urls")))

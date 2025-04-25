@@ -666,7 +666,7 @@ class SChProject(JSONModel):
         return form_class
 
 
-admin.site.register(SChProject)
+admin_register(SChProject)
 
 
 class SChApp(JSONModel):
@@ -964,7 +964,7 @@ class SChApp(JSONModel):
         return self.name
 
 
-admin.site.register(SChApp)
+admin_register(SChApp)
 
 
 class SChChoice(models.Model):
@@ -996,7 +996,7 @@ class SChChoice(models.Model):
         return self.name
 
 
-admin.site.register(SChChoice)
+admin_register(SChChoice)
 
 
 class SChChoiceItem(models.Model):
@@ -1028,7 +1028,7 @@ class SChChoiceItem(models.Model):
         return self.name
 
 
-admin.site.register(SChChoiceItem)
+admin_register(SChChoiceItem)
 
 
 class SChTable(models.Model):
@@ -1123,7 +1123,7 @@ class SChTable(models.Model):
         return self.name
 
 
-admin.site.register(SChTable)
+admin_register(SChTable)
 
 
 class SChField(models.Model):
@@ -1365,7 +1365,7 @@ class SChField(models.Model):
         return standard_table_action(cls, list_view, request, data, ["copy", "paste"])
 
 
-admin.site.register(SChField)
+admin_register(SChField)
 
 
 class SChView(models.Model):
@@ -1562,7 +1562,7 @@ class SChView(models.Model):
         return ""
 
 
-admin.site.register(SChView)
+admin_register(SChView)
 
 
 class SChStatic(models.Model):
@@ -1614,7 +1614,7 @@ class SChStatic(models.Model):
         return (self.name < other.name) and (self.name < other.name)
 
 
-admin.site.register(SChStatic)
+admin_register(SChStatic)
 
 
 class SChTemplate(models.Model):
@@ -1879,7 +1879,7 @@ class SChTemplate(models.Model):
         return self.name
 
 
-admin.site.register(SChTemplate)
+admin_register(SChTemplate)
 
 
 class SChAppMenu(models.Model):
@@ -1980,7 +1980,7 @@ class SChAppMenu(models.Model):
         return self.name
 
 
-admin.site.register(SChAppMenu)
+admin_register(SChAppMenu)
 
 
 class SChForm(models.Model):
@@ -2049,7 +2049,7 @@ class SChForm(models.Model):
         return None
 
 
-admin.site.register(SChForm)
+admin_register(SChForm)
 
 
 class SChFormField(models.Model):
@@ -2158,7 +2158,7 @@ class SChFormField(models.Model):
         return ret
 
 
-admin.site.register(SChFormField)
+admin_register(SChFormField)
 
 
 class SChTask(models.Model):
@@ -2216,7 +2216,7 @@ class SChTask(models.Model):
         return self.name
 
 
-admin.site.register(SChTask)
+admin_register(SChTask)
 
 
 class SChFile(models.Model):
@@ -2269,7 +2269,7 @@ class SChFile(models.Model):
         super().save(*argi, **argv)
 
 
-admin.site.register(SChFile)
+admin_register(SChFile)
 
 
 class SChLocale(models.Model):
@@ -2295,7 +2295,7 @@ class SChLocale(models.Model):
     )
 
 
-admin.site.register(SChLocale)
+admin_register(SChLocale)
 
 
 class SChTranslate(models.Model):
@@ -2327,7 +2327,7 @@ class SChTranslate(models.Model):
     )
 
 
-admin.site.register(SChTranslate)
+admin_register(SChTranslate)
 
 
 class SChChannelConsumer(models.Model):
@@ -2383,7 +2383,7 @@ class SChChannelConsumer(models.Model):
             return None
 
 
-admin.site.register(SChChannelConsumer)
+admin_register(SChChannelConsumer)
 
 
 tmp = [

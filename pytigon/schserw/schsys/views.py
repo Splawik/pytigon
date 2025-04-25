@@ -461,7 +461,7 @@ def change_profile_variant(request, variant_name):
 
 def start(request, start_page=False):
     """Handle start page."""
-    if (
+    if hasattr(request, "user") and (
         not request.user.is_authenticated
         and settings.SHOW_LOGIN_WIN
         and settings.ALLAUTH

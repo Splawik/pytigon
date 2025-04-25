@@ -14,8 +14,9 @@ from django.urls import get_script_prefix
 try:
     from django.contrib.auth.models import Permission
     from django.contrib.auth.context_processors import PermWrapper
-except ImportError:
-    pass
+except:
+    Permission = None
+    PermWrapper = None
 
 from pytigon_lib.schdjangoext.django_init import get_app_name
 from pytigon_lib.schtools.env import get_environ
@@ -80,7 +81,11 @@ def standard_web_browser(request):
         else:
             return 0
     else:
-        if "HYBRID_BROWSER" in request.session or "hybrid" in request.GET:
+        if (
+            hasattr(request, "session")
+            and "HYBRID_BROWSER" in request.session
+            or "hybrid" in request.GET
+        ):
             return 2
         elif "only_table" in request.GET:
             return 6
@@ -380,7 +385,10 @@ class AppManager:
                         # AdditionalUrls: url, title, right, icon, module,
                         if callable(module2.AdditionalUrls):
                             urls2 = module2.AdditionalUrls(
-                                prj, self.request.LANGUAGE_CODE[:2].lower()
+                                prj,
+                                self.request.LANGUAGE_CODE[:2].lower()
+                                if hasattr(self.request, "LANGUAGE_CODE")
+                                else "en",
                             )
                         else:
                             urls2 = module2.AdditionalUrls
@@ -511,16 +519,18 @@ class CanCanWrapper:
         return self.request.ability.can(self.action, obj)
 
 
-class CanCanPermWrapper(PermWrapper):
-    def __init__(self, request):
-        super().__init__(request.user)
-        self.request = request
+if PermWrapper:
 
-    def __getitem__(self, app_label):
-        if app_label.startswith("can_"):
-            return CanCanWrapper(app_label[4:], self.request)
-        else:
-            return super().__getitem(app_label)
+    class CanCanPermWrapper(PermWrapper):
+        def __init__(self, request):
+            super().__init__(request.user)
+            self.request = request
+
+        def __getitem__(self, app_label):
+            if app_label.startswith("can_"):
+                return CanCanWrapper(app_label[4:], self.request)
+            else:
+                return super().__getitem(app_label)
 
 
 def sch_standard(request):
@@ -682,7 +692,10 @@ def sch_standard(request):
     if not prj:
         prj = settings.PRJ_NAME
 
-    lng = request.LANGUAGE_CODE[:2].lower()
+    if hasattr(request, "LANGUAGE_CODE"):
+        lng = request.LANGUAGE_CODE[:2].lower()
+    else:
+        lng = "en"
 
     b_type = browser_type(request)
     c_type = client_type(request)
@@ -776,7 +789,9 @@ def sch_standard(request):
         "show_title_bar": show_title_bar,
         "get": get,
         "uuid": "x" + str(uuid.uuid4()),
-        "lang": request.LANGUAGE_CODE[:2].lower(),
+        "lang": request.LANGUAGE_CODE[:2].lower()
+        if hasattr(request, "LANGUAGE_CODE") and request.LANGUAGE_CODE
+        else "en",
         "prj": prj,
         "offline_support": settings.OFFLINE_SUPPORT,
         "gen_time": gmt_str,
@@ -793,7 +808,7 @@ def sch_standard(request):
         "extra_param": extra_param,
         "datetime": datetime,
     }
-    if "client_param" in request.session:
+    if hasattr(request, "session") and "client_param" in request.session:
         ret.update(request.session["client_param"])
 
     ret["app_manager"] = AppManager(request)
@@ -802,8 +817,9 @@ def sch_standard(request):
     if settings.DEBUG:
         ret["context"] = ret
 
-    if hasattr(settings, "CANCAN") and settings.CANCAN:
-        ret["perms"] = CanCanPermWrapper(request)
+    if PermWrapper:
+        if hasattr(settings, "CANCAN") and settings.CANCAN:
+            ret["perms"] = CanCanPermWrapper(request)
 
     # print("FRAGMENT: ", get_fragment(request))
     # print("TEMPLATE: ", d_template)
