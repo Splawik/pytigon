@@ -15,6 +15,7 @@ def init(
     user_agent="pytigon",
     create_auto_user=False,
     ptig_installer=None,
+    path_alt=True,
 ):
     global HTTP
 
@@ -30,7 +31,7 @@ def init(
             ptig = Ptig(ptig_file)
         else:
             ptig = Ptig(ptig_installer)
-        ptig.extract_ptig()
+        ptig.extract_ptig(path_alt)
 
     paths = get_main_paths(prj)
     prj_path = os.path.join(paths["PRJ_PATH"], prj)
