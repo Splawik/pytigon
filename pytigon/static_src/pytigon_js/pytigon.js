@@ -1138,6 +1138,7 @@ add_param2url = function flx_add_param2url (url, param) {
 
 window.add_param2url = add_param2url;
 export {Loading, save_as, standard_error_handler, download_binary_file, frontend_view, ajax_get, ajax_post, ajax_json, ajax_submit, load_css, on_load_js, load_js, load_many_js, history_push_state, get_elem_from_string, animate_combo, is_hidden, is_visible, get_template, super_query_selector, super_insert, send_to_dom, remove_element, process_resize, get_page, get_table_type, can_popup, correct_href, remove_page_from_href, inline_maximize, inline_minimize, element_get_url, element_set_url, join_urls, add_param2url};
+export {Loading, save_as, standard_error_handler, download_binary_file, frontend_view, ajax_get, ajax_post, ajax_json, ajax_submit, load_css, on_load_js, load_js, load_many_js, history_push_state, get_elem_from_string, animate_combo, is_hidden, is_visible, get_template, super_query_selector, super_insert, send_to_dom, remove_element, process_resize, get_page, get_table_type, can_popup, correct_href, remove_page_from_href, inline_maximize, inline_minimize, element_get_url, element_set_url, join_urls, add_param2url};
 
 var DefineWebComponent, GlobalBus, set_state;
 set_state = function flx_set_state (component, state) {
@@ -1410,6 +1411,7 @@ GlobalBus.prototype.unregister = function (component) {
 
 
 window.GlobalBus = GlobalBus;
+export {set_state, DefineWebComponent, GlobalBus};
 export {set_state, DefineWebComponent, GlobalBus};
 
 var MOUNT_INIT_FUN, _get_region_element_closest, _get_region_elements_inside, _on_shown_bs_tab, _refresh_page, _valid_region_element, ajax_load, auto_frame_init, auto_refresh_tab, create_onloadeddata, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, get_click_on_focus_fun, get_refresh_on_focus_fun, init_select2_ctrl, mount_html, moveelement_init, on_focus_action, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init, set_select2_value;
@@ -2201,6 +2203,7 @@ ajax_load = function flx_ajax_load (element, url, complete) {
 
 window.ajax_load = ajax_load;
 export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, auto_refresh_tab, get_click_on_focus_fun, get_refresh_on_focus_fun, on_focus_action, moveelement_init, set_select2_value, create_onloadeddata, init_select2_ctrl, select2_init, select_combo_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
+export {data_type, register_mount_fun, mount_html, selectpicker_init, auto_frame_init, auto_refresh_tab, get_click_on_focus_fun, get_refresh_on_focus_fun, on_focus_action, moveelement_init, set_select2_value, create_onloadeddata, init_select2_ctrl, select2_init, select_combo_init, datatable_init, get_ajax_region, get_ajax_link, get_ajax_frame, refresh_ajax_frame, ajax_load};
 
 var INIT_DB_STRUCT, SYNC_STRUCT, _MSIE, _MSIE2, _UA, get_list_from_table, get_table, init_db, init_sync, on_sys_sync, open_database, sync_and_run;
 INIT_DB_STRUCT = null;
@@ -2447,6 +2450,7 @@ sync_and_run = function flx_sync_and_run (tbl, fun) {
 };
 
 window.sync_and_run = sync_and_run;
+export {init_db, open_database, get_table, get_list_from_table, on_sys_sync, init_sync, sync_and_run};
 export {init_db, open_database, get_table, get_list_from_table, on_sys_sync, init_sync, sync_and_run};
 
 var EVENT_CLICK_TAB, EVENT_TAB, REGISTERED_EVENT_TYPES, _chcek_element, _get_click_event_from_tab, _get_scrolled_parent, _get_title, _get_value, _on_close_subpage, _on_inline, _on_menu_click, _on_popup, _on_subframe, close_frame, create_event_handler, on_click_default_action, on_close_subframe, on_close_subframe_and_refresh, on_close_subpage, on_close_subpage_and_refresh, on_global_event, on_inline, on_inline_delete, on_inline_edit_new, on_inline_error, on_inline_info, on_message, on_new_tab, on_popup, on_popup_delete, on_popup_edit_new, on_popup_error, on_popup_info, on_replace_app, on_resize, on_subframe, on_subpage, only_get, process_href, refresh_app, refresh_frame, refresh_page, register_global_event;
@@ -3320,6 +3324,7 @@ on_resize = function (event) {
 
 window.addEventListener("resize", on_resize);
 export {on_global_event, register_global_event, process_href, on_click_default_action, create_event_handler, on_inline, on_inline_edit_new, on_inline_info, on_inline_delete, on_inline_error, on_popup, on_popup_edit_new, on_popup_info, on_popup_delete, on_popup_error, on_new_tab, on_replace_app, on_subpage, on_subframe, on_close_subpage, on_close_subpage_and_refresh, on_close_subframe, on_close_subframe_and_refresh, close_frame, refresh_frame, refresh_page, refresh_app, only_get, on_message, on_resize};
+export {on_global_event, register_global_event, process_href, on_click_default_action, create_event_handler, on_inline, on_inline_edit_new, on_inline_info, on_inline_delete, on_inline_error, on_popup, on_popup_edit_new, on_popup_info, on_popup_delete, on_popup_error, on_new_tab, on_replace_app, on_subpage, on_subframe, on_close_subpage, on_close_subpage_and_refresh, on_close_subframe, on_close_subframe_and_refresh, close_frame, refresh_frame, refresh_page, refresh_app, only_get, on_message, on_resize};
 
 var install_service_worker, service_worker_and_indexedDB_test;
 install_service_worker = function flx_install_service_worker () {
@@ -3367,6 +3372,7 @@ service_worker_and_indexedDB_test = function flx_service_worker_and_indexedDB_te
     return null;
 };
 
+export {install_service_worker, service_worker_and_indexedDB_test};
 export {install_service_worker, service_worker_and_indexedDB_test};
 
 var Page, TabMenu, TabMenuItem, get_menu;
@@ -3574,6 +3580,7 @@ get_menu = function flx_get_menu () {
     return window.MENU;
 };
 
+export {Page, TabMenuItem, TabMenu, get_menu};
 export {Page, TabMenuItem, TabMenu, get_menu};
 
 var _is_visible, _rowStyle, datatable_action, datatable_ajax, datatable_buttons, datatable_refresh, datetable_set_height, init_table, loading_template, old_datetable_set_height, on_check_toggle_visibility, prepare0, prepare_datatable, table_loadeddata;
@@ -4056,6 +4063,7 @@ datatable_buttons = function flx_datatable_buttons (obj) {
 
 window.datatable_buttons = datatable_buttons;
 export {old_datetable_set_height, datetable_set_height, datatable_refresh, prepare_datatable, prepare0, datatable_ajax, init_table, table_loadeddata, loading_template, datatable_action, on_check_toggle_visibility, datatable_buttons};
+export {old_datetable_set_height, datetable_set_height, datatable_refresh, prepare_datatable, prepare0, datatable_ajax, init_table, table_loadeddata, loading_template, datatable_action, on_check_toggle_visibility, datatable_buttons};
 
 var humanFileSize, img_field;
 humanFileSize = function flx_humanFileSize (bytes, si) {
@@ -4134,6 +4142,7 @@ img_field = function flx_img_field (elem) {
 };
 
 window.img_field = img_field;
+export {humanFileSize, img_field};
 export {humanFileSize, img_field};
 
 var _on_error, _on_key, _on_popstate, activate_menu, app_init, dom_content_loaded, jquery_ready, static_path;
@@ -4374,5 +4383,6 @@ _on_popstate = function (e) {
 };
 
 window.addEventListener("popstate", _on_popstate, false);
+export {dom_content_loaded, app_init, static_path, activate_menu, jquery_ready};
 export {dom_content_loaded, app_init, static_path, activate_menu, jquery_ready};
 

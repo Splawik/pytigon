@@ -5,19 +5,20 @@ from shutil import copyfile
 import sass
 
 import pscript
+from pytigon_lib.schindent.py_to_js import compile, prepare_python_code
 from jsmin import jsmin
 
 
-def prepare_python_code(code):
-    exported_id = []
-    for line in code.split("\n"):
-        if (line.startswith("def") and not line.startswith("def _")) or (
-            line.startswith("class") and not line.startswith("class _")
-        ):
-            exported_id.append(line.split(" ")[1].split("(")[0].split(":")[0])
-    if exported_id:
-        code += "RawJS('export {" + ", ".join(exported_id) + "}')\n"
-    return code
+# def prepare_python_code(code):
+#    exported_id = []
+#    for line in code.split("\n"):
+#        if (line.startswith("def") and not line.startswith("def _")) or (
+#            line.startswith("class") and not line.startswith("class _")
+#        ):
+#            exported_id.append(line.split(" ")[1].split("(")[0].split(":")[0])
+#    if exported_id:
+#        code += "RawJS('export {" + ", ".join(exported_id) + "}')\n"
+#    return code
 
 
 files = [
@@ -71,9 +72,15 @@ with open("py_runtime.min.js", "wt") as fout:
 with open("pytigon.js", "wt") as fout:
     for file in files:
         with open(file, "rt") as fin:
-            js = pscript.py2js(prepare_python_code(fin.read()), inline_stdlib=False)
-            fout.write(js)
-            fout.write("\n\n")
+            # js = pscript.py2js(prepare_python_code(fin.read()), inline_stdlib=False)
+
+            error, js = compile(prepare_python_code(fin.read()))
+            if error:
+                print("Error in", file)
+                print(js)
+            else:
+                fout.write(js)
+                fout.write("\n\n")
 
 with open("pytigon.js", "rt") as fin:
     with open("pytigon.min.js", "wt") as fout:
