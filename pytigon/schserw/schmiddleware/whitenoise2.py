@@ -70,6 +70,6 @@ class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
                 response = self.get_response(request)
             else:
                 response = HttpResponseNotFound(
-                    "File: " + request.path + " does'nt exists"
+                    "File: " + request.path + " does not exist"
                 )
         return response

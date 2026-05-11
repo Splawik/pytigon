@@ -1,19 +1,8 @@
-#!/usr/bin/env python
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY  ; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
+"""Pytigon AppImage launcher entry point.
 
-# Pytigon - wxpython and django application framework
-
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# license: "LGPL 3.0"
-
+Sets the PYTIGON_APP_IMAGE environment flag before launching the
+main pytigon runner. Used when pytigon is packaged as an AppImage.
+"""
 
 from os import environ
 

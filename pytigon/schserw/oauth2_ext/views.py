@@ -1,21 +1,42 @@
+"""Custom OAuth2 token view with application-specific scope handling.
+
+Extends the base TokenView from django-oauth-toolkit to support
+application-level scope overrides via the PytigonOAuth2Application model.
+"""
+
 import json
+import logging
+
 from django.http import HttpResponse
 from oauth2_provider.views.base import TokenView
 from oauth2_provider.signals import app_authorized
 from oauth2_provider.models import get_access_token_model
 
+logger = logging.getLogger(__name__)
+
+# Get the AccessToken model's DoesNotExist exception for catching missing tokens
+AccessToken = get_access_token_model()
+AccessTokenDoesNotExist = AccessToken.DoesNotExist
+
 
 class ApplicationScopesTokenView(TokenView):
-    """
-    Custom TokenView that extends the base TokenView to handle application-specific scopes.
+    """Custom TokenView that applies application-specific OAuth2 scopes.
+
+    When an application has a PytigonOAuth2Application with a custom scope,
+    the issued token's scope is overridden with that application-specific scope.
     """
 
     def post(self, request, *args, **kwargs):
-        """
-        Handle POST request to create a token response and modify it based on application scopes.
+        """Handle POST request to create a token, applying app-specific scopes.
+
+        Args:
+            request: The HTTP request object.
+
+        Returns:
+            HttpResponse: JSON response with the token data.
         """
         try:
-            # Create the initial token response
+            # Create the initial token response from the parent class
             url, headers, body, status = self.create_token_response(request)
 
             if status == 200:
@@ -23,9 +44,9 @@ class ApplicationScopesTokenView(TokenView):
                 access_token = json_body.get("access_token")
 
                 if access_token:
-                    token = get_access_token_model().objects.get(token=access_token)
+                    token = AccessToken.objects.get(token=access_token)
 
-                    # Check if the application has custom scopes and update the token accordingly
+                    # Check if the application has custom scopes
                     if (
                         hasattr(token.application, "pytigonoauth2application")
                         and token.application.pytigonoauth2application.scope
@@ -48,8 +69,15 @@ class ApplicationScopesTokenView(TokenView):
             return response
 
         except json.JSONDecodeError:
-            return HttpResponse(content='{"error": "Invalid JSON"}', status=400)
-        except get_access_token_model().DoesNotExist:
+            logger.warning("Invalid JSON in token response", exc_info=True)
+            return HttpResponse(
+                content='{"error": "Invalid JSON in response"}', status=400
+            )
+        except AccessTokenDoesNotExist:
+            logger.warning("Access token not found after creation")
             return HttpResponse(content='{"error": "Token not found"}', status=404)
         except Exception as e:
-            return HttpResponse(content=f'{{"error": "{str(e)}"}}', status=500)
+            logger.error("Error in token view: %s", e, exc_info=True)
+            return HttpResponse(
+                content='{"error": "Internal server error"}', status=500
+            )

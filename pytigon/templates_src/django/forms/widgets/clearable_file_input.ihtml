@@ -9,7 +9,7 @@
         label for={{ checkbox_id }}...{{ clear_checkbox_label }}
     {{ input_text }}:
 label class=btn btn-primary btn-file nocolon upload
-    input style=display:none,,,onchange=img_field(this);,,,type={{ widget.type }},,,name={{ widget.name }},,,{% include "django/forms/widgets/attrs.html" %}
+    input class=file-input-hidden,,,onchange=img_field(this);,,,type={{ widget.type }},,,name={{ widget.name }},,,{% include "django/forms/widgets/attrs.html" %}
     % if widget.value:
         img class=img,,,src=data:image/jpeg;base64,{{widget.value}}
     {% icon "fa-upload fa-lg" %}

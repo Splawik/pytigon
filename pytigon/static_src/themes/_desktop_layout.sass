@@ -1,0 +1,65 @@
+// ============================================================================
+// _desktop_layout.sass
+// ============================================================================
+// Purpose: Desktop theme layout and structural styles. Extracted from
+//          desktop.sass for better organization.
+// Used by: desktop theme (desktop.sass)
+// ----------------------------------------------------------------------------
+// Covers: body background, content area sizing, drop-down blocks in header,
+// loading indicator positioning, and tablet menu icon alignment.
+// ============================================================================
+
+/* Body */
+/* -------------------------------------------------- */
+
+body
+    overflow-x: hidden
+    overflow-y: auto
+    background: gray
+
+body > .body-body
+    background: white
+
+/* Desktop Content Area */
+/* -------------------------------------------------- */
+
+.desktop_content
+    padding: 0px
+    min-height: calc(100vh - 5px)
+
+.content
+    padding-top: 10px
+
+/* Drop-Down Blocks (Header Right) */
+/* -------------------------------------------------- */
+
+.drop_down_blocks
+    position: absolute
+    top: 0px
+    right: 0px
+    padding: 9px
+    background: black
+    height: 38px
+
+    > li
+        padding: 0px 16px
+
+        > a
+            color: white
+            text-decoration: none !important
+
+/* Loading Indicator */
+/* -------------------------------------------------- */
+
+#loading-indicator
+    position: absolute
+    top: 0px
+    left: 0px
+    width: 40px
+    z-index: 1
+
+/* Tablet Menu Icon Alignment */
+/* -------------------------------------------------- */
+
+img.tablet_menu_icon, a.menu-href svg
+    vertical-align: middle

@@ -29,7 +29,7 @@
 %% extrahead
     meta name=NO_VSCROLLBAR,,,content=True
 %% extrahead2
-    table style=width: 100%;,,,border=1
+    table class=table-full-width,,,border=1
         % if user.is_authenticated
           [ login | 0 ]
         % else

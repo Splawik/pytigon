@@ -1,5 +1,18 @@
-/* bootstrap-table */
+// ============================================================================
+// _default_bootstrap_table.sass
+// ============================================================================
+// Purpose: Bootstrap table styling for data tables, action columns, and
+//          table toolbars. Defines the look of data tables within panels.
+// Used by: default theme (default.sass)
+// ----------------------------------------------------------------------------
+// Covers: table cell padding, striped rows, action/information columns,
+// toolbar buttons, tree-id links, dropdowns within tables, and pagination.
+// ============================================================================
 
+/* Bootstrap Table */
+/* -------------------------------------------------- */
+
+// Column header buttons - transparent by default
 .bootstrap-table .columns
     font-size: small
     button.btn:not(:hover)
@@ -7,12 +20,14 @@
     a.btn:not(:hover)
         background: transparent
 
+/* Table Panels (tabsort, table_panel, subform_content) */
+/* -------------------------------------------------- */
 
 .tabsort_panel, .table_panel, .subform_content
     width: 100%
-
     font-size: small
 
+    // Table cell spacing
     .table td
         padding-top: 0.25rem
         padding-right: 0.75rem
@@ -25,47 +40,37 @@
             .form-group
                 margin-top: 0px
 
-    table.table-striped tbody 
-        tr:nth-of-type(odd) 
+    // Striped row colors
+    table.table-striped tbody
+        tr:nth-of-type(odd)
             background-color: rgba(0,0,0,0.02)
 
-        tr:nth-of-type(even) 
+        tr:nth-of-type(even)
             background-color: rgba(0,0,0,0)
-            
-        tr:hover 
+
+        tr:hover
             background-color: rgba(0,0,0,0.05)
 
-    //.btn, .list_content_header .btn
-        //box-shadow: none
-        //border: none !important
-    //    text-transform: none
-    //    padding: 0.5rem
-        //color: black
-        //background-color: rgba(0,0,0,0.05)
-
-    //.dropdown .btn, th .btn, , .list_content_header .btn
+    // Action and information column buttons
     .td_information .btn, .td_action .btn, .columns .btn
         box-shadow: none !important
         border: none !important
         text-transform: none
         padding: 0.5rem
-        //color: black
         color: var(--bs-body-color)
-        //background-color: rgba(0,0,0,0.05)
 
+    // Dropdown and tree-id buttons - smaller font
     .dropdown .btn, .tree-id .btn
         font-size: small
 
     .dropdown .btn.dropdown-toggle
         font-size: initial
 
-    //table .btn
-    //    background-color: rgba(255,255,255,0.7)
+    // Action buttons - transparent when not hovered
+    div.td_action .btn:not(:hover), div.td_information .btn:not(:hover)
+        background-color: transparent
 
-    //, .list_content_header .btn:not(:hover)
-    div.td_action .btn:not(:hover), div.td_information .btn:not(:hover) 
-       background-color: transparent
-
+    // Action column styling
     div.td_action
         box-shadow: none
         border: none
@@ -79,67 +84,69 @@
 
         a
             font-size: small
-        
+
         button
             font-size: small
 
-
-    div.td_action .btn:not(:hover) 
+    div.td_action .btn:not(:hover)
         background-color: transparent
 
-    tr:not(:hover) div.td_action .btn 
+    // Fade action buttons when row is not hovered
+    tr:not(:hover) div.td_action .btn
         opacity: 0.33
         filter: alpha(opacity=33)
 
+    // Information column
     .td_information
-        white-space:nowrap
+        white-space: nowrap
         width: 100%
         height: 100%
 
         a
             font-size: small
-        
+
         button
             font-size: small
 
-    tr:not(:hover) div.td_information * 
-        opacity: 0.66
-        filter: alpha(opacity=66)
+    // Fade information column content when row is not hovered
+            tr: not(:hover) div.td_information *
+            opacity: 0.66
+            filter: alpha(opacity=66)
 
     tr td.td_information .btn
-        padding: 5px 8px
+            padding: 5px 8px
+            box-shadow: none
+
+    div.td_information a.btn
         box-shadow: none
 
-    div.td_information a.btn 
-        box-shadow: none
-
+    // Tree-id header links
     th.tree-id a
         padding-left: 10px
         padding-right: 10px
         margin-left: 0.4rem
         margin-right: 8px
 
-
+// Compact button padding within tabsort panels
 .tabsort_panel tbody .td_information > .btn, .tabsort_panel tbody .td_action > .btn
     padding: 0.5rem
+
+/* Bootstrap Table Container */
+/* -------------------------------------------------- */
 
 div.bootstrap-table
 
     div.columns.float-right
         margin-right: 2px
-        //margin-top: 5px !important
 
     div.fixed-table-toolbar
-        //padding-left: 57px
 
         div.columns
             button
                 width: 50px
 
-    //div.search
-    //    input
-    //        height: 2.4rem
-    //        margin-top: 0.4rem
+/* Table Frame & Pagination */
+/* -------------------------------------------------- */
 
 div.tableframe
     position: relative
@@ -149,6 +156,6 @@ div.tableframe
         right: 2px
         top: -42px
 
-
+// Fixed table header padding
 .bootstrap-table .fixed-table-container .tabsort.table thead th
-    padding: 0.3rem !important;
+    padding: 0.3rem !important

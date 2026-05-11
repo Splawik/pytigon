@@ -1,26 +1,37 @@
-/* login form */
+// ============================================================================
+// _default_login_form.sass
+// ============================================================================
+// Purpose: Login page styling with radial gradient background and login card.
+// Used by: default theme (default.sass)
+// ----------------------------------------------------------------------------
+// Defines the full-screen login background with cross-browser radial gradient,
+// the login container layout, and the login card with styled form inputs.
+// ============================================================================
 
+/* Login Page */
+/* -------------------------------------------------- */
+
+// Full-screen radial gradient background
 .login_background
-    /* IE10+ */ 
+    /* IE10+ */
     background-image: -ms-radial-gradient(left top, ellipse farthest-side, #CCCCCC 0%, #224466 100%)
 
-    /* Mozilla Firefox */ 
+    /* Mozilla Firefox */
     background-image: -moz-radial-gradient(left top, ellipse farthest-side, #CCCCCC 0%, #224466 100%)
 
-    /* Opera */ 
+    /* Opera */
     background-image: -o-radial-gradient(left top, ellipse farthest-side, #CCCCCC 0%, #224466 100%)
 
-    /* Webkit (Safari/Chrome 10) */ 
+    /* Webkit (Safari/Chrome 10) */
     background-image: -webkit-gradient(radial, left top, 0, left top, 515, color-stop(0, #CCCCCC), color-stop(100, #224466))
 
-    /* Webkit (Chrome 11+) */ 
+    /* Webkit (Chrome 11+) */
     background-image: -webkit-radial-gradient(left top, ellipse farthest-side, #CCCCCC 0%, #224466 100%)
 
-    /* W3C Markup */ 
+    /* W3C Markup */
     background-image: radial-gradient(ellipse farthest-side at left top, #CCCCCC 0%, #224466 100%)
 
     min-height: 100vh !important
-    //overflow-y: scroll
 
     position: absolute
     top: 0px
@@ -31,13 +42,17 @@
     div.content-wrapper
         background: transparent
 
+/* Login Container */
+/* -------------------------------------------------- */
+
 div.login-container > .row
     height: 80vh
 
+/* Login Card */
+/* -------------------------------------------------- */
+
 .login-card
     min-width: 250px
-    //background: #357
-    // color: #dff
     box-shadow: 5px 5px 2px #112233
     padding: 20px
 
@@ -45,6 +60,7 @@ div.login-container > .row
         background: transparent
         font-size: 18px
 
+    // Transparent input fields with white text
     input
         color: white !important
         background: rgba(0,0,0,0.2) !important

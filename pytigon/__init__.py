@@ -5,13 +5,14 @@
 # version.
 #
 # This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY  ; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 # for more details.
 
-# Pytigon - wxpython and django application framework
+"""Pytigon - wxpython and django application framework.
 
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# license: "LGPL 3.0"
+author: Sławomir Chołaj (slawomir.cholaj@gmail.com)
+license: LGPL 3.0
+"""
 
-__version__ = "0.250214"
+__version__ = "0.260511"

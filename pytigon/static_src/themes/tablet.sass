@@ -1,15 +1,33 @@
-/* main */
+// ============================================================================
+// tablet.sass
+// ============================================================================
+// Purpose: Tablet/desktop-with-sidebar theme styles. Provides a full sidebar
+//          navigation layout with collapsible sidebar, top navbar with tabs,
+//          and responsive content area. Uses CSS variables for sidebar theming.
+// ----------------------------------------------------------------------------
+// Sections:
+//   1. HTML & Body             - Viewport settings
+//   2. Content Area            - Section and div content styling
+//   3. Sidebar Menu            - Collapsible sidebar with CSS variable theming
+//   4. Logo                    - Sidebar logo placement
+//   5. Top Navbar              - Main header navbar with tabs and toggle
+//   6. Sidebar Menu Items      - Treeview, submenu levels, merged items
+//   7. Tabsort Toolbar         - Expand button positioning
+//   8. Miscellaneous           - Badge, dropdown, tab content
+// ============================================================================
+
+/* ========================================================================
+ 1. HTML & Body
+ ======================================================================== */
 
 html
     overflow-x: hidden
     overflow-y: auto
     height: 100vh
 
-//body 
-//    background-color: var(--bs-body-bg)
-//    height: 100vh
-//    overflow-x: hidden
-//    overflow-y: auto
+/* ========================================================================
+ 2. Content Area
+ ======================================================================== */
 
 section.content
     background-color: #fff
@@ -19,41 +37,39 @@ section.content
 div.content
     padding-top: 10px
 
-/* application structure */
+/* ========================================================================
+ 3. Sidebar Menu Structure
+ ======================================================================== */
 
+// Sidebar menu system container
 sys-sidebarmenu
     background-color: black
 
+// Main sidebar (#menu) - full height, CSS variable themed
 #menu
-    //overflow-y: hidden
-    //position: fixed
-    width: var( --sidebar-width )
+    width: var(--sidebar-width)
     z-index: 999
     background-color: var(--sidebar-background-level1)
-    //min-height: 100%
     height: 100vh
     overflow-y: auto
     overflow-x: hidden
 
+// Menu icon alignment
 img.tablet_menu_icon, a.menu-href svg
     position: relative
     left: -5px
     margin-right: -2px
     vertical-align: middle
 
+// Panel (content area next to sidebar)
 #panel
-    //margin-left: var( --sidebar-width )
     transition: margin-left 0.2s
 
-//#panel.off 
-    //margin-left: var( --sidebar-width )
-
-//#panel.on 
-    //margin-left: var( --sidebar-width-min )
-
+// Panel offset when menu is hidden
 #menu:not(.show) + #panel
     margin-left: 0px
 
+// Tab position within sidebar
 #tab_tabs2
     float: left
     bottom: 0px
@@ -61,23 +77,28 @@ img.tablet_menu_icon, a.menu-href svg
     left: 52px
     right: 200px
 
+/* ========================================================================
+ 4. Logo
+ ======================================================================== */
+
 .logo
-    //background-color: rgba(0,0,0,0.1    ) !important
-    //width: 256px
     height: 3.2rem
     font-size: 22px
     padding: 6px
     text-decoration: none !important
     border-left: none !important
-    background: var( --bg-primary ) !important
+    background: var(--bg-primary) !important
 
+/* ========================================================================
+ 5. Top Navbar (Main Header)
+ ======================================================================== */
+
+// Loading indicator in header
 #loading-indicator
     position: absolute
-    //top: 3px
-    //left: -11px
     z-index: 1
 
-/* top navbar */
+// Main header navbar base
 .main-header .navbar
     -webkit-transition: margin-left 0.3s ease-in-out
     -o-transition: margin-left 0.3s ease-in-out
@@ -88,6 +109,7 @@ img.tablet_menu_icon, a.menu-href svg
     min-height: 3.2rem
     border-radius: 0
 
+// Navbar collapse (right side menu items)
 header.main-header nav.navbar div.navbar-collapse
     position: absolute
     right: 0px
@@ -96,39 +118,43 @@ header.main-header nav.navbar div.navbar-collapse
     min-height: 100%
     font-size: 15px
 
-header.main-header nav.navbar div.navbar-collapse > ul 
+header.main-header nav.navbar div.navbar-collapse > ul
     min-height: 100%
 
-header.main-header nav.navbar div.navbar-collapse > ul > li 
+header.main-header nav.navbar div.navbar-collapse > ul > li
     min-height: 100%
 
-header.main-header nav.navbar div.navbar-collapse > ul > li:hover, .sidebar-toggle:hover  
+// Hover effect on navbar items and sidebar toggle
+header.main-header nav.navbar div.navbar-collapse > ul > li:hover, .sidebar-toggle:hover
     background-color: rgba(0, 0, 0, .1)
 
-header.main-header nav.navbar div.navbar-collapse > ul > li > a, .sidebar-toggle 
+// White text for navbar links
+header.main-header nav.navbar div.navbar-collapse > ul > li > a, .sidebar-toggle
     color: #fff !important
 
+// Sidebar toggle button
 .main-sidebar-toggle
     border-radius: 20px
 
 .main-sidebar-toggle:hover
     background-color: rgba(255,255,255,0.2) !important
 
+// Navbar padding reset
 header.main-header nav.navbar
     padding: 0px !important
 
+// Sidebar toggle positioning
 .sidebar-toggle
-    //padding: 15px 20px
     position: absolute
     width: 2.8rem
     height: 3.2rem
     margin: 0px
     top: 0px
     left: 0px
-    //z-index: 1000
     background: none
     border: none
 
+// Nav item link spacing
 .main-header .nav-item .nav-link
     padding-right: 10px
     padding-left: 4px
@@ -137,56 +163,48 @@ header.main-header nav.navbar
     padding-right: 10px
     padding-left: 6px
 
+// Nav link styling - transparent background, no wrap
 .main-header a.nav-link
     background-color: transparent !important
     white-space: nowrap
 
-//.main-header a.active 
-//    background-color: var(--bs-body-bg) !important;
-//    color: var(--bs-body-color) !important;
-
+// Navbar nav item links - full height touch targets
 .main-header div.navbar-collapse ul.nav li.nav-item a
     height: 3.2rem
     padding: 15px 20px
     display: block
     text-decoration: none !important
 
+// Close button on nav items
 .main-header .nav-item .close
     margin-top: 2px
     margin-right: 2px
 
+// Card width in navbar collapse
 .main-header .navbar-collapse div.card
     width: 400px
 
-//.main-header .navbar-collapse div.card p
-//    font-size: 14px
+/* ========================================================================
+ 6. Sidebar Menu Items
+ ======================================================================== */
 
-/* sidebar menu */
-
+// Sidebar section base
 section.sidebar
-    //font-size: 14px
     min-height: 100%
 
+// Treeview submenu indentation
 ul.sidebar-menu ul.treeview-menu
     padding-left: 25px !important
 
+// Active/hover state - left border highlight
 .sidebar-menu > li:hover > a, .sidebar-menu > li.active > a
     border-left-color: #FDFD8C !important
 
+// Icon width in menu items
 .sidebar-menu > li > a > .fa-lg
     width: 24px !important
 
-.tabsort-toolbar-expand2
-    top: -40px !important
-    left: 50px !important
-
-.tabsort .badge-secondary
-    background: #868e96
-
-.dropdown-menu-right
-    right: 0px
-    left: auto
-
+// Submenu links - text overflow ellipsis
 .sidebar-menu
     ul.sidebar-submenu
         li
@@ -197,14 +215,17 @@ ul.sidebar-menu ul.treeview-menu
                 > span > .fa
                     width: 20px
 
+    // Logo within sidebar menu
     a.logo
         padding-left: 3.2rem
         padding-top: 0.6rem
 
+// Sidebar menu theming with CSS variables
 .sidebar-menu
     background: var(--sidebar-background-level1)
     height: 100%
 
+// Level 1: active/hover background & color
 .sidebar-menu > li:hover > a, .sidebar-menu > li.active > a
     background: var(--sidebar-background-active-level1)
 
@@ -214,6 +235,7 @@ ul.sidebar-menu ul.treeview-menu
 .sidebar-menu > li:hover > a, .sidebar-menu > li.active > a
     color: var(--sidebar-color-active-level1)
 
+// Level 2: submenu background & color
 .sidebar-menu .sidebar-submenu
     background: var(--sidebar-background-level2)
 
@@ -223,19 +245,22 @@ ul.sidebar-menu ul.treeview-menu
 .sidebar-menu .sidebar-submenu > li.active > a, .sidebar-menu .sidebar-submenu > li > a:hover
     color: var(--sidebar-color-active-level2)
 
+// Logo text positioning
 a.logo
     span
         top: -3px
         position: relative
         left: 5px
 
+// Collapsible sidebar (aside.main-sidebar)
 aside.main-sidebar
     transition: width 0.2s
     height: 100%
     position: relative
 
+// Sidebar collapsed state (off) - hide text, submenus, pull-right icons
 aside.main-sidebar.off:not(:hover)
-    width: var( --sidebar-width-min ) !important
+    width: var(--sidebar-width-min) !important
     .logo
         visibility: hidden
     li
@@ -246,24 +271,49 @@ aside.main-sidebar.off:not(:hover)
         i.pull-right
             display: none
 
+// Sidebar hover expansion when collapsed
 aside.main-sidebar.off:hover
-    width: var( --sidebar-off-width-hover ) !important
+    width: var(--sidebar-off-width-hover) !important
 
+// Merged treeview items - compact layout
 li.treeview-merged > ul.list-unstyled > li
     padding-top: 0px
     padding-bottom: 3px
 
-li.treeview-merged > ul.list-unstyled > li > a 
+li.treeview-merged > ul.list-unstyled > li > a
     color: var(--sidebar-color-level2)
     font-size: 14px
     padding: 5px 5px 5px 15px
 
+// Treeview submenu indentation (repeated for specificity)
 ul.sidebar-menu ul.treeview-menu
     padding-left: 25px !important
 
+// Icon width in treeview links
 ul.treeview-menu a .fa
     width: 20px
 
+/* ========================================================================
+ 7. Tabsort Toolbar
+ ======================================================================== */
+
+.tabsort-toolbar-expand2
+    top: -40px !important
+    left: 50px !important
+
+/* ========================================================================
+ 8. Miscellaneous
+ ======================================================================== */
+
+// Badge in tabsort
+.tabsort .badge-secondary
+    background: #868e96
+
+// Dropdown menu right alignment
+.dropdown-menu-right
+    right: 0px
+    left: auto
+
+// Tab content area
 #tabs2_content
-    //background-color: #fff
     overflow-y: auto

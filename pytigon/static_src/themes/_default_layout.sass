@@ -1,0 +1,336 @@
+// ============================================================================
+// _default_layout.sass
+// ============================================================================
+// Purpose: Additional layout, table, and UI element styles for the default
+//          theme. Extracted from default.sass for better organization.
+// Used by: default theme (default.sass)
+// ----------------------------------------------------------------------------
+// Covers: body styling, bootstrap table toolbar tweaks, tab pane sizing,
+// tree toolbar, tabsort panels, form labels, scrollable tables, pagination,
+// wiki collapse links, modal sizing, sublist widths, rotation animation,
+// row details, and slider lines.
+// ============================================================================
+
+/* Body */
+/* -------------------------------------------------- */
+
+body
+    background-color: var(--bs-body-bg)
+    height: 100vh
+    overflow-x: hidden
+    overflow-y: auto
+
+/* Table */
+/* -------------------------------------------------- */
+
+div.table
+    margin-bottom: 0rem
+
+.new_row
+    min-height: 0.3rem
+
+/* Bootstrap Table Toolbar Tweaks */
+/* -------------------------------------------------- */
+
+.bootstrap-table .fixed-table-toolbar .btn-group, .bootstrap-table .fixed-table-toolbar .bs-bars,
+.bootstrap-table .fixed-table-toolbar .search
+    margin-top: 0px !important
+    margin-bottom: 0px !important
+
+.bootstrap-table .fixed-table-toolbar
+    margin-bottom: 5px
+
+.bootstrap-table fixed-table-pagination div.pagination, .bootstrap-table .fixed-table-pagination .pagination-detail
+    margin-top: 0px !important
+    margin-bottom: 0px !important
+
+.bootstrap-table .fixed-table-toolbar .dropdown
+    display: inline
+
+/* Date/Time Picker */
+/* -------------------------------------------------- */
+
+.dtp > .dtp-content
+    max-height: 530px
+
+table.dtp-picker-days tbody tr td:nth-child(6) a, table.dtp-picker-days tbody tr td:nth-child(7) a
+    color: #d00
+
+div.dtp-buttons button
+    margin: 0px 5px
+
+/* Dropdown Toggle - Hide Before Pseudo */
+/* -------------------------------------------------- */
+
+.btn.dropdown-toggle::before
+    display: none
+    width: 0
+    height: 0
+    margin-left: 0.3em
+    vertical-align: middle
+    content: none
+    border-top: none
+    border-right: none
+    border-left: none
+
+/* Table Action/Information Buttons */
+/* -------------------------------------------------- */
+
+div.td_action .btn-secondary:after, div.td_information .btn-secondary:after
+    background-image: radial-gradient(circle, #eee 10%, transparent 10.01%) !important
+
+div.td_information
+    white-space: nowrap
+
+.div_content_center
+    text-align: center
+
+/* Tabsort Toolbar Expand Button */
+/* -------------------------------------------------- */
+
+.tabsort-toolbar-expand
+    position: absolute
+    top: 4px
+    left: 3px
+    transform: rotate(0deg)
+    transition: .3s
+    background: #fc0 !important
+    box-shadow: none !important
+
+    i.fa
+        vertical-align: 0 !important
+
+.tabsort-toolbar-expand.active
+    transform: rotate(315deg) !important
+    transition: .3s !important
+
+/* Tab Pane Sizing */
+/* -------------------------------------------------- */
+
+.tab-pane
+    position: relative
+    height: calc(100% - 5px)
+    > .ajax-item
+        height: 100%
+        > .ajax-region
+            height: 100%
+
+.tab-pane.container-fluid
+    padding-right: 5px !important
+    padding-left: 5px !important
+
+/* Tree Toolbar */
+/* -------------------------------------------------- */
+
+span.tree-toolbar
+    padding-right: 30px
+
+span.tree-home a
+    padding-left: 11px !important
+    padding-right: 11px !important
+
+/* Firefox Outline Reset */
+/* -------------------------------------------------- */
+
+a, button
+    outline: 0 !important
+
+/* Tabsort Panel */
+/* -------------------------------------------------- */
+
+.tabsort_panel
+    position: absolute
+    top: 0px
+    bottom: 0px
+    left: 0px
+    right: 0px
+    overflow: hidden
+
+.modal-body .tabsort_panel
+    position: relative
+
+/* Form Labels */
+/* -------------------------------------------------- */
+
+.form2columns label
+    margin-bottom: 0px
+
+.form2columns .checkbox
+    margin-left: 0px !important
+
+// Colon after modal body labels
+div.modal-body label:not(.form-check-label):not(.upload)::after
+    content: ":"
+
+// No colon for floating labels
+div.modal-body .form-floating label:not(.form-check-label):not(.upload)::after
+    content: ""
+
+/* Scrollable Table */
+/* -------------------------------------------------- */
+
+.tbl_scroll
+    min-height: 11rem
+    overflow-y: scroll
+
+.tabsort .tbl_scroll
+    min-height: auto
+    overflow-y: visible !important
+
+/* Content Area */
+/* -------------------------------------------------- */
+
+.content
+    position: relative
+
+/* Layout Table */
+/* -------------------------------------------------- */
+
+table.layout0 tr td
+    padding: 0 !important
+    margin: 0 !important
+    text-align: center
+    vertical-align: middle
+
+/* Utility: Hide */
+/* -------------------------------------------------- */
+
+.hide
+    display: none
+
+/* Pagination */
+/* -------------------------------------------------- */
+
+.pagination
+    float: right
+    margin-right: 3px
+    padding-bottom: 0px
+    margin-bottom: 0.2rem
+
+    li.active
+        a
+            background: #2196F3
+            color: white
+
+/* Size Level Colors */
+/* -------------------------------------------------- */
+
+.size_level_0
+    color: #fff
+
+.size_level_1
+    color: #9f9
+
+.size_level_2
+    color: #f44
+
+.size_level_3 .size_level_4 .size_level_5 .size_level_6
+    color: #000
+
+/* Wiki Collapse Link */
+/* -------------------------------------------------- */
+
+.wiki_collapse_link
+    position: absolute
+    right: 5px
+    z-index: 100
+
+/* Modal Max Width */
+/* -------------------------------------------------- */
+
+.modal-max
+    max-width: 100% !important
+
+/* Maximized Modal */
+/* -------------------------------------------------- */
+
+.maximized > .modal-body
+    padding: 0
+
+.maximized > .modal-footer
+    padding: 0.25rem
+
+/* Sublist Width Variants */
+/* -------------------------------------------------- */
+
+.sublist-sm
+    max-width: 300px !important
+
+.sublist-default
+    max-width: 500px !important
+
+.sublist-lg
+    max-width: 800px !important
+
+.sublist-xl
+    max-width: 1140px !important
+
+.sublist-max
+    max-width: 100% !important
+
+/* Rotation Animation */
+/* -------------------------------------------------- */
+
+.rotate
+    -webkit-animation-name: spin
+    -webkit-animation-duration: 1000ms
+    -webkit-animation-iteration-count: infinite
+    -webkit-animation-timing-function: linear
+    -moz-animation-name: spin
+    -moz-animation-duration: 1000ms
+    -moz-animation-iteration-count: infinite
+    -moz-animation-timing-function: linear
+    -ms-animation-name: spin
+    -ms-animation-duration: 1000ms
+    -ms-animation-iteration-count: infinite
+    -ms-animation-timing-function: linear
+
+    animation-name: spin
+    animation-duration: 1000ms
+    animation-iteration-count: infinite
+    animation-timing-function: linear
+
+@-ms-keyframes spin
+    from
+    -ms-transform: rotate(0deg)
+    to
+    -ms-transform: rotate(360deg)
+
+@-moz-keyframes spin
+    from
+    -moz-transform: rotate(0deg)
+    to
+    -moz-transform: rotate(360deg)
+
+@-webkit-keyframes spin
+    from
+    -webkit-transform: rotate(0deg)
+    to
+    -webkit-transform: rotate(360deg)
+
+@keyframes spin
+    from
+        transform: rotate(0deg)
+
+    to
+        transform: rotate(360deg)
+
+/* Row Details */
+/* -------------------------------------------------- */
+
+.v-row-details
+    padding: 10px
+
+/* Slider Lines */
+/* -------------------------------------------------- */
+
+.slider-line
+    background-color: #fb0
+
+.v-slider-line
+    background-color: #eee
+
+/* Additional */
+/* -------------------------------------------------- */
+.height-100p
+    height: 100% !important

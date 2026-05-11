@@ -79,6 +79,7 @@ settings_app_local.py
 
 pytigon/static/CACHE/*
 doc
+site
 pytigon_lib
 pytigon_gui
 ext_lib_cli_lin/
@@ -86,3 +87,4 @@ ext_prg/
 last_error.html
 static_src/sch/__javascript__/
 tools/pytigon.xml
+.aider*

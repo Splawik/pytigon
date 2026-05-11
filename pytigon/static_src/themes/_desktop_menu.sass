@@ -1,3 +1,17 @@
+// ============================================================================
+// _desktop_menu.sass
+// ============================================================================
+// Purpose: Desktop mode top menu bar and tab navigation styling.
+// Used by: desktop theme (desktop.sass)
+// ----------------------------------------------------------------------------
+// Defines the desktop menu bar with logo placement, color-coded tab items
+// (6 tabs with distinct active colors), and sub-tab toolbar areas.
+// Color palette: primary (Bootstrap), orange, green, red, blue-gray, teal.
+// ============================================================================
+
+/* Color Palette */
+/* -------------------------------------------------- */
+
 $menubg: #aaa
 $indigo: #3F51B5
 $orange: #FF9800
@@ -6,16 +20,21 @@ $red: #F44336
 $blue_gray: #607D8B
 $teal: #009688
 
+/* Menu Content Area */
+/* -------------------------------------------------- */
 
-.menu-content 
+.menu-content
     background-color: $menubg
     margin-bottom: 3px
 
-    a.menu-href 
-        padding: 5px 2px 15px 2px;
-        margin: 5px 2px 5px 2px;
+    a.menu-href
+        padding: 5px 2px 15px 2px
+        margin: 5px 2px 5px 2px
 
-#logo_place 
+/* Logo Placement */
+/* -------------------------------------------------- */
+
+#logo_place
     position: absolute
     text-align: center
     left: 0px
@@ -32,16 +51,19 @@ $teal: #009688
         height: 30px
         display: block
         text-decoration: none !important
-    
-#tabs 
+
+/* Primary Tabs (#tabs) */
+/* -------------------------------------------------- */
+
+#tabs
     padding-left: 200px
     background: black
     height: 40px
 
-    .nav-item 
+    .nav-item
         background-color: rgba(255,255,255,0.25)
 
-    li.nav-item a 
+    li.nav-item a
         color: white
         white-space: nowrap
         height: 41px
@@ -50,67 +72,67 @@ $teal: #009688
     li a.active
         color: white
 
-    .nav-link.active, .nav-item.show .nav-link 
+    .nav-link.active, .nav-item.show .nav-link
         background-color: $menubg !important
         border-color: #ddd transparent
 
-    li.nav-item:nth-child(1) a.active 
-        //background-color: $indigo !important
-        background-color: var(--bs-primary) !important;
+    // Color-coded active tab colors (tabs 1-6)
+    li.nav-item:nth-child(1) a.active
+        background-color: var(--bs-primary) !important
 
-    li.nav-item:nth-child(2) a.active 
+    li.nav-item:nth-child(2) a.active
         background-color: $orange !important
 
-    li.nav-item:nth-child(3) a.active 
+    li.nav-item:nth-child(3) a.active
         background-color: $green !important
 
-    li.nav-item:nth-child(4) a.active 
+    li.nav-item:nth-child(4) a.active
         background-color: $red !important
 
-    li.nav-item:nth-child(5) a.active 
+    li.nav-item:nth-child(5) a.active
         background-color: $blue_gray !important
 
-    li.nav-item:nth-child(6) a.active 
+    li.nav-item:nth-child(6) a.active
         background-color: $teal !important
 
+/* Sub-Tab Toolbar (#menu) */
+/* -------------------------------------------------- */
 
-#menu 
-    div.tab-tab 
+#menu
+    div.tab-tab
         border-bottom: white
-        //border-bottom-style: solid
         border-bottom-width: 2px
-        //padding-right: 420px
         overflow-x: auto
-        overflow-y: hidden    
+        overflow-y: hidden
         color: white
-        
-        a.btn 
+
+        a.btn
             background-color: rgba(255,255,255,0.02)
             border: none
             color: white
             box-shadow: none
-            text-transform: none !important        
+            text-transform: none !important
             font-size: 0.7rem
-        
-            &:hover 
+
+            &:hover
                 background-color: rgba(255,255,255,0.2)
                 border: none
-        
-    div.tab-tab:nth-child(1) 
-        background-color: var(--bs-primary) !important;
-        //background-color: $indigo !important
-        
-    div.tab-tab:nth-child(2) 
+
+    // Color-coded sub-tab backgrounds (tabs 1-6)
+    div.tab-tab:nth-child(1)
+        background-color: var(--bs-primary) !important
+
+    div.tab-tab:nth-child(2)
         background-color: $orange !important
 
-    div.tab-tab:nth-child(3) 
+    div.tab-tab:nth-child(3)
         background-color: $green !important
 
-    div.tab-tab:nth-child(4) 
+    div.tab-tab:nth-child(4)
         background-color: $red !important
 
-    div.tab-tab:nth-child(5) 
+    div.tab-tab:nth-child(5)
         background-color: $blue_gray !important
 
-    div.tab-tab:nth-child(6) 
+    div.tab-tab:nth-child(6)
         background-color: $teal !important

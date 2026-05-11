@@ -1,3 +1,7 @@
+/* Color Palette */
+/* -------------------------------------------------- */
+/* Menu Content Area */
+/* -------------------------------------------------- */
 .menu-content {
   background-color: #aaa;
   margin-bottom: 3px; }
@@ -5,6 +9,8 @@
     padding: 5px 2px 15px 2px;
     margin: 5px 2px 5px 2px; }
 
+/* Logo Placement */
+/* -------------------------------------------------- */
 #logo_place {
   position: absolute;
   text-align: center;
@@ -23,6 +29,8 @@
     display: block;
     text-decoration: none !important; }
 
+/* Primary Tabs (#tabs) */
+/* -------------------------------------------------- */
 #tabs {
   padding-left: 200px;
   background: black;
@@ -52,6 +60,8 @@
   #tabs li.nav-item:nth-child(6) a.active {
     background-color: #009688 !important; }
 
+/* Sub-Tab Toolbar (#menu) */
+/* -------------------------------------------------- */
 #menu div.tab-tab {
   border-bottom: white;
   border-bottom-width: 2px;
@@ -87,6 +97,8 @@
 #menu div.tab-tab:nth-child(6) {
   background-color: #009688 !important; }
 
+/* Desktop Secondary Tabs (#tabs2) */
+/* -------------------------------------------------- */
 #tabs2 {
   background-color: transparent;
   margin-top: -32px;
@@ -110,6 +122,8 @@
       overflow: hidden;
       font-size: small; }
 
+/* Desktop Tab Content Area */
+/* -------------------------------------------------- */
 #tabs2_content {
   padding-top: 10px;
   overflow-y: auto; }
@@ -117,6 +131,8 @@
 #body_desktop {
   height: calc(100% - 10px) important; }
 
+/* Body */
+/* -------------------------------------------------- */
 body {
   overflow-x: hidden;
   overflow-y: auto;
@@ -125,6 +141,8 @@ body {
 body > .body-body {
   background: white; }
 
+/* Desktop Content Area */
+/* -------------------------------------------------- */
 .desktop_content {
   padding: 0px;
   min-height: calc(100vh - 5px); }
@@ -132,6 +150,8 @@ body > .body-body {
 .content {
   padding-top: 10px; }
 
+/* Drop-Down Blocks (Header Right) */
+/* -------------------------------------------------- */
 .drop_down_blocks {
   position: absolute;
   top: 0px;
@@ -145,6 +165,8 @@ body > .body-body {
       color: white;
       text-decoration: none !important; }
 
+/* Loading Indicator */
+/* -------------------------------------------------- */
 #loading-indicator {
   position: absolute;
   top: 0px;
@@ -152,5 +174,7 @@ body > .body-body {
   width: 40px;
   z-index: 1; }
 
+/* Tablet Menu Icon Alignment */
+/* -------------------------------------------------- */
 img.tablet_menu_icon, a.menu-href svg {
   vertical-align: middle; }

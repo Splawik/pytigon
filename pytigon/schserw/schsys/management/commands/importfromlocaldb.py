@@ -3,7 +3,7 @@ from pytigon_lib.schtools.install import import_from_local_db
 
 
 class Command(BaseCommand):
-    help = "Export default database to local sqlite database"
+    help = "Import data from local sqlite database into default database"
 
     def add_arguments(self, parser):
         parser.add_argument(

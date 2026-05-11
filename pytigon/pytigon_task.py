@@ -5,68 +5,94 @@
 # version.
 #
 # This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY  ; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+# or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
 # for more details.
 
-# Pytigon - wxpython and django application framework
+"""Pytigon task scheduler entry point.
 
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# license: "LGPL 3.0"
+Runs scheduled tasks defined by pytigon application modules. Supports
+both direct view invocation and scheduled background task execution.
 
+Usage:
+    pytigon_task.py -a argument1=value1 -a argument2=value2 -u user -p password appset[:view]
+"""
 
 import os
 import sys
 import getopt
+import logging
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
+# Module-level logger
+LOGGER = logging.getLogger("pytigon_task")
+
+
+def usage():
+    """Print usage information for pytigon_task."""
+    print(
+        "pytigon_task.py -a argument1=value1 -a argument2=value2 "
+        "-u user -p password appset[:view]"
+    )
+
+
+def _login(http, username, password):
+    """Perform login via the embedded HTTP client.
+
+    Args:
+        http: HttpClient instance.
+        username: Login username.
+        password: Login password.
+    """
+    if username:
+        parm = {"username": username, "password": password, "next": "/schsys/ok/"}
+        http.post(
+            None,
+            "/schsys/do_login/",
+            parm,
+            credentials=(username, password),
+        )
+
+
 if __name__ == "__main__":
     from pytigon_lib.schtools.main_paths import get_main_paths
+    from pytigon_lib.schtasks import schschedule
+    from pytigon_lib.schhttptools import httpclient
 
     paths = get_main_paths()
 
     sys.path.append(paths["PRJ_PATH"])
     sys.path.append(paths["PRJ_PATH_ALT"])
 
-    from pytigon_lib.schtasks import schschedule
-    from pytigon_lib.schhttptools import httpclient
-
-    import logging
-
-    LOGGER = logging.getLogger("pytigon_task")
-
-    def usage():
-        print(
-            "pytigon_task.py -a argument1=value1 -a argument2=value2 -u user -p password appset"
-        )
-
     try:
         opts, args = getopt.getopt(
-            sys.argv[1:], "ha:u:p:", ["help", "arguments=", "username=", "password="]
+            sys.argv[1:],
+            "ha:u:p:",
+            ["help", "arguments=", "username=", "password="],
         )
     except getopt.GetoptError:
         usage()
         sys.exit(2)
 
-    PRJ = None
-    VIEW = None
-    ARGUMENTS = {}
-    USERNAME = None
-    PASSWORD = None
+    prj = None
+    view = None
+    arguments = {}
+    username = None
+    password = None
 
-    if len(args) > 0:
-        x = args[0].split(":")
-        PRJ = x[0]
-        if len(x) > 1:
-            VIEW = x[1]
+    # Parse positional argument: project[:view]
+    if args:
+        parts = args[0].split(":")
+        prj = parts[0]
+        if len(parts) > 1:
+            view = parts[1]
 
-    if not PRJ:
+    if not prj:
         usage()
-        sys.exit()
+        sys.exit(1)
 
-    ARGUMENTS = {}
-    FORCE_GET = False
+    force_get = False
     for opt, arg in opts:
         if opt in ("-h", "--help"):
             usage()
@@ -74,54 +100,48 @@ if __name__ == "__main__":
         elif opt in ("-a", "--arguments"):
             pos = arg.replace("__", " ").split("=")
             if len(pos) == 2:
-                ARGUMENTS[pos[0]] = pos[1]
+                arguments[pos[0]] = pos[1]
             else:
-                FORCE_GET = True
+                force_get = True
         elif opt in ("-u", "--username"):
-            USERNAME = arg
+            username = arg
         elif opt in ("-p", "--password"):
-            PASSWORD = arg
+            password = arg
 
-    CWD_PATH = os.path.join(paths["PRJ_PATH"], PRJ)
-    sys.path.insert(0, CWD_PATH)
-    CWD_PATH2 = os.path.join(paths["PRJ_PATH_ALT"], PRJ)
-    sys.path.insert(0, CWD_PATH2)
+    cwd_path = os.path.join(paths["PRJ_PATH"], prj)
+    sys.path.insert(0, cwd_path)
+    cwd_path2 = os.path.join(paths["PRJ_PATH_ALT"], prj)
+    sys.path.insert(0, cwd_path2)
 
     os.environ["PYTIGON_TASK"] = "1"
     os.environ["DJANGO_SETTINGS_MODULE"] = "settings_app"
     httpclient.init_embeded_django()
     http = httpclient.HttpClient("http://127.0.0.2")
 
-    if VIEW:
-        if USERNAME:
-            parm = {"username": USERNAME, "password": PASSWORD, "next": "/schsys/ok/"}
-            response = http.post(
-                None, "/schsys/do_login/", parm, credentials=(USERNAME, PASSWORD)
-            )
-        if ARGUMENTS or FORCE_GET:
-            ret, newaddr = http.post(
-                None, VIEW, ARGUMENTS
-            )  # , credentials=(USERNAME, PASSWORD))
+    if view:
+        _login(http, username, password)
+        if arguments or force_get:
+            ret, newaddr = http.post(None, view, arguments)
         else:
-            ret, newaddr = http.get(None, VIEW)  # , credentials=(USERNAME, PASSWORD))
+            ret, newaddr = http.get(None, view)
     else:
         from apps import APPS
         from pytigon_lib.schtools import sch_import
         from pytigon_lib.schdjangoext.django_manage import cmd
         from django.conf import settings
 
+        # Build mail configuration from Django settings if available
         mail_conf = None
         if hasattr(settings, "EMAIL_IMAP_HOST"):
-            mail_conf = {}
-            mail_conf["server"] = settings.EMAIL_IMAP_HOST
-            mail_conf["username"] = settings.EMAIL_HOST_USER
-            mail_conf["password"] = settings.EMAIL_HOST_PASSWORD
-            mail_conf["inbox"] = settings.EMAIL_IMAP_INBOX
-            mail_conf["outbox"] = settings.EMAIL_IMAP_OUTBOX
+            mail_conf = {
+                "server": settings.EMAIL_IMAP_HOST,
+                "username": settings.EMAIL_HOST_USER,
+                "password": settings.EMAIL_HOST_PASSWORD,
+                "inbox": settings.EMAIL_IMAP_INBOX,
+                "outbox": settings.EMAIL_IMAP_OUTBOX,
+            }
 
-        xmlrpc_port = None
-        if hasattr(settings, "XMLRPC_PORT"):
-            xmlrpc_port = settings.XMLRPC_PORT
+        xmlrpc_port = getattr(settings, "XMLRPC_PORT", None)
 
         scheduler = schschedule.SChScheduler(mail_conf, xmlrpc_port)
 
@@ -130,21 +150,18 @@ if __name__ == "__main__":
         for app in APPS:
             try:
                 module = sch_import(app + ".tasks")
-            except:
-                LOGGER.exception("An error occurred durring import task")
+            except Exception:
+                LOGGER.exception("Failed to import tasks module for app '%s'", app)
+                continue
 
             if hasattr(module, "init_schedule"):
                 run_scheduler = True
                 try:
                     module.init_schedule(scheduler, cmd, http)
-                except:
-                    LOGGER.exception("An error occurred durring init_schedule")
+                except Exception:
+                    LOGGER.exception("Failed to init_schedule for app '%s'", app)
 
-        if USERNAME:
-            parm = {"username": USERNAME, "password": PASSWORD, "next": "/schsys/ok/"}
-            response = http.post(
-                None, "/schsys/do_login/", parm, credentials=(USERNAME, PASSWORD)
-            )
+        _login(http, username, password)
 
-        if run_scheduler == True:
+        if run_scheduler:
             scheduler.run()

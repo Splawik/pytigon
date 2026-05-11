@@ -29,12 +29,7 @@
                         {% if standard_web_browser %}
                                 {% if not show_form and not 'no_scripts' in request.GET %}
                                         {% block css_links %}{% endblock %}
-                                        {% block css_start %}
-                                                <style type="text/css">
-                                        {% endblock %}
-                                        {% block css %}{% endblock %}
-                                        {% block css_end %}
-                                                </style>
+                                        {% block css %}
                                         {% endblock %}
                                 {% endif %}
                           {% else %}
@@ -119,7 +114,7 @@
         {% block page_footer %}
                 {% if not 'no_scripts' in request.GET %}
                         {% block js_extrascipts_init %}
-                                <script type="module">
+                                <script type="module" nonce="{{ csp_nonce }}">
                                         {% block jquery_init %}{% endblock %}
                                         {% block jquery_init_once %}{% endblock %}
                                         {% block jquery_ready_all %}

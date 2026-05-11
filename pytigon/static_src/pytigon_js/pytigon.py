@@ -1,10 +1,28 @@
-# from pytigon_js.tabmenu import Page, get_menu
-# from pytigon_js.offline import service_worker_and_indexedDB_test, install_service_worker
-# from pytigon_js.db import sync_and_run
-# from pytigon_js.component import GlobalBus
-# from pytigon_js.events import register_global_event
-# from pytigon_js.ajax_region import ajax_load, mount_html
-# from pytigon_js.widget import *
+"""
+Application entry point and initialization module.
+
+This is the main bootstrap module that initializes the entire client-side
+application. It sets up:
+- Global state (window-level variables).
+- Keyboard event handling (Enter key on DialogForm).
+- Application initialization (app_init).
+- Static path resolution.
+- Menu activation and highlighting.
+- Error handling for AJAX requests.
+- Browser history (popstate) navigation.
+
+Dependencies (loaded via pscript cross-module references):
+    pytigon_js.tabmenu: Page, get_menu
+    pytigon_js.offline: service_worker_and_indexedDB_test, install_service_worker
+    pytigon_js.db: sync_and_run
+    pytigon_js.component: GlobalBus
+    pytigon_js.events: register_global_event
+    pytigon_js.ajax_region: ajax_load, mount_html
+"""
+
+# =============================================================================
+# Global state initialization
+# =============================================================================
 
 window.PS = None
 window.MOUNTED_COMPONENTS = 0
@@ -12,7 +30,21 @@ window.GLOBAL_BUS = GlobalBus()
 window.START_MENU_ID = None
 
 
+# =============================================================================
+# Keyboard event handlers
+# =============================================================================
+
+
 def _on_key(self, e):
+    """Handle keypress events globally.
+
+    When Enter is pressed on a non-TEXTAREA element within a DialogForm,
+    triggers the form's OK action (on_edit_ok) and prevents default.
+
+    Args:
+        self: The event target element.
+        e: jQuery keypress event object.
+    """
     if e.which == 13:
         elem = jQuery(e.target)
         if elem.prop("tagName") != "TEXTAREA":
@@ -27,8 +59,22 @@ def _on_key(self, e):
 register_global_event("keypress", _on_key, None)
 
 
+# =============================================================================
+# DOM ready handler (for traditional template)
+# =============================================================================
+
+
 def dom_content_loaded():
+    """Handle DOMContentLoaded event for traditional application template.
+
+    Mounts the initial HTML content into the body-body section.
+    """
     mount_html(document.querySelector("section.body-body"), None)
+
+
+# =============================================================================
+# Application initialization
+# =============================================================================
 
 
 def app_init(
@@ -44,6 +90,28 @@ def app_init(
     gen_time,
     callback=None,
 ):
+    """Initialize the entire client-side application.
+
+    This is the main entry point called by the server-rendered page.
+    It sets up all window-level configuration, initializes the offline
+    service worker, runs database synchronization, and mounts the
+    initial page content.
+
+    Args:
+        prj_name: Project name (used for IndexedDB database name).
+        application_template: UI template mode:
+            'modern', 'standard', 'simple', 'traditional', 'mobile',
+            'tablet', 'hybrid'.
+        menu_id: ID of the starting menu item.
+        lang: Language/locale code (e.g. 'en', 'pl').
+        base_path: Base URL path prefix for the application.
+        base_fragment_init: Fragment initialization mode.
+        component_init: Component initialization callback.
+        offline_support: Whether to enable offline/PWA features.
+        start_page: URL of the initial page to load.
+        gen_time: Server-side generation timestamp for cache busting.
+        callback: Optional callback invoked after initialization.
+    """
     window.IN_MORPH_PROCESS = False
     moment.locale(lang)
     window.ACTIVE_PAGE = None
@@ -66,20 +134,24 @@ def app_init(
     window.LANG = lang
     window.GEN_TIME = gen_time
 
-    # if APPLICATION_TEMPLATE == "traditional":
-    #    document.addEventListener("DOMContentLoaded", dom_content_loaded)
-
+    # Register service worker for offline support if available
     if offline_support:
         if navigator.onLine and service_worker_and_indexedDB_test():
             install_service_worker()
 
     def _on_sync(status):
+        """Handle system sync completion - reload page if cache was stale."""
         if status == "OK-refresh":
             location.reload()
 
     sync_and_run("sys", _on_sync)
 
     def _init_start_page():
+        """Load the initial start page content via AJAX.
+
+        Only loads if start_page is specified and the current URL matches
+        the base path or ends with index.html.
+        """
         if (
             start_page
             and start_page != "None"
@@ -90,30 +162,28 @@ def app_init(
         ):
 
             def _on_load(responseText, status, response):
-                print("_init_strart_page::_on_load")
+                print("_init_start_page::_on_load")
 
-            # if window.location.pathname.endswith("index.html"):
-            #    p = start_page + "?only_content"
-            # else:
-            #    p = base_path + start_page + "?only_content"
             p = base_path + start_page
-
             ajax_load(document.querySelector("#body_desktop"), p, _on_load)
 
     window.init_start_page = _init_start_page
     _init_start_page()
 
+    # Invoke custom init callback if defined on window
     if hasattr(window, "init_callback"):
         window.init_callback()
 
+    # Set jQuery plugin defaults
     jQuery.fn.editable.defaults.mode = "inline"
     jQuery.fn.combodate.defaults["maxYear"] = 2025
 
-    # activate_menu()
+    # Mount initial HTML in the desktop area
     desktop = document.getElementById("body_desktop")
     if desktop:
         mount_html(desktop, None, None)
 
+    # Handle subpage navigation from URL query parameter
     if window.location.search and "subpage" in window.location.search:
         href = window.location.search.split("=")[1]
         objects = Array.prototype.slice.call(document.querySelectorAll("a"))
@@ -127,7 +197,21 @@ def app_init(
 window.app_init = app_init
 
 
+# =============================================================================
+# Static path resolution
+# =============================================================================
+
+
 def static_path(path):
+    """Resolve a static asset path with the application base path prefix.
+
+    Args:
+        path: Absolute path starting with '/' (e.g. '/static/js/app.js').
+
+    Returns:
+        str: Path with BASE_PATH prepended (minus the leading '/'),
+             or the original path if BASE_PATH is not set.
+    """
     if hasattr(window, BASE_PATH) and window.BASE_PATH and len(window.BASE_PATH) > 0:
         return window.BASE_PATH + path[1:]
     else:
@@ -137,7 +221,18 @@ def static_path(path):
 window.static_path = static_path
 
 
+# =============================================================================
+# Menu activation
+# =============================================================================
+
+
 def activate_menu():
+    """Highlight the current menu item based on the browser URL pathname.
+
+    Scans all 'a.menu-href' elements and activates the one matching the
+    current URL. For sidebar menus (sys-sidebarmenu), expands parent
+    treeview nodes. For tab menus, switches to the matching tab.
+    """
     pathname = window.location.pathname
     if pathname.startswith(window.BASE_PATH):
         pathname2 = pathname[len(window.BASE_PATH) :]
@@ -146,15 +241,13 @@ def activate_menu():
 
     if pathname2:
         menu = document.querySelector("sys-sidebarmenu")
-        # if menu:
-        #    menu.activate_url(pathname2)
-        # else:
         a_tab = Array.prototype.slice.call(document.querySelectorAll("a.menu-href"))
         for a in a_tab:
             if a.hasAttribute("href"):
                 href = a.getAttribute("href").split("?")[0]
                 if href.startswith("/" + pathname2):
                     if menu:
+                        # Sidebar menu: expand parent treeview node
                         li = a.closest("li.treeview")
                         if li and not li.classList.contains("active"):
                             a = li.querySelector("a")
@@ -179,6 +272,7 @@ def activate_menu():
                                 )
                                 a.dispatchEvent(event)
                     else:
+                        # Tab menu: switch to matching tab
                         div = a.closest(".tab-tab")
                         if div:
                             id_elem = "a_" + div.id
@@ -190,7 +284,22 @@ def activate_menu():
 window.activate_menu = activate_menu
 
 
+# =============================================================================
+# Error handling
+# =============================================================================
+
+
 def _on_error(request, settings):
+    """Global AJAX error handler.
+
+    Displays server error responses in a modal dialog. When the response
+    contains a <body> tag, extracts the body content for display.
+
+    Args:
+        request: The XMLHttpRequest object.
+        settings: jQuery AJAX settings including status and responseText.
+    """
+    # Stop any active loading indicators
     if window.WAIT_ICON:
         window.WAIT_ICON.stop()
         window.WAIT_ICON = None
@@ -202,6 +311,7 @@ def _on_error(request, settings):
         return
 
     if settings.responseText:
+        # Try to extract <body> content from the error response
         start = settings.responseText.indexOf("<body>")
         end = settings.responseText.lastIndexOf("</body>")
         if start > 0 and end > 0:
@@ -223,14 +333,39 @@ def _on_error(request, settings):
                 jQuery("#dialog-form-error").modal()
 
 
+# =============================================================================
+# jQuery ready callback (placeholder for extensions)
+# =============================================================================
+
+
 def jquery_ready():
+    """Placeholder for jQuery document ready callback.
+
+    Override or extend this function to run code after the DOM is ready.
+    """
     pass
 
 
 window.jquery_ready = jquery_ready
 
 
+# =============================================================================
+# Browser history (popstate) navigation
+# =============================================================================
+
+
 def _on_popstate(self, e):
+    """Handle browser back/forward navigation (popstate event).
+
+    Restores page state from history:
+    - In 'modern' template: activates the tab from stored state.
+    - In other templates: decompresses and mounts stored HTML content.
+    - In 'standard' template: also restores button highlighting.
+
+    Args:
+        self: The window object.
+        e: PopStateEvent with state data.
+    """
     if e.state:
         window.PUSH_STATE = False
         if window.APPLICATION_TEMPLATE == "modern":

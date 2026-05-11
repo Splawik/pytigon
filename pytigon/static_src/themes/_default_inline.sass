@@ -1,0 +1,415 @@
+// ============================================================================
+// inline.sass
+// ============================================================================
+// Purpose: Extracted inline CSS styles from template_src .ihtml files.
+//          These styles were previously defined inline (style= attributes)
+//          and have been consolidated here for maintainability.
+// ============================================================================
+
+/* DocHead & Separators */
+/* -------------------------------------------------- */
+
+// Horizontal rule separator used in dochead edit footer
+.dochead-separator
+    height: 10px
+    background: gray
+    border: 0
+
+/* FAB Menu (Floating Action Button Menu) */
+/* -------------------------------------------------- */
+
+// Scaled-down FAB menu used in sub-report and sub-document edit views
+.fab-scaled
+    transform: scale(0.5)
+    -webkit-transform: scale(0.5)
+    -moz-transform: scale(0.5)
+    -o-transform: scale(0.5)
+    margin-left: -40px
+
+/* Sub-Document Layout */
+/* -------------------------------------------------- */
+
+// Inline-block sub-document item container
+.subdoc-item
+    position: relative
+    display: inline-block
+
+/* Date Widget */
+/* -------------------------------------------------- */
+
+// Wrapper div for date input + calendar icon positioning
+.date-widget-wrapper
+    position: relative
+
+// Calendar icon overlay inside date widget
+.date-widget-icon
+    position: absolute
+    right: 10px
+    top: calc(50% - 6px)
+    pointer-events: none
+
+/* File Input */
+/* -------------------------------------------------- */
+
+// Hidden file input (styled label acts as button)
+.file-input-hidden
+    display: none
+
+/* Paginator */
+/* -------------------------------------------------- */
+
+// Simple paginator spacing
+.pagination-simple
+    margin-top: 5px
+    margin-bottom: 0
+
+/* Checkbox Select Multiple */
+/* -------------------------------------------------- */
+
+// Panel wrapping checkbox select multiple widget
+.checkbox-select-panel
+    padding: 0.5em
+    margin: 0.5em 0 0.5em 0
+
+/* User Tree Widget */
+/* -------------------------------------------------- */
+
+// User/group tree container
+.user-tree
+    border: 0
+    background-color: transparent
+    padding: 20px 0 0 0
+    max-height: 300px
+    overflow-y: auto
+
+// Tree node offset for hierarchy lines
+.user-tree-show-node
+    left: -35px
+
+// Root node icon container height
+.user-tree-root-icon
+    height: 34px
+
+/* Full-Width Tables */
+/* -------------------------------------------------- */
+
+// Generic 100% width table
+.table-full-width
+    width: 100%
+
+/* Typography Utilities */
+/* -------------------------------------------------- */
+
+// Bold text (when semantic tags not appropriate)
+.font-bold
+    font-weight: bold
+
+// Prevent text wrapping
+.txt-nowrap
+    white-space: nowrap
+
+// Table cell action column - no wrapping
+.td-action-nowrap
+    white-space: nowrap
+
+/* Desktop Menu */
+/* -------------------------------------------------- */
+
+// Thin separator bar in desktop app menu
+.menu-separator
+    width: 5px
+    height: 10px
+
+// Logo link in desktop/tablet header
+.logo-link
+    white-space: nowrap
+    text-align: center
+
+// Wide dropdown menu (user menu with login panel)
+.dropdown-menu-wide
+    width: 470px
+
+// Content wrapper with white background (desktop mode)
+.content-wrapper-white
+    background-color: #fff
+
+// Full height utility
+.full-height
+    height: 100%
+
+// Hidden loading indicator (shown by JS)
+.loading-indicator-hidden
+    display: none
+
+/* Alert Components */
+/* -------------------------------------------------- */
+
+// Close button positioned absolutely inside alert
+.alert-close-btn
+    position: absolute
+    right: 0.5rem
+
+/* Clipboard Utility */
+/* -------------------------------------------------- */
+
+// Hidden textarea used for clipboard copy operations
+.copy-clipboard-hidden
+    position: absolute
+    left: -1000px
+
+/* Table Layout Utilities */
+/* -------------------------------------------------- */
+
+// Fixed table layout algorithm
+.table-fixed-layout
+    table-layout: fixed
+
+// Inner container of table frame (flex column layout)
+.table-frame-inner
+    position: relative
+    margin-right: 4px
+
+// Scrollable table body - full height with vertical scroll
+.tbl-scroll-full
+    overflow-y: auto
+    height: 100%
+
+/* Foreign Key Widget */
+/* -------------------------------------------------- */
+
+// Full-height foreign key button
+.foreignkey-btn-full
+    height: 100%
+
+/* Mail Template */
+/* -------------------------------------------------- */
+
+// HTML element background for mail templates
+.mail-html-bg
+    background-color: white
+
+/* Wiki Title */
+/* -------------------------------------------------- */
+
+// Wiki title with no text wrapping
+.wiki-title-nowrap
+    white-space: nowrap
+
+/* Toast / Messages */
+/* -------------------------------------------------- */
+
+// Toast message z-index stacking
+.toast-message
+    z-index: 11
+
+/* Report PDF Styles */
+/* -------------------------------------------------- */
+// These styles were previously in a {:} CSS block in report_pdf.ihtml
+// Now externalized for reuse
+
+body.report-pdf
+    font-family: sans-serif
+    font-size: 80%
+    padding: 20
+
+    table
+        border: 0
+        vertical-align: top
+        padding: 3
+
+        td
+            vertical-align: top
+            padding: 3
+            border: 0
+
+            table
+                padding: 1
+                border: 0
+
+    th
+        padding: 3
+        font-weight: bold
+        border: 0
+
+    strong, b
+        font-weight: bold
+
+    p
+        padding: 2
+        border: 0
+        width: 100%
+
+    a
+        color: #0000ff
+        text-decoration: underline
+
+    strong a
+        color: #00ffff
+
+    ul
+        border: 0
+
+    li
+        padding: 5
+        width: calc(95% - 60px)
+
+    ul li
+        font-style: italic
+
+    em
+        font-style: italic
+
+    h1
+        font-size: 300%
+        font-weight: bold
+        padding: 12px 2px 12px 2px
+
+    h2
+        font-size: 240%
+        font-weight: bold
+        padding: 10px 2px 50px 2px
+
+    h3
+        font-size: 190%
+        font-weight: bold
+        padding: 8px 2px 8px 2px
+        width: 100%
+        text-align: center
+
+    h4
+        font-size: 150%
+        font-weight: bold
+        padding: 6px 2px 6px 2px
+
+    h5
+        font-size: 120%
+        font-weight: bold
+        padding: 4px 2px 4px 2px
+
+    h6
+        font-size: 100%
+        font-weight: bold
+        padding: 2px 2px 2px 2px
+
+    table.tabdel
+        border: 1px solid
+        width: 100%
+
+        tr th
+        background: #ccc
+        border: 1px solid
+        padding: 5px
+
+        tr td
+        background: #eee
+        border: 1px solid
+        padding: 5px
+
+    .helptext
+        font-size: 120%
+        font-style: italic
+
+    i
+        font-style: italic
+
+    .podpis
+        text-align: center
+
+    table.simple
+        border: 0
+        padding: 0
+
+        tr td
+        padding: 0
+
+    table.tab_header
+        font-size: 60%
+
+    table.with_border
+        border: 1px solid
+
+        tr td
+        border: 1px solid
+        margin: 1px
+
+    table.for_img
+        border: 1px solid
+        margin: 0
+        padding: 0
+
+        tr td
+        border: 1px solid
+        margin: 0
+        padding: 0
+
+    img
+        margin: 0
+        padding: 0
+
+    td.x11
+        width: 69px
+        height: 69px
+        margin: 0
+        padding: 0
+
+    td.x21
+        width: 138px
+        height: 69px
+        margin: 0
+        padding: 0
+
+    td.x12
+        width: 69px
+        height: 138px
+        margin: 0
+        padding: 0
+
+    td.x22
+        width: 138px
+        height: 138px
+        margin: 0
+        padding: 0
+
+    td.x23
+        width: 138px
+        height: 207px
+        margin: 0
+        padding: 0
+
+    td.x11 img
+        width: 67px
+        height: 67px
+        margin: 0
+        padding: 0
+
+    td.x21 img
+        width: 136px
+        height: 67px
+        margin: 0
+        padding: 0
+
+    td.x12 img
+        width: 67px
+        height: 136px
+        margin: 0
+        padding: 0
+
+    td.x22 img
+        width: 136px
+        height: 136px
+        margin: 0
+        padding: 0
+
+    td.x23 img
+        width: 136px
+        height: 205px
+        margin: 0
+        padding: 0
+
+    img.checkbox
+        width: 12px
+        height: 12px
+        margin: 20px
+
+    td:hover.test
+        background: #ff0000

@@ -1,0 +1,307 @@
+/* DocHead & Separators */
+/* -------------------------------------------------- */
+.dochead-separator {
+  height: 10px;
+  background: gray;
+  border: 0; }
+
+/* FAB Menu (Floating Action Button Menu) */
+/* -------------------------------------------------- */
+.fab-scaled {
+  transform: scale(0.5);
+  -webkit-transform: scale(0.5);
+  -moz-transform: scale(0.5);
+  -o-transform: scale(0.5);
+  margin-left: -40px; }
+
+/* Sub-Document Layout */
+/* -------------------------------------------------- */
+.subdoc-item {
+  position: relative;
+  display: inline-block; }
+
+/* Date Widget */
+/* -------------------------------------------------- */
+.date-widget-wrapper {
+  position: relative; }
+
+.date-widget-icon {
+  position: absolute;
+  right: 10px;
+  top: calc(50% - 6px);
+  pointer-events: none; }
+
+/* File Input */
+/* -------------------------------------------------- */
+.file-input-hidden {
+  display: none; }
+
+/* Paginator */
+/* -------------------------------------------------- */
+.pagination-simple {
+  margin-top: 5px;
+  margin-bottom: 0; }
+
+/* Checkbox Select Multiple */
+/* -------------------------------------------------- */
+.checkbox-select-panel {
+  padding: 0.5em;
+  margin: 0.5em 0 0.5em 0; }
+
+/* User Tree Widget */
+/* -------------------------------------------------- */
+.user-tree {
+  border: 0;
+  background-color: transparent;
+  padding: 20px 0 0 0;
+  max-height: 300px;
+  overflow-y: auto; }
+
+.user-tree-show-node {
+  left: -35px; }
+
+.user-tree-root-icon {
+  height: 34px; }
+
+/* Full-Width Tables */
+/* -------------------------------------------------- */
+.table-full-width {
+  width: 100%; }
+
+/* Typography Utilities */
+/* -------------------------------------------------- */
+.font-bold {
+  font-weight: bold; }
+
+.txt-nowrap {
+  white-space: nowrap; }
+
+.td-action-nowrap {
+  white-space: nowrap; }
+
+/* Desktop Menu */
+/* -------------------------------------------------- */
+.menu-separator {
+  width: 5px;
+  height: 10px; }
+
+.logo-link {
+  white-space: nowrap;
+  text-align: center; }
+
+.dropdown-menu-wide {
+  width: 470px; }
+
+.content-wrapper-white {
+  background-color: #fff; }
+
+.full-height {
+  height: 100%; }
+
+.loading-indicator-hidden {
+  display: none; }
+
+/* Alert Components */
+/* -------------------------------------------------- */
+.alert-close-btn {
+  position: absolute;
+  right: 0.5rem; }
+
+/* Clipboard Utility */
+/* -------------------------------------------------- */
+.copy-clipboard-hidden {
+  position: absolute;
+  left: -1000px; }
+
+/* Table Layout Utilities */
+/* -------------------------------------------------- */
+.table-fixed-layout {
+  table-layout: fixed; }
+
+.table-frame-inner {
+  position: relative;
+  margin-right: 4px; }
+
+.tbl-scroll-full {
+  overflow-y: auto;
+  height: 100%; }
+
+/* Foreign Key Widget */
+/* -------------------------------------------------- */
+.foreignkey-btn-full {
+  height: 100%; }
+
+/* Mail Template */
+/* -------------------------------------------------- */
+.mail-html-bg {
+  background-color: white; }
+
+/* Wiki Title */
+/* -------------------------------------------------- */
+.wiki-title-nowrap {
+  white-space: nowrap; }
+
+/* Toast / Messages */
+/* -------------------------------------------------- */
+.toast-message {
+  z-index: 11; }
+
+/* Report PDF Styles */
+/* -------------------------------------------------- */
+body.report-pdf {
+  font-family: sans-serif;
+  font-size: 80%;
+  padding: 20; }
+  body.report-pdf table {
+    border: 0;
+    vertical-align: top;
+    padding: 3; }
+    body.report-pdf table td {
+      vertical-align: top;
+      padding: 3;
+      border: 0; }
+      body.report-pdf table td table {
+        padding: 1;
+        border: 0; }
+  body.report-pdf th {
+    padding: 3;
+    font-weight: bold;
+    border: 0; }
+  body.report-pdf strong, body.report-pdf b {
+    font-weight: bold; }
+  body.report-pdf p {
+    padding: 2;
+    border: 0;
+    width: 100%; }
+  body.report-pdf a {
+    color: #0000ff;
+    text-decoration: underline; }
+  body.report-pdf strong a {
+    color: #00ffff; }
+  body.report-pdf ul {
+    border: 0; }
+  body.report-pdf li {
+    padding: 5;
+    width: calc(95% - 60px); }
+  body.report-pdf ul li {
+    font-style: italic; }
+  body.report-pdf em {
+    font-style: italic; }
+  body.report-pdf h1 {
+    font-size: 300%;
+    font-weight: bold;
+    padding: 12px 2px 12px 2px; }
+  body.report-pdf h2 {
+    font-size: 240%;
+    font-weight: bold;
+    padding: 10px 2px 50px 2px; }
+  body.report-pdf h3 {
+    font-size: 190%;
+    font-weight: bold;
+    padding: 8px 2px 8px 2px;
+    width: 100%;
+    text-align: center; }
+  body.report-pdf h4 {
+    font-size: 150%;
+    font-weight: bold;
+    padding: 6px 2px 6px 2px; }
+  body.report-pdf h5 {
+    font-size: 120%;
+    font-weight: bold;
+    padding: 4px 2px 4px 2px; }
+  body.report-pdf h6 {
+    font-size: 100%;
+    font-weight: bold;
+    padding: 2px 2px 2px 2px; }
+  body.report-pdf table.tabdel {
+    border: 1px solid;
+    width: 100%;
+    background: #ccc;
+    border: 1px solid;
+    padding: 5px;
+    background: #eee;
+    border: 1px solid;
+    padding: 5px; }
+  body.report-pdf .helptext {
+    font-size: 120%;
+    font-style: italic; }
+  body.report-pdf i {
+    font-style: italic; }
+  body.report-pdf .podpis {
+    text-align: center; }
+  body.report-pdf table.simple {
+    border: 0;
+    padding: 0;
+    padding: 0; }
+  body.report-pdf table.tab_header {
+    font-size: 60%; }
+  body.report-pdf table.with_border {
+    border: 1px solid;
+    border: 1px solid;
+    margin: 1px; }
+  body.report-pdf table.for_img {
+    border: 1px solid;
+    margin: 0;
+    padding: 0;
+    border: 1px solid;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf img {
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x11 {
+    width: 69px;
+    height: 69px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x21 {
+    width: 138px;
+    height: 69px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x12 {
+    width: 69px;
+    height: 138px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x22 {
+    width: 138px;
+    height: 138px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x23 {
+    width: 138px;
+    height: 207px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x11 img {
+    width: 67px;
+    height: 67px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x21 img {
+    width: 136px;
+    height: 67px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x12 img {
+    width: 67px;
+    height: 136px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x22 img {
+    width: 136px;
+    height: 136px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x23 img {
+    width: 136px;
+    height: 205px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf img.checkbox {
+    width: 12px;
+    height: 12px;
+    margin: 20px; }
+  body.report-pdf td:hover.test {
+    background: #ff0000; }

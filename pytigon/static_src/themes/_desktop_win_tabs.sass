@@ -1,15 +1,25 @@
+// ============================================================================
+// _desktop_win_tabs.sass
+// ============================================================================
+// Purpose: Desktop mode secondary tab bar (#tabs2) styling overlaid on the
+//          top menu bar. Floats right, positioned absolutely.
+// Used by: desktop theme (desktop.sass)
+// ----------------------------------------------------------------------------
+// Styles the floating secondary tab bar that overlays the desktop menu,
+// with compact tab items (max 120px wide) and active/background states.
+// ============================================================================
+
+/* Desktop Secondary Tabs (#tabs2) */
+/* -------------------------------------------------- */
+
 #tabs2
     background-color: transparent
-    //margin-top: -38px
     margin-top: -32px
     padding-left: 10px
     position: absolute
     right: 10px
-    //width: 500px
-    //overflow-x: auto
-    //overflow-y: hidden    
-    //z-index: 1
 
+    // Tab links - light gray background, white when active
     a
         background-color: #ddd !important
         white-space: nowrap
@@ -18,12 +28,12 @@
     a.active
         background-color: #fff !important
 
+    // Tab items with small horizontal gaps
     > li
         margin-left: 2px !important
         margin-right: 2px !important
 
         > a
-            //background-color: rgba(250,250,250,0.6) !important
             background-color: transparent !important
             margin-bottom: 0px !important
             text-overflow: ellipsis
@@ -31,8 +41,10 @@
             overflow: hidden
             font-size: small
 
+/* Desktop Tab Content Area */
+/* -------------------------------------------------- */
+
 #tabs2_content
-    //background-color: #fff
     padding-top: 10px
     overflow-y: auto
 

@@ -19,6 +19,6 @@
 
 %% logo
     span class=logo-lg
-        img src={{base_path}}static/favicon.ico,,,style=height:100%;
-        span class=txt3d text-white,,,style=font-size:1rem;
+        img src={{base_path}}static/favicon.ico,,,class=height-100p;
+        span class=txt3d text-white fs-6;
             .Pytigon - dev tools

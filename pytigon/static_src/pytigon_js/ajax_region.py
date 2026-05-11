@@ -1,10 +1,42 @@
-# from pytigon_js.tools import Loading, correct_href, ajax_get, ajax_post, get_table_type, super_insert
-# from pytigon_js.tbl import init_table
+"""
+AJAX region management and HTML mounting module.
+
+Provides the core DOM manipulation and AJAX content loading layer:
+- data_type: Detects server response type markers for routing.
+- mount_html: Renders HTML content into a target element with morph support.
+- register_mount_fun: Plugin system for post-mount initialization hooks.
+- Select2, SelectPicker, DataTable initialization hooks.
+- AJAX region/link/frame element lookup helpers.
+- refresh_ajax_frame: Core function for AJAX-based content updates.
+
+Dependencies (pscript cross-module):
+    pytigon_js.tools: Loading, correct_href, ajax_get, ajax_post,
+                      get_table_type, super_insert
+    pytigon_js.tbl: init_table
+"""
+
+
+# =============================================================================
+# Server response type detection
+# =============================================================================
 
 
 def data_type(data_or_html):
+    """Detect the server response type from markers in the response.
+
+    Checks for special `$$RETURN_*` markers in string responses or
+    `<meta name="RETURN" content="...">` tags in HTML responses.
+
+    Args:
+        data_or_html: String or DOM element containing server response.
+
+    Returns:
+        str: One of the `$$RETURN_*` constants, or `$$RETURN_HTML` if
+             no special marker is found.
+    """
     if data_or_html:
         if isinstance(data_or_html, str):
+            # String response: check for embedded markers
             if "$$RETURN_OK" in data_or_html:
                 return "$$RETURN_OK"
             elif "$$RETURN_NEW_ROW_OK" in data_or_html:
@@ -30,6 +62,7 @@ def data_type(data_or_html):
             elif "$$RETURN_JSON" in data_or_html:
                 return "$$RETURN_JSON"
         else:
+            # HTML element: check for <meta> tags
             meta_list = Array.prototype.slice.call(
                 data_or_html.querySelectorAll("meta")
             )
@@ -41,10 +74,21 @@ def data_type(data_or_html):
     return "$$RETURN_HTML"
 
 
+# =============================================================================
+# Mount initialization plugin system
+# =============================================================================
+
 MOUNT_INIT_FUN = []
 
 
 def register_mount_fun(fun):
+    """Register a callback to run after every mount_html operation.
+
+    The callback receives the destination element that was just mounted.
+
+    Args:
+        fun: Callback function(dest_elem) invoked after each mount.
+    """
     global MOUNT_INIT_FUN
     MOUNT_INIT_FUN.append(fun)
 
@@ -52,7 +96,30 @@ def register_mount_fun(fun):
 window.register_mount_fun = register_mount_fun
 
 
+# =============================================================================
+# HTML mounting with Idiomorph support
+# =============================================================================
+
+
 def mount_html(dest_elem, data_or_html, link=None):
+    """Mount HTML content into a destination element.
+
+    This is the central DOM update function. It supports:
+    - 'loadeddata' event delegation for elements with onloadeddata handlers.
+    - 'data-link' attribute redirection (.. = replace parent).
+    - Idiomorph-based DOM morphing for smooth transitions.
+    - 'call_on_remove' cleanup callbacks.
+    - 'ajax-temp-item' container unwrapping.
+    - Post-mount initialization hooks (MOUNT_INIT_FUN).
+
+    Args:
+        dest_elem: Target DOM element to receive content.
+        data_or_html: HTML string or DOM element to mount.
+        link: Optional source element for data-source tracking.
+
+    Returns:
+        The destination element after mounting, or None if dest_elem is None.
+    """
     global MOUNT_INIT_FUN
 
     replace = False
@@ -60,6 +127,7 @@ def mount_html(dest_elem, data_or_html, link=None):
     if dest_elem == None:
         return None
 
+    # If destination has a loadeddata handler, dispatch event instead
     if (
         hasattr(dest_elem, "onloadeddata")
         and getattr(dest_elem, "onloadeddata")
@@ -72,6 +140,7 @@ def mount_html(dest_elem, data_or_html, link=None):
         dest_elem.dispatchEvent(evt)
         return dest_elem
 
+    # Handle data-link redirection
     if dest_elem.hasAttribute("data-link"):
         attr = dest_elem.getAttribute("data-link")
         if attr == "..":
@@ -86,11 +155,13 @@ def mount_html(dest_elem, data_or_html, link=None):
     if data_or_html != None:
 
         def _on_remove(index, value):
+            """Invoke on_remove callback on elements marked for cleanup."""
             value.on_remove()
 
         jQuery.each(jQuery(dest_elem).find(".call_on_remove"), _on_remove)
 
         if dest_elem.children.length > 0:
+            # Morph path: clone destination, inject content, then morph
             elem2 = dest_elem.cloneNode()
             if jQuery.type(data_or_html) == "string":
                 window.IN_MORPH_PROCESS = True
@@ -104,6 +175,7 @@ def mount_html(dest_elem, data_or_html, link=None):
                     data_or_html.tagName.lower() == "div"
                     and data_or_html.classList.contains("ajax-temp-item")
                 ):
+                    # Unwrap ajax-temp-item container
                     for item in Array.prototype.slice.call(data_or_html.children):
                         if replace:
                             elem2.replaceWith(item)
@@ -117,6 +189,7 @@ def mount_html(dest_elem, data_or_html, link=None):
                         elem2.appendChild(data_or_html)
             Idiomorph.morph(dest_elem, elem2)
         else:
+            # Empty destination: direct innerHTML or append
             if jQuery.type(data_or_html) == "string":
                 dest_elem.innerHTML = data_or_html
                 if replace:
@@ -127,6 +200,7 @@ def mount_html(dest_elem, data_or_html, link=None):
                     data_or_html.tagName.lower() == "div"
                     and data_or_html.classList.contains("ajax-temp-item")
                 ):
+                    # Unwrap ajax-temp-item container
                     for item in Array.prototype.slice.call(data_or_html.children):
                         if replace:
                             dest_elem.replaceWith(item)
@@ -139,6 +213,7 @@ def mount_html(dest_elem, data_or_html, link=None):
                     else:
                         dest_elem.appendChild(data_or_html)
 
+    # Run post-mount initialization hooks
     if MOUNT_INIT_FUN:
         for fun in MOUNT_INIT_FUN:
             fun(dest_elem)
@@ -149,37 +224,16 @@ def mount_html(dest_elem, data_or_html, link=None):
 window.mount_html = mount_html
 
 
-# def datetime_init(dest_elem):
-#    format = {
-#        "singleDatePicker": True,
-#        "showDropdowns": True,
-#        "buttonClasses": "btn",
-#        "applyClass": "btn-success align-top",
-#        "cancelClass": "btn-danger btn-sm align-top",
-#        "timePicker24Hour": True,
-#        "autoApply": True,
-#        "locale": {
-#            "format": "YYYY-MM-DD",
-#            "separator": "-",
-#            "applyLabel": "&nbsp; OK &nbsp;",
-#            "cancelLabel": "<i class='fa fa-close'></i>",
-#        },
-#    }
-#
-#    d = jQuery(dest_elem).find("div.group_datefield input")
-#    d.daterangepicker(format)
-#
-#    format["locale"]["format"] = "YYYY-MM-DD HH:mm"
-#    format["timePicker"] = True
-#    format["timePickerIncrement"] = 30
-#
-#    d = jQuery(dest_elem).find("div.group_datetimefield input")
-#    d.daterangepicker(format)
-
-# register_mount_fun(datetime_init)
+# =============================================================================
+# Mount initialization hooks
+# =============================================================================
+# These functions are registered via register_mount_fun and run after
+# each mount_html operation to initialize UI components within the
+# newly mounted content.
 
 
 def selectpicker_init(dest_elem):
+    """Initialize Bootstrap SelectPicker widgets in mounted content."""
     if hasattr(jQuery.fn, "selectpicker"):
         jQuery(dest_elem).find(".selectpicker").selectpicker()
 
@@ -188,6 +242,7 @@ register_mount_fun(selectpicker_init)
 
 
 def auto_frame_init(dest_elem):
+    """Auto-refresh all .auto-frame elements in mounted content."""
     frame_list = Array.prototype.slice.call(dest_elem.querySelectorAll(".auto-frame"))
     for elem in frame_list:
         refresh_ajax_frame(elem)
@@ -197,6 +252,11 @@ register_mount_fun(auto_frame_init)
 
 
 def _on_shown_bs_tab(event):
+    """Handle Bootstrap tab shown event for auto-refresh tabs.
+
+    When a tab is shown, refreshes the associated frame or specific
+    targets within it based on auto-refresh-target attribute.
+    """
     if event.target.hasAttribute("data-bs-target"):
         target = event.target.getAttribute("data-bs-target")
         div = event.target.closest("div.auto-refresh")
@@ -213,6 +273,7 @@ def _on_shown_bs_tab(event):
 
 
 def auto_refresh_tab(dest_elem):
+    """Bind auto-refresh behavior to tabs in .auto-refresh containers."""
     item_list = Array.prototype.slice.call(
         dest_elem.querySelectorAll("div.auto-refresh button")
     )
@@ -224,6 +285,15 @@ register_mount_fun(auto_refresh_tab)
 
 
 def get_click_on_focus_fun(element):
+    """Create a visibilitychange handler that clicks the element.
+
+    Args:
+        element: DOM element to click when page becomes visible.
+
+    Returns:
+        Callback for the visibilitychange event.
+    """
+
     def _click(event):
         nonlocal element
         if not document.hidden:
@@ -233,6 +303,15 @@ def get_click_on_focus_fun(element):
 
 
 def get_refresh_on_focus_fun(element):
+    """Create a visibilitychange handler that refreshes the element.
+
+    Args:
+        element: DOM element to refresh when page becomes visible.
+
+    Returns:
+        Callback for the visibilitychange event.
+    """
+
     def _refresh(event):
         nonlocal element
         if not document.hidden:
@@ -242,6 +321,12 @@ def get_refresh_on_focus_fun(element):
 
 
 def on_focus_action(dest_elem):
+    """Bind visibilitychange-based actions to .on-focus-action elements.
+
+    Supports two modes:
+    - .on-focus-action-click: clicks the element when page becomes visible.
+    - .on-focus-action-refresh: refreshes the element when page becomes visible.
+    """
     item_list = Array.prototype.slice.call(
         dest_elem.querySelectorAll(".on-focus-action")
     )
@@ -259,6 +344,12 @@ register_mount_fun(on_focus_action)
 
 
 def moveelement_init(dest_elem):
+    """Process .move-element directives: move elements to target positions.
+
+    Elements with class 'move-element' and 'data-position' attribute are
+    moved to the specified DOM location via super_insert. Registers cleanup
+    callbacks for proper element removal.
+    """
     objs = Array.prototype.slice.call(dest_elem.querySelectorAll(".move-element"))
     if objs:
         for obj in objs:
@@ -274,6 +365,7 @@ def moveelement_init(dest_elem):
                 if data_position.endswith(":class"):
 
                     def _on_remove():
+                        """Remove classes from target when source is removed."""
                         nonlocal obj, elem2
                         for c in Array.prototype.slice.call(obj.classList):
                             elem2.classList.remove(c)
@@ -281,6 +373,7 @@ def moveelement_init(dest_elem):
                 else:
 
                     def _on_remove():
+                        """Remove the original element when source is removed."""
                         nonlocal obj
                         obj.remove()
 
@@ -291,39 +384,37 @@ def moveelement_init(dest_elem):
 register_mount_fun(moveelement_init)
 
 
-# def label_floating_init(dest_elem):
-#    def _on_blur(self, e):
-#        if self.tagName.lower() == "input":
-#            if e["type"] == "focus" or self.value.length > 0:
-#                test = True
-#            else:
-#                test = False
-#        else:
-#            test = True
-#        jQuery(self).parents(".form-group").toggleClass("focused", test)
-#
-#    jQuery(dest_elem).find(".label-floating .form-control").on(
-#        "focus blur", _on_blur
-#    ).trigger("blur")
-#
-#    def _on_blur2(self, e):
-#        jQuery(self).parents(".form-group").toggleClass("focused", True)
-#
-#    jQuery(dest_elem).find(".label-floating .form-control-file").on(
-#        "focus blur", _on_blur2
-#    ).trigger("blur")
-
-
-# register_mount_fun(label_floating_init)
+# =============================================================================
+# Select2 widget initialization
+# =============================================================================
 
 
 def set_select2_value(sel2, id, text):
+    """Set the value and display text of a Select2 widget.
+
+    Args:
+        sel2: jQuery Select2 element.
+        id: Option value to select.
+        text: Display text for the option.
+    """
     sel2.append(jQuery("<option>", {"value": id, "text": text}))
     sel2.val(id.toString())
     sel2.trigger("change")
 
 
 def create_onloadeddata(control):
+    """Create a loadeddata event handler for a Select2 control.
+
+    When the control receives a loadeddata event with data_source,
+    extracts data-id and data-text attributes to set the Select2 value.
+
+    Args:
+        control: The Select2 DOM element.
+
+    Returns:
+        Event handler function for the 'loadeddata' event.
+    """
+
     def _onloadeddata(self, event):
         nonlocal control
         if hasattr(event, "data_source"):
@@ -338,6 +429,11 @@ def create_onloadeddata(control):
 
 
 def init_select2_ctrl(self):
+    """Initialize a single Select2 control with existing data from parent.
+
+    Looks for item_id/item_str attributes on the parent .input-group
+    and sets the Select2 value accordingly.
+    """
     sel2 = jQuery(self)
     src = sel2.closest(".input-group")
     if src.length == 1:
@@ -349,20 +445,11 @@ def init_select2_ctrl(self):
 
 
 def select2_init(dest_elem):
-    # jQuery(dest_elem).find(".django-select2:not(.select2-full-width)").djangoSelect2(
-    #    {"width": "calc(100% - 48px)", "minimumInputLength": 0, "theme": "bootstrap-5"}
-    # )
-    # jQuery(dest_elem).find(".django-select2.select2-full-width").djangoSelect2(
-    #    {"width": "calc(100%)", "minimumInputLength": 0, "theme": "bootstrap-5"}
-    # )
+    """Initialize Django Select2 widgets in mounted content.
 
-    # jQuery(dest_elem).find(".django-select2:not(.select2-full-width)").djangoSelect2(
-    #    {"minimumInputLength": 0, "placeholder": "Select an option", 'dropdownParent': jQuery(dest_elem) }
-    # )
-    # jQuery(dest_elem).find(".django-select2.select2-full-width").djangoSelect2(
-    #    {"minimumInputLength": 0, "placeholder": "Select an option", 'dropdownParent': jQuery(dest_elem)}
-    # )
-
+    Configures Select2 with proper dropdown parents (especially for modals)
+    and wires up loadeddata handlers for dynamic value updates.
+    """
     controls = Array.prototype.slice.call(dest_elem.querySelectorAll(".django-select2"))
     if controls:
         for control in controls:
@@ -392,12 +479,24 @@ def select2_init(dest_elem):
 register_mount_fun(select2_init)
 
 
+# =============================================================================
+# Select combo (cascading dropdown) initialization
+# =============================================================================
+
+
 def select_combo_init(dest_elem):
+    """Initialize cascading select combos (.select_combo class).
+
+    When a select with data-rel-name changes, finds the associated element
+    by name and loads its options via AJAX from its src attribute.
+    Supports loadeddata event delegation for custom handlers.
+    """
     select_ctrl_list = Array.prototype.slice.call(
         dest_elem.querySelectorAll(".select_combo")
     )
 
     def on_change_element(element):
+        """Handle cascading update for a changed select element."""
         region = element.closest(".ajax-region")
         if region != None:
             next_elements = document.getElementsByName(
@@ -457,8 +556,17 @@ def select_combo_init(dest_elem):
 register_mount_fun(select_combo_init)
 
 
+# =============================================================================
+# DataTable initialization
+# =============================================================================
+
+
 def datatable_init(dest_elem):
-    # datatable_onresize()
+    """Initialize DataTables and treegrid widgets in mounted content.
+
+    Detects the table type and initializes Bootstrap Table and treegrid
+    components as appropriate.
+    """
     table_type = get_table_type(jQuery(dest_elem))
     tbl = jQuery(dest_elem).find(".tabsort")
     if tbl.length > 0:
@@ -471,7 +579,29 @@ register_mount_fun(datatable_init)
 register_mount_fun(process_resize)
 
 
+# =============================================================================
+# AJAX region/link/frame element lookup helpers
+# =============================================================================
+# These functions traverse the DOM to find elements marked with
+# .ajax-region, .ajax-link, and .ajax-frame CSS classes, respecting
+# data-region naming scopes.
+
+
 def _valid_region_element(element, class_name, region_name=None):
+    """Check if an element belongs to the specified region scope.
+
+    An element is valid if it has no region_name requirement, or if its
+    data-region attribute contains the region_name (possibly with a
+    parenthesized scope qualifier).
+
+    Args:
+        element: DOM element to check.
+        class_name: The CSS class type ('ajax-region', 'ajax-link', etc.).
+        region_name: Optional region name to match.
+
+    Returns:
+        bool: True if the element is valid for the given region.
+    """
     if not region_name:
         return True
     if element.hasAttribute("data-region"):
@@ -486,6 +616,16 @@ def _valid_region_element(element, class_name, region_name=None):
 
 
 def _get_region_elements_inside(element, class_name, region_name=None):
+    """Find all elements with a given class inside a container.
+
+    Args:
+        element: Container DOM element.
+        class_name: CSS class to query (e.g. 'ajax-link').
+        region_name: Optional region scope filter.
+
+    Returns:
+        list: Matching DOM elements.
+    """
     item_list = Array.prototype.slice.call(element.querySelectorAll("." + class_name))
     ret = []
     for item in item_list:
@@ -499,19 +639,40 @@ def _get_region_elements_inside(element, class_name, region_name=None):
 
 
 def _get_region_element_closest(element, class_name, region_name=None):
+    """Find the closest ancestor matching class_name and optional region.
+
+    Args:
+        element: Starting DOM element.
+        class_name: CSS class to match.
+        region_name: Optional region scope filter.
+
+    Returns:
+        Matching ancestor element or None.
+    """
     item = element.closest("." + class_name)
     if not region_name:
         return item
     while item:
         if _valid_region_element(item, class_name, region_name):
-            return ret
-        ret = ret.parentElement
-        if ret != None:
-            ret = ret.closest("." + class_name)
+            return item
+        item = item.parentElement
+        if item != None:
+            item = item.closest("." + class_name)
     return None
 
 
 def get_ajax_region(element, region_name=None, strict_mode=False):
+    """Find the nearest .ajax-region ancestor matching the region name.
+
+    Args:
+        element: Starting DOM element.
+        region_name: Optional region name to match (from data-region attr).
+        strict_mode: If True, returns None instead of falling back to
+            the closest region without name matching.
+
+    Returns:
+        The matching .ajax-region element or None.
+    """
     if element.classList.contains("ajax-region") and _valid_region_element(
         element, "ajax-region", region_name
     ):
@@ -537,6 +698,19 @@ window.get_ajax_region = get_ajax_region
 
 
 def get_ajax_link(element, region_name=None, strict_mode=False):
+    """Find the .ajax-link element for a given region scope.
+
+    Searches for elements that provide the URL for AJAX operations within
+    a region. Priority: direct class match > single child > closest child.
+
+    Args:
+        element: Starting DOM element.
+        region_name: Optional region name scope.
+        strict_mode: If True, don't fall back to un-scoped lookup.
+
+    Returns:
+        The matching .ajax-link element or None.
+    """
     if element.classList.contains("ajax-link") and _valid_region_element(
         element, "ajax-link", region_name
     ):
@@ -574,6 +748,18 @@ window.get_ajax_link = get_ajax_link
 
 
 def get_ajax_frame(element, region_name=None, strict_mode=False):
+    """Find the .ajax-frame element for a given region scope.
+
+    Similar to get_ajax_link but for frame elements (content containers).
+
+    Args:
+        element: Starting DOM element.
+        region_name: Optional region name scope.
+        strict_mode: If True, don't fall back to un-scoped lookup.
+
+    Returns:
+        The matching .ajax-frame element or None.
+    """
     region = get_ajax_region(element, region_name, strict_mode)
     if region != None:
         if region.classList.contains("ajax-frame") and _valid_region_element(
@@ -606,7 +792,20 @@ def get_ajax_frame(element, region_name=None, strict_mode=False):
 window.get_ajax_frame = get_ajax_frame
 
 
+# =============================================================================
+# Page-level refresh
+# =============================================================================
+
+
 def _refresh_page(target_element, data_element):
+    """Refresh the content of a full page section.
+
+    Replaces the content inside div.content with new data.
+
+    Args:
+        target_element: Element within the page to refresh.
+        data_element: New content (string or DOM element).
+    """
     frame = target_element.closest("div.content")
     if frame and frame.firstElementChild:
         if isinstance(data_element, str):
@@ -621,6 +820,11 @@ def _refresh_page(target_element, data_element):
         mount_html(frame, data_element2)
 
 
+# =============================================================================
+# Core AJAX frame refresh
+# =============================================================================
+
+
 def refresh_ajax_frame(
     element,
     region_name=None,
@@ -629,6 +833,26 @@ def refresh_ajax_frame(
     callback_on_error=None,
     data_if_none=None,
 ):
+    """Refresh an AJAX frame with content from the server or provided data.
+
+    This is the central function for AJAX-based content updates. It:
+    1. Locates the region, frame, and link elements.
+    2. If data_element is provided, uses it directly.
+    3. Otherwise, fetches the URL from the link element via GET or POST.
+    4. Processes the response based on its data_type marker.
+    5. Handles special markers: REFRESH, RELOAD, CANCEL, ERROR, JSON, etc.
+
+    Args:
+        element: Starting element for region/link/frame lookup.
+        region_name: Optional region scope name.
+        data_element: Pre-fetched content to mount (skips AJAX if provided).
+        callback: Success callback invoked after content is mounted.
+        callback_on_error: Error callback for failed requests.
+        data_if_none: Content to use if the URL contains unresolved [[placeholders]].
+
+    Returns:
+        The result of mount_html, or None.
+    """
     region = get_ajax_region(element, region_name)
     frame = get_ajax_frame(element, region_name)
     if frame == None:
@@ -639,6 +863,7 @@ def refresh_ajax_frame(
     loading = Loading(element)
 
     def _callback(data):
+        """Process the AJAX response and route based on data_type."""
         nonlocal element, link, frame, region, callback, loading, url
         ret = None
 
@@ -647,9 +872,11 @@ def refresh_ajax_frame(
 
         dt = data_type(data)
 
+        # Override data_type from element's rettype attribute
         if dt != "$$RETURN_ERROR" and element and element.hasAttribute("rettype"):
             dt = "$$" + element.getAttribute("rettype")
 
+        # If frame has loadeddata handler and not an error, delegate to mount
         if (
             dt != "$$RETURN_ERROR"
             and getattr(frame, "onloadeddata")
@@ -672,22 +899,15 @@ def refresh_ajax_frame(
                 "$$RETURN_NEW_ROW_OK",
                 "$$RETURN_UPDATE_ROW_OK",
             ):
-                # if url and "fragment=" in url:
-                #   x = url.split("fragment=")[1].split("&")[0]
-                #    if x:
-                #       region_name = x
+                # After successful action, refresh the parent frame
                 plug = region.closest(".plug")
                 if plug:
                     elem = region.closest(".plug").parentElement
-                    # elem = get_ajax_frame(region.closest(".plug"), None)
                 else:
                     elem = element
                 if callback:
                     callback()
                 return refresh_ajax_frame(elem, "", None, None, callback_on_error, data)
-                # return refresh_ajax_frame(
-                #    get_ajax_region(elem, "page").parentElement, "", None, None, callback_on_error, data
-                # )
             elif dt == "$$RETURN_RELOAD":
                 if region_name == "error":
                     ret = mount_html(frame, data, link)
@@ -739,6 +959,7 @@ def refresh_ajax_frame(
             else:
                 ret = mount_html(frame, data, link)
 
+        # Invoke appropriate callback
         if dt in ("$$RETURN_ERROR", "$$RETURN_RELOAD", "$$RETURN_HTML_ERROR"):
             if callback_on_error:
                 callback_on_error()
@@ -749,13 +970,16 @@ def refresh_ajax_frame(
         return ret
 
     def _callback_on_error(req):
+        """Handle AJAX request failure."""
         loading.stop()
         loading.remove()
         window.standard_error_handler(req)
 
+    # Use provided data_element if available (skip AJAX fetch)
     if data_element:
         return _callback(data_element)
 
+    # Determine URL from the link element
     post = False
     if link != None:
         if link.hasAttribute("href"):
@@ -769,6 +993,7 @@ def refresh_ajax_frame(
     if url:
         url = correct_href(url, (element, link))
         url = process_href(url, jQuery(link.parentElement))
+        # If URL still has unresolved placeholders, use data_if_none
         if "[[" in url and "]]" in url:
             _callback(data_if_none)
             return
@@ -792,7 +1017,22 @@ def refresh_ajax_frame(
 window.refresh_ajax_frame = refresh_ajax_frame
 
 
+# =============================================================================
+# Convenience: AJAX load into element
+# =============================================================================
+
+
 def ajax_load(element, url, complete):
+    """Load content from a URL and mount it into the specified element.
+
+    Simple wrapper around ajax_get + mount_html.
+
+    Args:
+        element: Target DOM element for the loaded content.
+        url: URL to fetch content from.
+        complete: Callback invoked with the response text after mounting.
+    """
+
     def _onload(responseText):
         mount_html(element, responseText, None)
         complete(responseText)

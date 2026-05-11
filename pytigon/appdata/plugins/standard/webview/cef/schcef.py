@@ -1,3 +1,9 @@
+"""CEF (Chromium Embedded Framework) helper module for Pytigon.
+
+Provides CEF initialization, resource handling, and browser creation
+utilities for the CEF-based web browser backend.
+"""
+
 from cefpython3 import cefpython as cef
 import platform
 import time
@@ -7,6 +13,7 @@ from pytigon.pytigon_request import request as pytigon_request, init
 import sys
 import ctypes
 
+# HTML loading screen shown while the page loads
 LOADER = """   
     <style>
         .centered {
@@ -21,6 +28,15 @@ LOADER = """
 
 
 def exists(site, path="/"):
+    """Check if a web resource exists at the given URL.
+
+    Args:
+        site: Base URL to check.
+        path: URL path (default "/").
+
+    Returns:
+        True if the resource exists (HTTP 200) or is localhost.
+    """
     if "127.0.0.2" in site:
         return True
     try:
@@ -29,11 +45,16 @@ def exists(site, path="/"):
         response = conn.getresponse()
         conn.close()
         return response.status == 200
-    except:
-        False
+    except Exception:
+        return False
 
 
 def check_versions():
+    """Print CEF and system version information for debugging.
+
+    Raises:
+        AssertionError: If CEF Python version is below 57.0.
+    """
     ver = cef.GetVersion()
     print("[pytigon] CEF Python {ver}".format(ver=ver["version"]))
     print("[pytigon] Chromium {ver}".format(ver=ver["chrome_version"]))
@@ -256,21 +277,15 @@ async def run_async(
     def py_function(value, js_callback):
         url = value[0]
         params = value[1]
-        url2 = url.replace("file:///home/sch/prj/pytigon/pytigon", "http://127.0.0.2")
-        print(url2, params)
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA2")
-        # print(url, url2)
-        ret = request(url2 + "/", params)
-        # print(ret.str())
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3")
-        # ret = "Hello world!"
+        url2 = url.replace("file://" + cef.GetModuleDirectory(), "http://127.0.0.2")
+        ret = pytigon_request(url2 + "/", params)
         ret = (
-            """<base href="file:///home/sch/prj/pytigon/pytigon/" target="_blank">"""
+            '<base href="file://%s/" target="_blank">' % cef.GetModuleDirectory()
             + ret.str()
         )
         ret = ret.replace(
             "window.BASE_PATH = '/'",
-            "window.BASE_PATH = 'file:///home/sch/prj/pytigon/pytigon/'",
+            "window.BASE_PATH = 'file://%s/'" % cef.GetModuleDirectory(),
         )
         js_callback.Call(ret, py_callback)
 

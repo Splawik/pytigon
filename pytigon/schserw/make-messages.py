@@ -1,32 +1,155 @@
 #!/usr/bin/env python
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY  ; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
+"""Extract translatable strings from Python/HTML/JS files into .po files.
 
-# Pytigon - wxpython and django application framework
+This script uses xgettext from GNU gettext to scan project files for
+translatable strings and generates or updates .po files for the specified
+languages.
+"""
 
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# license: "LGPL 3.0"
+import os
+import re
+import subprocess
+import sys
+import getopt
+import tempfile
 
 from django.conf import settings
 
 settings.configure(use_i18n=True)
 from django.utils.translation import templatize
-import re
-import os
-import sys
-import getopt
 
 pythonize_re = re.compile(r"\n\s*//")
 
+# Domain constants
+DOMAIN_DJANGO = "django"
+DOMAIN_DJANGOJS = "djangojs"
+
+
+def find_xgettext():
+    """Find the xgettext executable on the system.
+
+    Returns:
+        str: Path to xgettext executable, or None if not found.
+    """
+    for name in ("xgettext", "xgettext.exe"):
+        try:
+            result = subprocess.run(
+                [name, "--version"],
+                capture_output=True,
+                timeout=5,
+            )
+            if result.returncode == 0:
+                return name
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            continue
+
+    # Try common Windows paths
+    candidates = [
+        r"C:\Programy\GnuWin32\bin\xgettext.exe",
+        r"C:\Program Files\GnuWin32\bin\xgettext.exe",
+        r"C:\Program Files (x86)\GnuWin32\bin\xgettext.exe",
+        r"C:\msys64\usr\bin\xgettext.exe",
+        r"C:\cygwin\bin\xgettext.exe",
+    ]
+    for candidate in candidates:
+        if os.path.isfile(candidate):
+            return candidate
+
+    return None
+
+
+def find_msguniq():
+    """Find the msguniq executable on the system.
+
+    Returns:
+        str: Path to msguniq executable, or None if not found.
+    """
+    for name in ("msguniq", "msguniq.exe"):
+        try:
+            result = subprocess.run(
+                [name, "--version"],
+                capture_output=True,
+                timeout=5,
+            )
+            if result.returncode == 0:
+                return name
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            continue
+    return None
+
+
+def find_msgmerge():
+    """Find the msgmerge executable on the system.
+
+    Returns:
+        str: Path to msgmerge executable, or None if not found.
+    """
+    for name in ("msgmerge", "msgmerge.exe"):
+        try:
+            result = subprocess.run(
+                [name, "--version"],
+                capture_output=True,
+                timeout=5,
+            )
+            if result.returncode == 0:
+                return name
+        except (FileNotFoundError, subprocess.TimeoutExpired):
+            continue
+    return None
+
+
+def run_xgettext(filepath, domain, potfile_exists, xgettext_cmd):
+    """Run xgettext on a single file and return the output.
+
+    Args:
+        filepath: Path to the file to process.
+        domain: Translation domain (django or djangojs).
+        potfile_exists: Whether a .pot file already exists.
+        xgettext_cmd: Path to xgettext executable.
+
+    Returns:
+        bytes: Output from xgettext, or empty bytes on failure.
+    """
+    lang = "Perl" if domain == DOMAIN_DJANGOJS else "Python"
+    omit_header = "--omit-header" if potfile_exists else ""
+
+    cmd = [
+        xgettext_cmd,
+        "-d",
+        domain,
+        "-L",
+        lang,
+        "--keyword=gettext_noop",
+        "--keyword=gettext_lazy",
+        "--keyword=ngettext_lazy",
+        "-o",
+        "-",
+        filepath,
+    ]
+    if omit_header:
+        cmd.insert(1, omit_header)
+
+    try:
+        result = subprocess.run(cmd, capture_output=True)
+        if result.stderr:
+            sys.stderr.write(
+                "Errors while running xgettext on %s:\n%s\n"
+                % (
+                    os.path.basename(filepath),
+                    result.stderr.decode("utf-8", errors="replace"),
+                )
+            )
+        return result.stdout
+    except OSError as e:
+        sys.stderr.write(
+            "OS error running xgettext on %s: %s\n" % (os.path.basename(filepath), e)
+        )
+        return b""
+
 
 def make_messages():
+    """Main entry point: scan files, extract strings, and update .po files."""
+    # Determine locale directory
     localedir = None
     if os.path.isdir(os.path.join("conf", "locale")):
         localedir = os.path.abspath(os.path.join("conf", "locale"))
@@ -34,25 +157,31 @@ def make_messages():
         localedir = os.path.abspath("locale")
     else:
         print(
-            "This script should be run from the django svn tree or your project or app tree."
+            "This script should be run from the Django source tree or "
+            "your project or app tree."
         )
         print(
-            "If you did indeed run it from the svn checkout or your project or application,"
+            "If you did indeed run it from the checkout or your project or application,"
         )
         print(
-            "maybe you are just missing the conf/locale (in the django tree) or locale (for project"
+            "maybe you are just missing the conf/locale (in the django tree) "
+            "or locale (for project"
         )
         print("and application) directory?")
         print(
-            "make-messages.py doesn't create it automatically, you have to create it by hand if"
+            "make-messages.py doesn't create it automatically, you have to "
+            "create it by hand if"
         )
         print("you want to enable i18n for your project or application.")
         sys.exit(1)
+
+    # Parse command-line options
     (opts, args) = getopt.getopt(sys.argv[1:], "l:d:va")
     lang = None
-    domain = "django"
+    domain = DOMAIN_DJANGO
     verbose = False
-    all = False
+    all_languages = False
+
     for o, v in opts:
         if o == "-l":
             lang = v
@@ -61,118 +190,179 @@ def make_messages():
         elif o == "-v":
             verbose = True
         elif o == "-a":
-            all = True
-    if domain not in ("django", "djangojs"):
+            all_languages = True
+
+    if domain not in (DOMAIN_DJANGO, DOMAIN_DJANGOJS):
         print(
-            "currently make-messages.py only supports domains 'django' and 'djangojs'"
+            "Currently make-messages.py only supports domains 'django' and 'djangojs'"
         )
         sys.exit(1)
-    if lang is None and not all or domain is None:
-        print("usage: make-messages.py -l <language>")
+
+    if lang is None and not all_languages:
+        print("Usage: make-messages.py -l <language>")
         print("   or: make-messages.py -a")
         sys.exit(1)
+
+    # Find required tools
+    xgettext_cmd = find_xgettext()
+    if not xgettext_cmd:
+        print("Error: xgettext not found. Please install gettext utilities.")
+        sys.exit(1)
+
+    msguniq_cmd = find_msguniq()
+    msgmerge_cmd = find_msgmerge()
+
+    # Build language list
     languages = []
     if lang is not None:
         languages.append(lang)
-    elif all:
+    elif all_languages:
         languages = [el for el in os.listdir(localedir) if not el.startswith(".")]
-    for lang in languages:
-        print("processing language", lang)
-        basedir = os.path.join(localedir, lang, "LC_MESSAGES")
-        if not os.path.isdir(basedir):
-            os.makedirs(basedir)
-        pofile = os.path.join(basedir, "%s.po" % domain)
-        potfile = os.path.join(basedir, "%s.pot" % domain)
-        if os.path.exists(potfile):
-            os.unlink(potfile)
-        for dirpath, dirnames, filenames in os.walk("."):
-            for file in filenames:
-                if domain == "djangojs" and file.endswith(".js"):
-                    if verbose:
-                        sys.stdout.write("processing file %s in %s\n" % (file, dirpath))
-                    src = open(os.path.join(dirpath, file), "rb").read()
-                    src = pythonize_re.sub("\n#", src)
-                    open(os.path.join(dirpath, "%s.py" % file), "wb").write(src)
-                    thefile = "%s.py" % file
-                    cmd = (
-                        'C:/Programy/GnuWin32/bin/xgettext.exe %s -d %s -L Perl --keyword=gettext_noop --keyword=gettext_lazy --keyword=ngettext_lazy -o - "%s"'
-                        % (
-                            os.path.exists(potfile) and "--omit-header" or "",
-                            domain,
-                            os.path.join(dirpath, thefile),
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        for lang in languages:
+            print("Processing language: %s" % lang)
+            basedir = os.path.join(localedir, lang, "LC_MESSAGES")
+            if not os.path.isdir(basedir):
+                os.makedirs(basedir)
+
+            pofile = os.path.join(basedir, "%s.po" % domain)
+            potfile = os.path.join(basedir, "%s.pot" % domain)
+
+            # Remove old pot file
+            if os.path.exists(potfile):
+                os.unlink(potfile)
+
+            potfile_exists = False
+
+            for dirpath, _dirnames, filenames in os.walk("."):
+                for file in filenames:
+                    if domain == DOMAIN_DJANGOJS and file.endswith(".js"):
+                        if verbose:
+                            sys.stdout.write(
+                                "Processing file %s in %s\n" % (file, dirpath)
+                            )
+                        src_path = os.path.join(dirpath, file)
+                        with open(src_path, "rb") as fh:
+                            src = fh.read()
+
+                        src = pythonize_re.sub(b"\n#", src)
+
+                        # Create temporary Python version
+                        tmp_py_path = os.path.join(
+                            tmpdir, file.replace("/", "_") + ".py"
                         )
+                        with open(tmp_py_path, "wb") as fh:
+                            fh.write(src)
+
+                        msgs = run_xgettext(
+                            tmp_py_path, domain, potfile_exists, xgettext_cmd
+                        )
+
+                        # Fix path references in output
+                        old_ref = ("#: " + tmp_py_path).encode("utf-8")
+                        new_ref = ("#: " + os.path.join(dirpath, file)[2:]).encode(
+                            "utf-8"
+                        )
+                        msgs = msgs.replace(old_ref, new_ref)
+
+                        if msgs:
+                            with open(potfile, "ab") as fh:
+                                fh.write(msgs)
+                            potfile_exists = True
+
+                    elif domain == DOMAIN_DJANGO and (
+                        file.endswith(".py") or file.endswith(".html")
+                    ):
+                        thefile = file
+                        tmp_py_path = os.path.join(dirpath, file)
+
+                        if file.endswith(".html"):
+                            src_path = os.path.join(dirpath, file)
+                            with open(src_path, "rb") as fh:
+                                src = fh.read()
+
+                            tmp_py_path = os.path.join(
+                                tmpdir, file.replace("/", "_") + ".py"
+                            )
+                            with open(tmp_py_path, "wb") as fh:
+                                fh.write(templatize(src))
+
+                            thefile = tmp_py_path
+
+                        if verbose:
+                            sys.stdout.write(
+                                "Processing file %s in %s\n" % (file, dirpath)
+                            )
+
+                        msgs = run_xgettext(
+                            thefile, domain, potfile_exists, xgettext_cmd
+                        )
+
+                        # Fix path references if using temp file
+                        if file.endswith(".html"):
+                            old_ref = ("#: " + thefile).encode("utf-8")
+                            new_ref = ("#: " + os.path.join(dirpath, file)[2:]).encode(
+                                "utf-8"
+                            )
+                            msgs = msgs.replace(old_ref, new_ref)
+
+                        if msgs:
+                            with open(potfile, "ab") as fh:
+                                fh.write(msgs)
+                            potfile_exists = True
+
+            # Run msguniq on the pot file
+            if os.path.exists(potfile) and msguniq_cmd:
+                try:
+                    with open(potfile, "rb") as fh:
+                        pot_data = fh.read()
+
+                    result = subprocess.run(
+                        [msguniq_cmd, potfile],
+                        capture_output=True,
                     )
-                    print(cmd)
-                    (stdin, stdout, stderr) = os.popen3(cmd, "b")
-                    msgs = stdout.read()
-                    errors = stderr.read()
-                    if errors:
-                        print("errors happened while running xgettext on %s" % file)
-                        print(errors)
-                        sys.exit(8)
-                    old = "#: " + os.path.join(dirpath, thefile)[2:]
-                    new = "#: " + os.path.join(dirpath, file)[2:]
-                    msgs = msgs.replace(old, new)
-                    if msgs:
-                        open(potfile, "ab").write(msgs)
-                    os.unlink(os.path.join(dirpath, thefile))
-                elif domain == "django" and (
-                    file.endswith(".py") or file.endswith(".html")
-                ):
-                    thefile = file
-                    if file.endswith(".html"):
-                        src = open(os.path.join(dirpath, file), "rb").read()
-                        open(os.path.join(dirpath, "%s.py" % file), "wb").write(
-                            templatize(src)
+                    if result.stderr:
+                        sys.stderr.write(
+                            "Errors while running msguniq:\n%s\n"
+                            % result.stderr.decode("utf-8", errors="replace")
                         )
-                        thefile = "%s.py" % file
-                    if verbose:
-                        sys.stdout.write("processing file %s in %s\n" % (file, dirpath))
-                    cmd = (
-                        'C:/Programy/GnuWin32/bin/xgettext.exe %s -d %s -L Python --keyword=gettext_noop --keyword=gettext_lazy --keyword=ngettext_lazy -o - "%s"'
-                        % (
-                            os.path.exists(potfile) and "--omit-header" or "",
-                            domain,
-                            os.path.join(dirpath, thefile),
+
+                    msgs = result.stdout
+
+                    with open(potfile, "wb") as fh:
+                        fh.write(msgs)
+                except OSError as e:
+                    sys.stderr.write("OS error running msguniq: %s\n" % e)
+
+                # Merge with existing po file
+                if os.path.exists(pofile) and msgmerge_cmd:
+                    try:
+                        result = subprocess.run(
+                            [msgmerge_cmd, "-q", pofile, potfile],
+                            capture_output=True,
                         )
-                    )
-                    print(cmd)
-                    (stdin, stdout, stderr) = os.popen3(cmd, "b")
-                    msgs = stdout.read()
-                    errors = stderr.read()
-                    if errors:
-                        print("errors happened while running xgettext on %s" % file)
-                        print(errors)
-                        sys.exit(8)
-                    if thefile != file:
-                        old = "#: " + os.path.join(dirpath, thefile)[2:]
-                        new = "#: " + os.path.join(dirpath, file)[2:]
-                        msgs = msgs.replace(old, new)
-                    if msgs:
-                        open(potfile, "ab").write(msgs)
-                    if thefile != file:
-                        os.unlink(os.path.join(dirpath, thefile))
-        if os.path.exists(potfile):
-            (stdin, stdout, stderr) = os.popen3('msguniq "%s"' % potfile, "b")
-            msgs = stdout.read()
-            errors = stderr.read()
-            if errors:
-                print("errors happened while running msguniq")
-                print(errors)
-                sys.exit(8)
-            open(potfile, "w").write(msgs)
-            if os.path.exists(pofile):
-                (stdin, stdout, stderr) = os.popen3(
-                    'msgmerge -q "%s" "%s"' % (pofile, potfile), "b"
-                )
-                msgs = stdout.read()
-                errors = stderr.read()
-                if errors:
-                    print("errors happened while running msgmerge")
-                    print(errors)
-                    sys.exit(8)
-            open(pofile, "wb").write(msgs)
-            os.unlink(potfile)
+                        if result.stderr:
+                            sys.stderr.write(
+                                "Errors while running msgmerge:\n%s\n"
+                                % result.stderr.decode("utf-8", errors="replace")
+                            )
+
+                        if result.stdout:
+                            with open(pofile, "wb") as fh:
+                                fh.write(result.stdout)
+                    except OSError as e:
+                        sys.stderr.write("OS error running msgmerge: %s\n" % e)
+                elif os.path.exists(potfile):
+                    # No existing po file, copy pot content
+                    with open(potfile, "rb") as fh:
+                        pot_content = fh.read()
+                    with open(pofile, "wb") as fh:
+                        fh.write(pot_content)
+
+                # Clean up pot file
+                if os.path.exists(potfile):
+                    os.unlink(potfile)
 
 
 if __name__ == "__main__":

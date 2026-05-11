@@ -5,7 +5,7 @@
 
 %% head_start
     % if fragment != 'content':
-        script language=javascript
+        script language=javascript,,,nonce={{ csp_nonce }}
             .window.BASE_PATH = '{{base_path}}';
         {% jscript_link 'pytigon_js/pytigon-tools.js' %}
 

@@ -1,33 +1,39 @@
+"""URL configuration for the Pytigon server application.
+
+Defines all URL patterns including:
+- Static media serving
+- GraphQL and REST API endpoints
+- OAuth2 provider URLs
+- Dynamic app URL loading from INSTALLED_APPS
+- Project-specific start pages
+"""
+
 import importlib
 import os
+import posixpath
+import logging
 
 from django.urls import include, path, re_path
 from django.conf import settings
+from django.http import Http404, FileResponse
 from django.views.generic import TemplateView
 
 import django.views.i18n
-import django.conf.urls.i18n
 import django_select2.urls
 import django.contrib.staticfiles
 
-# from django.contrib.staticfiles import views
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
-
-from django.urls import path
 
 if settings.GRAPHQL:
     from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import admin
 
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
-
 from pytigon_lib.schdjangoext.tools import make_href
 
 from .schsys import views
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -39,6 +45,8 @@ if settings.GRAPHQL:
     PytigonGraphQLViewPublic = GraphQLView
 
     class PytigonGraphQLView(LoginRequiredMixin, GraphQLView):
+        """GraphQL view requiring authentication."""
+
         pass
 
 
@@ -65,12 +73,15 @@ _urlpatterns.extend(
             ),
             name="javascript-catalog",
         ),
-        path("schsys/i18n/", include(django.conf.urls.i18n)),
+        path(
+            "schsys/i18n/setlang/",
+            django.views.i18n.set_language,
+            name="set_language",
+        ),
         path("plugins/<path:template_name>", views.plugin_template),
         path("select2/", include(django_select2.urls)),
         path("favicon.ico", views.favicon),
         path(make_href("sw.js"), views.sw),
-        # path("admin/", admin.site.urls),
     ]
 )
 
@@ -112,10 +123,10 @@ if settings.REST:
 
     schema_view = get_schema_view(
         openapi.Info(
-            title="Rest api",
+            title="Rest API",
             default_version="v1",
-            description="Rest api for pytigon application",
-            contact=openapi.Contact(email="admi@epytigon.eu"),
+            description="Rest API for Pytigon application",
+            contact=openapi.Contact(email="admin@pytigon.eu"),
         ),
         public=True,
         permission_classes=(permissions.AllowAny,),
@@ -132,19 +143,16 @@ if settings.REST:
         ]
     )
 
-    @api_view(
-        [
-            "GET",
-        ]
-    )
+    @api_view(["GET"])
     def rest_hello(request):
+        """Health-check endpoint for the REST API."""
         if request.method == "GET":
-            print(dir(request))
             return Response({"message": "Hello %s, %s" % (request.user, request.auth)})
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     _urlpatterns.append(path("rest_hello", rest_hello))
 
+    # Load REST API URLs from installed apps
     for app in settings.INSTALLED_APPS:
         if isinstance(app, AppConfigMod):
             pos = app.name
@@ -181,7 +189,10 @@ if settings.GRAPHQL or settings.REST:
 
     _urlpatterns.extend(
         [
-            path("o/", include("oauth2_provider.urls", namespace="oauth2_provider")),
+            path(
+                "o/",
+                include("oauth2_provider.urls", namespace="oauth2_provider"),
+            ),
             path("o/token/", ApplicationScopesTokenView.as_view(), name="token"),
         ]
     )
@@ -194,10 +205,37 @@ if settings.PWA:
     )
 
 
+def _serve_media(request, path, document_root):
+    """Serve media files from document_root.
+
+    Replacement for django.views.static.serve (removed in Django 5.0).
+
+    Args:
+        request: The HTTP request.
+        path: Relative path within document_root.
+        document_root: Base directory containing media files.
+
+    Returns:
+        FileResponse with the requested file.
+
+    Raises:
+        Http404: If path is invalid, a directory, or the file does not exist.
+    """
+    path = posixpath.normpath(path).lstrip("/")
+    fullpath = os.path.normpath(os.path.join(document_root, path))
+    if not fullpath.startswith(os.path.normpath(document_root)):
+        raise Http404("Path traversal detected")
+    if os.path.isdir(fullpath):
+        raise Http404("Directory indexes are not allowed here.")
+    if not os.path.exists(fullpath):
+        raise Http404('"%s" does not exist' % path)
+    return FileResponse(open(fullpath, "rb"), as_attachment=False)
+
+
 _urlpatterns.append(
     re_path(
         r"^site_media/(?P<path>.*)$",
-        django.views.static.serve,
+        _serve_media,
         {"document_root": settings.MEDIA_ROOT},
     )
 )
@@ -207,13 +245,21 @@ if settings.DEBUG:
     _urlpatterns.append(
         re_path(
             r"^media_protected/(?P<path>.*)$",
-            django.views.static.serve,
+            _serve_media,
             {"document_root": settings.MEDIA_ROOT_PROTECTED},
         )
     )
 
 
 def app_description(prj):
+    """Read the project title from the project's settings_app.py file.
+
+    Args:
+        prj: Project name.
+
+    Returns:
+        str: Project title if found, otherwise the project name itself.
+    """
     file_name = os.path.join(os.path.join(settings.PRJ_PATH, prj), "settings_app.py")
     try:
         with open(file_name, "rt") as f:
@@ -222,10 +268,11 @@ def app_description(prj):
                 if pos.startswith("PRJ_TITLE"):
                     return pos.split("=")[1].split('"')[1]
         return prj
-    except:
+    except (IOError, IndexError, OSError):
         return prj
 
 
+# Load URL patterns from installed apps
 for app in settings.INSTALLED_APPS:
     if isinstance(app, AppConfigMod):
         pos = app.name
@@ -242,7 +289,6 @@ for app in settings.INSTALLED_APPS:
             continue
 
     elementy = pos.split(".")
-    module = __import__(pos)
 
     if pos == "pytigon":
         pass
@@ -260,12 +306,13 @@ for app in settings.INSTALLED_APPS:
                     _urlpatterns = ret
     except ModuleNotFoundError as e:
         x = pos.split(".")[0]
-        y = e.name.split(".")[0]
+        y = e.name.split(".")[0] if e.name else ""
         if x != y:
-            logger.exception(f"URLs error: {pos}")
-    except:
-        logger.exception(f"URLs error: {pos}")
+            logger.error("URLs module not found: %s", pos, exc_info=True)
+    except Exception:
+        logger.error("URLs error for app: %s", pos, exc_info=True)
 
+# Extract URL patterns starting with "../" for later re-insertion
 tmp = []
 for item in _urlpatterns:
     if hasattr(item, "url_patterns"):
@@ -276,6 +323,7 @@ for item in _urlpatterns:
                 tmp.append(item2)
                 item.url_patterns.remove(item2)
 
+# Add start pages for each project in PRJS
 if len(settings.PRJS) > 0:
     for prj in settings.PRJS:
         if prj.startswith("_"):
@@ -291,16 +339,6 @@ if len(settings.PRJS) > 0:
                 test = False
                 break
         if test:
-            # u = path(
-            #    prj + "/",
-            #    cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
-            #        vary_on_headers("User-Agent", "Cookie")(
-            #            TemplateView.as_view(template_name="schsys/app/index.html")
-            #        )
-            #    ),
-            #    {"start_page": True},
-            #    name="start" + prj,
-            # )
             u = path(
                 prj + "/",
                 cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
@@ -335,15 +373,6 @@ else:
                 test = False
                 break
     if test:
-        # u = path(
-        #    "",
-        #    cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
-        #        vary_on_headers("User-Agent", "Cookie")(
-        #            TemplateView.as_view(template_name="schsys/app/index.html")
-        #        )
-        #    ),
-        #    name="start",
-        # )
         u = path(
             "",
             cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
@@ -353,6 +382,7 @@ else:
         )
         _urlpatterns.append(u)
 
+# Re-insert patterns that started with ".."
 for item in tmp:
     if item.pattern._route == "../":
         for item2 in _urlpatterns:

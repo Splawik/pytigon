@@ -12,7 +12,7 @@
 
 %% list_content_title
     % if parent_pk > 0:
-        h4 style=white-space:nowrap;,,,class=txt3d wiki-title
+        h4 class=txt3d wiki-title wiki-title-nowrap
             {{title|wiki_href|safe}}
             % if parent:
                 span
@@ -21,7 +21,7 @@
                     % else:
                         - {{parent}}
     % else:
-        h4 style=white-space:nowrap;,,,class=txt3d wiki-title
+        h4 class=txt3d wiki-title wiki-title-nowrap
             {{title|wiki_href|safe}}
             % if settings.DEBUG:
                 a data-bs-toggle=collapse,,,href=#collapse_{{uuid}},,,role=button...>>

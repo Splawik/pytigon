@@ -1,15 +1,30 @@
-.btn-circle 
+// ============================================================================
+// _default_controls.sass
+// ============================================================================
+// Purpose: UI control styling for buttons, upload labels, checkboxes,
+//          calendar, date range picker, ticker animation, select2,
+//          collapsible toggle icons, and various form helpers.
+// Used by: default theme (default.sass)
+// ----------------------------------------------------------------------------
+// Covers: circular buttons (.btn-circle), file upload labels, checkboxes,
+// transparent buttons, calendar today highlight, disabled links, input
+// group addons, date range picker, scrolling ticker animation, select2
+// containers, collapsed/expanded toggle icons, and subform row hover.
+// ============================================================================
+
+/* Circular Buttons */
+/* -------------------------------------------------- */
+
+.btn-circle
     width: 30px
     height: 30px
     text-align: center
     padding: 6px 0
     padding-top: 3px
-    //font-size: 14px
     line-height: 1.428571429
     border-radius: 15px
 
-
-.btn-circle.btn-lg 
+.btn-circle.btn-lg
     width: 50px
     height: 50px
     padding: 10px 16px
@@ -17,8 +32,7 @@
     line-height: 1.33
     border-radius: 25px
 
-
-.btn-circle.btn-xl 
+.btn-circle.btn-xl
     width: 70px
     height: 70px
     padding: 10px 16px
@@ -26,13 +40,15 @@
     line-height: 1.33
     border-radius: 35px
 
+/* Upload Label */
+/* -------------------------------------------------- */
+
 label.upload
     height: 80px
     padding: 0px
     min-width: 160px
     align-items: normal
     position: relative
-    //padding-left: 10px
 
     p
         padding: 5px 20px 5px 30px
@@ -46,10 +62,11 @@ label.upload
     p.upload
         max-width: 170px
 
+    // Image preview
     img, .img
         max-height: 100%
         max-width: 100%
-        position: absolute;
+        position: absolute
         right: 0px
         bottom: 0px
         margin: auto
@@ -63,80 +80,54 @@ label.upload
     p.img
         width: 150px
 
+    // Upload icon
     i
         position: absolute
         top: 6px
         left: 2px
-        padding: 0px 5px;
+        padding: 0px 5px
+
+/* Checkbox Input */
+/* -------------------------------------------------- */
 
 .checkboxinput
-    margin-right: 10px;
+    margin-right: 10px
 
-
-//.label-floating
-//    .form-group
-//        display: flex
-//        height: 55px
-//
-//    .control-label
-//        font-size: 14px
-//        font-weight: 400
-//        opacity: 0.4
-//        pointer-events: none
-//        transform: translate3d(0px, 22px, 0) scale(1)
-//        transform-origin: left top
-//        transition: 240ms
-//        top: -14px
-//        padding-left: 19px
-//        z-index: 1
-//
-//    .control-label
-//
-//    &.focused .control-label
-//        opacity: 1
-//        transform: scale(0.75)
-//
-//    &.focused .form-control::-webkit-input-placeholder
-//        color: #bbb
-//
-//    .form-control
-//        align-self: flex-end
-//
-//    .form-control::-webkit-input-placeholder
-//        color: transparent
-//        transition: 240ms
-//
-//    .form-control:focus::-webkit-input-placeholder
-//        transition: none
-//
-//.form-control
-//    padding: 0.5rem 0;
-//
-//form.form-inline .label-floating label.control-label
-//    position: absolute
-
+/* File Button */
+/* -------------------------------------------------- */
 
 .btn-file
     cursor: pointer
     cursor: hand
 
+/* Transparent Buttons */
+/* -------------------------------------------------- */
+
 button.btn-transparent:not(:hover), a.btn-transparent:not(:hover)
     background: transparent !important
 
+/* Calendar - Today Highlight */
+/* -------------------------------------------------- */
 
 div.calendar-table td.today:not(.active)
     background: #ffb
 
+/* Disabled Links */
+/* -------------------------------------------------- */
 
 a.disabled
     pointer-events: none !important
     background: #ccc !important
     color: #eee !important
 
+/* Input Group Addon */
+/* -------------------------------------------------- */
+
 .input-group-addon
     padding: 0px 0.7rem
 
-
+/* Date Range Picker */
+/* -------------------------------------------------- */
 
 div.daterangepicker
     .drp-buttons
@@ -147,92 +138,99 @@ div.daterangepicker
             top: 4px
             right: 4px
 
+/* Scrolling Ticker Animation */
+/* -------------------------------------------------- */
+
 $duration: 30s
 
 @-webkit-keyframes ticker
-  0%
+    0%
     -webkit-transform: translate3d(0, 0, 0)
     transform: translate3d(0, 0, 0)
     visibility: visible
 
-  100%
+    100%
     -webkit-transform: translate3d(-100%, 0, 0)
     transform: translate3d(-100%, 0, 0)
 
 @keyframes ticker
-  0%
-    -webkit-transform: translate3d(0, 0, 0)
-    transform: translate3d(0, 0, 0)
-    visibility: visible
+    0%
+        -webkit-transform: translate3d(0, 0, 0)
+        transform: translate3d(0, 0, 0)
+        visibility: visible
 
-  100%
-    -webkit-transform: translate3d(-100%, 0, 0)
-    transform: translate3d(-100%, 0, 0)
+    100%
+        -webkit-transform: translate3d(-100%, 0, 0)
+        transform: translate3d(-100%, 0, 0)
 
 .ticker-wrap
-  //position: fixed
-  //bottom: 0
-  //width: 100%
-  overflow: hidden
-  //height: 4rem
-  background-color: rgba(#000, 0.9)
-  padding-left: 100%
-  box-sizing: content-box
-
-  .ticker
-    display: inline-block
-    height: 4rem
-    line-height: 4rem
-    white-space: nowrap
-    padding-right: 100%
+    overflow: hidden
+    background-color: rgba(#000, 0.9)
+    padding-left: 100%
     box-sizing: content-box
-    -webkit-animation-iteration-count: infinite
-    animation-iteration-count: infinite
-    -webkit-animation-timing-function: linear
-    animation-timing-function: linear
-    -webkit-animation-name: ticker
-    animation-name: ticker
-    -webkit-animation-duration: $duration
-    animation-duration: $duration
 
-    &__item
-      display: inline-block
-      padding: 0 2rem
-      font-size: 2rem
-      color: white
+    .ticker
+        display: inline-block
+        height: 4rem
+        line-height: 4rem
+        white-space: nowrap
+        padding-right: 100%
+        box-sizing: content-box
+        -webkit-animation-iteration-count: infinite
+        animation-iteration-count: infinite
+        -webkit-animation-timing-function: linear
+        animation-timing-function: linear
+        -webkit-animation-name: ticker
+        animation-name: ticker
+        -webkit-animation-duration: $duration
+        animation-duration: $duration
 
-//button.select2-selection__clear
-//    position: absolute
-//    right: -13px
+        &__item
+            display: inline-block
+            padding: 0 2rem
+            font-size: 2rem
+            color: white
+
+/* Select2 within Form Rows */
+/* -------------------------------------------------- */
 
 form
     div.get_row
-        span.select2-container 
+        span.select2-container
             margin-left: 5px
 
+/* Subform Row Hover */
+/* -------------------------------------------------- */
 
 div.subform_content tr:hover
     color: white
 
+/* Left-Aligned Checkbox Boolean Fields */
+/* -------------------------------------------------- */
 
 .leftaligncheckbox .booleanfield
     margin-left: 0 !important
 
+/* Form Group Controls - Unstyled List */
+/* -------------------------------------------------- */
 
-.form-group div.controls ul 
+.form-group div.controls ul
     list-style-type: none
     padding-left: 0
 
+/* Collapsible Toggle Icons (+/-) */
+/* -------------------------------------------------- */
 
+// Show plus icon when collapsed
 a.collapsed > i.colapsed-plus
     display: inline-block
 
 a.collapsed > i.colapsed-minus
     display: none
 
-a:not([class*="collapsed"]) > i.colapsed-plus
+// Show minus icon when expanded
+    a: not([class*="collapsed"]) > i.colapsed-plus
     display: none
 
-a:not([class*="collapsed"]) > i.colapsed-minus
+    a: not([class*="collapsed"]) > i.colapsed-minus
     display: inline-block
-

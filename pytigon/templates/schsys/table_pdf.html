@@ -2,7 +2,7 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% block css %}
-        <style type="text/css">
+        <style type="text/css" nonce="{{ csp_nonce }}">
     body{
         font-family:sans-serif;
         font-size:60%;

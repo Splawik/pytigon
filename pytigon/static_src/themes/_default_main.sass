@@ -1,8 +1,18 @@
-/* main settings */
+// ============================================================================
+// _default_main.sass
+// ============================================================================
+// Purpose: Core layout and structural styles for the default theme.
+// Used by: default theme (default.sass)
+// ----------------------------------------------------------------------------
+// Defines the main page structure: body wrapper, content wrappers, page
+// layout, navigation search bar, dashboard, table-and-details split view,
+// and utility classes (.pull-right, .pseudotable, .row-details).
+// ============================================================================
 
-//not(.login_background) div.content-wrapper 
-//    background-color: #fff
+/* Main Layout & Structure */
+/* -------------------------------------------------- */
 
+// Page body wrapper - centered, full height
 .body-body
     display: block
     margin-left: auto
@@ -10,12 +20,17 @@
     position: relative
     height: 100%
 
+// Full viewport content wrapper
 div.content-wrapper
     width: 100%
     height: 100vh
 
+// Page content area - full height
 div.page-content
     height: 100%
+
+/* Application Chooser */
+/* -------------------------------------------------- */
 
 .app_chose_title
     color: gold !important
@@ -30,6 +45,9 @@ div.page-content
 .app_chose a
     padding: 10px 40px
     margin: 10px 0px
+
+/* Navigation Search Bar */
+/* -------------------------------------------------- */
 
 .nav
     li.search
@@ -57,6 +75,9 @@ div.page-content
             height: 40px
             padding-top: 12px
 
+/* Dashboard */
+/* -------------------------------------------------- */
+
 .dashboard
     #header
         display: none
@@ -64,12 +85,20 @@ div.page-content
     #content
         padding: 0px 10px
 
+/* Table & Details Split Layout */
+/* -------------------------------------------------- */
+
+// Full-size container for table + detail view
 div.table-and-details
     width: 100%
     height: 100%
 
+// Modal body variant - minimum half viewport height
 .modal-body div.table-and-details
     min-height: 50vh
+
+/* Utility Classes */
+/* -------------------------------------------------- */
 
 .pull-right
     float: right
@@ -77,6 +106,7 @@ div.table-and-details
 .pseudotable
     position: relative
 
+// Row detail panel sizing (flex column vs row layout)
 .row-details.flex-column
     max-height: calc(100% - 13rem)
 

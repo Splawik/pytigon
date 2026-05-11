@@ -1,0 +1,143 @@
+site_name: Pytigon Application
+site_description: API documentation for pytigon - wxPython/Django application framework
+site_author: Sławomir Chołaj
+site_url: ""
+repo_name: pytigon
+repo_url: ""
+copyright: "&copy; 2025 Sławomir Chołaj &middot; LGPL 3.0"
+theme:
+  name: material
+  language: en
+  palette:
+    - scheme: default
+      primary: deep-purple
+      accent: deep-purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: deep-purple
+      accent: deep-purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - navigation.tracking
+    - toc.integrate
+    - toc.follow
+    - search.suggest
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [.]
+          import:
+            - https://docs.python.org/3/objects.inv
+            - https://docs.djangoproject.com/en/stable/_objects/
+          options:
+            docstring_style: google
+            docstring_options:
+              ignore_init_summary: false
+            show_source: true
+            show_root_heading: true
+            show_root_toc_entry: true
+            show_root_full_path: false
+            show_root_members_full_path: false
+            show_object_full_path: false
+            show_category_heading: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            heading_level: 2
+            members_order: alphabetical
+            group_by_category: true
+            filters:
+              - "!^_"
+              - "^__init__$"
+            separate_signature: true
+            show_signature_annotations: true
+            signature_crossrefs: true
+            line_length: 88
+            show_bases: true
+            inherited_members: false
+            merge_init_into_class: true
+            unwrap_annotated: true
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - def_list
+  - footnotes
+  - meta
+  - tables
+  - toc:
+      permalink: true
+      toc_depth: 4
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.keys
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.details
+
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/solid/globe
+      link: ""
+      name: Pytigon
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Overview: getting-started/overview.md
+      - Quick Import: getting-started/quick-import.md
+  - Core:
+      - pytigon (root): api/pytigon.md
+      - pytigon_run: api/pytigon_run.md
+      - pytigon_request: api/pytigon_request.md
+      - pytigon_task: api/pytigon_task.md
+      - django_min_init: api/django_min_init.md
+      - manage: api/manage.md
+      - ptig: api/ptig.md
+  - Commands:
+      - commands: api/commands.md
+      - commands.dispatcher: api/commands_dispatcher.md
+      - commands.registry: api/commands_registry.md
+      - commands.handlers: api/commands_handlers.md
+      - commands.errors: api/commands_errors.md
+      - commands.utils: api/commands_utils.md
+  - External Libraries:
+      - ext_lib: api/ext_lib.md

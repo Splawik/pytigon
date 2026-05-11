@@ -1,10 +1,54 @@
-# import pytigon_js.resources as rc
+"""
+Utility functions and helper classes for the Pytigon client-side framework.
+
+Provides:
+- Loading indicators (Ladda buttons and global spinner).
+- AJAX communication (GET, POST, JSON, form submit, file upload).
+- Dynamic JS/CSS loading with dependency tracking.
+- DOM manipulation helpers (query, insert, remove, resize).
+- URL manipulation (correct_href, join_urls, history push state).
+- Template rendering and dialog positioning.
+- File download and error handling.
+"""
+
+# =============================================================================
+# Loaded file tracking (prevents duplicate JS/CSS loads)
+# =============================================================================
 
 LOADED_FILES = {}
 
 
+# =============================================================================
+# Loading indicator management
+# =============================================================================
+
+
 class Loading:
+    """Manage loading indicators for AJAX operations.
+
+    Supports two modes:
+    - 'ladda': Ladda button animation on the triggering element.
+    - 'global': A global loading-indicator element.
+
+    Usage::
+
+        loading = Loading(element)
+        loading.create()
+        loading.start()
+        # ... async operation ...
+        loading.stop()
+        loading.remove()
+    """
+
     def __init__(self, element):
+        """Initialize the loading manager for a given element.
+
+        Detects whether to use Ladda (if the element has .ladda-button)
+        or the global loading indicator.
+
+        Args:
+            element: The DOM element that triggered the operation.
+        """
         self.load_type = None
         if hasattr(element, "data") and getattr(element, "data"):
             self.element = getattr(element, "data")
@@ -21,32 +65,55 @@ class Loading:
                 self.loading_indicator = loading_indicator
 
     def create(self):
+        """Create the Ladda instance if in ladda mode."""
         if self.load_type == "ladda":
             self.ladda = window.Ladda.create(self.element)
 
     def start(self):
+        """Start the loading animation."""
         if self.load_type == "ladda" and self.ladda:
             self.ladda.start()
         elif self.load_type == "global":
             self.loading_indicator.style.display = "block"
 
     def set_progress(self, progress):
+        """Update the Ladda progress bar.
+
+        Args:
+            progress: Progress value between 0 and 1.
+        """
         if self.load_type == "ladda" and self.ladda:
             self.ladda.setProgress(progress)
 
     def stop(self):
+        """Stop the loading animation."""
         if self.load_type == "ladda" and self.ladda:
             self.ladda.stop()
         elif self.load_type == "global":
             self.loading_indicator.style.display = "none"
 
     def remove(self):
+        """Remove the Ladda instance and clean up."""
         if self.load_type == "ladda" and self.ladda:
             self.ladda.remove()
             self.ladda = None
 
 
+# =============================================================================
+# File download
+# =============================================================================
+
+
 def save_as(blob, file_name):
+    """Trigger a file download in the browser.
+
+    Creates a temporary anchor element with a blob URL, clicks it,
+    and cleans up after a short delay.
+
+    Args:
+        blob: Blob or File object to download.
+        file_name: Suggested file name for the download.
+    """
     url = window.URL.createObjectURL(blob)
 
     anchor_elem = document.createElement("a")
@@ -65,7 +132,20 @@ def save_as(blob, file_name):
     setTimeout(_, 1000)
 
 
+# =============================================================================
+# Error handling
+# =============================================================================
+
+
 def standard_error_handler(req):
+    """Display a standard error dialog for failed AJAX requests.
+
+    For 500 errors: opens the response in a new window.
+    For other errors: shows a SweetAlert2 error dialog.
+
+    Args:
+        req: The XMLHttpRequest object with .status and .response.
+    """
     if req.status != 200:
         reader = FileReader()
 
@@ -91,16 +171,14 @@ window.standard_error_handler = standard_error_handler
 
 
 def download_binary_file(buf, content_disposition):
-    # mimetype = 'text/html'
-    # if 'odf' in content_disposition or 'ods' in content_disposition:
-    #    mimetype = 'application/vnd.oasis.opendocument.formula'
-    # elif 'pdf' in content_disposition:
-    #    mimetype = 'application/pdf'
-    # elif 'zip' in content_disposition:
-    #    mimetype = 'application/x-compressed'
-    # elif 'xls' in content_disposition:
-    #    mimetype = 'application/excel'
+    """Download a binary file from a server response.
 
+    Parses the Content-Disposition header to extract the filename.
+
+    Args:
+        buf: Binary blob data.
+        content_disposition: Content-Disposition header string.
+    """
     file_name = "temp.dat"
     var_list = content_disposition.split(";")
     for pos in var_list:
@@ -111,7 +189,23 @@ def download_binary_file(buf, content_disposition):
     save_as(buf, file_name)
 
 
+# =============================================================================
+# Frontend view rendering
+# =============================================================================
+
+
 def frontend_view(url, complete, callback_on_error=None, param=None):
+    """Render a frontend view (.fview) URL.
+
+    Loads the corresponding .js module, invokes its request function
+    with parameters, and optionally renders a Nunjucks template.
+
+    Args:
+        url: The .fview URL to process.
+        complete: Callback receiving the rendered result.
+        callback_on_error: Optional error callback.
+        param: Optional parameters for the view.
+    """
     url2 = window.process_href(url.replace(".fview", ".js"), None)
 
     param2 = param
@@ -151,7 +245,26 @@ def frontend_view(url, complete, callback_on_error=None, param=None):
         x = window.dynamic_import(url2, _callback)
 
 
+# =============================================================================
+# AJAX GET
+# =============================================================================
+
+
 def ajax_get(url, complete, callback_on_error=None, process_req=None):
+    """Perform an AJAX GET request.
+
+    Handles .fview URLs via frontend_view, binary downloads, redirects,
+    and standard text responses.
+
+    Args:
+        url: The URL to fetch.
+        complete: Callback receiving the response text.
+        callback_on_error: Optional error callback.
+        process_req: Optional callback to configure the XHR before send.
+
+    Returns:
+        The XMLHttpRequest object.
+    """
     if ".fview" in url:
         return frontend_view(url, complete, callback_on_error, None)
 
@@ -274,7 +387,6 @@ def ajax_get(url, complete, callback_on_error=None, process_req=None):
     req.onload = _onload
 
     req.open("GET", url, True)
-    # req.overrideMimeType('text/plain; charset=x-user-defined')
     req.send(None)
     return req
 
@@ -282,7 +394,16 @@ def ajax_get(url, complete, callback_on_error=None, process_req=None):
 window.ajax_get = ajax_get
 
 
+# =============================================================================
+# AJAX POST (internal helper and public API)
+# =============================================================================
+
+
 def _req_post(req, url, data, complete, callback_on_error=None, content_type=None):
+    """Internal POST request handler.
+
+    Handles .fview URLs, blob responses, and standard text responses.
+    """
     if ".fview" in url:
         return frontend_view(url, complete, callback_on_error, data)
 
@@ -334,15 +455,13 @@ def _req_post(req, url, data, complete, callback_on_error=None, content_type=Non
 
     req.open("POST", url, True)
 
+    # Set CSRF token and content type headers
     req.setRequestHeader("X-CSRFToken", Cookies.get("csrftoken"))
     if content_type:
         if content_type != "pass":
             req.setRequestHeader("Content-Type", content_type)
     else:
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
-    # if data.length:
-    #    req.setRequestHeader("Content-length", data.length)
-    # req.setRequestHeader("Connection", "close")
 
     req.send(data)
     return req
@@ -351,6 +470,19 @@ def _req_post(req, url, data, complete, callback_on_error=None, content_type=Non
 def ajax_post(
     url, data, complete, callback_on_error, process_req=None, content_type=None
 ):
+    """Perform an AJAX POST request.
+
+    Args:
+        url: The URL to post to.
+        data: Form data string or FormData object.
+        complete: Callback receiving the response text.
+        callback_on_error: Error callback.
+        process_req: Optional callback to configure the XHR before send.
+        content_type: Content-Type header value, or 'pass' to skip.
+
+    Returns:
+        The XMLHttpRequest object.
+    """
     req = XMLHttpRequest()
     if process_req:
         process_req(req)
@@ -362,7 +494,24 @@ def ajax_post(
 window.ajax_post = ajax_post
 
 
+# =============================================================================
+# AJAX JSON
+# =============================================================================
+
+
 def ajax_json(url, data, complete, callback_on_error, process_req=None):
+    """Perform an AJAX POST with JSON content type.
+
+    Stringifies the data object and sends it as application/json.
+
+    Args:
+        url: The URL to post to.
+        data: Data object to stringify and send.
+        complete: Callback receiving the parsed JSON response.
+        callback_on_error: Error callback.
+        process_req: Optional XHR configuration callback.
+    """
+
     def _complete(data_in):
         try:
             _data = JSON.parse(data_in)
@@ -377,6 +526,11 @@ def ajax_json(url, data, complete, callback_on_error, process_req=None):
 window.ajax_json = ajax_json
 
 
+# =============================================================================
+# AJAX Form Submit (with file upload support)
+# =============================================================================
+
+
 def ajax_submit(
     _form,
     complete,
@@ -385,6 +539,19 @@ def ajax_submit(
     process_req=None,
     url=None,
 ):
+    """Submit a form via AJAX with automatic file upload detection.
+
+    If the form contains file inputs, uses FormData with progress tracking.
+    Otherwise, serializes the form data.
+
+    Args:
+        _form: The form DOM element.
+        complete: Callback receiving the response.
+        callback_on_error: Error callback.
+        data_filter: Optional function to transform form data before send.
+        process_req: Optional XHR configuration callback.
+        url: Optional override URL (falls back to form action).
+    """
     content_type = None
     req = XMLHttpRequest()
     form = jQuery(_form)
@@ -393,14 +560,15 @@ def ajax_submit(
         process_req(req)
 
     if form.find("[type='file']").length > 0:
+        # File upload path
         _form.setAttribute("enctype", "multipart/form-data")
         data = FormData(_form)
         if data_filter:
             data = data_filter(data)
 
-        # content_type = "multipart/form-data; boundary=..."
         content_type = "pass"
 
+        # Show progress bar
         if not form.find("#progress").length == 1:
             form.find("div.inline-form-body").append(
                 "<div class='progress progress-striped active'><div id='progress' class='progress-bar' role='progressbar' style='width: 0%;'></div></div>"
@@ -418,6 +586,7 @@ def ajax_submit(
             print(pair[0] + ": " + pair[1])
 
     else:
+        # Standard form data path
         data = form.serialize()
         if data_filter:
             data = data_filter(data)
@@ -434,36 +603,25 @@ def ajax_submit(
             content_type,
         )
 
-    # if (
-    #    _form[0].hasAttribute("data-region")
-    #    and _form[0].getAttribute("data-region") == "table"
-    # ):
-    #    _req_post(req, corect_href(form.attr("action"), True), data, complete, content_type)
-    # else:
-    #    _req_post(req, corect_href(form.attr("action")), data, complete, content_type)
-
 
 window.ajax_submit = ajax_submit
 
 
-# def load_css(path):
-#     global LOADED_FILES
-#     if not (LOADED_FILES and path in LOADED_FILES):
-#         LOADED_FILES[path] = None
-#         req = __new__(XMLHttpRequest())
-#
-#         def _onload():
-#             jQuery('<style type="text/css"></style>').html(req.responseText).appendTo(
-#                 "head"
-#             )
-#
-#         req.onload = _onload
-#
-#         req.open("GET", path, True)
-#         req.send("")
+# =============================================================================
+# Dynamic CSS loading
+# =============================================================================
 
 
 def load_css(path, on_load=None):
+    """Dynamically load a CSS file.
+
+    Prevents duplicate loads by tracking loaded files. If no on_load
+    callback is provided, injects a <style> tag into <head>.
+
+    Args:
+        path: URL of the CSS file.
+        on_load: Optional callback receiving the XHR on load.
+    """
     global LOADED_FILES
     if not (LOADED_FILES and path in LOADED_FILES):
         LOADED_FILES[path] = None
@@ -487,7 +645,17 @@ def load_css(path, on_load=None):
 window.load_css = load_css
 
 
+# =============================================================================
+# Dynamic JavaScript loading
+# =============================================================================
+
+
 def on_load_js(path):
+    """Execute callbacks registered for a loaded JS file.
+
+    Args:
+        path: URL of the JS file that was loaded.
+    """
     global LOADED_FILES
     if LOADED_FILES and path in LOADED_FILES:
         functions = LOADED_FILES[path]
@@ -498,6 +666,15 @@ def on_load_js(path):
 
 
 def load_js(path, fun):
+    """Dynamically load a JavaScript file and execute a callback.
+
+    Supports deduplication: if already loading, queues the callback.
+    If already loaded, executes immediately.
+
+    Args:
+        path: URL of the JS file to load.
+        fun: Callback to execute after the script loads.
+    """
     global LOADED_FILES
     if LOADED_FILES and path in LOADED_FILES:
         if LOADED_FILES[path]:
@@ -509,7 +686,7 @@ def load_js(path, fun):
         req = XMLHttpRequest()
 
         def _onload():
-            # jQuery.globalEval(req.responseText)
+            # Save and restore requirejs/require/define to avoid conflicts
             _requirejs = window.requirejs
             _require = window.require
             _define = window.define
@@ -535,6 +712,15 @@ window.load_js = load_js
 
 
 def load_many_js(paths, fun):
+    """Load multiple JS files in order, executing a callback when all done.
+
+    Supports the '|' separator to create loading groups: files before '|'
+    are loaded before those after.
+
+    Args:
+        paths: List of JS file URLs. May contain '|' as a stage separator.
+        fun: Callback executed after all files are loaded.
+    """
     counter = 1
     next_step = None
 
@@ -563,7 +749,21 @@ def load_many_js(paths, fun):
 window.load_many_js = load_many_js
 
 
+# =============================================================================
+# Browser history
+# =============================================================================
+
+
 def history_push_state(title, url, data=None):
+    """Push a state entry to the browser history.
+
+    Converts the URL to a subpage query parameter format.
+
+    Args:
+        title: History entry title.
+        url: URL for the history entry.
+        data: Optional data tuple [html_content, element_id] for state restoration.
+    """
     if not url or url == "/":
         url2 = url
     else:
@@ -578,7 +778,23 @@ def history_push_state(title, url, data=None):
 window.history_push_state = history_push_state
 
 
+# =============================================================================
+# DOM element creation from HTML strings
+# =============================================================================
+
+
 def get_elem_from_string(html, selectors=None):
+    """Create a DOM element from an HTML string.
+
+    Wraps the HTML in a temporary div.ajax-temp-item.
+
+    Args:
+        html: HTML string to parse.
+        selectors: Optional CSS selector to extract a specific child.
+
+    Returns:
+        A DOM element or the temporary container if multiple children.
+    """
     temp = document.createElement("div")
     temp.classList.add("ajax-temp-item")
     temp.innerHTML = html
@@ -595,6 +811,11 @@ def get_elem_from_string(html, selectors=None):
 window.get_elem_from_string = get_elem_from_string
 
 
+# =============================================================================
+# Animation
+# =============================================================================
+
+
 def animate_combo(
     button,
     obj1,
@@ -606,6 +827,22 @@ def animate_combo(
     speed,
     end=None,
 ):
+    """Toggle animation between two states for paired elements.
+
+    When the button is clicked, toggles between 'on' and 'off' states,
+    animating obj1 and obj2 with CSS transitions.
+
+    Args:
+        button: jQuery button element that toggles the state.
+        obj1: First jQuery element to animate.
+        obj2: Second jQuery element to animate.
+        obj1_style_off: CSS properties for obj1 when button is OFF.
+        obj1_style_on: CSS properties for obj1 when button is ON.
+        obj2_style_off: CSS properties for obj2 when button is OFF.
+        obj2_style_on: CSS properties for obj2 when button is ON.
+        speed: Animation duration or None for instant.
+        end: Optional callback after animation completes.
+    """
     if end:
         end2 = end
     else:
@@ -658,6 +895,11 @@ def animate_combo(
 
 window.animate_combo = animate_combo
 
+
+# =============================================================================
+# Default icon mapping
+# =============================================================================
+
 window.icons = {
     "time": "fa fa-clock-o",
     "date": "fa fa-calendar",
@@ -678,7 +920,20 @@ window.icons = {
 }
 
 
+# =============================================================================
+# Visibility helpers
+# =============================================================================
+
+
 def is_hidden(el):
+    """Check if an element is hidden via computed style.
+
+    Args:
+        el: DOM element.
+
+    Returns:
+        bool: True if display:none.
+    """
     style = window.getComputedStyle(el)
     return style.display == "none"
 
@@ -687,10 +942,24 @@ window.is_hidden = is_hidden
 
 
 def is_visible(el):
+    """Check if an element is visible.
+
+    Args:
+        el: DOM element.
+
+    Returns:
+        bool: True if not hidden.
+    """
     return not is_hidden(el)
 
 
 window.is_visible = is_visible
+
+
+# =============================================================================
+# Template system
+# =============================================================================
+# Template keys map to pre-defined HTML templates from pytigon_js.resources
 
 TEMPLATES = {
     "MODAL_EDIT": MODAL_EDIT,
@@ -705,6 +974,17 @@ TEMPLATES = {
 
 
 def get_template(template_name, param):
+    """Get a rendered template string with parameter substitution.
+
+    Replaces {title} and {href} placeholders in the template.
+
+    Args:
+        template_name: Key into the TEMPLATES dict.
+        param: Dict with 'title' and optionally 'href' keys.
+
+    Returns:
+        str: The rendered template, or None if template not found.
+    """
     global TEMPLATES
     if template_name in TEMPLATES:
         ret = TEMPLATES[template_name].replace("{title}", param["title"])
@@ -714,7 +994,29 @@ def get_template(template_name, param):
     return None
 
 
+# =============================================================================
+# DOM query helpers
+# =============================================================================
+
+
 def super_query_selector(element, selector):
+    """Enhanced query selector with path-like syntax.
+
+    Supports special path segments:
+    - '..' : parent element
+    - '.'  : current element (no-op)
+    - '^selector' : closest ancestor matching selector
+    - 'selector' : querySelector
+
+    Multiple segments are separated by '/'.
+
+    Args:
+        element: Starting DOM element.
+        selector: Path string (e.g. '../div.content/^.modal').
+
+    Returns:
+        The matched element or None.
+    """
     x = selector.split("/")
     e = element
     for pos in x:
@@ -734,7 +1036,30 @@ def super_query_selector(element, selector):
 window.super_query_selector = super_query_selector
 
 
+# =============================================================================
+# DOM insertion helpers
+# =============================================================================
+
+
 def super_insert(base_element, insert_selector, inserted_element):
+    """Insert an element relative to a target using a position selector.
+
+    Selector format: 'path:position' where position is one of:
+    - 'overwrite' / '>' : replace content
+    - 'append_first' / '<<' : insert as first child
+    - 'append' / '>>' : append as last child
+    - 'after' / ')' : insert after target
+    - 'before' / '(' : insert before target
+    - 'class' : copy classes from inserted to target
+
+    Args:
+        base_element: Starting DOM element.
+        insert_selector: Position selector string.
+        inserted_element: Element to insert.
+
+    Returns:
+        The target element or None if not found.
+    """
     if insert_selector and ":" in insert_selector:
         x = insert_selector.split(":")
         if x[0]:
@@ -778,10 +1103,26 @@ def super_insert(base_element, insert_selector, inserted_element):
 window.super_insert = super_insert
 
 
+# =============================================================================
+# HTML-to-DOM with position markers
+# =============================================================================
+
 _OPERATOR = (">>", "<<", ">", "(", ")")
 
 
 def send_to_dom(html_text, base_elem):
+    """Parse HTML text and insert it into the DOM based on position markers.
+
+    If the HTML contains ===operator followed by a selector, inserts
+    the parsed content at the specified position relative to base_elem.
+
+    Args:
+        html_text: HTML string possibly containing ===operator markers.
+        base_elem: Base element for relative insertion.
+
+    Returns:
+        The result of super_insert, or None if no operator found.
+    """
     global _OPERATOR
     for operator in _OPERATOR:
         if "===" + operator in html_text:
@@ -796,7 +1137,22 @@ def send_to_dom(html_text, base_elem):
 window.send_to_dom = send_to_dom
 
 
+# =============================================================================
+# Element removal
+# =============================================================================
+
+
 def remove_element(element):
+    """Remove an element from the DOM with cleanup callbacks.
+
+    Handles:
+    - .call_on_remove callbacks before removal.
+    - .plug elements with modal dialogs (hides modals first).
+    - String selectors (removes all matches).
+
+    Args:
+        element: DOM element, or CSS selector string.
+    """
     if element:
 
         def _on_remove(index, value):
@@ -818,8 +1174,6 @@ def remove_element(element):
                         d.hide()
                     else:
                         jQuery(dialog).modal("hide")
-                # else:
-                #    aside.remove()
 
             jQuery.each(jQuery(element2).find(".plug"), _on_remove_aside)
 
@@ -829,7 +1183,22 @@ def remove_element(element):
 window.remove_element = remove_element
 
 
+# =============================================================================
+# Responsive resize handler
+# =============================================================================
+
+
 def process_resize(target_element):
+    """Process resize events for flexible_size elements.
+
+    Calculates viewport dimensions and element offsets, then triggers
+    size adjustments on elements with .flexible_size or
+    .flexible_size_round2 classes, either via their process_resize
+    callback or by applying data-size attribute formatting.
+
+    Args:
+        target_element: Root element to scan for resizable children.
+    """
     param = {}
     param["w"] = window.innerWidth
     param["h"] = window.innerHeight
@@ -874,7 +1243,20 @@ def process_resize(target_element):
 window.process_resize = process_resize
 
 
+# =============================================================================
+# Table type detection
+# =============================================================================
+
+
 def get_page(elem):
+    """Get the closest .tab-pane ancestor of an element.
+
+    Args:
+        elem: jQuery element.
+
+    Returns:
+        jQuery element matching .tab-pane.
+    """
     if elem.hasClass(".tab-pane"):
         return elem
     else:
@@ -882,6 +1264,16 @@ def get_page(elem):
 
 
 def get_table_type(elem):
+    """Detect the table_type attribute from a .tabsort element.
+
+    Searches within the element and its parent page.
+
+    Args:
+        elem: jQuery element.
+
+    Returns:
+        str: The table_type value, or empty string.
+    """
     tabsort = elem.find(".tabsort")
     if tabsort.length == 0:
         tabsort = get_page(elem).find(".tabsort")
@@ -895,14 +1287,43 @@ def get_table_type(elem):
 window.get_table_type = get_table_type
 
 
+# =============================================================================
+# Modal stacking prevention
+# =============================================================================
+
+
 def can_popup():
+    """Check if a modal popup can be opened (no existing modal is open).
+
+    Returns:
+        bool: True if no .modal-open element exists.
+    """
     if jQuery(".modal-open").length > 0:
         return False
     else:
         return True
 
 
+# =============================================================================
+# URL utilities
+# =============================================================================
+
+
 def correct_href(href, elements=None):
+    """Add fragment parameters to a URL based on element context.
+
+    Automatically appends:
+    - 'fragment=table-content' for table region elements.
+    - 'fragment=page-content' for other elements.
+    - Custom get-param attributes from elements.
+
+    Args:
+        href: The URL to modify.
+        elements: Tuple of DOM elements providing context.
+
+    Returns:
+        str: The modified URL.
+    """
     if not href:
         return href
 
@@ -957,6 +1378,14 @@ def correct_href(href, elements=None):
 
 
 def remove_page_from_href(href):
+    """Remove 'page=' parameter from a URL.
+
+    Args:
+        href: URL string.
+
+    Returns:
+        str: URL without page parameters.
+    """
     x = href.split("?")
     if len(x) > 1:
         x2 = x[1].split("&")
@@ -974,7 +1403,13 @@ def remove_page_from_href(href):
     return href
 
 
+# =============================================================================
+# Inline dialog maximize/minimize
+# =============================================================================
+
+
 def inline_maximize(elem):
+    """Maximize an inline dialog (add .maximized class, toggle buttons)."""
     dialog = elem.closest("div.modal-content")
     if not dialog.classList.contains("maximized"):
         dialog.classList.add("maximized")
@@ -989,6 +1424,7 @@ window.inline_maximize = inline_maximize
 
 
 def inline_minimize(elem):
+    """Minimize an inline dialog (remove .maximized class, toggle buttons)."""
     dialog = elem.closest("div.modal-content")
     if dialog.classList.contains("maximized"):
         dialog.classList.remove("maximized")
@@ -1002,7 +1438,20 @@ def inline_minimize(elem):
 window.inline_minimize = inline_minimize
 
 
+# =============================================================================
+# Element URL accessors
+# =============================================================================
+
+
 def element_get_url(element):
+    """Get the URL from an element's href, action, or src attribute.
+
+    Args:
+        element: DOM element.
+
+    Returns:
+        str: The first found URL attribute value, or None.
+    """
     for attr in ("href", "action", "src"):
         if element.hasAttribute(attr):
             return element.getAttribute(attr)
@@ -1013,6 +1462,14 @@ window.element_get_url = element_get_url
 
 
 def element_set_url(element, url):
+    """Set the URL on an element's href, action, or src attribute.
+
+    Only sets the first matching attribute.
+
+    Args:
+        element: DOM element.
+        url: URL value to set.
+    """
     for attr in ("href", "action", "src"):
         if element.hasAttribute(attr):
             element.setAttribute(attr, url)
@@ -1023,6 +1480,17 @@ window.element_set_url = element_set_url
 
 
 def join_urls(url1, url2):
+    """Merge two URLs, combining their query parameters.
+
+    url2's parameters override url1's for same keys.
+
+    Args:
+        url1: Base URL.
+        url2: URL with parameters to merge.
+
+    Returns:
+        str: Combined URL.
+    """
     d = {}
     if not "?" in url2:
         return url1
@@ -1053,6 +1521,15 @@ window.join_urls = join_urls
 
 
 def add_param2url(url, param):
+    """Append a query parameter to a URL.
+
+    Args:
+        url: Base URL.
+        param: Parameter string (e.g. 'key=value').
+
+    Returns:
+        str: URL with appended parameter.
+    """
     if "?" in url:
         return url + "&" + param
     else:

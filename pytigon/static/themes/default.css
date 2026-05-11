@@ -1,4 +1,5 @@
-/* main settings */
+/* Main Layout & Structure */
+/* -------------------------------------------------- */
 .body-body {
   display: block;
   margin-left: auto;
@@ -13,6 +14,8 @@ div.content-wrapper {
 div.page-content {
   height: 100%; }
 
+/* Application Chooser */
+/* -------------------------------------------------- */
 .app_chose_title {
   color: gold !important;
   text-align: center;
@@ -27,6 +30,8 @@ div.page-content {
   padding: 10px 40px;
   margin: 10px 0px; }
 
+/* Navigation Search Bar */
+/* -------------------------------------------------- */
 .nav li.search {
   background-color: rgba(0, 0, 0, 0) !important; }
   .nav li.search div.input-group {
@@ -46,12 +51,16 @@ div.page-content {
     height: 40px;
     padding-top: 12px; }
 
+/* Dashboard */
+/* -------------------------------------------------- */
 .dashboard #header {
   display: none; }
 
 .dashboard #content {
   padding: 0px 10px; }
 
+/* Table & Details Split Layout */
+/* -------------------------------------------------- */
 div.table-and-details {
   width: 100%;
   height: 100%; }
@@ -59,6 +68,8 @@ div.table-and-details {
 .modal-body div.table-and-details {
   min-height: 50vh; }
 
+/* Utility Classes */
+/* -------------------------------------------------- */
 .pull-right {
   float: right; }
 
@@ -71,7 +82,8 @@ div.table-and-details {
 .row-details.flex-row {
   max-width: calc(100% - 13rem); }
 
-/* Tab - close button on tab */
+/* Tab Bar (#tabs2) */
+/* -------------------------------------------------- */
 #tabs2 {
   border-bottom: 0px; }
   #tabs2 li {
@@ -114,11 +126,14 @@ div.table-and-details {
       #tabs2 li:nth-child(1n+6) a {
         color: var(--bs-body-color) !important; }
 
+/* Desktop Body */
+/* -------------------------------------------------- */
 #body_desktop {
   height: calc(100% - 10px) !important;
   overflow-y: auto; }
 
-/* bootstrap-table */
+/* Bootstrap Table */
+/* -------------------------------------------------- */
 .bootstrap-table .columns {
   font-size: small; }
   .bootstrap-table .columns button.btn:not(:hover) {
@@ -126,6 +141,8 @@ div.table-and-details {
   .bootstrap-table .columns a.btn:not(:hover) {
     background: transparent; }
 
+/* Table Panels (tabsort, table_panel, subform_content) */
+/* -------------------------------------------------- */
 .tabsort_panel, .table_panel, .subform_content {
   width: 100%;
   font-size: small; }
@@ -175,15 +192,13 @@ div.table-and-details {
     opacity: 0.33;
     filter: alpha(opacity=33); }
   .tabsort_panel .td_information, .table_panel .td_information, .subform_content .td_information {
+    white-space: nowrap;
     width: 100%;
     height: 100%; }
     .tabsort_panel .td_information a, .table_panel .td_information a, .subform_content .td_information a {
       font-size: small; }
     .tabsort_panel .td_information button, .table_panel .td_information button, .subform_content .td_information button {
       font-size: small; }
-  .tabsort_panel tr:not(:hover) div.td_information *, .table_panel tr:not(:hover) div.td_information *, .subform_content tr:not(:hover) div.td_information * {
-    opacity: 0.66;
-    filter: alpha(opacity=66); }
   .tabsort_panel tr td.td_information .btn, .table_panel tr td.td_information .btn, .subform_content tr td.td_information .btn {
     padding: 5px 8px;
     box-shadow: none; }
@@ -198,12 +213,16 @@ div.table-and-details {
 .tabsort_panel tbody .td_information > .btn, .tabsort_panel tbody .td_action > .btn {
   padding: 0.5rem; }
 
+/* Bootstrap Table Container */
+/* -------------------------------------------------- */
 div.bootstrap-table div.columns.float-right {
   margin-right: 2px; }
 
 div.bootstrap-table div.fixed-table-toolbar div.columns button {
   width: 50px; }
 
+/* Table Frame & Pagination */
+/* -------------------------------------------------- */
 div.tableframe {
   position: relative; }
   div.tableframe ul.simple_pagination {
@@ -214,7 +233,8 @@ div.tableframe {
 .bootstrap-table .fixed-table-container .tabsort.table thead th {
   padding: 0.3rem !important; }
 
-/* dropdown menu */
+/* Dropdown Menu */
+/* -------------------------------------------------- */
 .user-menu {
   white-space: nowrap; }
   .user-menu div.dropdown-menu {
@@ -228,8 +248,10 @@ div.tableframe {
   height: 10rem;
   overflow-y: scroll; }
 
-/* form */
+/* Modal Body Forms */
+/* -------------------------------------------------- */
 .modal-body label {
+  font-style: italic;
   text-overflow: ellipsis;
   overflow: hidden; }
 
@@ -237,6 +259,8 @@ form .row .row {
   margin-right: 0px;
   margin-left: 0px; }
 
+/* Form Groups */
+/* -------------------------------------------------- */
 .form-group {
   position: relative; }
   .form-group label, .form-group form-label {
@@ -249,24 +273,36 @@ form .row .row {
     padding-right: 10px;
     padding-top: 4px; }
 
-.group_select2multiplefield, .group_heavyselect2multiplefield, .group_modelselect2multiplefield, .group_filepathfield, .group_typedmultiplechoicefield, .group_multiplechoicefield, .group_modelmultiplechoicefield {
+/* Multiple Choice & Select2 Fields */
+/* -------------------------------------------------- */
+.group_select2multiplefield, .group_heavyselect2multiplefield, .group_modelselect2multiplefield,
+.group_filepathfield, .group_typedmultiplechoicefield, .group_multiplechoicefield, .group_modelmultiplechoicefield {
   margin-top: 0.5rem; }
 
-.form-floating.group_select2multiplefield label, .form-floating.group_heavyselect2multiplefield label, .form-floating.group_modelselect2multiplefield label, .form-floating.group_typedmultiplechoicefield label, .form-floating.group_multiplechoicefield label, .form-floating.group_modelmultiplechoicefield label {
+.form-floating.group_select2multiplefield label, .form-floating.group_heavyselect2multiplefield label,
+.form-floating.group_modelselect2multiplefield label, .form-floating.group_typedmultiplechoicefield label,
+.form-floating.group_multiplechoicefield label, .form-floating.group_modelmultiplechoicefield label {
   z-index: 1;
   opacity: .65;
   transform: scale(0.9) translateY(-1.3rem) translateX(0.15rem);
   background: transparent !important; }
 
-.form-floating.group_typedmultiplechoicefield, .group_filefield, .form-floating.group_multiplechoicefield, .form-floating.group_modelmultiplechoicefield {
+.form-floating.group_typedmultiplechoicefield, .group_filefield,
+.form-floating.group_multiplechoicefield, .form-floating.group_modelmultiplechoicefield {
   margin-top: 1.5rem; }
 
-.form-floating.group_typedmultiplechoicefield select, .form-floating.group_modelmultiplechoicefield select, .form-floating.group_multiplechoicefield select {
+.form-floating.group_typedmultiplechoicefield select,
+.form-floating.group_modelmultiplechoicefield select,
+.form-floating.group_multiplechoicefield select {
   padding-top: 0.375rem !important; }
 
-.form-floating.group_heavyselect2multiplefield label, .form-floating.group_modelselect2multiplefield label, .form-floating.group_multiplechoicefield label, .form-floating.group_typedmultiplechoicefield label, .form-floating.group_modelmultiplechoicefield label {
+.form-floating.group_heavyselect2multiplefield label, .form-floating.group_modelselect2multiplefield label,
+.form-floating.group_multiplechoicefield label, .form-floating.group_typedmultiplechoicefield label,
+.form-floating.group_modelmultiplechoicefield label {
   transform: scale(0.9) translateY(-2.3rem) translateX(0.15rem) !important; }
 
+/* Select2 Height Adjustments for Floating Forms */
+/* -------------------------------------------------- */
 .form-floating .select2-selection--single {
   height: calc(3.5rem + 2px) !important;
   padding-top: 1.625rem !important; }
@@ -286,13 +322,12 @@ form .row .row {
 .row > .form-floating > label {
   left: 0.6rem; }
 
-.form-floating.group_select2multiplefield label, .form-floating.group_heavyselect2multiplefield label, .form-floating.group_modelselect2multiplefield label {
+.form-floating.group_select2multiplefield label, .form-floating.group_heavyselect2multiplefield label,
+.form-floating.group_modelselect2multiplefield label {
   transform: scale(0.9) translateY(-0.6rem) translateX(0.15rem) !important; }
 
-.bootstrap-datetimepicker-widget {
-  width: auto !important;
-  box-shadow: 2px 2px 2px #888; }
-
+/* Dropdown Toggle Arrow */
+/* -------------------------------------------------- */
 .btn.dropdown-toggle::after {
   display: inline-block;
   width: 0;
@@ -304,9 +339,19 @@ form .row .row {
   border-right: 0.3em solid transparent;
   border-left: 0.3em solid transparent; }
 
+/* Date/Time Picker */
+/* -------------------------------------------------- */
+.bootstrap-datetimepicker-widget {
+  width: auto !important;
+  box-shadow: 2px 2px 2px #888; }
+
+/* Vertical Form */
+/* -------------------------------------------------- */
 .form-vertical .form-control {
   width: 100%; }
 
+/* Modal Background Overlay */
+/* -------------------------------------------------- */
 body:not(.modal-open) .dark_background {
   position: fixed;
   background: #448;
@@ -317,10 +362,14 @@ body:not(.modal-open) .dark_background {
   opacity: 0.1;
   pointer-events: none; }
 
+/* Inline Table/Update Modal Bodies */
+/* -------------------------------------------------- */
 .inline-table-modal-body, .inline-update-modal-body {
   padding: 30px;
   overflow: hidden; }
 
+/* Fullscreen Modal */
+/* -------------------------------------------------- */
 .modal-fullscreen .modal-header {
   padding: 5px; }
 
@@ -330,39 +379,6 @@ body:not(.modal-open) .dark_background {
 
 .modal-fullscreen .inline-table-modal-body, .modal-fullscreen .inline-update-modal-body {
   overflow-y: auto; }
-
-.group_filefield label.control-label {
-  transform: none;
-  top: -10p;
-  margin-top: -2px; }
-
-.group_multiplechoicefield, .group_modelmultiplechoicefield, .group_typedmultiplechoicefield {
-  min-width: 10rem; }
-
-.group_typedchoicefield, .group_modelchoicefield, .group_choicefield {
-  min-width: 10rem; }
-
-div.d-inline-flex div.form-group {
-  align-self: end; }
-
-.group_filefield label.top_label {
-  position: absolute;
-  top: -1.1rem;
-  left: 2px;
-  color: rgba(0, 0, 0, 0.5); }
-
-div.form_delete, div.form_info {
-  max-height: 25rem;
-  overflow-y: auto; }
-
-.maximize, .minimize {
-  box-shadow: none; }
-
-select.form-control {
-  padding-right: 1rem; }
-
-select.show-form-btn + span.select2 span.select2-selection {
-  padding-right: 5rem; }
 
 .modal-fullscreen {
   position: fixed !important;
@@ -375,31 +391,87 @@ select.show-form-btn + span.select2 span.select2-selection {
   .modal-fullscreen .modal-content {
     height: 100%; }
 
-div.v-autosize div.modal-body {
-  max-height: calc( 100vh - 10rem);
+/* File Field */
+/* -------------------------------------------------- */
+.group_filefield label.control-label {
+  transform: none;
+  top: -10p;
+  margin-top: -2px; }
+
+.group_filefield label.top_label {
+  position: absolute;
+  top: -1.1rem;
+  left: 2px;
+  color: rgba(0, 0, 0, 0.5); }
+
+/* Choice Fields - Minimum Width */
+/* -------------------------------------------------- */
+.group_multiplechoicefield, .group_modelmultiplechoicefield, .group_typedmultiplechoicefield {
+  min-width: 10rem; }
+
+.group_typedchoicefield, .group_modelchoicefield, .group_choicefield {
+  min-width: 10rem; }
+
+/* Inline Flex Form Groups */
+/* -------------------------------------------------- */
+div.d-inline-flex div.form-group {
+  align-self: end; }
+
+/* Form Delete/Info Sections */
+/* -------------------------------------------------- */
+div.form_delete, div.form_info {
+  max-height: 25rem;
   overflow-y: auto; }
 
+/* Maximize/Minimize Buttons */
+/* -------------------------------------------------- */
+.maximize, .minimize {
+  box-shadow: none; }
+
+/* Select Form Controls */
+/* -------------------------------------------------- */
+select.form-control {
+  padding-right: 1rem; }
+
+select.show-form-btn + span.select2 span.select2-selection {
+  padding-right: 5rem; }
+
+/* Auto-sized Modal Body */
+/* -------------------------------------------------- */
+div.v-autosize div.modal-body {
+  max-height: calc(100vh - 10rem);
+  overflow-y: auto; }
+
+/* Dialog Form Container */
+/* -------------------------------------------------- */
 div.dialog-form div.container-fluid {
   padding-left: 0;
   padding-right: 0; }
 
+/* Foreign Key Button */
+/* -------------------------------------------------- */
 a.foreignkey_button {
   position: absolute !important;
   right: 65px;
   top: 0rem;
   z-index: 10; }
 
+/* Validation Feedback */
+/* -------------------------------------------------- */
 div.is-invalid .invalid-feedback {
   display: block; }
 
 input[required]:invalid, select[required] {
   background-color: #ffc; }
 
+/* Modal Footer Buttons */
+/* -------------------------------------------------- */
 .modal-footer button {
   margin-left: 0.2rem;
   margin-right: 0.2rem; }
 
-/* Inline form */
+/* Inline Modal Dialog */
+/* -------------------------------------------------- */
 .modal-dialog-inline > div > div > .modal-header {
   padding-bottom: 0.2rem;
   padding-top: 0.2rem; }
@@ -413,6 +485,8 @@ input[required]:invalid, select[required] {
   padding-top: 0.5rem;
   margin-bottom: 0.5rem; }
 
+/* Inline Form Groups */
+/* -------------------------------------------------- */
 .form-inline .form-group, .form-inline div.checkbox {
   padding: 2px;
   margin-right: 15px; }
@@ -455,6 +529,8 @@ input[required]:invalid, select[required] {
 .form-inline .datetimeinput {
   width: 9rem !important; }
 
+/* Refresh Button */
+/* -------------------------------------------------- */
 .refresh-button {
   position: absolute !important;
   right: 3px;
@@ -468,11 +544,16 @@ input[required]:invalid, select[required] {
   border-radius: 30px;
   z-index: 1; }
 
+/* Table Filter Form */
+/* -------------------------------------------------- */
 .table_filter {
   margin-top: 0px;
   margin-bottom: 3px;
   margin-left: 0px;
   margin-right: 50px; }
+
+form.table_filter label {
+  font-style: italic; }
 
 form.table_filter label:not(.form-check-label):not(.upload)::after {
   content: ":";
@@ -486,25 +567,33 @@ form.table_filter label.nocolon::after {
   content: "" !important;
   background-color: transparent !important; }
 
+/* Inline Dialog in Tab Content */
+/* -------------------------------------------------- */
 div.tab-content .modal-dialog-inline {
   position: relative;
   left: 0px;
   right: 0px;
   top: 0px; }
 
+/* Subform Frame within Modal */
+/* -------------------------------------------------- */
 .modal-dialog .subform_frame {
   margin: 15px 15px; }
 
+/* Maximized Modal Content */
+/* -------------------------------------------------- */
 div.modal-content.maximized {
   position: fixed;
   top: -5px;
   left: -5px;
-  width: calc( 100% + 10px);
-  height: calc( 100vh + 10px);
+  width: calc(100% + 10px);
+  height: calc(100vh + 10px);
   z-index: 9000;
   overflow-y: auto;
   overflow-x: hidden; }
 
+/* Inline Dialog Frame */
+/* -------------------------------------------------- */
 div.inline-dialog-frame {
   position: fixed;
   z-index: 1001;
@@ -516,6 +605,8 @@ div.inline-dialog-frame {
     left: 2rem;
     bottom: 2rem; }
 
+/* Inline Content */
+/* -------------------------------------------------- */
 .inline-content {
   z-index: 1000; }
 
@@ -527,10 +618,13 @@ div.inline-dialog-frame {
   border-radius: var(--bs-border-radius-lg);
   outline: 0; }
 
+/* Plug Row Highlight */
+/* -------------------------------------------------- */
 tr.plug > td {
   background-color: var(--bs-warning); }
 
-/* login form */
+/* Login Page */
+/* -------------------------------------------------- */
 .login_background {
   /* IE10+ */
   background-image: -ms-radial-gradient(left top, ellipse farthest-side, #CCCCCC 0%, #224466 100%);
@@ -553,9 +647,13 @@ tr.plug > td {
   .login_background div.content-wrapper {
     background: transparent; }
 
+/* Login Container */
+/* -------------------------------------------------- */
 div.login-container > .row {
   height: 80vh; }
 
+/* Login Card */
+/* -------------------------------------------------- */
 .login-card {
   min-width: 250px;
   box-shadow: 5px 5px 2px #112233;
@@ -574,6 +672,8 @@ div.login-container > .row {
   .login-card span {
     color: white !important; }
 
+/* Circular Buttons */
+/* -------------------------------------------------- */
 .btn-circle {
   width: 30px;
   height: 30px;
@@ -599,6 +699,8 @@ div.login-container > .row {
   line-height: 1.33;
   border-radius: 35px; }
 
+/* Upload Label */
+/* -------------------------------------------------- */
 label.upload {
   height: 80px;
   padding: 0px;
@@ -635,27 +737,41 @@ label.upload {
     left: 2px;
     padding: 0px 5px; }
 
+/* Checkbox Input */
+/* -------------------------------------------------- */
 .checkboxinput {
   margin-right: 10px; }
 
+/* File Button */
+/* -------------------------------------------------- */
 .btn-file {
   cursor: pointer;
   cursor: hand; }
 
+/* Transparent Buttons */
+/* -------------------------------------------------- */
 button.btn-transparent:not(:hover), a.btn-transparent:not(:hover) {
   background: transparent !important; }
 
+/* Calendar - Today Highlight */
+/* -------------------------------------------------- */
 div.calendar-table td.today:not(.active) {
   background: #ffb; }
 
+/* Disabled Links */
+/* -------------------------------------------------- */
 a.disabled {
   pointer-events: none !important;
   background: #ccc !important;
   color: #eee !important; }
 
+/* Input Group Addon */
+/* -------------------------------------------------- */
 .input-group-addon {
   padding: 0px 0.7rem; }
 
+/* Date Range Picker */
+/* -------------------------------------------------- */
 div.daterangepicker .drp-buttons {
   text-align: center; }
   div.daterangepicker .drp-buttons button.cancelBtn {
@@ -663,14 +779,16 @@ div.daterangepicker .drp-buttons {
     top: 4px;
     right: 4px; }
 
+/* Scrolling Ticker Animation */
+/* -------------------------------------------------- */
 @-webkit-keyframes ticker {
-  0% {
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-    visibility: visible; }
-  100% {
-    -webkit-transform: translate3d(-100%, 0, 0);
-    transform: translate3d(-100%, 0, 0); } }
+  0% { }
+  -webkit-transform: translate3d(0, 0, 0);
+  transform: translate3d(0, 0, 0);
+  visibility: visible;
+  100% { }
+  -webkit-transform: translate3d(-100%, 0, 0);
+  transform: translate3d(-100%, 0, 0); }
 
 @keyframes ticker {
   0% {
@@ -707,31 +825,37 @@ div.daterangepicker .drp-buttons {
       font-size: 2rem;
       color: white; }
 
+/* Select2 within Form Rows */
+/* -------------------------------------------------- */
 form div.get_row span.select2-container {
   margin-left: 5px; }
 
+/* Subform Row Hover */
+/* -------------------------------------------------- */
 div.subform_content tr:hover {
   color: white; }
 
+/* Left-Aligned Checkbox Boolean Fields */
+/* -------------------------------------------------- */
 .leftaligncheckbox .booleanfield {
   margin-left: 0 !important; }
 
+/* Form Group Controls - Unstyled List */
+/* -------------------------------------------------- */
 .form-group div.controls ul {
   list-style-type: none;
   padding-left: 0; }
 
+/* Collapsible Toggle Icons (+/-) */
+/* -------------------------------------------------- */
 a.collapsed > i.colapsed-plus {
   display: inline-block; }
 
 a.collapsed > i.colapsed-minus {
   display: none; }
 
-a:not([class*="collapsed"]) > i.colapsed-plus {
-  display: none; }
-
-a:not([class*="collapsed"]) > i.colapsed-minus {
-  display: inline-block; }
-
+/* 3D Text Effects */
+/* -------------------------------------------------- */
 .txt3d {
   font-weight: 900;
   text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2), 4px 4px 5px rgba(0, 0, 0, 0.4); }
@@ -745,6 +869,8 @@ a:not([class*="collapsed"]) > i.colapsed-minus {
   .txt3d.wiki-title span {
     color: antiquewhite; }
 
+/* Wiki Content Styling */
+/* -------------------------------------------------- */
 div.highlight pre {
   padding: 10px;
   font-size: 12px; }
@@ -760,18 +886,24 @@ div.highlight pre {
   .wiki-frame table.codehilitetable .codehilite {
     padding: 0.5rem; }
 
+/* Body */
+/* -------------------------------------------------- */
 body {
   background-color: var(--bs-body-bg);
   height: 100vh;
   overflow-x: hidden;
   overflow-y: auto; }
 
+/* Table */
+/* -------------------------------------------------- */
 div.table {
   margin-bottom: 0rem; }
 
 .new_row {
   min-height: 0.3rem; }
 
+/* Bootstrap Table Toolbar Tweaks */
+/* -------------------------------------------------- */
 .bootstrap-table .fixed-table-toolbar .btn-group, .bootstrap-table .fixed-table-toolbar .bs-bars,
 .bootstrap-table .fixed-table-toolbar .search {
   margin-top: 0px !important;
@@ -787,6 +919,8 @@ div.table {
 .bootstrap-table .fixed-table-toolbar .dropdown {
   display: inline; }
 
+/* Date/Time Picker */
+/* -------------------------------------------------- */
 .dtp > .dtp-content {
   max-height: 530px; }
 
@@ -796,6 +930,8 @@ table.dtp-picker-days tbody tr td:nth-child(6) a, table.dtp-picker-days tbody tr
 div.dtp-buttons button {
   margin: 0px 5px; }
 
+/* Dropdown Toggle - Hide Before Pseudo */
+/* -------------------------------------------------- */
 .btn.dropdown-toggle::before {
   display: none;
   width: 0;
@@ -807,6 +943,8 @@ div.dtp-buttons button {
   border-right: none;
   border-left: none; }
 
+/* Table Action/Information Buttons */
+/* -------------------------------------------------- */
 div.td_action .btn-secondary:after, div.td_information .btn-secondary:after {
   background-image: radial-gradient(circle, #eee 10%, transparent 10.01%) !important; }
 
@@ -816,6 +954,8 @@ div.td_information {
 .div_content_center {
   text-align: center; }
 
+/* Tabsort Toolbar Expand Button */
+/* -------------------------------------------------- */
 .tabsort-toolbar-expand {
   position: absolute;
   top: 4px;
@@ -831,6 +971,8 @@ div.td_information {
   transform: rotate(315deg) !important;
   transition: .3s !important; }
 
+/* Tab Pane Sizing */
+/* -------------------------------------------------- */
 .tab-pane {
   position: relative;
   height: calc(100% - 5px); }
@@ -843,6 +985,8 @@ div.td_information {
   padding-right: 5px !important;
   padding-left: 5px !important; }
 
+/* Tree Toolbar */
+/* -------------------------------------------------- */
 span.tree-toolbar {
   padding-right: 30px; }
 
@@ -850,10 +994,13 @@ span.tree-home a {
   padding-left: 11px !important;
   padding-right: 11px !important; }
 
-/* for firefox */
+/* Firefox Outline Reset */
+/* -------------------------------------------------- */
 a, button {
   outline: 0 !important; }
 
+/* Tabsort Panel */
+/* -------------------------------------------------- */
 .tabsort_panel {
   position: absolute;
   top: 0px;
@@ -865,6 +1012,8 @@ a, button {
 .modal-body .tabsort_panel {
   position: relative; }
 
+/* Form Labels */
+/* -------------------------------------------------- */
 .form2columns label {
   margin-bottom: 0px; }
 
@@ -877,6 +1026,8 @@ div.modal-body label:not(.form-check-label):not(.upload)::after {
 div.modal-body .form-floating label:not(.form-check-label):not(.upload)::after {
   content: ""; }
 
+/* Scrollable Table */
+/* -------------------------------------------------- */
 .tbl_scroll {
   min-height: 11rem;
   overflow-y: scroll; }
@@ -885,18 +1036,26 @@ div.modal-body .form-floating label:not(.form-check-label):not(.upload)::after {
   min-height: auto;
   overflow-y: visible !important; }
 
+/* Content Area */
+/* -------------------------------------------------- */
 .content {
   position: relative; }
 
+/* Layout Table */
+/* -------------------------------------------------- */
 table.layout0 tr td {
   padding: 0 !important;
   margin: 0 !important;
   text-align: center;
   vertical-align: middle; }
 
+/* Utility: Hide */
+/* -------------------------------------------------- */
 .hide {
   display: none; }
 
+/* Pagination */
+/* -------------------------------------------------- */
 .pagination {
   float: right;
   margin-right: 3px;
@@ -906,6 +1065,8 @@ table.layout0 tr td {
     background: #2196F3;
     color: white; }
 
+/* Size Level Colors */
+/* -------------------------------------------------- */
 .size_level_0 {
   color: #fff; }
 
@@ -918,20 +1079,28 @@ table.layout0 tr td {
 .size_level_3 .size_level_4 .size_level_5 .size_level_6 {
   color: #000; }
 
+/* Wiki Collapse Link */
+/* -------------------------------------------------- */
 .wiki_collapse_link {
   position: absolute;
   right: 5px;
   z-index: 100; }
 
+/* Modal Max Width */
+/* -------------------------------------------------- */
 .modal-max {
   max-width: 100% !important; }
 
+/* Maximized Modal */
+/* -------------------------------------------------- */
 .maximized > .modal-body {
   padding: 0; }
 
 .maximized > .modal-footer {
   padding: 0.25rem; }
 
+/* Sublist Width Variants */
+/* -------------------------------------------------- */
 .sublist-sm {
   max-width: 300px !important; }
 
@@ -947,6 +1116,8 @@ table.layout0 tr td {
 .sublist-max {
   max-width: 100% !important; }
 
+/* Rotation Animation */
+/* -------------------------------------------------- */
 .rotate {
   -webkit-animation-name: spin;
   -webkit-animation-duration: 1000ms;
@@ -987,11 +1158,323 @@ table.layout0 tr td {
   to {
     transform: rotate(360deg); } }
 
+/* Row Details */
+/* -------------------------------------------------- */
 .v-row-details {
   padding: 10px; }
 
+/* Slider Lines */
+/* -------------------------------------------------- */
 .slider-line {
   background-color: #fb0; }
 
 .v-slider-line {
   background-color: #eee; }
+
+/* DocHead & Separators */
+/* -------------------------------------------------- */
+.dochead-separator {
+  height: 10px;
+  background: gray;
+  border: 0; }
+
+/* FAB Menu (Floating Action Button Menu) */
+/* -------------------------------------------------- */
+.fab-scaled {
+  transform: scale(0.5);
+  -webkit-transform: scale(0.5);
+  -moz-transform: scale(0.5);
+  -o-transform: scale(0.5);
+  margin-left: -40px; }
+
+/* Sub-Document Layout */
+/* -------------------------------------------------- */
+.subdoc-item {
+  position: relative;
+  display: inline-block; }
+
+/* Date Widget */
+/* -------------------------------------------------- */
+.date-widget-wrapper {
+  position: relative; }
+
+.date-widget-icon {
+  position: absolute;
+  right: 10px;
+  top: calc(50% - 6px);
+  pointer-events: none; }
+
+/* File Input */
+/* -------------------------------------------------- */
+.file-input-hidden {
+  display: none; }
+
+/* Paginator */
+/* -------------------------------------------------- */
+.pagination-simple {
+  margin-top: 5px;
+  margin-bottom: 0; }
+
+/* Checkbox Select Multiple */
+/* -------------------------------------------------- */
+.checkbox-select-panel {
+  padding: 0.5em;
+  margin: 0.5em 0 0.5em 0; }
+
+/* User Tree Widget */
+/* -------------------------------------------------- */
+.user-tree {
+  border: 0;
+  background-color: transparent;
+  padding: 20px 0 0 0;
+  max-height: 300px;
+  overflow-y: auto; }
+
+.user-tree-show-node {
+  left: -35px; }
+
+.user-tree-root-icon {
+  height: 34px; }
+
+/* Full-Width Tables */
+/* -------------------------------------------------- */
+.table-full-width {
+  width: 100%; }
+
+/* Typography Utilities */
+/* -------------------------------------------------- */
+.font-bold {
+  font-weight: bold; }
+
+.txt-nowrap {
+  white-space: nowrap; }
+
+.td-action-nowrap {
+  white-space: nowrap; }
+
+/* Desktop Menu */
+/* -------------------------------------------------- */
+.menu-separator {
+  width: 5px;
+  height: 10px; }
+
+.logo-link {
+  white-space: nowrap;
+  text-align: center; }
+
+.dropdown-menu-wide {
+  width: 470px; }
+
+.content-wrapper-white {
+  background-color: #fff; }
+
+.full-height {
+  height: 100%; }
+
+.loading-indicator-hidden {
+  display: none; }
+
+/* Alert Components */
+/* -------------------------------------------------- */
+.alert-close-btn {
+  position: absolute;
+  right: 0.5rem; }
+
+/* Clipboard Utility */
+/* -------------------------------------------------- */
+.copy-clipboard-hidden {
+  position: absolute;
+  left: -1000px; }
+
+/* Table Layout Utilities */
+/* -------------------------------------------------- */
+.table-fixed-layout {
+  table-layout: fixed; }
+
+.table-frame-inner {
+  position: relative;
+  margin-right: 4px; }
+
+.tbl-scroll-full {
+  overflow-y: auto;
+  height: 100%; }
+
+/* Foreign Key Widget */
+/* -------------------------------------------------- */
+.foreignkey-btn-full {
+  height: 100%; }
+
+/* Mail Template */
+/* -------------------------------------------------- */
+.mail-html-bg {
+  background-color: white; }
+
+/* Wiki Title */
+/* -------------------------------------------------- */
+.wiki-title-nowrap {
+  white-space: nowrap; }
+
+/* Toast / Messages */
+/* -------------------------------------------------- */
+.toast-message {
+  z-index: 11; }
+
+/* Report PDF Styles */
+/* -------------------------------------------------- */
+body.report-pdf {
+  font-family: sans-serif;
+  font-size: 80%;
+  padding: 20; }
+  body.report-pdf table {
+    border: 0;
+    vertical-align: top;
+    padding: 3; }
+    body.report-pdf table td {
+      vertical-align: top;
+      padding: 3;
+      border: 0; }
+      body.report-pdf table td table {
+        padding: 1;
+        border: 0; }
+  body.report-pdf th {
+    padding: 3;
+    font-weight: bold;
+    border: 0; }
+  body.report-pdf strong, body.report-pdf b {
+    font-weight: bold; }
+  body.report-pdf p {
+    padding: 2;
+    border: 0;
+    width: 100%; }
+  body.report-pdf a {
+    color: #0000ff;
+    text-decoration: underline; }
+  body.report-pdf strong a {
+    color: #00ffff; }
+  body.report-pdf ul {
+    border: 0; }
+  body.report-pdf li {
+    padding: 5;
+    width: calc(95% - 60px); }
+  body.report-pdf ul li {
+    font-style: italic; }
+  body.report-pdf em {
+    font-style: italic; }
+  body.report-pdf h1 {
+    font-size: 300%;
+    font-weight: bold;
+    padding: 12px 2px 12px 2px; }
+  body.report-pdf h2 {
+    font-size: 240%;
+    font-weight: bold;
+    padding: 10px 2px 50px 2px; }
+  body.report-pdf h3 {
+    font-size: 190%;
+    font-weight: bold;
+    padding: 8px 2px 8px 2px;
+    width: 100%;
+    text-align: center; }
+  body.report-pdf h4 {
+    font-size: 150%;
+    font-weight: bold;
+    padding: 6px 2px 6px 2px; }
+  body.report-pdf h5 {
+    font-size: 120%;
+    font-weight: bold;
+    padding: 4px 2px 4px 2px; }
+  body.report-pdf h6 {
+    font-size: 100%;
+    font-weight: bold;
+    padding: 2px 2px 2px 2px; }
+  body.report-pdf table.tabdel {
+    border: 1px solid;
+    width: 100%;
+    background: #ccc;
+    border: 1px solid;
+    padding: 5px;
+    background: #eee;
+    border: 1px solid;
+    padding: 5px; }
+  body.report-pdf .helptext {
+    font-size: 120%;
+    font-style: italic; }
+  body.report-pdf i {
+    font-style: italic; }
+  body.report-pdf .podpis {
+    text-align: center; }
+  body.report-pdf table.simple {
+    border: 0;
+    padding: 0;
+    padding: 0; }
+  body.report-pdf table.tab_header {
+    font-size: 60%; }
+  body.report-pdf table.with_border {
+    border: 1px solid;
+    border: 1px solid;
+    margin: 1px; }
+  body.report-pdf table.for_img {
+    border: 1px solid;
+    margin: 0;
+    padding: 0;
+    border: 1px solid;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf img {
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x11 {
+    width: 69px;
+    height: 69px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x21 {
+    width: 138px;
+    height: 69px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x12 {
+    width: 69px;
+    height: 138px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x22 {
+    width: 138px;
+    height: 138px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x23 {
+    width: 138px;
+    height: 207px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x11 img {
+    width: 67px;
+    height: 67px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x21 img {
+    width: 136px;
+    height: 67px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x12 img {
+    width: 67px;
+    height: 136px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x22 img {
+    width: 136px;
+    height: 136px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf td.x23 img {
+    width: 136px;
+    height: 205px;
+    margin: 0;
+    padding: 0; }
+  body.report-pdf img.checkbox {
+    width: 12px;
+    height: 12px;
+    margin: 20px; }
+  body.report-pdf td:hover.test {
+    background: #ff0000; }

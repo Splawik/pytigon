@@ -1,14 +1,28 @@
-# from pytigon_js.tools import (
-#    ajax_post,
-#    ajax_post,
-#    get_table_type,
-#    load_js,
-# )
+"""
+Bootstrap Table integration and data table management module.
 
-# from pytigon_js.ajax_region import refresh_ajax_frame
+Provides initialization and lifecycle management for Bootstrap Table
+widgets including:
+- Table height management and responsive sizing.
+- AJAX data loading with server-side pagination/sorting.
+- Row selection, checkboxes, and inline editing.
+- Table action dropdowns and toolbar expand/collapse.
+- Data change event handling (loadeddata) for table refresh.
+- Visual feedback for row-level operations.
+
+Dependencies (pscript cross-module):
+    pytigon_js.tools: ajax_post, ajax_get, get_table_type, load_js
+    pytigon_js.ajax_region: refresh_ajax_frame
+"""
+
+
+# =============================================================================
+# Visibility helpers
+# =============================================================================
 
 
 def _is_visible(element):
+    """Check if an element is visible using jQuery's :visible selector."""
     test = RawJS('jQuery(element).is(":visible")')
     if test:
         return True
@@ -16,8 +30,16 @@ def _is_visible(element):
         return False
 
 
-def old_datetable_set_height(element):
+# =============================================================================
+# Table height management
+# =============================================================================
 
+
+def old_datetable_set_height(element):
+    """Legacy table height calculation based on window/viewport offsets.
+
+    Used for tables with the 'table_get' class.
+    """
     if jQuery(element).hasClass("table_get"):
         return
     if not _is_visible(element):
@@ -36,12 +58,7 @@ def old_datetable_set_height(element):
     ):
         details = super_query_selector(elem[0], "^.table-and-details/.row-details")
         details_height = details.clientHeight
-        dydy = (
-            # int(elem[0].getAttribute("table-details-height").replace("%", "").replace("vh", ""))
-            details_height
-            * dy_win
-            / 100
-        )
+        dydy = details_height * dy_win / 100
 
     dy -= dydy
 
@@ -50,21 +67,21 @@ def old_datetable_set_height(element):
 
     panel = elem.find(".fixed-table-toolbar")
     if not _is_visible(panel):
-        dy += panel.outerHeight() + 5  # height() #- 15
+        dy += panel.outerHeight() + 5
 
     jQuery(element).bootstrapTable("resetView", {"height": dy - 5})
 
 
 def datetable_set_height(element):
+    """Calculate table height based on parent container height.
 
-    # if jQuery(element).hasClass("table_get"):
-    #    return
+    Modern approach: uses the parent's height instead of window offsets.
+    """
     if not _is_visible(element):
         return
 
     elem = jQuery(element).closest(".tabsort_panel")
 
-    # table_offset = elem.offset().top
     dy = elem.parent().height()
 
     if dy < 200:
@@ -72,12 +89,22 @@ def datetable_set_height(element):
 
     panel = elem.find(".fixed-table-toolbar")
     if not _is_visible(panel):
-        dy += panel.outerHeight() + 5  # height() #- 15
+        dy += panel.outerHeight() + 5
 
     jQuery(element).bootstrapTable("resetView", {"height": dy - 10})
 
 
+# =============================================================================
+# Table refresh
+# =============================================================================
+
+
 def datatable_refresh(element):
+    """Refresh a Bootstrap Table - either directly or via parent region.
+
+    If the element itself has the .tabsort class, refreshes it directly.
+    Otherwise, looks for the nearest 'table' region and refreshes tables within.
+    """
     if element.classList.contains("tabsort"):
         jQuery(element).bootstrapTable("refresh", {"silent": True})
     else:
@@ -91,7 +118,25 @@ def datatable_refresh(element):
 window.datatable_refresh = datatable_refresh
 
 
+# =============================================================================
+# Table row styling
+# =============================================================================
+
+
 def _rowStyle(value, row, index):
+    """Extract row CSS class from the cid (cell identifier) column.
+
+    Looks for a div.td_information within the cid column and extracts
+    additional CSS classes for row-level styling.
+
+    Args:
+        value: Row data object.
+        row: Full row data.
+        index: Row index.
+
+    Returns:
+        dict: {'classes': css_class} if found, otherwise {}.
+    """
     x = jQuery("<div class='cid'>" + value["cid"] + "</div>").find("div.td_information")
     if x.length > 0:
         c = x.attr("class").replace("td_information", "").replace(" ", "")
@@ -100,7 +145,18 @@ def _rowStyle(value, row, index):
     return {}
 
 
+# =============================================================================
+# Table preparation helpers
+# =============================================================================
+
+
 def prepare_datatable(table):
+    """Post-render cleanup: merge second_row cells and auto-select if needed.
+
+    - Merges div.second_row cells by removing siblings and setting colspan.
+    - Triggers auto-select checkbox if data-autoselect attribute is set.
+    """
+
     def _local_fun(index):
         td = jQuery(this).parent()
         tr = td.parent()
@@ -114,6 +170,7 @@ def prepare_datatable(table):
 
 
 def prepare0(table):
+    """Remove 'flexible_size' class from header tables within the frame."""
     refr_block = table.closest(".ajax-frame")
     if refr_block:
         tables = Array.prototype.slice.call(
@@ -123,7 +180,20 @@ def prepare0(table):
             table.classList.remove("flexible_size")
 
 
+# =============================================================================
+# AJAX data source for Bootstrap Table
+# =============================================================================
+
+
 def datatable_ajax(params):
+    """Custom AJAX handler for Bootstrap Table server-side processing.
+
+    For tables within a form: serializes the form data and sends a POST.
+    Otherwise: sends a GET with query parameters.
+
+    Args:
+        params: Bootstrap Table AJAX parameters dict with url, data, success keys.
+    """
     url = params["url"]
     success = params["success"]
     if "form" in dict(params["data"]):
@@ -149,8 +219,29 @@ def datatable_ajax(params):
         ajax_get(url, _on_get_data)
 
 
+# =============================================================================
+# Main table initialization
+# =============================================================================
+
+
 def init_table(table, table_type):
+    """Initialize a Bootstrap Table with full configuration.
+
+    Sets up:
+    - Checkbox columns (visible for .multiple-select, hidden otherwise).
+    - Row ID column.
+    - AJAX data loading.
+    - Row click handling and row-active region updates.
+    - Toolbar expand/collapse.
+    - Resize handling.
+    - Inline editing with auto-advance.
+
+    Args:
+        table: jQuery-wrapped table element.
+        table_type: Table type string (e.g. 'datatable').
+    """
     if table_type == "datatable":
+        # Add checkbox column (visible or hidden depending on multiple-select)
         if table.hasClass("multiple-select"):
             jQuery(table).find("tr:first").find("th:first").before(
                 "<th data-field='state' data-checkbox='true' data-visible='true'></th>"
@@ -160,11 +251,13 @@ def init_table(table, table_type):
                 "<th data-field='state' data-checkbox='true' data-visible='false'></th>"
             )
 
+        # Add hidden ID column
         jQuery(table).find("tr:first").find("th:last").after(
             "<th data-field='id' data-visible='false'>ID</th>"
         )
 
         def onLoadSuccess(data):
+            """After loading data: prepare table and add pagination styling."""
             nonlocal table
             prepare_datatable(table)
 
@@ -173,17 +266,18 @@ def init_table(table, table_type):
                 jQuery(table).closest(".fixed-table-container").find(
                     ".fixed-table-pagination ul.pagination a"
                 ).addClass("page-link")
-                # datatable_onresize()
 
             setTimeout(_pagination, 0)
             return False
 
         def onPostHeader(data):
+            """After header render: remove flexible_size from header tables."""
             nonlocal table
             prepare0(table)
             return False
 
         def onCheck(row, elem):
+            """Handle row checkbox: update table_row_pk input and refresh active areas."""
             if elem.length > 0:
                 x = elem[0].closest(".ajax-region[data-region='page'")
                 if x:
@@ -197,9 +291,8 @@ def init_table(table, table_type):
                             if elem.classList.contains("show"):
                                 refresh_ajax_frame(elem)
 
-                        x.querySelector(".table-row-active")
-
         def queryParams(p):
+            """Add serialized form data to table query parameters."""
             nonlocal table
             base_elem = table[0].closest(".tabsort_panel")
             link = get_ajax_link(base_elem, "table")
@@ -220,12 +313,14 @@ def init_table(table, table_type):
         }
 
         def onRefresh(params):
+            """After manual refresh: trigger auto-select if configured."""
             nonlocal table
             if table[0].hasAttribute("data-autoselect"):
                 table[0].closest(".bootstrap-table").querySelector(
                     "[name='select']"
                 ).click()
 
+        # Initialize Bootstrap Table with full config
         if table.hasClass("table_get"):
             table.bootstrapTable(
                 {
@@ -262,6 +357,7 @@ def init_table(table, table_type):
                 }
             )
 
+        # Initialize inline editing with auto-advance to next row
         def init_bootstrap_table(self, e, data):
             table.find("a.editable").editable({"step": "any"})
 
@@ -282,14 +378,15 @@ def init_table(table, table_type):
             table.find("a.editable").on("hidden", on_hidden_editable)
 
         table.on("post-body.bs.table", init_bootstrap_table)
-        
+
+        # Handle column resize to recalculate table height
         def _on_column_resize_stop(event):
             nonlocal table
             datetable_set_height(table)
 
         table.on("column:resize:stop", _on_column_resize_stop)
 
-        # table_panel = jQuery(table).closest(".content")
+        # Toolbar expand/collapse toggle
         table_panel = jQuery(table).closest("div.win-content")
         btn = table_panel.find(".tabsort-toolbar-expand").first()
         if btn:
@@ -298,7 +395,6 @@ def init_table(table, table_type):
                 panel = table_panel.find(".fixed-table-toolbar").first()
                 panel2 = table_panel.find(".list_content_header_second_row").first()
                 if not jQuery(this).hasClass("active"):
-                    # if panel[0].style.display == "none":
                     panel.show()
                     panel2.show()
                 else:
@@ -312,8 +408,8 @@ def init_table(table, table_type):
                 panel2 = jQuery(".list_content_header_second_row")
                 panel.hide()
                 panel2.hide()
-                # datatable_onresize()
 
+        # Register resize callback on the table element
         def _process_resize(size_object):
             nonlocal table
             datetable_set_height(table[0])
@@ -324,7 +420,22 @@ def init_table(table, table_type):
 window.init_table = init_table
 
 
+# =============================================================================
+# Table loadeddata event handler
+# =============================================================================
+
+
 def table_loadeddata(event):
+    """Handle the loadeddata event for table elements.
+
+    Processes server response markers and updates the table accordingly:
+    - $$RETURN_REFRESH / $$RETURN_REFRESH_PARENT: refresh the table.
+    - $$RETURN_ERROR: refresh with error region.
+    - $$RETURN_HTML_ERROR: show SweetAlert error dialog.
+    - $$RETURN_NEW_ROW_OK / $$RETURN_UPDATE_ROW_OK: append or update a row.
+    - $$RETURN_OK: refresh the table.
+    - Other: delegate to refresh_ajax_frame with 'page' region.
+    """
     if getattr(event, "data"):
         dt = data_type(event.data)
         if dt in ("$$RETURN_REFRESH_PARENT", "$$RETURN_REFRESH"):
@@ -362,14 +473,6 @@ def table_loadeddata(event):
                 pk = int(_data.split("id:")[1].strip())
                 table = event.srcElement if event.srcElement else event.data_source
                 datatable = jQuery(table).find("table[name=tabsort].datatable")
-                # if table.hasAttribute("data-region"):
-                #    data_region = table.getAttribute("data-region")
-                # else:
-                #    data_region = None
-                # link = None
-                # if data_region:
-                #    link = get_ajax_link(table, data_region, True)
-                # if not link:
                 link = get_ajax_link(table, "page-content", True)
                 if not link:
                     link = get_ajax_link(table, "page")
@@ -393,6 +496,7 @@ def table_loadeddata(event):
                     url = process_href(url, jQuery(link.parentElement))
 
                     def _update(data):
+                        """Update or append a row in the datatable."""
                         nonlocal datatable, dt
                         try:
                             d = JSON.parse(data)
@@ -408,7 +512,9 @@ def table_loadeddata(event):
                                         {"id": id2, "row": d["rows"][0]},
                                     )
                                 else:
-                                    datatable.bootstrapTable("refresh", {"silent": True})
+                                    datatable.bootstrapTable(
+                                        "refresh", {"silent": True}
+                                    )
                         except:
                             datatable.bootstrapTable("refresh", {"silent": True})
 
@@ -439,14 +545,33 @@ def table_loadeddata(event):
 window.table_loadeddata = table_loadeddata
 
 
+# =============================================================================
+# Loading template
+# =============================================================================
+
+
 def loading_template(message):
+    """Return a Font Awesome spinner HTML template for loading states."""
     return '<i class="fa fa-spinner fa-spin fa-fw fa-2x"></i>'
 
 
 window.loading_template = loading_template
 
 
+# =============================================================================
+# Table action buttons
+# =============================================================================
+
+
 def datatable_action(btn, action):
+    """Execute an action on the selected rows of a datatable.
+
+    Collects selected row PKs and sends them to the table_action endpoint.
+
+    Args:
+        btn: The button element that triggered the action.
+        action: Action name to send to the server.
+    """
     div = btn.closest("div.tableframe")
     datatable = div.querySelector("table[name=tabsort].datatable")
     url = datatable.getAttribute("data-url") + "../table_action/"
@@ -469,7 +594,17 @@ def datatable_action(btn, action):
 window.datatable_action = datatable_action
 
 
+# =============================================================================
+# Select/Menu toggle visibility
+# =============================================================================
+
+
 def on_check_toggle_visibility():
+    """Toggle visibility of table selection checkboxes and menu button.
+
+    When the 'select' button is clicked, shows/hides the state checkbox
+    column and builds a dropdown menu from data-actions if configured.
+    """
     datatable = this
 
     container = getattr(datatable, "$container")[0]
@@ -503,7 +638,6 @@ def on_check_toggle_visibility():
                         + x[1].strip()
                         + "</button>"
                     )
-                    # html += "<a class ='dropdown-item' href=../action/?'" + x[0] + "' target='" + x[2] + "'>" + x[1] + "</a>"
                 html += "</div>"
 
                 dropdown.innerHTML = html
@@ -513,12 +647,17 @@ def on_check_toggle_visibility():
     menu_btn.style.display = "none"
 
 
-# def on_menu():
-#    datatable = this
-#    alert(datatable)
+# =============================================================================
+# Datatable button definitions
+# =============================================================================
 
 
 def datatable_buttons(obj):
+    """Return button definitions for the Bootstrap Table toolbar.
+
+    Provides 'select' (toggle checkboxes) and 'menu' (dropdown actions)
+    button configurations.
+    """
     return {
         "select": {
             "text": "Select rows",
@@ -531,9 +670,6 @@ def datatable_buttons(obj):
         "menu": {
             "text": "Menu",
             "icon": "fa-bars",
-            #'event': {
-            #    'click': on_menu,
-            # },
             "attributes": {
                 "title": "Menu",
                 "style": "display: none;",

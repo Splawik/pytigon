@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block nav-global %}
-<style>
+<style nonce="{{ csp_nonce }}">
 #header {
     display: none;
 }

@@ -35,7 +35,7 @@
         {% endblock %}
         {% if 'start'|reverse == request.path or request.path == '/'|append_str:URL_ROOT_FOLDER|append_str:"/" %}
                 {% block indexhead %}
-                        <table style="width: 100%;" border="1">
+                        <table class="table-full-width" border="1">
                                 <tr>
                                         <td>login</td>
                                         <td>{% if user.is_authenticated %}0{% else %}1{% endif %}</td>
@@ -72,7 +72,7 @@
                         <h1>Aplikacja:</h1>
                         <h2>SCHWeb</h2>
                         <h3>
-                                <span style="font-weight: bold;">
+                                <span class="font-bold">
                                 Zawartość pola komenda - zawartość pola dane
                                 </span>
                         </h3>
@@ -84,7 +84,7 @@
                         <br>
                         </br>
                         <h1>Menu bar or toolbar:</h1>
-                        <table style="width: 100%;" border="1">
+                        <table class="table-full-width" border="1">
                         <tr>
                                 <th>Menu - poziom 1</th>
                                 <th>Menu - poziom 2</th>
@@ -179,7 +179,7 @@
                         2 - radiotool<br />
                         3 - control, w polu opis długi - kod w pythonie dla obiektu "control"<br />
                 <br />
-                <table style="width: 100%;" border="1">
+                <table class="table-full-width" border="1">
                         <tr>
                                 <th>name</th>
                                 <th>description</th>

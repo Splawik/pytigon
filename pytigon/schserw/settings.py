@@ -1,28 +1,10 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU Lesser General Public License as published by the
-# Free Software Foundation; either version 3, or (at your option) any later
-# version.
-#
-# This program is distributed in the hope that it will be useful, but
-# WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTIBILITY
-# or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-# for more details.
-
-# Pytigon - wxpython and django application framework
-
-# author: "Slawomir Cholaj (slawomir.cholaj@gmail.com)"
-# copyright: "Copyright (C) ????/2012 Slawomir Cholaj"
-# license: "LGPL 3.0"
-# version: "0.1a"
-
 import os
 import sys
 from fs.mountfs import MountFS
 from fs.multifs import MultiFS
 
 from django.conf import settings
+from django.utils.csp import CSP
 
 from pytigon.ext_lib.django_storage import OSFS_EXT
 
@@ -93,7 +75,6 @@ MANAGERS = ADMINS
 TIME_ZONE = "Europe/Warsaw"
 LANGUAGE_CODE = "pl"
 USE_I18N = True
-USE_L10N = False
 SITE_ID = 1
 LANGUAGES = [
     ["en", "English"],
@@ -134,7 +115,6 @@ UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT_PROTECTED, "upload")
 DOC_PATH = os.path.join(MEDIA_ROOT, "doc")
 DOC_PATH_PROTECTED = os.path.join(MEDIA_ROOT_PROTECTED, "doc")
 
-ADMIN_MEDIA_PREFIX = "/media/"
 
 SECRET_KEY = ENV("SECRET_KEY")
 if not SECRET_KEY:
@@ -188,6 +168,7 @@ TEMPLATES = [
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
                 "django.template.context_processors.request",
+                "django.template.context_processors.csp",
                 "pytigon.schserw.schsys.context_processors.sch_standard",
             ],
             "loaders": [
@@ -235,6 +216,7 @@ else:
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.locale.LocaleMiddleware",
         "django.contrib.auth.middleware.RemoteUserMiddleware",
+        "django.middleware.csp.ContentSecurityPolicyMiddleware",
         # "pytigon.schserw.schmiddleware.schpost.view_post",
     ]
 
@@ -625,14 +607,14 @@ def DEFAULT_FILE_STORAGE_FS():
     _m.mount("data", OSFS_EXT(settings.DATA_PATH))
     try:
         _m.mount("temp", OSFS_EXT(settings.TEMP_PATH))
-    except:
+    except Exception:
         pass
     try:
         # _m.mount("media", OSFS_EXT(settings.MEDIA_ROOT))
         _m.mount("site_media", OSFS_EXT(settings.MEDIA_ROOT))
         _m.mount("site_media_protected", OSFS_EXT(settings.MEDIA_ROOT_PROTECTED))
-    except:
-        print("mount error: ")
+    except Exception:
+        print("mount error: site_media paths not available")
 
     try:
         _m.mount("doc", OSFS_EXT(settings.DOC_PATH))
@@ -654,8 +636,8 @@ def DEFAULT_FILE_STORAGE_FS():
             "filer_private_thumbnails",
             OSFS_EXT(os.path.join(settings.UPLOAD_PATH, "filer_private_thumbnails")),
         )
-    except:
-        print("mount error: ")
+    except Exception:
+        print("mount error: doc/upload paths not available")
 
     if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")):
         if platform_name() == "Windows":
@@ -702,7 +684,7 @@ if platform_name() == "Android":
 try:
     CACHES = {"default": ENV.cache()}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
-except:
+except Exception:
     # CACHES = {
     #    "default": {
     #        "BACKEND": "diskcache.DjangoCache",
@@ -785,6 +767,21 @@ PROMETHEUS_ENABLED = False
 if ENV("PROMETHEUS_ENABLED"):
     PROMETHEUS_ENABLED = True
     INSTALLED_APPS.append("django_prometheus")
+
+SECURE_CSP = {
+    "default-src": [CSP.SELF],
+    # Allow self-hosted scripts and script tags with matching `nonce` attr.
+    "script-src": [CSP.SELF, CSP.NONCE],
+    # Example of the less secure 'unsafe-inline' option.
+    "style-src": [
+        CSP.SELF,
+        CSP.UNSAFE_INLINE,
+        # CSP.NONCE,
+        "https://fonts.googleapis.com",
+    ],
+    "font-src": [CSP.SELF, "https://fonts.gstatic.com", "data:"],
+    "img-src": [CSP.SELF, "data:"],
+}
 
 
 def finish(settings):

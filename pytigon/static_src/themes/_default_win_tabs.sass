@@ -1,13 +1,24 @@
-/* Tab - close button on tab */
+// ============================================================================
+// _default_win_tabs.sass
+// ============================================================================
+// Purpose: Tab bar (#tabs2) styling for the default theme.
+// Used by: default theme (default.sass)
+// ----------------------------------------------------------------------------
+// Styles for the secondary tab bar including tab items, close buttons,
+// active state, text overflow handling, and compact tabs beyond 5 items.
+// ============================================================================
+
+/* Tab Bar (#tabs2) */
+/* -------------------------------------------------- */
 
 #tabs2
     border-bottom: 0px
-    
+
     li
         position: relative
 
-        a     
-            //color: #000 
+        // Tab link styling
+        a
             border: medium none
             box-shadow: none !important
             margin-bottom: -3px !important
@@ -15,45 +26,46 @@
             overflow: hidden
             text-overflow: ellipsis
             max-width: 10rem
-            //color: #000 !important;
-            color: var( --bs-dark ) !important;
+            color: var(--bs-dark) !important
+
             &.active
-                color: var(--bs-body-color) !important;
-                background-color: var(--bs-body-bg) !important;
+                color: var(--bs-body-color) !important
+                background-color: var(--bs-body-bg) !important
 
-
-        button 
+        // Close button on tabs
+        button
             position: absolute
             top: 0px
             right: 0px
 
-            &.close 
+            &.close
                 position: absolute
                 right: 1px
                 top: 1px
-                //font-size: 18px
                 padding: 0px 3px
-                margin-top: 0px 
+                margin-top: 0px
                 margin-right: 0px
-                box-shadow: none 
+                box-shadow: none
                 border: none
-                color: var(--bs-body-color) !important;
+                color: var(--bs-body-color) !important
 
-        &.nav-item a.nav-link 
-            //padding: 8px
-            //padding-right: 12px
+        // Nav link within tab item
+        &.nav-item a.nav-link
             padding: 6px 12px 10px 8px
             text-transform: none
             border-top-right-radius: 0.15rem
             border-top-left-radius: 0.15rem
             font-size: small
 
+        // Compact tabs: items beyond the 5th are collapsed to 25px wide
         &:nth-child(1n+6)
             width: 25px
             overflow: hidden
             a
-                //color: rgba(0, 0, 0, 0)
-                color: var(--bs-body-color) !important;
+                color: var(--bs-body-color) !important
+
+/* Desktop Body */
+/* -------------------------------------------------- */
 
 #body_desktop
     height: calc(100% - 10px) !important

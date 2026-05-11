@@ -1,3 +1,9 @@
+"""CEF (Chromium Embedded Framework) browser plugin for Pytigon.
+
+Provides the HTML2 browser control using CEF as the rendering backend.
+This is an alternative to the wx.html2 WebView backend.
+"""
+
 import wx
 from pytigon_gui.guilib.tools import get_colour
 
@@ -15,31 +21,43 @@ def init_plugin_cef(
     accel,
     base_web_browser,
 ):
+    """Initialize the CEF-based browser plugin.
+
+    Args:
+        app: Application instance.
+        mainframe: Main window frame.
+        desktop: Desktop manager.
+        mgr: Plugin manager.
+        menubar: Menu bar.
+        toolbar: Tool bar.
+        accel: Accelerator table.
+        base_web_browser: Base browser mixin class.
+
+    Returns:
+        The cef_shutdown function for cleanup on application exit.
+    """
     from pytigon_lib.schindent.indent_tools import norm_html
     from pytigon_gui.guictrl.ctrl import SchBaseCtrl
     import pytigon_gui.guictrl.ctrl
 
-    try:
-        pass
-    except:
-        pass
-
     from .cefcontrol import CEFControl, cef_shutdown
 
     class Html2(CEFControl, SchBaseCtrl, base_web_browser):
+        """CEF-based embedded browser control."""
+
         logged = False
 
         def __init__(self, parent, **kwds):
+            """Initialize the CEF browser control.
+
+            Args:
+                parent: Parent window.
+                **kwds: Configuration keywords (supports 'component' flag).
+            """
             wx.GetApp().web_ctrl = self
-            self.component = False
-            if "component" in kwds:
-                del kwds["component"]
-                self.component = True
+            self.component = kwds.pop("component", False)
             SchBaseCtrl.__init__(self, parent, kwds)
-            if "style" in kwds:
-                kwds["style"] |= wx.WANTS_CHARS
-            else:
-                kwds["style"] = wx.WANTS_CHARS
+            kwds["style"] = kwds.get("style", 0) | wx.WANTS_CHARS
 
             CEFControl.__init__(self, parent, **kwds)
 
@@ -48,42 +66,60 @@ def init_plugin_cef(
             base_web_browser.__init__(self)
             if hasattr(self.GetParent(), "any_parent_command"):
                 self.GetParent().any_parent_command("set_handle_info", "browser", self)
-
-            if hasattr(self.GetParent(), "any_parent_command"):
                 self.GetParent().any_parent_command("show_info")
 
             self.edit = False
 
-            # self.browser.GetMainFrame().LoadUrl("about:blank")
-
-            if href != None:
+            if href is not None:
                 self.go(href)
 
-            self.afetr_init()
+            self.after_init()
 
         def html_from_str(self, str_body):
+            """Wrap HTML body content with the static file prefix.
+
+            Args:
+                str_body: HTML body content.
+
+            Returns:
+                Complete HTML document string.
+            """
             color = get_colour(wx.SYS_COLOUR_3DFACE)
             return (
                 (
-                    '<!DOCTYPE html><html><head><base href="%s" target="_blank"></head><body bgcolor=\'%s\'>'
-                    % (self._static_prefix(), color)
+                    "<!DOCTYPE html><html><head>"
+                    '<base href="%s" target="_blank">'
+                    "</head><body bgcolor='%s'>" % (self._static_prefix(), color)
                 )
                 + str_body
                 + "</body></html>"
             )
 
         def get_shtml_window(self):
+            """Get the parent SHTML window.
+
+            Returns:
+                Parent window.
+            """
             return self.GetParent()
 
         def _static_prefix(self):
+            """Get the file:// URL prefix for static resources.
+
+            Returns:
+                File URL prefix string.
+            """
             rp = wx.GetApp().root_path
-            if rp[0] == "/":
-                rpp = "file://" + rp.replace("\\", "/") + "/"
-            else:
-                rpp = "file:///" + rp.replace("\\", "/") + "/"
-            return rpp
+            prefix = "file://" if rp[0] == "/" else "file:///"
+            return prefix + rp.replace("\\", "/") + "/"
 
         def load_str(self, data, base=None):
+            """Load an HTML string into the browser.
+
+            Args:
+                data: HTML string to load.
+                base: Optional base URL for relative links.
+            """
             if self.browser:
                 if base:
                     self.browser.GetMainFrame().LoadUrl(
@@ -118,10 +154,16 @@ def init_plugin_cef(
             return self.browser and self.browser.CanGoForward()
 
         def execute_javascript(self, script):
+            """Execute JavaScript in the browser.
+
+            Args:
+                script: JavaScript code to execute.
+            """
             frame = self.browser.GetMainFrame()
             frame.ExecuteJavascript(script)
 
         def on_source(self, event):
+            """Open page source in an editor tab."""
             okno = self.GetParent().new_main_page(
                 "^standard/editor/editor.html",
                 self.GetParent().GetTab().title + " - page source",
@@ -131,6 +173,7 @@ def init_plugin_cef(
             okno.body["EDITOR"].GotoPos(0)
 
         def on_edit(self, event):
+            """Toggle content editable mode."""
             self.edit = not self.edit
             self.browser.SetEditable(self.edit)
 

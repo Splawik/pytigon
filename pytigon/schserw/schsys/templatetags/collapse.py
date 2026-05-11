@@ -37,11 +37,10 @@ class CollapseNode(Node):
         try:
             data = self.nodelist.render(context)
             var = {
-                "data": self.nodelist.render(context),
                 "id": self.extra_context["id"].resolve(context),
                 "title": self.extra_context["title"].resolve(context),
             }
-            if context["standard_web_browser"]:
+            if context.get("standard_web_browser"):
                 var["data"] = data
                 return _collapse_str.format(**var)
             var["data"] = b64encode(data.encode("utf-8")).decode("utf-8")

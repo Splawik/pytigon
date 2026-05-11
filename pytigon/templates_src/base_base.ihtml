@@ -114,7 +114,7 @@
                             % if object|hasattr:"copy_to_clipboard":
                                 tr
                                     td colspan=2:
-                                        textarea class=copy_to_clipboard,,,style=position:absolute;left:-1000px;...{{object.copy_to_clipboard|json_dumps}}
+                                        textarea class=copy_to_clipboard copy-clipboard-hidden...{{object.copy_to_clipboard|json_dumps}}
                                 
                     %% form_ok_cancel_info
                 % if standard_web_browser:
@@ -161,7 +161,7 @@
                 form method=post,,,action={% block form_action%}{{request.path}}{% endblock %},,,name=DialogForm,,,class=ajax-link DialogForm {% block form_class %}{% if not vform %}form-horizontal{% endif %}{% endblock %},,,role=form,,,enctype={% block enctype %}{{form|preferred_enctype}}{% endblock %},,,data-region={% block dialog_form_region %}page-content{% endblock %}
                     % csrf_token
                     %% row_edit_form
-                        table width=100%,,,style=table-layout:fixed;
+                        table width=100%,,,class=table-fixed-layout
                             %if form
                                 % if field:
                                     tr
@@ -214,7 +214,7 @@
                         div class=tr row list_content_header list_content_header_first_row
                             div class=td col-sm-12 hidden-sm-down text-center
                                 %% list_content_title
-                                    h4 style=white-space:nowrap;,,,class=txt3d wiki-title
+                                    h4 class=txt3d wiki-title wiki-title-nowrap
                                         {{title|wiki_href|safe}}
                                         % if settings.DEBUG:
                                             a data-bs-toggle=collapse,,,href=#collapse_{{uuid}},,,role=button...>>
@@ -313,7 +313,7 @@
                         <div class="tableframe flex-grow-1 d-flex flex-row" data-actions="{% block data_actions %}delete/Delete selected rows{% endblock %}">
                     % else:
                         <div class="tableframe flex-grow-1 d-flex flex-row">
-                    <div class="d-flex flex-column flex-grow-1" style="position:relative;margin-right:4px;">
+                    <div class="d-flex flex-column flex-grow-1 table-frame-inner">
                     <div class="tabsort_panel d-flex flex-column flex-grow-1" table-details="{% if table_details_height %}0{% endif %}">
                     % if table_subtype and table_subtype == 'table_with_details':
                         input type=hidden,,,name=table_row_pk,,,value=[[ERROR]]
@@ -323,7 +323,7 @@
                         <div class="ajax-frame ajax-region" data-region="table-content" onloadeddata="table_loadeddata(event);">
                     % else:
                         % if table_type == 'scrolled' or not table_type:
-                            <div class="tbl_scroll ajax-link" data-region="table-content" style="overflow-y:auto;height:100%" href="{{request.path}}">
+                            <div class="tbl_scroll ajax-link tbl-scroll-full" data-region="table-content" href="{{request.path}}">
                         % else:
                             <div class="tbl_scroll ajax-link" data-region="table-content" href="{{request.path}}">
 
@@ -362,7 +362,7 @@
                                         td...{{object}}
                                     %% list_row_end
                                         td
-                                            div class=td_action,,,style=white-space:nowrap
+                                            div class=td_action td-action-nowrap
                                                 %% list_row_actions
                                                     % if readonly
                                                         a href=../{{object.id}}/edit/?childwin=1,,,class=popup,,,name=get,,,title=Select...Select

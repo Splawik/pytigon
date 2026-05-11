@@ -6,7 +6,7 @@
 % load static
 
 %% js_scripts_base
-    script language=javascript
+    script language=javascript,,,nonce={{ csp_nonce }}
         .window.BASE_PATH = '{{base_path}}';
         .window.LOADED = 0
 
@@ -111,13 +111,6 @@
 
     %% botstrap_css
         {% css_link 'bootstrap/css/bootstrap.min.css' %}
-
-%% css_start
-    <style type="text/css">
-
-%% css_end
-    </style>
-
 
 %% page_start
 

@@ -3,7 +3,7 @@
 {% load exsyntax %}
 {% load static %}
 {% block js_scripts_base %}
-        <script language="javascript">
+        <script language="javascript" nonce="{{ csp_nonce }}">
                 window.BASE_PATH = '{{base_path}}';
                 window.LOADED = 0
         </script>
@@ -96,7 +96,7 @@
         {% endblock %}
 {% endblock %}
 {% block css_start %}
-        <style type="text/css">
+        <style type="text/css" nonce="{{ csp_nonce }}">
 {% endblock %}
 {% block css_end %}
         </style>

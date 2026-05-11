@@ -56,7 +56,7 @@ class Example1User(models.Model):
     )
 
 
-admin.site.register(Example1User)
+admin_register(Example1User)
 
 
 class Example1Computer(models.Model):
@@ -90,7 +90,7 @@ class Example1Computer(models.Model):
     )
 
 
-admin.site.register(Example1Computer)
+admin_register(Example1Computer)
 
 
 class Example2Peripheral(models.Model):
@@ -116,7 +116,7 @@ class Example2Peripheral(models.Model):
     )
 
 
-admin.site.register(Example2Peripheral)
+admin_register(Example2Peripheral)
 
 
 class Example3Tag(models.Model):
@@ -164,7 +164,7 @@ class Example3Tag(models.Model):
             return cls.objects.all()
 
 
-admin.site.register(Example3Tag)
+admin_register(Example3Tag)
 
 
 class Example4Parameter(JSONModel):
@@ -214,7 +214,7 @@ class Example4Parameter(JSONModel):
         return self.key
 
 
-admin.site.register(Example4Parameter)
+admin_register(Example4Parameter)
 
 
 class Example5ParamGroup(TreeModel):
@@ -265,7 +265,7 @@ class Example5ParamGroup(TreeModel):
     )
 
 
-admin.site.register(Example5ParamGroup)
+admin_register(Example5ParamGroup)
 
 
 class Example6ComputerFromExample1(Example1Computer):
@@ -281,7 +281,7 @@ class Example6ComputerFromExample1(Example1Computer):
         proxy = True
 
 
-admin.site.register(Example6ComputerFromExample1)
+admin_register(Example6ComputerFromExample1)
 
 
 class Example7ComputerFromExample1(Example1Computer):
@@ -307,4 +307,4 @@ class Example7ComputerFromExample1(Example1Computer):
         )
 
 
-admin.site.register(Example7ComputerFromExample1)
+admin_register(Example7ComputerFromExample1)

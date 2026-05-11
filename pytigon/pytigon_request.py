@@ -1,11 +1,20 @@
+"""HTTP request helpers for pytigon's embedded Django client.
+
+Provides initialization and simplified HTTP request functions that work
+with pytigon's embedded Django HTTP client. Used by GUI and script modes
+to communicate with the internal Django server.
+"""
+
 import os
 import sys
+import logging
 
 from pytigon_lib.schtools.main_paths import get_main_paths
 from pytigon_lib.schhttptools import httpclient
 from django.conf import settings
 
 HTTP = None
+_logger = logging.getLogger("pytigon_request")
 
 
 def init(
@@ -17,6 +26,18 @@ def init(
     ptig_installer=None,
     path_alt=True,
 ):
+    """Initialize the pytigon HTTP client for embedded Django communication.
+
+    Args:
+        prj: Project name.
+        username: Optional login username.
+        password: Optional login password.
+        user_agent: User-Agent string for HTTP requests (default: "pytigon").
+        create_auto_user: If True, create an 'auto' superuser.
+        ptig_installer: Optional .ptig archive data. Can be bytes (binary data),
+            a str file path, or a file-like object.
+        path_alt: If True, extract ptig archive using alternative path logic.
+    """
     global HTTP
 
     if ptig_installer:
@@ -26,7 +47,7 @@ def init(
         if isinstance(ptig_installer, bytes):
             ptig_file = io.BytesIO(ptig_installer)
             ptig = Ptig(ptig_file)
-        elif isinstance(ptig_installer, bytes):
+        elif isinstance(ptig_installer, str):
             ptig_file = open(ptig_installer, "rb")
             ptig = Ptig(ptig_file)
         else:
@@ -62,8 +83,29 @@ def init(
 
 
 def request(url, params=None, user_agent="pytigon"):
-    if params:
-        response = HTTP.post(None, url, params, user_agent=user_agent)
-    else:
-        response = HTTP.get(None, url, user_agent=user_agent)
-    return response
+    """Send an HTTP request via the embedded client.
+
+    Args:
+        url: Target URL path.
+        params: Optional POST parameters. If None, a GET request is sent.
+        user_agent: User-Agent string (default: "pytigon").
+
+    Returns:
+        The HTTP response object.
+
+    Raises:
+        RuntimeError: If init() has not been called before request().
+    """
+    if HTTP is None:
+        raise RuntimeError(
+            "HTTP client not initialized. Call pytigon_request.init() first."
+        )
+
+    try:
+        if params:
+            return HTTP.post(None, url, params, user_agent=user_agent)
+        else:
+            return HTTP.get(None, url, user_agent=user_agent)
+    except Exception as e:
+        _logger.error("HTTP request failed for URL %s: %s", url, e)
+        raise

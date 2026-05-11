@@ -4,9 +4,12 @@
 {% load static %}
 {% load compress %}
 {% block head_start %}
-        <script language="javascript">
-                window.BASE_PATH = '{{base_path}}';
-        </script>
+        <sys-pytigon-init base_path="{{base_path}}"></sys-pytigon-init>
+        {% comment %}
+                <script language="javascript" nonce="{{ csp_nonce }}">
+                        window.BASE_PATH = '{{base_path}}';
+                </script>
+        {% endcomment %}
         {% jscript_link 'pytigon_js/pytigon-tools.js' %}
 {% endblock %}
 {% block js_scripts_base %}
@@ -22,7 +25,7 @@
                 {% jscript_link 'pytigon_js/py_runtime.js' %}
                 {% jscript_link 'system/idiomorph.min.js' %}
                 {% jscript_link 'vanillajs_plugins/sprintf/sprintf.min.js' %}
-                {% jscript_link 'vanillajs_plugins/moment.js/moment.min.js' %}
+                {% jscript_link 'vanillajs_plugins/moment.js/moment-with-locales.min.js' %}
                 {% jscript_link 'vanillajs_plugins/lz-string/lz-string.min.js' %}
                 {% jscript_link 'vanillajs_plugins/cookie/js.cookie.js' %}
                 {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
@@ -154,12 +157,6 @@
                 {% endblock %}
         {% endcompress %}
 {% endblock %}
-{% block css_start %}
-        <style type="text/css">
-{% endblock %}
-{% block css_end %}
-        </style>
-{% endblock %}
 {% block login_header %}
 {% endblock %}
 {% block login_footer %}
@@ -173,13 +170,13 @@
                         {% if request.get_host != '127.0.0.2' %}
                           {% else %}
                                 <li>
-                                        <div style="width:5px; height:10px;"></div>
+                                        <div class="menu-separator"></div>
                                 </li>
                         {% endif %}
                 </ul>
         {% endcomment %}
         <div id="logo_place">
-                <a href="{{base_path}}" class="logo" style="white-space:nowrap;text-align: center;" target="_top">
+                <a href="{{base_path}}" class="logo logo-link" target="_top">
                         {% block logo %}
                                 <span class="logo-lg">
                                         {% if prj_title|length > 20 %}
@@ -215,7 +212,7 @@
                                         {% icon "fa-user fa-lg" %}
                                         <span class="hidden-sm-down">{{user.username}}</span>
                                 </a>
-                                <div class="dropdown-menu dropdown-menu-lg-end" style="width:470px">
+                                <div class="dropdown-menu dropdown-menu-lg-end dropdown-menu-wide">
                                         <div class="dropdown-block">
                                                 <p class="text-xl-center">
                                                         <i class="fa fa-info-circle fa-5x"></i>
@@ -351,7 +348,7 @@
                           {% else %}
                                 <body bgcolor="#{{color_body_1_5}}" style="background:#{{color_body_1_5}}">
                         {% endif %}
-                        <div class="content-wrapper" style=background-color:#fff;>
+                        <div class="content-wrapper content-wrapper-white">
                 {% endif %}
         {% endblock %}
         {% block form_bar %}
@@ -364,7 +361,7 @@
                 {{block.super}}
           {% else %}
                 <div class="tabbable win-content flex-grow-1">
-                        <div id="tab_tabs2" class="d-flex flex-column" style="height:100%">
+                        <div id="tab_tabs2" class="d-flex flex-column full-height">
                                 <ul class="nav nav-tabs win-header append-left mb-2" id="tabs2"></ul>
                                 <div class="tab-content flex-grow-1" id="tabs2_content"></div>
                         </div>
@@ -394,9 +391,9 @@
 {% block body_init %}
         {% block loading-indicator: %}
                         {% if ie %}
-                                <img src="{% get_static_prefix %}images/reload/reload.gif" id="loading-indicator" style="display:none"></img>
+                                <img src="{% get_static_prefix %}images/reload/reload.gif" id="loading-indicator" class="loading-indicator-hidden"></img>
                           {% else %}
-                                <i class="fa fa-refresh fa-pulse fa-2x fa-fw text-info" id="loading-indicator" style="display:none">
+                                <i class="fa fa-refresh fa-pulse fa-2x fa-fw text-info loading-indicator-hidden" id="loading-indicator">
                                 </i>
                         {% endif %}
         {% endblock %}
@@ -445,7 +442,7 @@
                 {% if form.errors %}
                         <meta name="RETURN" content="$$RETURN_RELOAD" />
                         <div class="alert alert-danger alert-dismissable alert-link">
-                                <button class="close btn btn-secondary" type="button" data-bs-dismiss="alert" aria-hidden="true" style="position:absolute;right:0.5rem;"> &#215;</button>
+                                <button class="close btn btn-secondary alert-close-btn" type="button" data-bs-dismiss="alert" aria-hidden="true"> &#215;</button>
                                 <ul class="errorlist">
                                         {% if form.non_field_errors %}
                                                 <li>{{ form.non_field_errors }}</li>

@@ -130,13 +130,13 @@ class download_ptig(forms.Form):
     project = forms.ChoiceField(
         label=_("Project"), required=True, choices=models.get_projects
     )
-    export_db = forms.NullBooleanField(
+    export_db = forms.BooleanField(
         label=_("Export database"),
-        required=True,
+        required=False,
     )
-    export_prj_source = forms.NullBooleanField(
+    export_prj_source = forms.BooleanField(
         label=_("Export project source"),
-        required=True,
+        required=False,
     )
 
 

@@ -1,14 +1,30 @@
+// ============================================================================
+// _default_wiki.sass
+// ============================================================================
+// Purpose: Wiki content styling for rendered wiki/markup pages.
+// Used by: default theme (default.sass)
+// ----------------------------------------------------------------------------
+// Styles for .wiki-frame containers, code highlighting tables, and
+// the .highlight pre block used in wiki content rendering.
+// ============================================================================
+
+/* Wiki Content Styling */
+/* -------------------------------------------------- */
+
+// Code highlight block within wiki content
 div.highlight
     pre
         padding: 10px
         font-size: 12px
 
+// Main wiki frame container
 .wiki-frame
     font-size: 0.9rem
 
     p
-       margin: 0 0 0.2rem
+        margin: 0 0 0.2rem
 
+    // Code highlighting table (line numbers + code)
     table.codehilitetable
         .linenodiv
             padding: 0.5rem
@@ -16,4 +32,4 @@ div.highlight
             color: white
 
         .codehilite
-            padding: 0.5rem;
+            padding: 0.5rem

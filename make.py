@@ -9,6 +9,46 @@ from pytigon_lib.schindent.py_to_js import compile, prepare_python_code
 from jsmin import jsmin
 
 
+def remove_duplicate_exports(input_file, output_file=None):
+    """
+    Removes one of two identical consecutive lines starting with 'export'.
+
+    Args:
+        input_file: Path to the input file
+        output_file: Path to the output file (optional)
+    """
+    if output_file is None:
+        output_file = input_file
+
+    with open(input_file, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    result = []
+    i = 0
+    while i < len(lines):
+        current_line = lines[i]
+
+        # Check if the line starts with 'export'
+        if current_line.strip().startswith("export"):
+            # Check if the next line is identical
+            if i + 1 < len(lines) and lines[i + 1] == current_line:
+                # Add only one copy (skip the duplicate)
+                result.append(current_line)
+                i += 2  # Skip both lines (jump by 2)
+                continue
+
+        result.append(current_line)
+        i += 1
+
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.writelines(result)
+
+    removed = len(lines) - len(result)
+    print(f"Processed: {len(lines)} lines")
+    print(f"Duplicates removed: {removed}")
+    print(f"Result saved to: {output_file}")
+
+
 # def prepare_python_code(code):
 #    exported_id = []
 #    for line in code.split("\n"):
@@ -33,6 +73,7 @@ files = [
     "tabmenu.py",
     "tbl.py",
     "widget.py",
+    "pytigon_inline.py",
     "pytigon.py",
 ]
 
@@ -81,6 +122,8 @@ with open("pytigon.js", "wt") as fout:
             else:
                 fout.write(js)
                 fout.write("\n\n")
+
+remove_duplicate_exports("pytigon.js")
 
 with open("pytigon.js", "rt") as fin:
     with open("pytigon.min.js", "wt") as fout:

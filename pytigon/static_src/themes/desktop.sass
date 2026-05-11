@@ -1,53 +1,19 @@
+// ============================================================================
+// desktop.sass
+// ============================================================================
+// Purpose: Desktop theme entry point. Imports desktop-specific partial
+//          stylesheets to compose the complete desktop theme.
+// ----------------------------------------------------------------------------
+// Import order:
+//   _desktop_menu      - Top menu bar, logo, color-coded tabs
+//   _desktop_win_tabs  - Floating secondary tab bar
+//   _desktop_layout    - Body, content area, header blocks, loading indicator
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Imports
+// ----------------------------------------------------------------------------
+
 @import 'desktop_menu'
 @import 'desktop_win_tabs'
-
-body
-    overflow-x: hidden
-    overflow-y: auto
-    background: gray
-
-body > .body-body
-    //width: 1366px
-    background: white
-
-.desktop_content 
-    padding: 0px
-    min-height: calc(100vh - 5px)
-
-.content 
-    padding-top: 10px
-
-.drop_down_blocks 
-    position: absolute
-    top: 0px
-    right: 0px
-    padding: 9px
-    background: black
-    height: 38px
-
-    > li
-        padding: 0px 16px
-
-        > a
-            color: white
-            text-decoration: none !important
-
-#loading-indicator
-    position: absolute
-    top: 0px
-    left: 0px
-    width: 40px
-    z-index: 1
-
-
-//#tabs, #tabs2, .drop_down_blocks, #menu, #loading-indicator
-//    z-index: 100
-//
-//#tabs, #menu
-//    position: relative
-//
-//#logo_place, .dropdown-menu
-//    z-index: 101
-
-img.tablet_menu_icon, a.menu-href svg
-    vertical-align: middle
+@import 'desktop_layout'

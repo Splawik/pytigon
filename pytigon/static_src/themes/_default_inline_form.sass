@@ -1,4 +1,17 @@
-/* Inline form */
+// ============================================================================
+// _default_inline_form.sass
+// ============================================================================
+// Purpose: Inline form styling for modal dialogs, table filters, and
+//          inline dialog frames.
+// Used by: default theme (default.sass)
+// ----------------------------------------------------------------------------
+// Styles for inline modal dialogs (.modal-dialog-inline), inline form groups
+// (.form-inline), table filters, refresh buttons, maximized modals,
+// inline dialog frames, and plug-row highlighting.
+// ============================================================================
+
+/* Inline Modal Dialog */
+/* -------------------------------------------------- */
 
 .modal-dialog-inline > div > div > .modal-header
     padding-bottom: 0.2rem
@@ -8,18 +21,20 @@
     max-height: calc(100vh - 8rem)
     overflow-y: auto
     overflow-x: hidden
- 
     padding-left: 0.3rem
     padding-right: 0.3rem
     padding-top: 0.5rem
     margin-bottom: 0.5rem
 
-.form-inline .form-group, .form-inline div.checkbox 
+/* Inline Form Groups */
+/* -------------------------------------------------- */
+
+.form-inline .form-group, .form-inline div.checkbox
     padding: 2px
     margin-right: 15px
 
-
 .form-inline .form-group
+    // Minimum widths for select2 and choice fields
     .select2field
         min-width: 10rem
 
@@ -35,37 +50,38 @@
     .abc-checkbox
         padding-left: 17px
 
-
+// Date field minimum width
 .form-inline .form-group .datefield input
     min-width: 120px
 
-
-.form-inline .form-group select.form-control 
+// Inline select padding
+.form-inline .form-group select.form-control
     padding-top: 2px
     padding-bottom: 2px
     padding-right: 1rem
 
+// Inline form labels
+.form-inline .form-group label :not(.upload)
+    padding-right: 8px
+    background: transparent
 
-.form-inline .form-group
-    label :not(.upload)
-        padding-right: 8px
-        background: transparent
+.form-inline .form-group label.upload
+    position: relative
 
-    label.upload 
-        position: relative
-
-
-.form-inline .form-group .numberinput 
+// Number input width
+.form-inline .form-group .numberinput
     width: 100px
     padding-left: 5px
     padding-right: 5px
 
-
-.form-inline  .datetimeinput 
+// DateTime input width
+.form-inline .datetimeinput
     width: 9rem !important
 
+/* Refresh Button */
+/* -------------------------------------------------- */
 
-.refresh-button 
+.refresh-button
     position: absolute !important
     right: 3px
     bottom: 3px
@@ -78,6 +94,8 @@
     border-radius: 30px
     z-index: 1
 
+/* Table Filter Form */
+/* -------------------------------------------------- */
 
 .table_filter
     margin-top: 0px
@@ -85,23 +103,26 @@
     margin-left: 0px
     margin-right: 50px
 
-
 form.table_filter label
-    font-style:italic
+    font-style: italic
 
-
+// Colon after filter labels
 form.table_filter label:not(.form-check-label):not(.upload)::after
     content: ":"
     background-color: transparent !important
 
+// No colon for floating labels in filter
 form.table_filter .form-floating label:not(.form-check-label):not(.upload)::after
     content: "" !important
     background-color: transparent !important
 
-
+// Explicit no-colon class
 form.table_filter label.nocolon::after
     content: "" !important
     background-color: transparent !important
+
+/* Inline Dialog in Tab Content */
+/* -------------------------------------------------- */
 
 div.tab-content .modal-dialog-inline
     position: relative
@@ -109,20 +130,28 @@ div.tab-content .modal-dialog-inline
     right: 0px
     top: 0px
 
+/* Subform Frame within Modal */
+/* -------------------------------------------------- */
+
 .modal-dialog
     .subform_frame
         margin: 15px 15px
 
+/* Maximized Modal Content */
+/* -------------------------------------------------- */
 
 div.modal-content.maximized
     position: fixed
     top: -5px
     left: -5px
-    width: calc( 100% + 10px )
-    height: calc( 100vh + 10px )
+    width: calc(100% + 10px)
+    height: calc(100vh + 10px)
     z-index: 9000
     overflow-y: auto
     overflow-x: hidden
+
+/* Inline Dialog Frame */
+/* -------------------------------------------------- */
 
 div.inline-dialog-frame
     position: fixed
@@ -132,14 +161,16 @@ div.inline-dialog-frame
     bottom: 1rem
     max-height: calc(100% - 1rem)
 
-    div.inline-dialog-frame 
+    // Nested inline dialog - extra indent
+    div.inline-dialog-frame
         left: 2rem
         bottom: 2rem
 
-.inline-content
-    //margin-top: -4.5rem
-    z-index: 1000
+/* Inline Content */
+/* -------------------------------------------------- */
 
+.inline-content
+    z-index: 1000
 
 .modal-content.inline-content
     padding: 0.5rem
@@ -149,8 +180,8 @@ div.inline-dialog-frame
     border-radius: var(--bs-border-radius-lg)
     outline: 0
 
+/* Plug Row Highlight */
+/* -------------------------------------------------- */
+
 tr.plug > td
     background-color: var(--bs-warning)
-
-
-    

@@ -99,7 +99,7 @@ class Album(models.Model):
         return form_class
 
 
-admin.site.register(Album)
+admin_register(Album)
 
 
 class AlbumProxy(Album):
@@ -115,7 +115,7 @@ class AlbumProxy(Album):
         proxy = True
 
 
-admin.site.register(AlbumProxy)
+admin_register(AlbumProxy)
 
 
 class UserGroup(models.Model):
@@ -129,7 +129,7 @@ class UserGroup(models.Model):
         ordering = ["id"]
 
 
-admin.site.register(UserGroup)
+admin_register(UserGroup)
 
 
 class Track(models.Model):
@@ -178,4 +178,4 @@ class Track(models.Model):
     )
 
 
-admin.site.register(Track)
+admin_register(Track)

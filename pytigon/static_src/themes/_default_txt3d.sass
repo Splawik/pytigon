@@ -1,13 +1,28 @@
+// ============================================================================
+// _default_txt3d.sass
+// ============================================================================
+// Purpose: 3D text effect styles used for decorative headings and titles.
+// Used by: default theme (default.sass)
+// ----------------------------------------------------------------------------
+// Provides the .txt3d class with text-shadow for a raised/embossed look,
+// and a .txt3d.wiki-title variant for wiki page titles.
+// ============================================================================
+
+/* 3D Text Effects */
+/* -------------------------------------------------- */
+
+// Base 3D text effect with layered shadows for depth
 .txt3d
     font-weight: 900
-    text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2), 4px 4px 5px rgba(0, 0, 0, 0.4 )
+    text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2), 4px 4px 5px rgba(0, 0, 0, 0.4)
     span
         vertical-align: middle
 
-.txt3d.wiki-title 
+// Wiki title variant of 3D text
+.txt3d.wiki-title
     font-size: 1.2rem
-    a 
+    a
         color: white
 
     span
-        color: antiquewhite;
+        color: antiquewhite

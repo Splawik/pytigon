@@ -208,8 +208,8 @@ def truncate(value, arg):
     """Truncates the value to 'arg' characters, appending '...' if necessary."""
     try:
         retstr = str(value)
-    except:
-        retstr = unicode(value)
+    except Exception:
+        retstr = str(value)
 
     if len(retstr) > int(arg):
         return retstr[: int(arg) - 3] + "..."
@@ -484,7 +484,7 @@ def sysisoformat(value):
     """Formats the value as an ISO date string, handling system-specific formats."""
     if value:
         try:
-            if type(value) == str:
+            if isinstance(value, str):
                 x = value[:10].replace("-", " ").replace(".", " ").split(" ")
                 if len(x[0]) == 4:
                     x2 = value[:10]
@@ -711,6 +711,7 @@ def get_model_fields_names(obj):
 @register.filter(name="get_model_fields_verbose_names")
 def get_model_fields_verbose_names(obj):
     """Returns a list of verbose names for the model fields."""
+    ret = []
     if hasattr(obj, "_meta"):
         for field in obj._meta.get_fields():
             if hasattr(obj, field.name):
@@ -911,12 +912,12 @@ def textfiel_row_col(field, arg):
 
 def ooxml(value):
     """Converts the value to a string suitable for OOXML."""
-    if type(value) in (datetime.datetime, datetime.date):
+    if isinstance(value, (datetime.datetime, datetime.date)):
         if value:
             return value.isoformat()
         else:
             return "0"
-    elif type(value) in (float, int):
+    elif isinstance(value, (float, int)):
         if value:
             return str(value)
         else:
@@ -1057,7 +1058,7 @@ def append_uuid(var):
 @register.filter(name="append_suffix")
 def append_suffix(value, s):
     """Appends the suffix to the value."""
-    if s == None or s == "":
+    if s is None or s == "":
         return value
     else:
         if value.endswith(s):
@@ -1068,8 +1069,8 @@ def append_suffix(value, s):
 
 @register.filter(name="remove_suffix")
 def remove_suffix(value, s):
-    """Removes the suffix from the value"""
-    if s == None or s == "":
+    """Removes the suffix from the value."""
+    if s is None or s == "":
         return value
     else:
         if value.endswith(s):

@@ -1,3 +1,19 @@
+// ============================================================================
+// smartfon.sass
+// ============================================================================
+// Purpose: Smartphone/mobile theme styles. Optimized for small screens with
+//          compact navigation, repositioned loading indicator, and adjusted
+//          tab bars for touch interaction.
+// ----------------------------------------------------------------------------
+// Covers: viewport settings, body overflow, content margins, loading
+// indicator (top-right), tabsort panel spacing, navbar brand sizing,
+// top menu (#topmenu) with larger touch targets, secondary tabs (#tabs2)
+// with semi-transparent background and close buttons, and toolbar expand.
+// ============================================================================
+
+/* HTML & Body */
+/* -------------------------------------------------- */
+
 html
     overflow-x: hidden
     overflow-y: auto
@@ -8,8 +24,14 @@ body
     overflow-y: auto
     height: 100vh
 
+/* Content Area */
+/* -------------------------------------------------- */
+
 div.content
     margin-top: 5px
+
+/* Loading Indicator */
+/* -------------------------------------------------- */
 
 #loading-indicator
     position: absolute
@@ -18,23 +40,36 @@ div.content
     right: 0.55rem
     z-index: 1
 
+/* Tabsort Panel */
+/* -------------------------------------------------- */
+
 .tabsort_panel
     margin-top: 0.5rem
+
+/* Navbar Brand */
+/* -------------------------------------------------- */
 
 a.navbar-brand
     max-width: 180px
     margin-top: -0.5rem
+
+/* Top Menu (#topmenu) */
+/* -------------------------------------------------- */
 
 #topmenu
     margin-bottom: 2px
     position: relative
     padding: 0.5rem 0.5rem
 
+    // Larger touch targets for dropdown items
     div.dropdown-menu a
         padding: 0.7rem 1.5rem
 
     ul.navbar-nav li.nav-item a
         font-size: 1rem
+
+/* Secondary Tabs (#tabs2) */
+/* -------------------------------------------------- */
 
 #tabs2
     background: rgba(0,0,0,0.05)
@@ -54,6 +89,9 @@ a.navbar-brand
         .close
             margin-top: 2px
             margin-right: 2px
+
+/* Tabsort Toolbar Expand (Mobile Variant) */
+/* -------------------------------------------------- */
 
 .tabsort-toolbar-expand2
     position: absolute !important

@@ -1,9 +1,14 @@
-/* main */
+/* ========================================================================
+ 1. HTML & Body
+ @mixin ======================================================================= */
 html {
   overflow-x: hidden;
   overflow-y: auto;
   height: 100vh; }
 
+/* ========================================================================
+ 2. Content Area
+ @mixin ======================================================================= */
 section.content {
   background-color: #fff;
   margin: 0px;
@@ -12,7 +17,9 @@ section.content {
 div.content {
   padding-top: 10px; }
 
-/* application structure */
+/* ========================================================================
+ 3. Sidebar Menu Structure
+ @mixin ======================================================================= */
 sys-sidebarmenu {
   background-color: black; }
 
@@ -43,6 +50,9 @@ img.tablet_menu_icon, a.menu-href svg {
   left: 52px;
   right: 200px; }
 
+/* ========================================================================
+ 4. Logo
+ @mixin ======================================================================= */
 .logo {
   height: 3.2rem;
   font-size: 22px;
@@ -51,11 +61,13 @@ img.tablet_menu_icon, a.menu-href svg {
   border-left: none !important;
   background: var(--bg-primary) !important; }
 
+/* ========================================================================
+ 5. Top Navbar (Main Header)
+ @mixin ======================================================================= */
 #loading-indicator {
   position: absolute;
   z-index: 1; }
 
-/* top navbar */
 .main-header .navbar {
   -webkit-transition: margin-left 0.3s ease-in-out;
   -o-transition: margin-left 0.3s ease-in-out;
@@ -130,7 +142,9 @@ header.main-header nav.navbar {
 .main-header .navbar-collapse div.card {
   width: 400px; }
 
-/* sidebar menu */
+/* ========================================================================
+ 6. Sidebar Menu Items
+ @mixin ======================================================================= */
 section.sidebar {
   min-height: 100%; }
 
@@ -142,17 +156,6 @@ ul.sidebar-menu ul.treeview-menu {
 
 .sidebar-menu > li > a > .fa-lg {
   width: 24px !important; }
-
-.tabsort-toolbar-expand2 {
-  top: -40px !important;
-  left: 50px !important; }
-
-.tabsort .badge-secondary {
-  background: #868e96; }
-
-.dropdown-menu-right {
-  right: 0px;
-  left: auto; }
 
 .sidebar-menu ul.sidebar-submenu li a {
   overflow: hidden;
@@ -225,6 +228,23 @@ ul.sidebar-menu ul.treeview-menu {
 
 ul.treeview-menu a .fa {
   width: 20px; }
+
+/* ========================================================================
+ 7. Tabsort Toolbar
+ @mixin ======================================================================= */
+.tabsort-toolbar-expand2 {
+  top: -40px !important;
+  left: 50px !important; }
+
+/* ========================================================================
+ 8. Miscellaneous
+ @mixin ======================================================================= */
+.tabsort .badge-secondary {
+  background: #868e96; }
+
+.dropdown-menu-right {
+  right: 0px;
+  left: auto; }
 
 #tabs2_content {
   overflow-y: auto; }

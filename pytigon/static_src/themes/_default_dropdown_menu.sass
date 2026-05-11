@@ -1,5 +1,17 @@
-/* dropdown menu */
+// ============================================================================
+// _default_dropdown_menu.sass
+// ============================================================================
+// Purpose: Dropdown menu styling for user menus and table action menus.
+// Used by: default theme (default.sass)
+// ----------------------------------------------------------------------------
+// Styles for .user-menu dropdowns (user profile menu) and .tabsort table
+// action dropdown menus with scrolling support.
+// ============================================================================
 
+/* Dropdown Menu */
+/* -------------------------------------------------- */
+
+// User menu dropdown with padded content blocks
 .user-menu
     white-space: nowrap
 
@@ -11,11 +23,10 @@
             p
                 font-size: 0.8rem
 
-
+// Table action dropdown inside tabsort panels
 .tabsort
     .td_action
         div.dropdown-menu
             width: 22rem
-            height: 10rem;
-            overflow-y: scroll;
-
+            height: 10rem
+            overflow-y: scroll

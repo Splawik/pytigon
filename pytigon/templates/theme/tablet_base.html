@@ -23,7 +23,7 @@
                                 <div sidebar-menu>
                                         <ul class="sidebar-menu">
                                                 <li class="bg-primary">
-                                                        <a href="{{base_path}}" class="logo txt3d text-white" style="white-space:nowrap;" target="_top">
+                                                        <a href="{{base_path}}" class="logo txt3d text-white logo-link" target="_top">
                                                                 {% block logo %}
                                                                         <span class="logo-lg">
                                                                                 {% if prj_title|length > 20 %}
@@ -169,9 +169,9 @@
         <header class="main-header win-header bg-primary">
                 <nav class="navbar navbar-toggleable-md bg-primary">
                         {% if ie %}
-                                <img src="{% get_static_prefix %}images/reload/reload.gif" id="loading-indicator" style="display:none"></img>
+                                <img src="{% get_static_prefix %}images/reload/reload.gif" id="loading-indicator" class="loading-indicator-hidden"></img>
                           {% else %}
-                                <i class="fa fa-refresh fa-pulse fa-2x fa-fw text-info" id="loading-indicator" style="display:none">
+                                <i class="fa fa-refresh fa-pulse fa-2x fa-fw text-info loading-indicator-hidden" id="loading-indicator">
                                 </i>
                         {% endif %}
                         <button class="main-sidebar-toggle sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %}" role="button" title="Toggle navigation">
@@ -228,7 +228,7 @@
                                                                 {% icon "fa-user fa-lg" %}
                                                                 <span class="hidden-sm-down">{{user.username}}</span>
                                                         </a>
-                                                        <div class="dropdown-menu dropdown-menu-lg-end" style="width:470px">
+                                                        <div class="dropdown-menu dropdown-menu-lg-end dropdown-menu-wide">
                                                                 <div class="dropdown-block">
                                                                         <p class="text-xl-center">
                                                                                 <i class="fa fa-info-circle fa-5x"></i>

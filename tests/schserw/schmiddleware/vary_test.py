@@ -36,10 +36,13 @@ def test_process_response_without_set_vary(vary_middleware):
 
 
 def test_process_response_exception_handling(vary_middleware):
+    """Test that process_response handles exceptions gracefully
+    (missing headers attribute)."""
     request = HttpRequest()
     request.set_vary = "User-Agent"
     response = HttpResponse()
     # Simulate an error by removing the headers attribute
     delattr(response, "headers")
-    with pytest.raises(MiddlewareNotUsed):
-        vary_middleware.process_response(request, response)
+    # Should not raise - the exception is caught and logged
+    result = vary_middleware.process_response(request, response)
+    assert result is response

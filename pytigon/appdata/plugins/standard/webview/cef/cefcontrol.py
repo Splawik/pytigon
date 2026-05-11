@@ -1,10 +1,16 @@
+"""CEF (Chromium Embedded Framework) control for Pytigon.
+
+Provides the CEFControl wx widget that embeds a Chromium browser
+and handles resource interception for local content.
+"""
+
 import platform
 from django.core.files.storage import default_storage
 
 import wx
 
 from cefpython3 import cefpython as cef
-from schcef import initialize, shutdown, create_browser
+from .schcef import initialize, shutdown, create_browser
 
 CEF_INITIATED = False
 TIMER = None
@@ -227,7 +233,6 @@ class ClientHandler:
             "http://127.0.0.2/"
         ) or request.GetUrl().startswith("memory://127.0.0.2/"):
             uri = request.GetUrl()
-            print("R: ", uri)
             data, file_name = self.htmlwin._get_http_file(
                 uri.replace("memory:", "http:")
             )
@@ -295,7 +300,6 @@ class ClientHandler:
     def OnLoadError(self, browser, frame, error_code, error_text_out, failed_url):
         event = wx.CommandEvent()
         # event.SetString(error_text_out)
-        print(error_text_out)
         if self.htmlwin:
             self.htmlwin.on_load_error(event)
             self.htmlwin.progress_changed(100)
@@ -320,7 +324,6 @@ class ClientHandler:
     # def OnConsoleMessage(self, browser, message, line, **_):
 
     def OnConsoleMessage(self, browser, level, message, source, line):
-        print("M:", message, source, line, level)
         # return True
         return False
 

@@ -1,12 +1,47 @@
-# from pytigon_js.tabmenu import get_menu
-# from pytigon_js.tools import Loading, is_visible, correct_href, ajax_get, get_template, super_insert, remove_element, process_resize, can_popup, get_elem_from_string
-# from pytigon_js.ajax_region import get_ajax_region, refresh_ajax_frame, mount_html
+"""
+Event handling and navigation target routing module.
+
+This is the core event system that handles:
+- Global event delegation (click, submit, keypress) with selector matching.
+- URL processing with template placeholder substitution ([[variable]]).
+- Navigation target dispatching: inline, popup, tab, subpage, subframe, etc.
+- Dialog creation and lifecycle management (modal/inline).
+- History-based close/back navigation for subpages and subframes.
+
+The EVENT_CLICK_TAB table maps target names to handler functions:
+    Target types: inline, inline_edit, inline_info, inline_delete,
+    popup, popup_edit, popup_info, popup_delete, popup_error,
+    _top, _self, _parent, page, subpage, subframe,
+    refresh_frame, close_frame, refresh_page, refresh_app, message, null
+
+Dependencies (pscript cross-module):
+    pytigon_js.tabmenu: get_menu
+    pytigon_js.tools: Loading, is_visible, correct_href, ajax_get,
+                      get_template, super_insert, remove_element,
+                      process_resize, can_popup, get_elem_from_string
+    pytigon_js.ajax_region: get_ajax_region, refresh_ajax_frame, mount_html
+"""
+
+# =============================================================================
+# Global event delegation system
+# =============================================================================
 
 EVENT_TAB = []
 REGISTERED_EVENT_TYPES = []
 
 
-def _chcek_element(element, selector):
+def _check_element(element, selector):
+    """Check if an element matches a CSS-like selector.
+
+    Supports tag.class, #id, and plain tag selectors.
+
+    Args:
+        element: DOM element to test.
+        selector: Selector string (e.g. 'a.menu-href', '#myid', 'button').
+
+    Returns:
+        bool: True if the element matches the selector.
+    """
     if not selector:
         return True
     if "." in selector:
@@ -34,6 +69,19 @@ def _chcek_element(element, selector):
 
 
 def _get_title(element, data_element, url):
+    """Extract a title from element attributes or response data.
+
+    Priority: element's title attribute > data's <title> tag > truncated URL.
+
+    Args:
+        element: Source DOM element.
+        data_element: Response data element (may contain <title>).
+        url: Fallback URL for generating title.
+
+    Returns:
+        tuple: (title, title_alt) where title_alt is the alternate title
+               from the data element (empty string if none).
+    """
     title = element.getAttribute("title")
     if data_element:
         title_element = data_element.querySelector("title")
@@ -57,12 +105,21 @@ def _get_title(element, data_element, url):
 
 
 def on_global_event(self, event):
+    """Global event dispatcher - routes events to registered handlers.
+
+    Walks up the DOM tree from the event target, checking each element
+    against registered selectors. Stops at the body element.
+
+    Args:
+        self: The event target element.
+        event: The DOM event object.
+    """
     global EVENT_TAB
     for pos in EVENT_TAB:
         if pos[0] == event.type:
             element = event.target
             while element:
-                if _chcek_element(element, pos[2]):
+                if _check_element(element, pos[2]):
                     return pos[1](event, element)
                 element = element.parentElement
                 if element and element.tagName.lower() == "body":
@@ -70,6 +127,16 @@ def on_global_event(self, event):
 
 
 def register_global_event(event_type, fun, selector):
+    """Register a global event handler with optional CSS selector filter.
+
+    On first registration for an event type, adds a single event listener
+    to document.body that dispatches to all registered handlers.
+
+    Args:
+        event_type: DOM event name (e.g. 'click', 'submit', 'keypress').
+        fun: Handler function(event, element).
+        selector: CSS-like selector to filter target elements, or None.
+    """
     if not event_type in REGISTERED_EVENT_TYPES:
         document.body.addEventListener(event_type, on_global_event)
         REGISTERED_EVENT_TYPES.append(event_type)
@@ -79,7 +146,25 @@ def register_global_event(event_type, fun, selector):
 window.register_global_event = register_global_event
 
 
+# =============================================================================
+# URL template processing
+# =============================================================================
+
+
 def _get_value(elem, name):
+    """Resolve a template variable to its value.
+
+    Variables starting with '$' reference window properties.
+    Other variables are looked up in form inputs within the current
+    region, page, or document scope.
+
+    Args:
+        elem: jQuery element providing context for the lookup.
+        name: Variable name (with optional '$' prefix for window scope).
+
+    Returns:
+        The resolved value, or '[[ERROR]]' if not found.
+    """
     if name.startswith("$"):
         name = name[1:]
         if hasattr(window, name):
@@ -97,6 +182,18 @@ def _get_value(elem, name):
 
 
 def process_href(href, elem):
+    """Replace [[variable]] placeholders in a URL with actual values.
+
+    Placeholders are resolved via _get_value. If a value is None,
+    the placeholder is replaced with an empty string.
+
+    Args:
+        href: URL string possibly containing [[...]] placeholders.
+        elem: jQuery element providing context for value resolution.
+
+    Returns:
+        str: The processed URL with placeholders replaced.
+    """
     ret = []
     if "[[" in href and "]]" in href:
         x1 = href.split("[[")
@@ -124,7 +221,22 @@ def process_href(href, elem):
 window.process_href = process_href
 
 
+# =============================================================================
+# Click event routing
+# =============================================================================
+
+
 def _get_click_event_from_tab(target_element, target, href):
+    """Look up the handler for a given target type in EVENT_CLICK_TAB.
+
+    Args:
+        target_element: The clicked DOM element.
+        target: Target name (e.g. 'inline', 'popup', '_top').
+        href: The URL being navigated to.
+
+    Returns:
+        tuple: (url, callback) or (None, None) if no match found.
+    """
     global EVENT_CLICK_TAB
     for pos in EVENT_CLICK_TAB:
         if pos[0] == "*" or pos[0] == target:
@@ -135,13 +247,33 @@ def _get_click_event_from_tab(target_element, target, href):
 
 
 def on_click_default_action(event, target_element):
+    """Handle click/submit events and route to the appropriate action.
+
+    This is the main event handler for navigation. It:
+    1. Resolves data-link indirection.
+    2. Extracts href/action/src from the target element.
+    3. Determines the target type and finds the matching handler.
+    4. For forms: detects file uploads, PDF/ODF generation.
+    5. Executes GET/POST AJAX requests with loading indicators.
+    6. Routes responses through the target handler callbacks.
+
+    Args:
+        event: The DOM event object.
+        target_element: The clicked/submitted element.
+
+    Returns:
+        True if the event was handled (prevent default navigation),
+        None for _blank target (allow default).
+    """
     global EVENT_CLICK_TAB
 
+    # Handle data-link indirection: redirect the click to another element
     if target_element.hasAttribute("data-link"):
         obj = super_query_selector(
             target_element, target_element.getAttribute("data-link")
         )
         if obj:
+            # Merge URLs from the source and target elements
             tmp_url1 = window.element_get_url(obj)
             tmp_url2 = window.element_get_url(target_element)
             if tmp_url1 != None and tmp_url2:
@@ -149,18 +281,13 @@ def on_click_default_action(event, target_element):
             setattr(obj, "data", target_element)
             ret = on_click_default_action(event, obj)
             setattr(obj, "data", None)
-            # if tmp_url1 != None and tmp_url2:
-            #    window.element_set_url(obj, tmp_url1)
             return ret
 
     target = target_element.getAttribute("target")
 
-    # if window.APPLICATION_TEMPLATE == "traditional":
-    #    if not target or (target and target in ("_self", "_parent", "_top")):
-    #        return False
-
     src_obj = jQuery(target_element)
 
+    # Extract URL from various possible attributes
     href = target_element.getAttribute("xlink:href")
     if not href:
         href = target_element.getAttribute("href")
@@ -169,15 +296,18 @@ def on_click_default_action(event, target_element):
     if not href:
         href = target_element.getAttribute("src")
 
+    # Hash-only links are handled by the browser
     if href and "#" in href:
         return True
 
+    # Editable elements handle their own clicks
     if src_obj.hasClass("editable"):
         return True
 
     if href:
         href = process_href(href, jQuery(target_element))
 
+    # Form handling: detect file uploads, PDF/ODF generation
     if target_element.tagName.lower() == "form":
         if target_element.getAttribute("target") == "_blank":
             target_element.setAttribute("enctype", "multipart/form-data")
@@ -203,11 +333,11 @@ def on_click_default_action(event, target_element):
     else:
         param = None
         if target == "_blank":
-            # event.preventDefault()
-            # window.open(href, target)
+            # Let the browser handle _blank links normally
             return
 
     def _get_or_post(url, callback, data2=None):
+        """Execute the AJAX request and route the response."""
         nonlocal target_element, target, param, event
 
         req = None
@@ -217,6 +347,7 @@ def on_click_default_action(event, target_element):
         loading.start()
 
         def _callback(data):
+            """Process the AJAX response and dispatch to the handler."""
             nonlocal target_element, target, param, event, url, callback, loading, req
 
             element = None
@@ -224,6 +355,7 @@ def on_click_default_action(event, target_element):
             loading.stop()
             loading.remove()
 
+            # Check for meta redirect in the response
             data_element = get_elem_from_string(data)
             if (
                 data_element.nodeName == "META"
@@ -249,6 +381,7 @@ def on_click_default_action(event, target_element):
             return element
 
         def _callback_on_error(req):
+            """Handle AJAX errors."""
             nonlocal loading
             loading.stop()
             loading.remove()
@@ -262,6 +395,7 @@ def on_click_default_action(event, target_element):
         else:
             _callback(data2)
 
+    # Find the matching handler for this target
     url, callback = _get_click_event_from_tab(target_element, target, href)
     if callback:
         if param == "file":
@@ -279,7 +413,11 @@ def on_click_default_action(event, target_element):
 
 
 def _on_menu_click(event, target_element):
-    # if window.APPLICATION_TEMPLATE != "traditional":
+    """Handle menu link clicks with mobile collapse support.
+
+    If the navbar toggler is visible (mobile view), collapses the menu
+    first and then processes the click after the collapse animation.
+    """
     event.preventDefault()
     toggler = document.querySelector("#topmenu .navbar-toggler")
     if toggler and is_visible(toggler):
@@ -295,8 +433,7 @@ def _on_menu_click(event, target_element):
         on_click_default_action(event, target_element)
 
 
-# window.on_click_default_action = on_click_default_action
-
+# Register global event handlers
 register_global_event("click", _on_menu_click, "a.menu-href")
 
 register_global_event("click", on_click_default_action, "a")
@@ -305,6 +442,20 @@ register_global_event("submit", on_click_default_action, "form")
 
 
 def create_event_handler(href, target="inline_info", position="div.page.active"):
+    """Create a synthetic click event handler for programmatic navigation.
+
+    Creates a temporary <a> element, attaches it to the DOM, simulates
+    a click, and returns a handler function.
+
+    Args:
+        href: URL to navigate to.
+        target: Target type (default 'inline_info').
+        position: CSS selector for where to attach the temporary element.
+
+    Returns:
+        A handler function that triggers the navigation when called.
+    """
+
     def _handler(event):
         nonlocal href, target, position
         a = document.createElement("a")
@@ -320,7 +471,20 @@ def create_event_handler(href, target="inline_info", position="div.page.active")
 window.create_event_handler = create_event_handler
 
 
+# =============================================================================
+# Scroll utilities
+# =============================================================================
+
+
 def _get_scrolled_parent(node):
+    """Find the nearest scrollable ancestor of a node.
+
+    Args:
+        node: Starting DOM node.
+
+    Returns:
+        The first ancestor with scrollHeight > clientHeight, or None.
+    """
     if node == None:
         return None
     if node.scrollHeight > node.clientHeight:
@@ -329,9 +493,38 @@ def _get_scrolled_parent(node):
         return _get_scrolled_parent(node.parentNode)
 
 
+# =============================================================================
+# Inline dialog creation
+# =============================================================================
+
+
 def _on_inline(target_element, data_element, url, param, event, template_name):
+    """Create an inline (non-modal) dialog within the page flow.
+
+    Inline dialogs are embedded in the page rather than floating as modals.
+    They can be positioned after a table row (tr), in a div slot, or within
+    a plug container.
+
+    Features:
+    - Auto-scrolling to keep the dialog visible.
+    - Copy-to-clipboard support for INFO dialogs.
+    - Maximize/minimize via CSS classes.
+    - After-close refresh callbacks.
+
+    Args:
+        target_element: The element that triggered the dialog.
+        data_element: The content to display.
+        url: Source URL (may contain after_close= parameter).
+        param: Request parameters.
+        event: The triggering DOM event.
+        template_name: Template key (INLINE, INLINE_EDIT, INLINE_INFO, ...).
+
+    Returns:
+        The created dialog slot DOM element.
+    """
     inline_position = target_element.getAttribute("data-inline-position")
 
+    # Create dialog slot based on positioning type
     if inline_position and inline_position.split(":")[0].endswith("tr"):
         dialog_slot = document.createElement("tr")
         child = document.createElement("td")
@@ -346,33 +539,36 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
 
     dialog_slot.classList.add("plug")
 
+    # Render the inline template with title and href
     dialog_slot2.innerHTML = get_template(
         template_name.replace("MODAL", "INLINE"),
         {"title": _get_title(target_element, data_element, url)[0], "href": url},
     )
 
+    # Apply visual effects to the trigger element
     target_element.setAttribute("data-style", "zoom-out")
     target_element.setAttribute("data-spinner-color", "#FF0000")
 
     content = dialog_slot.querySelector("div.dialog-data")
 
+    # Handle ajax-temp-item container unwrapping
     if data_element.tagName.lower() == "div" and data_element.classList.contains(
         "ajax-temp-item"
     ):
         for item in Array.prototype.slice.call(data_element.childNodes):
             content.appendChild(item)
     else:
-        content.appendChild(data_or_html)
-
-    # content.appendChild(data_element)
+        content.appendChild(data_element)
 
     super_insert(target_element, inline_position, dialog_slot)
     mount_html(dialog_slot, None)
 
+    # Apply maximize state if data indicates it
     if data_element.classList.contains("maximized"):
         inline_maximize(data_element)
 
     def on_hidden(self, event):
+        """Clean up the dialog when closed."""
         nonlocal target_element, url
         region = get_ajax_region(
             target_element, target_element.getAttribute("data-region")
@@ -381,6 +577,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
             obj = region.querySelector(".plug")
             obj.remove()
 
+            # Handle after_close=refresh in URL
             if "after_close=" in url:
                 x = url.split("after_close=")[1]
                 if x.startswith("refresh"):
@@ -393,6 +590,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
     if dialog != None:
         jQuery(dialog).on("click", "button.ptig-btn-close", on_hidden)
 
+    # Adjust scroll position to keep dialog visible
     plug = dialog.closest("aside.plug")
     if plug != None:
         viewportOffset = dialog.getBoundingClientRect()
@@ -428,6 +626,8 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
                         scroll_frame.scrollTop = int(sy) + (rect1.top - rect2.top)
                 else:
                     scroll_frame.scrollTop = int(sy) + (rect1.top - rect2.top)
+
+    # Copy-to-clipboard functionality for INFO dialogs
     if "INFO" in template_name:
         txt = dialog_slot.querySelector("textarea.copy_to_clipboard")
         btn = dialog_slot.querySelector("button.copy_to_clipboard")
@@ -450,6 +650,7 @@ window._on_inline = _on_inline
 
 
 def on_inline(target_element, data_element, new_url, param, event):
+    """Create an inline dialog with INLINE template."""
     return _on_inline(target_element, data_element, new_url, param, event, "INLINE")
 
 
@@ -457,6 +658,7 @@ window.on_inline = on_inline
 
 
 def on_inline_edit_new(target_element, data_element, new_url, param, event):
+    """Create an inline edit dialog."""
     return _on_inline(
         target_element, data_element, new_url, param, event, "INLINE_EDIT"
     )
@@ -466,15 +668,20 @@ window.on_inline_edit_new = on_inline_edit_new
 
 
 def on_inline_info(target_element, data_element, new_url, param, event):
+    """Create an inline info dialog with copy-to-clipboard."""
     return _on_inline(
         target_element, data_element, new_url, param, event, "INLINE_INFO"
     )
 
 
+window.on_inline_info = on_inline_info
+
+# Backward-compatible alias (historical typo preserved)
 window.on_inline_inf = on_inline_info
 
 
 def on_inline_delete(target_element, data_element, new_url, param, event):
+    """Create an inline delete confirmation dialog."""
     return _on_inline(
         target_element, data_element, new_url, param, event, "INLINE_DELETE"
     )
@@ -484,6 +691,7 @@ window.on_inline_delete = on_inline_delete
 
 
 def on_inline_error(target_element, data_element, new_url, param, event):
+    """Create an inline error dialog."""
     return _on_inline(
         target_element, data_element, new_url, param, event, "INLINE_ERROR"
     )
@@ -492,11 +700,39 @@ def on_inline_error(target_element, data_element, new_url, param, event):
 window.on_inline_error = on_inline_error
 
 
+# =============================================================================
+# Popup (modal) dialog creation
+# =============================================================================
+
+
 def _on_popup(target_element, data_element, url, param, event, template_name):
+    """Create a Bootstrap modal popup dialog.
+
+    Falls back to inline mode if a modal is already open (to avoid
+    stacking modals).
+
+    Features:
+    - Bootstrap 5 Modal with backdrop support.
+    - Draggable via jQuery drags plugin.
+    - Copy-to-clipboard for INFO dialogs.
+    - After-close refresh callbacks.
+
+    Args:
+        target_element: The element that triggered the popup.
+        data_element: The content to display.
+        url: Source URL (may contain after_close= parameter).
+        param: Request parameters.
+        event: The triggering DOM event.
+        template_name: Template key (MODAL, MODAL_EDIT, MODAL_INFO, ...).
+
+    Returns:
+        The created dialog content element.
+    """
     if not can_popup():
         return _on_inline(
             target_element, data_element, url, param, event, template_name
         )
+
     dialog_slot = document.createElement("aside")
     dialog_slot.setAttribute("class", "plug")
 
@@ -519,6 +755,7 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
     mount_html(content, data_element)
 
     def on_hidden(self, event):
+        """Clean up the popup when hidden."""
         nonlocal region, url
         obj = region.querySelector(".plug")
         if obj:
@@ -531,6 +768,7 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
 
         return False
 
+    # Initialize Bootstrap modal (v5 or legacy)
     if window.hasOwnProperty("bootstrap"):
         dialog_slot.firstElementChild.addEventListener("hidden.bs.modal", on_hidden)
         dialog = window.bootstrap.Modal(
@@ -550,6 +788,8 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
                     "backdrop": False,
                 }
             )
+
+    # Copy-to-clipboard for INFO dialogs
     if "INFO" in template_name:
         txt = dialog_slot.querySelector("textarea.copy_to_clipboard")
         btn = dialog_slot.querySelector("button.copy_to_clipboard")
@@ -572,6 +812,7 @@ window._on_popup = _on_popup
 
 
 def on_popup(target_element, data_element, new_url, param, event):
+    """Create a modal popup dialog."""
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL")
 
 
@@ -579,6 +820,7 @@ window.on_popup = on_popup
 
 
 def on_popup_edit_new(target_element, data_element, new_url, param, event):
+    """Create a modal edit popup dialog."""
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_EDIT")
 
 
@@ -586,6 +828,7 @@ window.on_popup_edit_new = on_popup_edit_new
 
 
 def on_popup_info(target_element, data_element, new_url, param, event):
+    """Create a modal info popup dialog."""
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_INFO")
 
 
@@ -593,6 +836,7 @@ window.on_popup_info = on_popup_info
 
 
 def on_popup_delete(target_element, data_element, new_url, param, event):
+    """Create a modal delete confirmation popup."""
     return _on_popup(
         target_element, data_element, new_url, param, event, "MODAL_DELETE"
     )
@@ -602,13 +846,23 @@ window.on_popup_delete = on_popup_delete
 
 
 def on_popup_error(target_element, data_element, new_url, param, event):
+    """Create a modal error popup."""
     return _on_popup(target_element, data_element, new_url, param, event, "MODAL_ERROR")
 
 
 window.on_popup_error = on_popup_error
 
 
+# =============================================================================
+# Tab navigation handlers
+# =============================================================================
+
+
 def on_new_tab(target_element, data_element, new_url, param, event):
+    """Open content in a new application tab (or activate existing).
+
+    Extracts the title from the response and delegates to the menu system.
+    """
     title, title_alt = _get_title(target_element, data_element, new_url)
     data_element2 = data_element.querySelector("section.body-body")
     if not data_element2:
@@ -622,6 +876,12 @@ window.on_new_tab = on_new_tab
 
 
 def on_replace_app(target_element, data_element, new_url, param, event):
+    """Replace the entire application content (for _top targets).
+
+    Clears the current content wrapper, mounts new content from the
+    response's body-body section, reinitializes the start page, and
+    re-activates the menu. Preserves subpage navigation if present.
+    """
     subpages = (URLSearchParams(window.location.search)).getAll("subpage")
     if subpages:
         subpage = subpages[0]
@@ -657,18 +917,28 @@ def on_replace_app(target_element, data_element, new_url, param, event):
     return wrapper
 
 
+# =============================================================================
+# Subpage/subframe navigation (stack-based)
+# =============================================================================
+
+
 def _on_subframe(frame_element, target_element, data_element, url, param, event):
+    """Push new content onto the subframe stack.
+
+    Saves the current frame content into a hidden stack-slot and
+    replaces it with new data.
+    """
     stack_slot = document.createElement("div")
     stack_slot.style.display = "none"
     stack_slot.classList.add("stack-slot")
     while frame_element.childNodes.length > 0:
         stack_slot.appendChild(frame_element.childNodes[0])
     mount_html(frame_element, data_element)
-    # frame_element.appendChild(stack_slot)
     frame_element.prepend(stack_slot)
 
 
 def on_subpage(target_element, data_element, new_url, param, event):
+    """Navigate to a subpage within the current page."""
     page = target_element.closest(".page")
     return _on_subframe(page, target_element, data_element, new_url, param, event)
 
@@ -677,6 +947,7 @@ window.on_subpage = on_subpage
 
 
 def on_subframe(target_element, data_element, new_url, param, event):
+    """Navigate to a subframe (within an ajax-frame or data-link target)."""
     if target_element.hasAttribute("data-link"):
         frame = super_query_selector(
             target_element, target_element.getAttribute("data-link")
@@ -690,13 +961,16 @@ window.on_subframe = on_subframe
 
 
 def _on_close_subpage(page, target_element, data_element, new_url, param, event):
+    """Pop the subpage/subframe stack, restoring previous content.
+
+    Removes 'count' levels of stack-slots from the page.
+    """
     if target_element.hasAttribute("subpage-count"):
         count = int(target_element.getAttribute("subpage-count"))
     else:
         count = 1
     temp_slot = document.createElement("div")
     if page.childNodes.length > 0:
-        # child = page.childNodes[page.childNodes.length - 1]
         child = page.childNodes[0]
         if (
             (not child)
@@ -713,7 +987,6 @@ def _on_close_subpage(page, target_element, data_element, new_url, param, event)
 
     stack_slot = temp_slot.childNodes[0]
     while count > 1:
-        # child = stack_slot.childNodes[stack_slot.childNodes.length - 1]
         child = stack_slot.childNodes[0]
         if (
             (not child)
@@ -732,11 +1005,13 @@ def _on_close_subpage(page, target_element, data_element, new_url, param, event)
 
 
 def on_close_subpage(target_element, data_element, new_url, param, event):
+    """Close the current subpage and restore the previous one."""
     page = target_element.closest(".page")
     return _on_close_subpage(page, target_element, data_element, new_url, param, event)
 
 
 def on_close_subpage_and_refresh(target_element, data_element, new_url, param, event):
+    """Close subpage and refresh the parent frame."""
     page = target_element.closest(".page")
     ret = on_close_subpage(target_element, data_element, new_url, param, event)
     window.refresh_ajax_frame(page)
@@ -744,6 +1019,7 @@ def on_close_subpage_and_refresh(target_element, data_element, new_url, param, e
 
 
 def on_close_subframe(target_element, data_element, new_url, param, event):
+    """Close the current subframe and restore previous content."""
     if target_element.hasAttribute("data-link"):
         frame = super_query_selector(
             target_element, target_element.getAttribute("data-link")
@@ -754,6 +1030,7 @@ def on_close_subframe(target_element, data_element, new_url, param, event):
 
 
 def on_close_subframe_and_refresh(target_element, data_element, new_url, param, event):
+    """Close subframe and refresh the parent."""
     if target_element.hasAttribute("data-link"):
         frame = super_query_selector(
             target_element, target_element.getAttribute("data-link")
@@ -765,7 +1042,22 @@ def on_close_subframe_and_refresh(target_element, data_element, new_url, param, 
     return ret
 
 
+# =============================================================================
+# Close and refresh frame handlers
+# =============================================================================
+
+
 def close_frame(target_element, data_element, new_url, param, event, data_region=None):
+    """Close a dialog/frame and optionally refresh the parent region.
+
+    Handles both modal (Bootstrap) and inline plug dismissal,
+    with opacity feedback during the close operation.
+
+    Args:
+        target_element: The element that triggered the close.
+        data_element: Response data to mount after close.
+        data_region: Optional region name override.
+    """
     f = target_element.getAttribute("data-link")
     if f:
         data_element2 = super_query_selector(data_element, f)
@@ -789,6 +1081,7 @@ def close_frame(target_element, data_element, new_url, param, event, data_region
         aside = None
 
     def _callback():
+        """After successful refresh, dismiss the dialog."""
         nonlocal aside, dialog
         if aside:
             if dialog and dialog.classList.contains("modal"):
@@ -797,6 +1090,7 @@ def close_frame(target_element, data_element, new_url, param, event, data_region
                 aside.remove()
 
     def _callback_on_error():
+        """On error, restore dialog opacity."""
         nonlocal aside, dialog
         if aside:
             aside.style.opacity = "100%"
@@ -812,6 +1106,13 @@ def close_frame(target_element, data_element, new_url, param, event, data_region
 def refresh_frame(
     target_element, data_element, new_url, param, event, data_region=None
 ):
+    """Refresh a frame with new content.
+
+    Args:
+        target_element: Element to use for region lookup.
+        data_element: New content to mount.
+        data_region: Optional region name for the frame to refresh.
+    """
     f = target_element.getAttribute("data-link")
     if f:
         data_element2 = super_query_selector(data_element, f)
@@ -827,35 +1128,28 @@ def refresh_frame(
 
 
 def refresh_page(target_element, data_element, new_url, param, event):
+    """Refresh the page-content region of the current page."""
     return refresh_frame(
         target_element, data_element, new_url, param, event, "page-content"
     )
 
 
-# def refresh_page2(target_element, data_element, new_url, param, event):
-#    frame = target_element.closest("div.content")
-#    if frame and frame.firstElementChild:
-#        if isinstance(data_element, str):
-#            data_element2 = None
-#        else:
-#            data_element2 = data_element.querySelector("div.content")
-#        if data_element2:
-#            if data_element2.firstElementChild:
-#                data_element2 = data_element2.firstElementChild
-#        if not data_element2:
-#            data_element2 = data_element
-#        mount_html(frame, data_element2)
-
-
 def refresh_app(target_element, data_element, new_url, param, event):
+    """Reload the entire application by navigating to the base path."""
     window.location.href = window.BASE_PATH
 
 
 def only_get(target_element, data_element, url, param, event):
+    """No-op handler for background GET requests (no UI update)."""
     pass
 
 
 def on_message(target_element, data_element, new_url, param, event):
+    """Display a SweetAlert2 message dialog.
+
+    Reads icon, title, text, footer, and timer from data attributes
+    on either the target_element or the data_element.
+    """
     options = {
         "icon": "success",
         "title": "Information",
@@ -890,31 +1184,31 @@ def on_message(target_element, data_element, new_url, param, event):
     Swal.fire(options)
 
 
-## target:
-## _blank: new browser window (pdf) - default action
-## _parent: new app tab
-## _top: replace current app window
-## _self: replace current frame
-## page: alias to _parent
-## subpage: hide content of page an show new from response
-## popup: new popup window
-## popup_edit: new popup window
-## popup_info: new popup window
-## popup_delete: new popup window
-## inline_edit: new popup window
-## inline_info: new popup window
-## inline_delete: new popup window
-## inline: new inline window
-## none, get request (no gui)
-## refresh_obj: replace current object
-## refresh_page: reload current page (like _self)
-## refresh_app: reload current app (like _top)
+# =============================================================================
+# Event click routing table
+# =============================================================================
+# Maps (target, class_filter, get_only_content, get_only_tab, handler)
+#
+# Target types:
+#   inline, inline_edit, inline_info, inline_delete, inline_error:
+#       Embedded inline dialogs within the page.
+#   popup, popup_edit, popup_info, popup_delete, popup_error:
+#       Modal popup dialogs.
+#   _top: Replace the entire application.
+#   _top2: Open in a new application tab.
+#   _self: Refresh the current page (page-content region).
+#   _parent, page: Open in a new application tab.
+#   refresh_frame: Refresh a specific frame region.
+#   close_frame: Close a frame/dialog and refresh.
+#   refresh_page: Refresh the current page.
+#   refresh_app: Full application reload.
+#   message: Display a Swal message.
+#   subpage, subframe: Stack-based sub-navigation.
+#   close-subpage, close-subframe: Pop the navigation stack.
+#   null: Background GET, no UI update.
 
 EVENT_CLICK_TAB = [
-    # target, class, get only content, get only tab, function
-    # ("*", "get_tbl_value", True, False, on_get_tbl_value),
-    # ("*", "new_tbl_value", True, False, on_new_tbl_value),
-    # ("*", "get_row", True, False, on_get_row),
+    # (target, class, get_only_content, get_only_tab, handler_function)
     ("inline", "*", True, False, on_inline),
     ("inline_edit", "*", True, False, on_inline_edit_new),
     ("inline_info", "*", True, False, on_inline_info),
@@ -945,7 +1239,13 @@ EVENT_CLICK_TAB = [
 ]
 
 
+# =============================================================================
+# Window resize handler
+# =============================================================================
+
+
 def on_resize(self, event):
+    """Global window resize handler - triggers process_resize on body."""
     process_resize(document.body)
 
 

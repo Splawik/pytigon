@@ -12,12 +12,12 @@
         {% endfor %}
 </select>
 {% if 'href1' in widget.attrs %}
-        <a href="{{ widget.attrs.href1 }}" class="btn {{btn_size}} shadow-none foreignkey_button get_tbl_value" get row target="popup_edit" data-role="button" data-inline-position="^div.ajax-region:append" style="height:100%;">
+        <a href="{{ widget.attrs.href1 }}" class="btn {{btn_size}} shadow-none foreignkey_button get_tbl_value foreignkey-btn-full" get row target="popup_edit" data-role="button" data-inline-position="^div.ajax-region:append">
                 <span class="fa fa-table"></span>
         </a>
 {% endif %}
 {% if 'href2' in widget.attrs %}
-        <a href="{{ widget.attrs.href2 }}" class="btn {{btn_size}} shadow-none foreignkey_button get_tbl_value" new row target="popup_edit" data-role="button" data-inline-position="^div.ajax-region:append" style="height:100%;">
+        <a href="{{ widget.attrs.href2 }}" class="btn {{btn_size}} shadow-none foreignkey_button get_tbl_value foreignkey-btn-full" new row target="popup_edit" data-role="button" data-inline-position="^div.ajax-region:append">
                 <span class="fa fa-plus"></span>
         </a>
 {% endif %}

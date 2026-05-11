@@ -1,44 +1,86 @@
-import sys
-import json
+"""Django management command to export a database table to JSON."""
 
-from django.core.management.base import BaseCommand
+import json
+import sys
+
+from django.core.management.base import BaseCommand, CommandError
 from django.db import connection
 
 
 def get_table(table_name):
+    """Fetch all rows from a table and return as a list of dictionaries.
+
+    Uses parameterized queries to prevent SQL injection.
+
+    Args:
+        table_name: Name of the database table.
+
+    Returns:
+        list: List of dictionaries, each representing a row.
+
+    Raises:
+        CommandError: If the table name is invalid.
+    """
+    # Validate table name - only allow alphanumeric and underscore
+    if not table_name.replace("_", "").isalnum():
+        raise CommandError(
+            "Invalid table name: '%s'. "
+            "Only alphanumeric characters and underscores are allowed." % table_name
+        )
+
+    # Use the connection's ops to properly quote the table name
+    quoted_name = connection.ops.quote_name(table_name)
+
     with connection.cursor() as cursor:
-        cursor.execute("select * from %s" % table_name)
-        r = [
-            dict((cursor.description[i][0], value) for i, value in enumerate(row))
-            for row in cursor.fetchall()
-        ]
-        return r
+        cursor.execute("SELECT * FROM %s" % quoted_name)
+        columns = [col[0] for col in cursor.description]
+        return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
 
 class Command(BaseCommand):
-    help = "Export sql table to json"
+    """Export a database table to JSON format."""
+
+    help = "Export SQL table to JSON"
 
     def add_arguments(self, parser):
-        parser.add_argument("table_name", nargs="?", help="Table name to export")
+        """Add command-line arguments.
+
+        Args:
+            parser: argparse argument parser.
+        """
+        parser.add_argument(
+            "table_name",
+            nargs="?",
+            help="Table name to export",
+        )
         parser.add_argument(
             "--output",
-            help="save output to file",
+            help="Save output to file (prints to stdout if not specified)",
         )
 
     def handle(self, *args, **options):
+        """Execute the command.
+
+        Args:
+            options: Parsed command-line options.
+        """
         if not options["table_name"]:
             self.print_help("manage.py", "sqltable2json")
             sys.exit(1)
 
-        if "output" in options and options["output"]:
-            o = options["output"]
-        else:
-            o = None
+        output_file = options.get("output")
 
-        t = get_table(options["table_name"])
-        if o:
-            with open(o, "wt") as f:
-                f.write(json.dumps(t))
-        else:
-            print(json.dumps(t))
+        try:
+            data = get_table(options["table_name"])
+        except CommandError as e:
+            self.stderr.write(str(e))
+            sys.exit(1)
 
+        json_output = json.dumps(data, indent=2, default=str)
+
+        if output_file:
+            with open(output_file, "wt") as f:
+                f.write(json_output)
+            self.stdout.write("Exported %d rows to %s" % (len(data), output_file))
+        else:
+            self.stdout.write(json_output)

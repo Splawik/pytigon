@@ -1,6 +1,6 @@
 import os
+import logging
 
-import os
 from pyquery import PyQuery as pq
 
 from django.core.management.base import BaseCommand
@@ -77,7 +77,7 @@ class Command(BaseCommand):
                 path4 = os.path.join(output_path, *(path2.split("/")[:-1]))
                 try:
                     os.makedirs(path4, exist_ok=True)
-                except:
+                except OSError:
                     pass
 
                 try:
@@ -95,7 +95,7 @@ class Command(BaseCommand):
                             )
                         else:
                             o.write(r.ptr())
-                except:
+                except (IOError, OSError):
                     pass
 
             if not txt_file:

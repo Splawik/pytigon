@@ -30,7 +30,7 @@
     
     % if 'start'|reverse == request.path or request.path == '/'|append_str:URL_ROOT_FOLDER|append_str:"/":
         %% indexhead
-            table style=width: 100%;,,,border=1
+            table class=table-full-width,,,border=1
                 tr
                     td...login
                     td...{% if user.is_authenticated %}0{% else %}1{% endif %}
@@ -56,7 +56,7 @@
             h1...Aplikacja:
             h2...SCHWeb
             h3
-                span style=font-weight: bold;...Zawartość pola komenda - zawartość pola dane
+                span class=font-bold...Zawartość pola komenda - zawartość pola dane
 
             .html - adres strony<br />
             .txt - nazwa pliku<br />
@@ -66,7 +66,7 @@
             br
 
             h1...Menu bar or toolbar:
-            <table style="width: 100%;" border="1">
+            <table class="table-full-width" border="1">
             tr
                 th...Menu - poziom 1
                 th...Menu - poziom 2
@@ -146,7 +146,7 @@
             .2 - radiotool<br />
             .3 - control, w polu opis długi - kod w pythonie dla obiektu "control"<br />
         br
-        table style=width: 100%;,,,border=1
+        table class=table-full-width,,,border=1
             tr
                 th...name
                 th...description

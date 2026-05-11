@@ -26,11 +26,7 @@
             % if standard_web_browser:
                 % if not show_form and not 'no_scripts' in request.GET:
                     %% css_links
-                    %% css_start
-                        <style type="text/css">
                     %% css
-                    %% css_end
-                        </style>
 
             % else
                 %% pythoncode
@@ -96,7 +92,7 @@
     %% page_footer
         %if not 'no_scripts' in request.GET:
             %% js_extrascipts_init
-                script type=module
+                script type=module,,,nonce={{ csp_nonce }}
                     %% jquery_init
                     %% jquery_init_once
                     %% jquery_ready_all

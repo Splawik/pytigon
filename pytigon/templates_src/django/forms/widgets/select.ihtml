@@ -7,8 +7,8 @@ select name={{ widget.name }},,,{% include "django/forms/widgets/attrs.html" %}
         % if group_name: 
             </optgroup>
 % if 'href1' in widget.attrs:
-    a href={{ widget.attrs.href1 }},,,class=btn {{btn_size}} shadow-none foreignkey_button get_tbl_value,,,_(get row),,,target=popup_edit,,,data-role=button,,,data-inline-position=^div.ajax-region:append,,,style=height:100%;
+    a href={{ widget.attrs.href1 }},,,class=btn {{btn_size}} shadow-none foreignkey_button get_tbl_value foreignkey-btn-full,,,_(get row),,,target=popup_edit,,,data-role=button,,,data-inline-position=^div.ajax-region:append
         span class=fa fa-table
 % if 'href2' in widget.attrs:
-    a href={{ widget.attrs.href2 }},,,class=btn {{btn_size}} shadow-none foreignkey_button get_tbl_value,,,_(new row),,,target=popup_edit,,,data-role=button,,,data-inline-position=^div.ajax-region:append,,,style=height:100%;
+    a href={{ widget.attrs.href2 }},,,class=btn {{btn_size}} shadow-none foreignkey_button get_tbl_value foreignkey-btn-full,,,_(new row),,,target=popup_edit,,,data-role=button,,,data-inline-position=^div.ajax-region:append
         span class=fa fa-plus

@@ -10,7 +10,7 @@
                         {% endblock %}
                 </title>
                 {% block extrahead %}{% endblock %}
-                <style type="text/css">
+                <style type="text/css" nonce="{{ csp_nonce }}">
                         
                         {% block extrastyle %}
                                 

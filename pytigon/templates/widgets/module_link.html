@@ -1,6 +1,6 @@
 {% load static %}
 {% if content %}
-        <script type="module">
+        <script type="module" nonce="{{ csp_nonce }}">
                 {{ content|safe }}
         </script>
   {% else %}

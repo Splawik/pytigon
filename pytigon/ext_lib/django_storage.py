@@ -40,6 +40,7 @@ class ThumbnailFileSystemStorage(FileSystemStorage):
         return urljoin(self.base_url, url)
 
 
+@deconstructible
 class FSStorage(Storage):
     def __init__(self, fs=None, base_url=None):
         if fs is None:
@@ -60,6 +61,7 @@ class FSStorage(Storage):
         name = self._save(name, content)
         return name
 
+    @staticmethod
     def validate_file_name(name, allow_relative_path=True):
         return True
 

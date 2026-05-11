@@ -1,3 +1,19 @@
+"""
+HTML template resources for modal and inline dialogs.
+
+Defines base HTML templates for various dialog types (modal and inline)
+used throughout the application. Each template type has a corresponding
+footer with action buttons (OK, Cancel, Close, Copy to clipboard).
+
+Template types:
+    MODAL, MODAL_EDIT, MODAL_INFO, MODAL_DELETE, MODAL_ERROR
+    INLINE, INLINE_EDIT, INLINE_INFO, INLINE_DELETE, INLINE_ERROR
+"""
+
+# =============================================================================
+# Internationalized button labels
+# =============================================================================
+
 if hasattr(window, "gettext"):
     _CANCEL = gettext("Cancel")
     _CLOSE = gettext("Close")
@@ -7,9 +23,17 @@ else:
     _CLOSE = "Close"
     _COPY_TO_CLIP = "Copy to clipboard"
 
+# =============================================================================
+# Simple template (no decoration, just content area)
+# =============================================================================
+
 MODAL = """
     <div class="dialog-data"></div>
 """
+
+# =============================================================================
+# Modal dialog templates
+# =============================================================================
 
 MODAL_BASE = """
 <div class="dialog-form modal" role="dialog" title="{title}">
@@ -32,9 +56,7 @@ MODAL_BASE = """
         </div>
     </div>
 </div>
-""".replace(
-    "Close", _CLOSE
-)
+""".replace("Close", _CLOSE)
 
 MODAL_DELETE_BASE = """
 <div class="dialog-form modal" role="dialog" title="{title}">
@@ -53,43 +75,43 @@ MODAL_DELETE_BASE = """
         </div>
     </div>
 </div>
-""".replace(
-    "Close", _CLOSE
-)
+""".replace("Close", _CLOSE)
+
+# =============================================================================
+# Footer button templates
+# =============================================================================
 
 EDIT_FOOTER = """ 
 <button type="button" class="btn btn-secondary ptig-btn-close" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>
 <button type="button" class="btn btn-primary" data-region="page-content" target="close_frame">OK</button>
-""".replace(
-    "Cancel", _CANCEL
-)
+""".replace("Cancel", _CANCEL)
 
 INFO_FOOTER = """
 <button type = "button" class ="btn btn-info copy_to_clipboard">Copy to clipboard</button>
 <button type = "button" class ="btn btn-secondary ptig-btn-close" data-dismiss='modal' data-bs-dismiss='modal'>Close</button>
-""".replace(
-    "Copy to clipboard", _COPY_TO_CLIP
-).replace(
-    "Close", _CLOSE
-)
+""".replace("Copy to clipboard", _COPY_TO_CLIP).replace("Close", _CLOSE)
 
 DELETE_FOOTER = """
 <button type="button" class="btn btn-secondary ptig-btn-close" data-dismiss='modal' data-bs-dismiss='modal'>Cancel</button>
 <button type="button" class="btn btn-danger" data-region="page-content" target="close_frame">OK</button>
-""".replace(
-    "Cancel", _CANCEL
-)
+""".replace("Cancel", _CANCEL)
 
 ERROR_FOOTER = """
 <button type="button" class="btn btn-secondary ptig-btn-close" data-dismiss='modal' data-bs-dismiss='modal'>Close</button>
-""".replace(
-    "Close", _CLOSE
-)
+""".replace("Close", _CLOSE)
+
+# =============================================================================
+# Composed modal templates (base + footer)
+# =============================================================================
 
 MODAL_EDIT = MODAL_BASE.replace("{{modal_footer}}", EDIT_FOOTER)
 MODAL_INFO = MODAL_BASE.replace("{{modal_footer}}", INFO_FOOTER)
 MODAL_DELETE = MODAL_BASE.replace("{{modal_footer}}", DELETE_FOOTER)
 MODAL_ERROR = MODAL_BASE.replace("{{modal_footer}}", ERROR_FOOTER)
+
+# =============================================================================
+# Inline dialog templates (non-modal, embedded in page)
+# =============================================================================
 
 INLINE = """
     <div class="dialog-data"></div>
@@ -127,9 +149,7 @@ INLINE_BASE = """
         </div>
     </div>
 </div>
-""".replace(
-    "Close", _CLOSE
-)
+""".replace("Close", _CLOSE)
 
 INLINE_DELETE_BASE = """
 <div style='position:relative;z-index:1001;'>
@@ -157,9 +177,11 @@ INLINE_DELETE_BASE = """
         </div>
     </div>
 </div>
-""".replace(
-    "Close", _CLOSE
-)
+""".replace("Close", _CLOSE)
+
+# =============================================================================
+# Composed inline templates (base + footer, without dismiss attributes)
+# =============================================================================
 
 INLINE_EDIT = (
     INLINE_BASE.replace("{{modal_footer}}", EDIT_FOOTER)

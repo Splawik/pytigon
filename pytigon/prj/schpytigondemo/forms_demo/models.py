@@ -46,4 +46,4 @@ class Select2Example(models.Model):
         return self.name
 
 
-admin.site.register(Select2Example)
+admin_register(Select2Example)
