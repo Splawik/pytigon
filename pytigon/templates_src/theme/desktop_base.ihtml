@@ -6,10 +6,7 @@
 % load compress
 
 %% head_start
-    sys-pytigon-init base_path={{base_path}}
-    % comment:
-        script language=javascript,,,nonce={{ csp_nonce }}
-            .window.BASE_PATH = '{{base_path}}';
+    <meta name="base-path" content="{{ base_path }}">
     {% jscript_link 'pytigon_js/pytigon-tools.js' %}
 
 %% js_scripts_base
@@ -73,26 +70,6 @@
     {% module_link 'pytigon_js/pytigon.js' %}
 
 
-%% jquery_init
-   %% js_app_init
-        .function base_fragment_init() {}
-    %% component_init
-        .var component_init = null
-    .app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE|safe}}', '{{ gen_time }}' );
-
-%% jquery_ready_start
-    .jQuery(document).ready(function() {
-
-
-%% jquery_ready
-    .jquery_ready();
-    .base_fragment_init();
-
-
-%% jquery_ready_end
-  });
-
-
 %% js_scripts
     % if form_edit or form_delete or form_info
         % if form_ext
@@ -100,17 +77,13 @@
     % else
         {{ block.super }}
 
-
-%% js_extrascipts_init
+%% page_footer_scripts
     % if form_edit or form_delete or form_info
         % if form_ext
             {{ block.super }}
     % else
+        <script type="module" src="{{base_path}}schsys/dstatic/desktop_base.js"></script>
         {{ block.super }}
-
-
-%% js_script_body
-    %% jquery_ovr
 
 %% css_links
 

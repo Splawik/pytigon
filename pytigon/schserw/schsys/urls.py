@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_headers
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 
 from pytigon_lib.schdjangoext.tools import make_href
 
@@ -99,6 +100,16 @@ def sch_logout(request):
     return HttpResponseRedirect(make_href("/"))
 
 
+def login_required_for_non_public(view_func):
+    def wrapper(request, *args, **kwargs):
+        if settings.PUBLIC:
+            return view_func(request, *args, **kwargs)
+        else:
+            return login_required(view_func)(request, *args, **kwargs)
+
+    return wrapper
+
+
 urlpatterns = [
     path("ok/", views.ok, name="ok"),
     path(
@@ -110,20 +121,32 @@ urlpatterns = [
         ),
     ),
     path("do_login/", sch_login),
-    path("do_logout/", sch_logout),
-    path("change_password/", views.change_password),
-    path("change_profile_variant/<str:variant_name>/", views.change_profile_variant),
+    path("do_logout/", login_required(sch_logout)),
+    path("change_password/", login_required(views.change_password)),
+    path(
+        "change_profile_variant/<str:variant_name>/",
+        login_required(views.change_profile_variant),
+    ),
+    path("dstatic/<str:script_name>.js", views.dstatic),
     path("messages/", views.get_messages),
-    path("datedialog/<str:action>/", views.datedialog),
-    path("listdialog/<str:action>/", views.listdialog),
-    path("treedialog/<str:app>/<str:tab>/<int:id>/<str:action>/", views.treedialog),
-    path("tabdialog/<str:app>/<str:tab>/<int:id>/<str:action>/", views.tabdialog),
-    path("table/<str:app>/<str:tab>/grid/", views.tbl),
+    path("datedialog/<str:action>/", login_required_for_non_public(views.datedialog)),
+    path("listdialog/<str:action>/", login_required_for_non_public(views.listdialog)),
+    path(
+        "treedialog/<str:app>/<str:tab>/<int:id>/<str:action>/",
+        login_required_for_non_public(views.treedialog),
+    ),
+    path(
+        "tabdialog/<str:app>/<str:tab>/<int:id>/<str:action>/",
+        login_required_for_non_public(views.tabdialog),
+    ),
+    # path("table/<str:app>/<str:tab>/grid/", login_required_for_non_public(views.tbl)),
     path("widget_web", TemplateView.as_view(template_name="schsys/widget_web.html")),
-    path("plugins/<str:app>/<path:plugin_name>/", views.plugins),
-    path("app_time_stamp/", views.app_time_stamp, {}),
-    path("search/", views.search, {}),
+    path(
+        "plugins/<str:app>/<path:plugin_name>/",
+        login_required_for_non_public(views.plugins),
+    ),
+    path("app_time_stamp/", login_required_for_non_public(views.app_time_stamp), {}),
+    path("search/", login_required_for_non_public(views.search), {}),
 ]
-
 
 gen = True

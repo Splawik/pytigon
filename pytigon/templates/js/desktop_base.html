@@ -1,0 +1,28 @@
+{% extends 'js/base0.html'|translate:lang %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load static %}
+{% load compress %}
+{% block init %}
+        {% block js_app_init %}
+                function base_fragment_init() {}
+        {% endblock %}
+        {% block component_init %}
+                var component_init = null
+        {% endblock %}
+        app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE|safe}}', '{{ gen_time }}' );
+{% endblock %}
+{% block ready_start %}
+        jQuery(document).ready(function() {
+{% endblock %}
+{% block ready %}
+        jquery_ready();
+        base_fragment_init();
+{% endblock %}
+{% block ready_end %}
+    });
+{% endblock %}
+{% block body %}
+        {% block jquery_ovr %}{% endblock %}
+{% endblock %}
+

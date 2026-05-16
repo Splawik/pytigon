@@ -1,0 +1,30 @@
+% extends "js/base0.html"
+
+% load exfiltry
+% load exsyntax
+% load static
+
+%% init
+    %% js_app_init
+        .function base_fragment_init() {
+        .}
+    %% component_init
+        .var component_init = null
+    .pytigon.app_init('{{prj_name}}', 'to_print', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' )
+
+
+%% ready_start
+    .jQuery(document).ready(function() {
+
+
+%% ready
+    .pytigon.jquery_ready();
+    .base_fragment_init();
+
+
+%% ready_end
+  });
+
+%% body
+    %% jquery_ovr
+

@@ -13,25 +13,29 @@
         {% block body_body_start %}
                 {{ block.super }}
         {% endblock %}
-        {% block login_background %}
-                {{ block.super }}
-        {% endblock %}
-        <div class="container login-container" data-bs-theme="dark">
-                <div class="row align-items-center">
-                        <div class="col"></div>
-                        <div class="col-lg-6 col-xl-5">
-                                <div class="card text-bg-dark mb-3">
-                                        <div class="card-header">
-                                                {{prj_title|upper}}
+        {% if not user.is_authenticated or FORCE_LOGIN_WIN %}
+                {% if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN or "login" in request.path %}
+                        {% block login_background %}
+                                {{ block.super }}
+                        {% endblock %}
+                        <div class="container login-container" data-bs-theme="dark">
+                                <div class="row align-items-center">
+                                        <div class="col"></div>
+                                        <div class="col-lg-6 col-xl-5">
+                                                <div class="card text-bg-dark mb-3">
+                                                        <div class="card-header">
+                                                                {{prj_title|upper}}
+                                                        </div>
+                                                        <div class="card-body">
+                                                                {% block content %}{% endblock %}
+                                                        </div>
+                                                </div>
                                         </div>
-                                        <div class="card-body">
-                                                {% block content %}{% endblock %}
-                                        </div>
+                                        <div class="col"></div>
                                 </div>
                         </div>
-                        <div class="col"></div>
-                </div>
-        </div>
+                {% endif %}
+        {% endif %}
         {% block body_desktop_cd %}{% endblock %}
         {% block body_body_end %}
                 {{ block.super }}

@@ -2,10 +2,10 @@
 {% load exfiltry %}
 {% load exsyntax %}
 {% block widget_content %}
-        <div class='tree' style='border: 0px; background-color:transparent; padding: 20px 0px 0px 0px; max-height: 300px; overflow-y: auto;'{% if not standard_web_browser %} width='300' height='120'{% endif %}>
+        <div class='tree user-tree'{% if not standard_web_browser %} width='300' height='120'{% endif %}>
                 <ul class="root">
-                        <li class="show_node" style="left:-35px;">
-                                <span class="root" style="height: 34px">
+                        <li class="show_node user-tree-show-node">
+                                <span class="root user-tree-root-icon">
                                         {% icon "fa-plus fa-lg" %}
                                         {{title}}
                                 </span>

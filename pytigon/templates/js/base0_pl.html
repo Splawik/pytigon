@@ -1,0 +1,11 @@
+{% load exfiltry %}
+{% load exsyntax %}
+{% block init %}{% endblock %}
+{% block init_once %}{% endblock %}
+{% block ready_all %}
+        {% block ready_start %}{% endblock %}
+        {% block ready %}{% endblock %}
+        {% block ready_end %}{% endblock %}
+{% endblock %}
+{% block body %}{% endblock %}
+

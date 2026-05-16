@@ -17,7 +17,7 @@
         {% jscript_link 'vanillajs_plugins/cookie/js.cookie.js' %}
         {% jscript_link 'vanillajs_plugins/tether/js/tether.min.js' %}
         {% jscript_link 'vanillajs_plugins/popper/popper.min.js' %}
-        {% jscript_link 'jquery/jquery-3.2.1.min.js' %}
+        {% jscript_link 'jquery/jquery-3.7.1.min.js' %}
         {% jscript_link 'jquery_plugins/select2/js/select2.full.js' %}
         {% jscript_link 'django_select2/django_select2.js' %}
         {% jscript_link 'jquery_plugins/form/jquery.form.js' %}
@@ -94,12 +94,6 @@
         {% block botstrap_css %}
                 {% css_link 'bootstrap/css/bootstrap.min.css' %}
         {% endblock %}
-{% endblock %}
-{% block css_start %}
-        <style type="text/css" nonce="{{ csp_nonce }}">
-{% endblock %}
-{% block css_end %}
-        </style>
 {% endblock %}
 {% block page_start %}
 {% endblock %}

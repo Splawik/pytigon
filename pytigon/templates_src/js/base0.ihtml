@@ -1,0 +1,10 @@
+% load exfiltry
+% load exsyntax
+
+%% init
+%% init_once
+%% ready_all
+    %% ready_start
+    %% ready
+    %% ready_end
+%% body

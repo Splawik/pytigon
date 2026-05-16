@@ -13,18 +13,22 @@
 %% body
     %% body_body_start
         {{ block.super }}
-    %% login_background
-        {{ block.super }}
-    div class=container login-container,,,data-bs-theme=dark
-        div class=row align-items-center
-            div class=col
-            div class=col-lg-6 col-xl-5
-                div class=card text-bg-dark mb-3
-                    div class=card-header
-                        {{prj_title|upper}}
-                    div class=card-body                
-                        %% content
-            div class=col
+
+    % if not user.is_authenticated or FORCE_LOGIN_WIN:
+        % if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN or "login" in request.path:
+            %% login_background
+                {{ block.super }}
+
+            div class=container login-container,,,data-bs-theme=dark
+                div class=row align-items-center
+                    div class=col
+                    div class=col-lg-6 col-xl-5
+                        div class=card text-bg-dark mb-3
+                            div class=card-header
+                                {{prj_title|upper}}
+                            div class=card-body                
+                                %% content
+                    div class=col
     %% body_desktop_cd
     %% body_body_end
         {{ block.super }}

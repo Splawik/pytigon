@@ -25,6 +25,7 @@ from django.http import (
     HttpResponseForbidden,
 )
 from django.views.decorators.cache import cache_page
+from django.template.loader import render_to_string
 
 from pytigon_lib.schdjangoext.tools import import_model
 from pytigon_lib.schtable.dbtable import DbTable
@@ -68,6 +69,20 @@ def change_password(request):
 
     messages.add_message(request, messages.ERROR, "Bad old password")
     return HttpResponseRedirect(make_href("/"))
+
+
+def dstatic(request, script_name):
+    """Serve dynamic JavaScript content.
+
+    Args:
+        request: Django HTTP request.
+        sc (str): Script code.
+
+    Returns:
+        HttpResponse: JavaScript code.
+    """
+    sc = render_to_string(f"js/{script_name}.html", context={}, request=request)
+    return HttpResponse(sc, content_type="application/javascript")
 
 
 def ok(request):
@@ -122,36 +137,36 @@ def get_messages(request):
     return HttpResponse("")
 
 
-def tbl(request, app, tab, value=None, template_name=None):
-    """Render a database table view using DbTable.
+# def tbl(request, app, tab, value=None, template_name=None):
+#     """Render a database table view using DbTable.
 
-    Args:
-        request: Django HTTP request.
-        app: Application name.
-        tab: Table name.
-        value: Optional value parameter.
-        template_name: Optional template name.
+#     Args:
+#         request: Django HTTP request.
+#         app: Application name.
+#         tab: Table name.
+#         value: Optional value parameter.
+#         template_name: Optional template name.
 
-    Returns:
-        HttpResponse: The rendered table output.
-    """
-    if request.POST:
-        p = request.POST.copy()
-        d = {}
-        for key, val in list(p.items()):
-            if key == "csrfmiddlewaretoken":
-                d[str(key)] = val
-            else:
-                d[str(key)] = schjson.loads(val)
-    else:
-        d = {}
+#     Returns:
+#         HttpResponse: The rendered table output.
+#     """
+#     if request.POST:
+#         p = request.POST.copy()
+#         d = {}
+#         for key, val in list(p.items()):
+#             if key == "csrfmiddlewaretoken":
+#                 d[str(key)] = val
+#             else:
+#                 d[str(key)] = schjson.loads(val)
+#     else:
+#         d = {}
 
-    if value and value != "":
-        d["value"] = bdecode(value.encode("ascii"))
+#     if value and value != "":
+#         d["value"] = bdecode(value.encode("ascii"))
 
-    dbtab = DbTable(app, tab)
-    retstr = dbtab.command(d)
-    return HttpResponse(retstr)
+#     dbtab = DbTable(app, tab)
+#     retstr = dbtab.command(d)
+#     return HttpResponse(retstr)
 
 
 def datedialog(request, action):

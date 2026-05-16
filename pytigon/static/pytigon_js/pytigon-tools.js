@@ -1,3 +1,6 @@
+const metaBasePath = document.querySelector('meta[name="base-path"]')
+window.BASE_PATH = metaBasePath ? metaBasePath.getAttribute('content') : '/'
+
 var PSEUDO_IP = '127.0.0.2'
 var PYWEBVIEW_IP = '127.0.0.5'
 var PYODIDE = null

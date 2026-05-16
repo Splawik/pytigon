@@ -1030,6 +1030,13 @@ def build_prj(pk, config={}):
                 with open(_file_name, "wt") as f:
                     f.write(field)
 
+    if prj.app_main:
+        _file_name = os.path.join(base_path, "templates_src", "js", "desktop.ihtml")
+        if not os.path.exists(os.path.dirname(_file_name)):
+            os.makedirs(os.path.dirname(_file_name))
+        with open(_file_name, "wt") as f:
+            f.write(prj.app_main)
+
     consumers_dict = {}
     for _app in apps:
         consumers = _app.schchannelconsumer_set.all()

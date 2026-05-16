@@ -10,7 +10,7 @@ from pytigon_lib.schtasks.publish import publish
 
 from pytigon_lib.schhttptools import httpclient
 from html.parser import HTMLParser
-from pytigon_lib.schparser.parser import Parser
+from pytigon_lib.schhtml.parser import Parser
 import re
 from pytigon_lib.schtools.schjson import json_dumps
 import urllib.parse
@@ -18,6 +18,7 @@ import httpx
 
 
 def download_task(cproxy=None, **kwargs):
+
     base_address, url = kwargs["user_parm"]
     path = urllib.parse.urljoin(base_address, url)
     if cproxy:
@@ -31,6 +32,7 @@ def download_task(cproxy=None, **kwargs):
 
 
 def scan_html(cproxy=None, **kwargs):
+
     parm = kwargs["user_parm"]
     base_address = parm["base_address"]
     source_page = parm["source_page"]

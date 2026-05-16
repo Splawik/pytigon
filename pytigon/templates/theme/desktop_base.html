@@ -4,12 +4,7 @@
 {% load static %}
 {% load compress %}
 {% block head_start %}
-        <sys-pytigon-init base_path="{{base_path}}"></sys-pytigon-init>
-        {% comment %}
-                <script language="javascript" nonce="{{ csp_nonce }}">
-                        window.BASE_PATH = '{{base_path}}';
-                </script>
-        {% endcomment %}
+        <meta name="base-path" content="{{ base_path }}">
         {% jscript_link 'pytigon_js/pytigon-tools.js' %}
 {% endblock %}
 {% block js_scripts_base %}
@@ -66,25 +61,6 @@
         {% endif %}
         {% module_link 'pytigon_js/pytigon.js' %}
 {% endblock %}
-{% block jquery_init %}
-      {% block js_app_init %}
-                function base_fragment_init() {}
-        {% block component_init %}
-                var component_init = null
-        {% endblock %}
-        app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE|safe}}', '{{ gen_time }}' );
-      {% endblock %}
-{% endblock %}
-{% block jquery_ready_start %}
-        jQuery(document).ready(function() {
-{% endblock %}
-{% block jquery_ready %}
-        jquery_ready();
-        base_fragment_init();
-{% endblock %}
-{% block jquery_ready_end %}
-    });
-{% endblock %}
 {% block js_scripts %}
         {% if form_edit or form_delete or form_info %}
                 {% if form_ext %}
@@ -94,18 +70,15 @@
                 {{ block.super }}
         {% endif %}
 {% endblock %}
-{% block js_extrascipts_init %}
+{% block page_footer_scripts %}
         {% if form_edit or form_delete or form_info %}
                 {% if form_ext %}
                         {{ block.super }}
                 {% endif %}
           {% else %}
+                <script type="module" src="{{base_path}}schsys/dstatic/desktop_base.js"></script>
                 {{ block.super }}
         {% endif %}
-{% endblock %}
-{% block js_script_body %}
-        {% block jquery_ovr %}
-        {% endblock %}
 {% endblock %}
 {% block css_links %}
         {% css_link 'themes/variables.css' %}

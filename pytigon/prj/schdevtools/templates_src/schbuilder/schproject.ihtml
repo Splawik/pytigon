@@ -54,6 +54,7 @@
         manage,Manage(Other options),[|client://categories/preferences-system.png]
         field_list/schlocale_set,Locale(Other options),[|client://apps/preferences-system-network-proxy.png]
         field_edit/icon_code,Icon code(Other options),[|client://categories/applications-graphics.png],_parent
+        field_edit/app_main,Init js script(Other options),client://actions/format-justify-left.png,_parent
         field_edit/user_app_template,Patches,client://actions/edit-find-replace.png,_parent
         field_edit/doc,Doc(Other options),[|client://apps/help-browser.png],_top2
         gen,Build,[|client://categories/applications-multimedia.png]

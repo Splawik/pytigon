@@ -113,18 +113,7 @@
         {% endif %}
         {% block page_footer %}
                 {% if not 'no_scripts' in request.GET %}
-                        {% block js_extrascipts_init %}
-                                <script type="module" nonce="{{ csp_nonce }}">
-                                        {% block jquery_init %}{% endblock %}
-                                        {% block jquery_init_once %}{% endblock %}
-                                        {% block jquery_ready_all %}
-                                                {% block jquery_ready_start %}{% endblock %}
-                                                {% block jquery_ready %}{% endblock %}
-                                                {% block jquery_ready_end %}{% endblock %}
-                                        {% endblock %}
-                                        {% block js_script_body %}
-                                        {% endblock %}
-                                </script>
+                        {% block page_footer_scripts %}
                         {% endblock %}
                 {% endif %}
                 {% block page_finish %}

@@ -1,0 +1,28 @@
+% extends 'js/base0.html'|translate:lang
+
+% load exfiltry
+% load exsyntax
+% load static
+% load compress
+
+%% init
+    %% js_app_init
+        .function base_fragment_init() {}
+    %% component_init
+        .var component_init = null
+    .app_init('{{prj_name}}', '{{application_type}}', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE|safe}}', '{{ gen_time }}' );
+
+%% ready_start
+    .jQuery(document).ready(function() {
+
+
+%% ready
+    .jquery_ready();
+    .base_fragment_init();
+
+
+%% ready_end
+  });
+
+%% body
+    %% jquery_ovr

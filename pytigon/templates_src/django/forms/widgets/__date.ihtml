@@ -1,5 +1,0 @@
-<div class="date-widget-wrapper">
-    <input type="{{ widget.type }}" name="{{ widget.name }}"{% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}"{%  endif %}{% include "django/forms/widgets/attrs.html" %} />
-    <i class='fa fa-calendar date-widget-icon' onclick='return false;'></i>
-</div>
-

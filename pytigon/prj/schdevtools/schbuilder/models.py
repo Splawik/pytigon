@@ -324,7 +324,6 @@ GuiElements_CHOICES = [
 
 
 class SChProject(JSONModel):
-
     class Meta:
         verbose_name = _("Pytigon project")
         verbose_name_plural = _("Pytigon projects")
@@ -670,7 +669,6 @@ admin_register(SChProject)
 
 
 class SChApp(JSONModel):
-
     class Meta:
         verbose_name = _("SChApp")
         verbose_name_plural = _("SChApp")
@@ -968,7 +966,6 @@ admin_register(SChApp)
 
 
 class SChChoice(models.Model):
-
     class Meta:
         verbose_name = _("SChChoice")
         verbose_name_plural = _("SChChoice")
@@ -1000,7 +997,6 @@ admin_register(SChChoice)
 
 
 class SChChoiceItem(models.Model):
-
     class Meta:
         verbose_name = _("SChChoiceItem")
         verbose_name_plural = _("SChChoiceItem")
@@ -1032,7 +1028,6 @@ admin_register(SChChoiceItem)
 
 
 class SChTable(models.Model):
-
     class Meta:
         verbose_name = _("SChTable")
         verbose_name_plural = _("SChTable")
@@ -1127,7 +1122,6 @@ admin_register(SChTable)
 
 
 class SChField(models.Model):
-
     class Meta:
         verbose_name = _("SChField")
         verbose_name_plural = _("SChField")
@@ -1227,8 +1221,8 @@ class SChField(models.Model):
         else:
             return None
 
-    def save(self, force_insert=False, force_update=False):
-        super(SChField, self).save(force_insert, force_update)
+    # def save(self, force_insert=False, force_update=False):
+    #    super(SChField, self).save(force_insert, force_update)
 
     def __str__(self):
         return self.name
@@ -1369,7 +1363,6 @@ admin_register(SChField)
 
 
 class SChView(models.Model):
-
     class Meta:
         verbose_name = _("SChView")
         verbose_name_plural = _("SChView")
@@ -1566,7 +1559,6 @@ admin_register(SChView)
 
 
 class SChStatic(models.Model):
-
     class Meta:
         verbose_name = _("Static file")
         verbose_name_plural = _("Static files")
@@ -1618,7 +1610,6 @@ admin_register(SChStatic)
 
 
 class SChTemplate(models.Model):
-
     class Meta:
         verbose_name = _("SChTemplate")
         verbose_name_plural = _("SChTemplate")
@@ -1883,7 +1874,6 @@ admin_register(SChTemplate)
 
 
 class SChAppMenu(models.Model):
-
     class Meta:
         verbose_name = _("SChAppMenu")
         verbose_name_plural = _("SChAppMenu")
@@ -1984,7 +1974,6 @@ admin_register(SChAppMenu)
 
 
 class SChForm(models.Model):
-
     class Meta:
         verbose_name = _("Form")
         verbose_name_plural = _("Form")
@@ -2053,7 +2042,6 @@ admin_register(SChForm)
 
 
 class SChFormField(models.Model):
-
     class Meta:
         verbose_name = _("Form field")
         verbose_name_plural = _("Form field")
@@ -2162,7 +2150,6 @@ admin_register(SChFormField)
 
 
 class SChTask(models.Model):
-
     class Meta:
         verbose_name = _("SChTask")
         verbose_name_plural = _("SChTask")
@@ -2220,7 +2207,6 @@ admin_register(SChTask)
 
 
 class SChFile(models.Model):
-
     class Meta:
         verbose_name = _("SChFile")
         verbose_name_plural = _("SChFiles")
@@ -2273,7 +2259,6 @@ admin_register(SChFile)
 
 
 class SChLocale(models.Model):
-
     class Meta:
         verbose_name = _("Locale")
         verbose_name_plural = _("Locales")
@@ -2299,7 +2284,6 @@ admin_register(SChLocale)
 
 
 class SChTranslate(models.Model):
-
     class Meta:
         verbose_name = _("Translate")
         verbose_name_plural = _("Translate")
@@ -2331,7 +2315,6 @@ admin_register(SChTranslate)
 
 
 class SChChannelConsumer(models.Model):
-
     class Meta:
         verbose_name = _("Channel consumer")
         verbose_name_plural = _("Channel consumers")

@@ -42,6 +42,10 @@ else:
 if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")):
     PRODUCTION_VERSION = False
 
+if ENV("PUBLIC"):
+    PUBLIC = True
+else:
+    PUBLIC = False
 
 SHOW_LOGIN_WIN = True
 
