@@ -1,0 +1,78 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/tree.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            import schbrowser.models
+            self.cut_id = None
+            self.bookmarks = schbrowser.models.bookmarks
+
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "go": "client://actions/go-jump.png",
+                    "clear": "wx.ART_DELETE",
+                    "cut": "wx.ART_CUT",
+                    "paste": "wx.ART_PASTE"
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            if '/go' in href:
+                okno = wx.GetApp().GetTopWindow().new_main_page("^standard/webview/widget_web.html", target)
+                okno.body.WEB.go(target)
+                return True
+            elif '/cut' in href:
+                self.cut_id = int(target)
+                return True
+            elif '/paste' in href:
+                if self.cut_id and self.cut_id>0:
+                    b = self.bookmarks.objects.get(id=self.cut_id)
+                    parent_pk = int(target)
+                    if parent_pk > 0:
+                        b.parent = self.bookmarks.objects.get(id=parent_pk)
+                    else:
+                        b.parent = None
+                    b.save()
+                return True
+            else:
+                return None
+
+
+</script>
+{% endblock %}
+{% block form_header2 %}
+        <td>
+                {% list_action "paste" "Paste" None parent_pk %}
+        </td>
+{% endblock %}
+{% block all %}
+        {% with form_width=800 form_height=600 %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block table_header %}
+        <tr><td> + </td><td> ID </td><td> Name </td><td> Url </td><td> Action </td></tr>
+{% endblock %}
+{% block table_content_obj %}
+                <td><a href="{{object.id}}/info?height=250&width=300" title="Informacje szczegółowe" class="thickbox">{{object.id}}</a></td>
+                <td>{{object.name}}</td>
+                <td>
+                {{object.url}}
+                </td>
+{% endblock %}
+{% block table_content_action %}
+        {% row_actions %}
+                edit
+                delete
+                go,Go,None,object.url
+                cut,Cut,None,object.id
+        {% endrow_actions %}
+{% endblock %}
+{% block row_edit %}
+        {% form %}
+        {% endform %}
+{% endblock %}
+

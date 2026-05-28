@@ -122,7 +122,7 @@ class TabMenu:
         if push_state and window.PUSH_STATE:
             history_push_state(menu_item.title, menu_item.url)
 
-    def register(self, title):
+    def register_title(self, title):
         """Pre-register a tab title (marks it as reserved with '$$$').
 
         Args:
@@ -279,7 +279,7 @@ class TabMenu:
             if self.is_open(title):
                 self.activate(title)
             else:
-                self.register(title)
+                self.register_title(title)
                 if url:
                     href = url
                 else:

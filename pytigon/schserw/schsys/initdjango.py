@@ -27,19 +27,22 @@ Modifications to Django:
 """
 
 import mimetypes
-from django.forms.widgets import TextInput, PasswordInput
-from django.db import models
 from copy import deepcopy
+
+from django.db import models
 from django.forms.forms import BaseForm
-
-
+from django.forms.widgets import TextInput, PasswordInput
 from django_bootstrap5.forms import render_form
 
+# NOTE: The monkey-patches below modify Django internals at import time.
+# They have been stable since Django 2.x but may need updating for newer Django versions.
+# See: https://docs.djangoproject.com/en/stable/ref/forms/renderers/ for the official
+# form rendering customization mechanism introduced in Django 4.0.
 
 django.db.models.fields.prep_for_like_query = lambda x: str(x).replace("\\", "\\\\")
 
-BaseForm._old_html_output = BaseForm._html_output
-BaseForm._old_as_p = BaseForm.as_p
+_original_html_output = BaseForm._html_output
+_original_as_p = BaseForm.as_p
 
 models.TreeForeignKey = models.ForeignKey
 models.GTreeForeignKey = models.ForeignKey
@@ -85,18 +88,22 @@ django.forms.fields.CharField.widget_attrs = widget_attrs
 
 
 class FormProxy:
-    """Proxy class to render specific fields of a form as a table."""
+    """Proxy class to render specific fields of a form as a table.
+
+    Can be used directly without the ModelForm monkey-patch:
+        proxy = FormProxy(my_form)
+        proxy["field1__field2"]
+    """
 
     def __init__(self, form):
         self.form = form
 
     def __getitem__(self, fields):
-        """Render specified fields as a table."""
         tmp_fields = self.form.fields
         tabfields = fields.split("__")
         new_fields = deepcopy(self.form.fields)
         for name, field in list(new_fields.items()):
-            if not name in tabfields:
+            if name not in tabfields:
                 del new_fields[name]
         self.form.fields = new_fields
         ret = self.form.as_table()
@@ -104,8 +111,18 @@ class FormProxy:
         return ret
 
 
+class FieldsAsTableMixin:
+    """Mixin that adds fields_as_table() method to form classes.
+
+    Alternative to monkey-patching ModelForm. Usage:
+        class MyForm(FieldsAsTableMixin, forms.ModelForm):
+            ...
+    """
+    def fields_as_table(self):
+        return FormProxy(self)
+
+
 def fields_as_table(self):
-    """Return a FormProxy instance for the form."""
     return FormProxy(self)
 
 

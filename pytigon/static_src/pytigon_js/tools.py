@@ -467,9 +467,7 @@ def _req_post(req, url, data, complete, callback_on_error=None, content_type=Non
     return req
 
 
-def ajax_post(
-    url, data, complete, callback_on_error, process_req=None, content_type=None
-):
+def ajax_post(url, data, complete, callback_on_error, process_req=None, content_type=None):
     """Perform an AJAX POST request.
 
     Args:
@@ -632,9 +630,7 @@ def load_css(path, on_load=None):
             if on_load:
                 on_load(req)
             else:
-                jQuery('<style type="text/css"></style>').html(
-                    req.responseText
-                ).appendTo("head")
+                jQuery('<style type="text/css"></style>').html(req.responseText).appendTo("head")
 
         req.onload = _onload
 
@@ -694,13 +690,29 @@ def load_js(path, fun):
             window.require = None
             window.define = None
             script = document.createElement("script")
-            script.text = req.responseText
-            document.head.appendChild(script).parentNode.removeChild(script)
-            window.requirejs = _requirejs
-            window.require = _require
-            window.define = _define
 
-            on_load_js(path)
+            # script.text = req.responseText
+            # document.head.appendChild(script).parentNode.removeChild(script)
+
+            blob = Blob([req.responseText], {"type": "application/javascript"})
+            script.src = URL.createObjectURL(blob)
+
+            def _onload2():
+                URL.revokeObjectURL(script.src)
+                # document.head.removeChild(script)
+                window.requirejs = _requirejs
+                window.require = _require
+                window.define = _define
+                on_load_js(path)
+
+            script.onload = _onload2
+            document.head.appendChild(script).parentNode.removeChild(script)
+
+            # window.requirejs = _requirejs
+            # window.require = _require
+            # window.define = _define
+
+            # on_load_js(path)
 
         req.onload = _onload
 
@@ -1203,16 +1215,12 @@ def process_resize(target_element):
     param["w"] = window.innerWidth
     param["h"] = window.innerHeight
     body_rect = document.body.getBoundingClientRect()
-    elements1 = Array.prototype.slice.call(
-        target_element.querySelectorAll(".flexible_size")
-    )
-    elements2 = Array.prototype.slice.call(
-        target_element.querySelectorAll(".flexible_size_round2")
-    )
+    elements1 = Array.prototype.slice.call(target_element.querySelectorAll(".flexible_size"))
+    elements2 = Array.prototype.slice.call(target_element.querySelectorAll(".flexible_size_round2"))
     elements3 = []
-    if target_element.classList.contains(
-        "flexible_size"
-    ) or target_element.classList.contains("flexible_size_round2"):
+    if target_element.classList.contains("flexible_size") or target_element.classList.contains(
+        "flexible_size_round2"
+    ):
         elements3.append(target_element)
     for elements in (elements1, elements2, elements3):
         for elem in elements:
@@ -1364,11 +1372,7 @@ def correct_href(href, elements=None):
 
     if elements != None:
         for element in elements:
-            if (
-                element
-                and element.hasAttribute("get-param")
-                and element.getAttribute("get-param")
-            ):
+            if element and element.hasAttribute("get-param") and element.getAttribute("get-param"):
                 if not element.getAttribute("get-param") in href:
                     if "?" in href:
                         href += "&" + element.getAttribute("get-param")

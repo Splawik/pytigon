@@ -1,7 +1,2 @@
 # Configuration Management
-# Centralized configuration handling
-
-from .manager import ConfigManager
-from .schemas import ConfigSchema
-
-__all__ = ["ConfigManager", "ConfigSchema"]
+# Placeholder for future centralized configuration handling.

@@ -1,0 +1,407 @@
+{
+    "model": "SChProject",
+    "attributes": {
+        "jsondata": null,
+        "name": "schwebtrapper",
+        "title": "Web trapper",
+        "version": "latest",
+        "main_view": true,
+        "ext_apps": "_schwiki.schwiki,_schtools.schtasks,_schdata.schelements",
+        "plugins": null,
+        "gui_type": "tree",
+        "gui_elements": "toolbar(browse)",
+        "login_required": false,
+        "public": false,
+        "main": false,
+        "start_page": null,
+        "user_app_template": "",
+        "app_main": null,
+        "doc": "def crawl_tree(tree) :\n  if type(tree.tag) is str :\n    handle_starttag(tree.tag, tree.attrib)\n    if tree.text :\n      handle_data(tree.text)\n    for node in tree :\n      crawl_tree(node)\n    handle_endtag(tree.tag)\n  if tree.tail :\n    handle_data(tree.tail)\n    ",
+        "desktop_gui_type": "auto",
+        "smartfon_gui_type": "auto",
+        "tablet_gui_type": "auto",
+        "additional_settings": "INSTALLED_APPS.append('easy_thumbnails')",
+        "custom_tags": "",
+        "readme_file": null,
+        "license_file": null,
+        "install_file": null,
+        "encoded_zip": null,
+        "icon": "None",
+        "icon_size": "1",
+        "icon_code": null,
+        "git_repository": "https://git.pytigon.cloud/pytigon/schwebtrapper.git",
+        "autor_name": null,
+        "autor_email": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "template_desktop": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_schweb": "% extends 'theme/schweb_base.html'|translate:lang\n\n%% toolbars_start\n    tr\n        td\n        td\n        td...Google\n        td...1\n        td...client://apps/utilities-terminal.png\n        td...html\n        td...Google,http://www.google.com?schtml=browser_panel\n",
+        "template_theme": null
+    },
+    "children": [
+        {
+            "model": "SChApp",
+            "attributes": {
+                "jsondata": null,
+                "name": "schbrowser",
+                "title": "Browser",
+                "module_name": "Tools",
+                "module_title": "Tools",
+                "perms": false,
+                "index": null,
+                "model_code": null,
+                "view_code": "import json\nfrom django.http import HttpResponseRedirect, HttpResponse, HttpResponseBadRequest\nfrom .models import history\nfrom pytigon_lib.schhttptools import httpclient\nfrom html.parser import HTMLParser\nimport re\nfrom pytigon_lib.schhttptools import httpclient\nfrom django_q.tasks import async_task, result",
+                "urls_code": null,
+                "tasks_code": "from pytigon_lib.schhttptools import httpclient\nfrom html.parser import HTMLParser\nfrom pytigon_lib.schhtml.parser import Parser\nimport re\nfrom pytigon_lib.schtools.schjson import json_dumps\nimport urllib.parse\nimport httpx\n",
+                "consumer_code": null,
+                "doc": null,
+                "user_param": null,
+                "icon": null,
+                "icon_size": "1",
+                "icon_code": null
+            },
+            "children": [
+                {
+                    "model": "SChTable",
+                    "attributes": {
+                        "base_table": "",
+                        "name": "bookmarks",
+                        "verbose_name": "Bookmarks",
+                        "verbose_name_plural": "Bookmarks",
+                        "metaclass_code": null,
+                        "table_code": null,
+                        "ordering": "['id']",
+                        "doc": null,
+                        "generic": true,
+                        "url_params": "",
+                        "proxy_model": null
+                    },
+                    "children": [
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "parent",
+                                "description": "Parent",
+                                "type": "PtigHiddenForeignKey",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": "",
+                                "help_text": "",
+                                "choices": "",
+                                "rel_to": "'self'",
+                                "param": "",
+                                "url_params": ""
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "name",
+                                "description": "Name",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": "",
+                                "help_text": "",
+                                "choices": "",
+                                "rel_to": "",
+                                "param": "max_length=64",
+                                "url_params": ""
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "url",
+                                "description": "url",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": "",
+                                "help_text": "",
+                                "choices": "",
+                                "rel_to": "",
+                                "param": "max_length=256",
+                                "url_params": ""
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChTable",
+                    "attributes": {
+                        "base_table": "",
+                        "name": "history",
+                        "verbose_name": "History",
+                        "verbose_name_plural": "History",
+                        "metaclass_code": null,
+                        "table_code": null,
+                        "ordering": "['id']",
+                        "doc": null,
+                        "generic": true,
+                        "url_params": "",
+                        "proxy_model": null
+                    },
+                    "children": [
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "date",
+                                "description": "Date",
+                                "type": "DateTimeField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": "",
+                                "help_text": "",
+                                "choices": "",
+                                "rel_to": "",
+                                "param": "auto_now=True",
+                                "url_params": ""
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "url",
+                                "description": "url",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": "",
+                                "help_text": "",
+                                "choices": "",
+                                "rel_to": "",
+                                "param": "max_length=256",
+                                "url_params": ""
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "search",
+                        "view_type": "u",
+                        "param": "",
+                        "url": "search/",
+                        "view_code": "q = request.GET.get('term', request.POST.get('term', None))\nif not q:\n    return HttpResponse(content_type='text/plain')\n\nlimit = request.GET.get('limit', request.POST.get('limit', 15))\n\ntry:\n    limit = int(limit)\nexcept ValueError:\n    return HttpResponseBadRequest()\n\nif q!=\" \":\n    tab = history.objects.filter(url__istartswith=q)[:limit]\nelse:\n    tab = history.objects.all()[:limit]\nout_tab = []\nfor pos in tab:\n    out_tab.append( { 'id': pos.id, 'label': pos.url, 'value': pos.url} )\n\njson_data = json.dumps(out_tab)\nreturn HttpResponse(json_data, content_type=\"application/x-javascript\")\n",
+                        "url_params": "",
+                        "ret_type": "U",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "bookmarks",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n\n% extends \"forms/tree.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% pythoncode\n    script language=python\n        def init_form(self):\n            import schbrowser.models\n            self.cut_id = None\n            self.bookmarks = schbrowser.models.bookmarks\n            \n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                    \"go\": \"client://actions/go-jump.png\",\n                    \"clear\": \"wx.ART_DELETE\",\n                    \"cut\": \"wx.ART_CUT\",\n                    \"paste\": \"wx.ART_PASTE\"\n                }\n                child.set_bitmaps(bitmaps)\n                \n        def filter_url(self, target, href):\n            if '/go' in href:\n                okno = wx.GetApp().GetTopWindow().new_main_page(\"^standard/webview/widget_web.html\", target)\n                okno.body.WEB.go(target)\n                return True\n            elif '/cut' in href:\n                self.cut_id = int(target)\n                return True\n            elif '/paste' in href:\n                if self.cut_id and self.cut_id>0:\n                    b = self.bookmarks.objects.get(id=self.cut_id)\n                    parent_pk = int(target)\n                    if parent_pk > 0:\n                        b.parent = self.bookmarks.objects.get(id=parent_pk)\n                    else:\n                        b.parent = None\n                    b.save()\n                return True                \n            else:\n                return None\n\n\n%% form_header2\n    td\n        % list_action \"paste\" \"Paste\" None parent_pk\n        \n\n%% all\n    %with form_width=800 form_height=600\n        {{ block.super }}\n \n%% table_header\n    [ + | ID | Name | Url | Action ]\n\n\n%% table_content_obj\n        td:::a href={{object.id}}/info?height=250&width=300,,,title=Informacje szczeg\u00f3\u0142owe,,,class=thickbox...{{object.id}}\n        td...{{object.name}}\n        td...{{object.url}}\n\n%% table_content_action            \n    % row_actions:\n        .edit\n        .delete\n        .go,Go,None,object.url\n        .cut,Cut,None,object.id\n    \n\n%% row_edit\n    % form:\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "history",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% pythoncode\n    script language=python\n        def init_form(self):\n            import schbrowser.models\n            self.cut_id = None\n            self.history = schbrowser.models.history\n\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                    \"go\": \"client://actions/go-jump.png\",\n                    \"clear\": \"wx.ART_DELETE\",\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            if '/go' in href:\n                okno = wx.GetApp().GetTopWindow().new_main_page(\"^standard/webview/widget_web.html\", target)\n                okno.body.WEB.go(target)\n                return True\n            elif '/clear' in href:\n                self.history.objects.all().delete()\n                return True\n            return None\n\n%% all\n    %with form_width=800 form_height=600\n        {{ block.super }}\n\n%% scroll\n\n%% form_header\n    p\n        % list_action \"clear\" \"Clear\"\n\n%% list_row_header\n    td...Date\n    td...Url\n\n%% list_row\n    td:::a href={{object.id}}/info?width=800&height=600,,,title=History,,,class=thickbox...{{object.id}}\n    td...{{object.date|isoformat}}\n    td...{{object.url}}\n\n%% list_row_actions\n    % row_actions:\n        .go,Go,None,object.url\n        .delete\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "FormMultiDownload",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n\n% extends \"tasks/v_edit_task.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% pythoncode\n    % if object:\n        {{ block.super }}\n\n%% all\n    %with show_title_bar=1 title='Download' form_edit=False:\n        {{ block.super }}\n\n%% form_content\n    table class=filter_form_frame,,,width=100%\n        div class=inline-form-body\n            {{ form.non_field_errors }}\n            % form:\n        div class=inline-form-body\n            div class=form-group\n                div class=controls\n                div class=controls\n                    input type=submit,,,value=Od\u015bwie\u017c,,,class=btn btn-info,,,target=_self,,,height=44\n\n%% list_content_body\n    % if object_list:\n        textarea\n            {% for pos in object_list %}{{pos}}\n            {% endfor %}\n\n%% task_title\n\n%% task_status\n\n%% wx_task_progress\n\n%% wx_task_input\n\n\n\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "Bookmarks",
+                        "url": "table/bookmarks/0/form/tree",
+                        "url_type": "desktop",
+                        "perms": "",
+                        "icon": "client://actions/bookmark-new.png",
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "History",
+                        "url": "table/history/-/form/list",
+                        "url_type": "desktop",
+                        "perms": "",
+                        "icon": "client://emblems/emblem-photos.png",
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "Download",
+                        "url": "form/MultiDownload/",
+                        "url_type": "desktop",
+                        "perms": "",
+                        "icon": "client://status/folder-open.png",
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                },
+                {
+                    "model": "SChForm",
+                    "attributes": {
+                        "name": "MultiDownload",
+                        "module": "",
+                        "process_code": "parm = {}\nparm[\"base_address\"] = self.cleaned_data['base_address']\nparm[\"source_page\"] = self.cleaned_data['source_page']\nparm[\"subpage_href\"] = self.cleaned_data['subpage_href']\nparm[\"download_mask\"] = self.cleaned_data['download_mask']\nparm[\"levels\"] = self.cleaned_data['levels']\nparm[\"test_only\"]  = self.cleaned_data['test_only']\n\nif not 'http' in parm[\"base_address\"]:\n    parm[\"base_address\"] = 'http://'+parm[\"base_address\"]\n\nif not parm[\"source_page\"]:\n    parm[\"source_page\"] = '/'\n\ntask_manager = get_process_manager()\n_id = task_manager.put(request, \"Scan html pages\", \"@schbrowser:scan_html\", user_parm = parm)\n_id = async_task(\"schbrowser.tasks.scan_html\", user_param = param)        \n#l = task_manager.list_threads(all=True)\nobject = task_manager.process_list[_id]\n#object = None\n#for pos in l:    \n#    if pos.id == _id:\n#        object = pos\n#        break\nreturn { \"ret\": task_id }\n#return { \"object\": object }\n",
+                        "end_class_code": "",
+                        "end_code": "",
+                        "asynchronous": false,
+                        "doc": ""
+                    },
+                    "children": [
+                        {
+                            "model": "SChFormField",
+                            "attributes": {
+                                "name": "base_address",
+                                "type": "CharField",
+                                "required": true,
+                                "label": "Base address",
+                                "initial": "'http://learningenglish.voanews.com'",
+                                "widget": "",
+                                "help_text": "",
+                                "error_messages": "",
+                                "param": "max_length=None, min_length=None"
+                            }
+                        },
+                        {
+                            "model": "SChFormField",
+                            "attributes": {
+                                "name": "source_page",
+                                "type": "CharField",
+                                "required": false,
+                                "label": "Source page",
+                                "initial": "'/archive/learningenglish-programs-radio-in-the-news/latest/1577/1577.html'",
+                                "widget": "",
+                                "help_text": "",
+                                "error_messages": "",
+                                "param": "max_length=None, min_length=None"
+                            }
+                        },
+                        {
+                            "model": "SChFormField",
+                            "attributes": {
+                                "name": "subpage_href",
+                                "type": "CharField",
+                                "required": false,
+                                "label": "Next page mask",
+                                "initial": "'/archive/learningenglish-programs-radio-in-the-news/.*;@/content/.*'",
+                                "widget": "",
+                                "help_text": "",
+                                "error_messages": "",
+                                "param": "max_length=None, min_length=None"
+                            }
+                        },
+                        {
+                            "model": "SChFormField",
+                            "attributes": {
+                                "name": "download_mask",
+                                "type": "CharField",
+                                "required": false,
+                                "label": "Download href mask",
+                                "initial": "'.*hq\\.mp3.*'",
+                                "widget": "",
+                                "help_text": "",
+                                "error_messages": "",
+                                "param": "max_length=None, min_length=None"
+                            }
+                        },
+                        {
+                            "model": "SChFormField",
+                            "attributes": {
+                                "name": "levels",
+                                "type": "IntegerField",
+                                "required": true,
+                                "label": "Levels",
+                                "initial": "'10'",
+                                "widget": "",
+                                "help_text": "",
+                                "error_messages": "",
+                                "param": "max_value=None, min_value=None"
+                            }
+                        },
+                        {
+                            "model": "SChFormField",
+                            "attributes": {
+                                "name": "test_only",
+                                "type": "BooleanField",
+                                "required": false,
+                                "label": "Test only",
+                                "initial": "True",
+                                "widget": "",
+                                "help_text": "",
+                                "error_messages": "",
+                                "param": ""
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChTask",
+                    "attributes": {
+                        "name": "download_task",
+                        "code": "base_address, url = kwargs['user_parm']\npath = urllib.parse.urljoin(base_address, url)\nif cproxy:\n    cproxy.log(url)\nr = httpx.get(path)\nfile_name = url.split('?')[0].split('/')[-1]\nwith open(\"/tmp/\"+file_name, \"wb\") as f:\n    f.write(r.content)\nif cproxy:\n    cproxy.log(\"finish\")\n",
+                        "doc": "",
+                        "perms": null,
+                        "publish": null,
+                        "publish_group": null
+                    }
+                },
+                {
+                    "model": "SChTask",
+                    "attributes": {
+                        "name": "scan_html",
+                        "code": "parm = kwargs['user_parm']\nbase_address = parm['base_address']\nsource_page = parm['source_page']\nsubpage_href = parm['subpage_href']\ndownload_mask = parm['download_mask']\nlevels = parm['levels']\ntest_only = parm['test_only']\n\ndef msg(s):\n    cproxy.log(s)\n\ndef process_url(url):\n    cproxy.add_task('system', 'Download', \"@schbrowser:download_task\", user_parm = [base_address, url])\n    msg(\"download: \"+ url)\n\nhttp = httpclient.HttpClient(\"\")\n\ndef _process(href, href_list=[], download_list=[], history_list=[]):\n    class _DownloadHTMLParser(Parser):\n        def __init__(self, href_list=[], download_list=[], history_list = []):\n            self.href_list = href_list\n            self.download_list = download_list\n            self.history_list = history_list\n            super().__init__()\n            \n        def handle_starttag(self, tag, attrs):\n            dattrs = dict(attrs)\n            if 'href' in dattrs:\n                if subpage_href:\n                    for pos in subpage_href.split(';'):\n                        if pos.startswith('@'):\n                            pos=pos[1:]\n                            end = True\n                        else:\n                            end = False\n                        matchObj = re.match( pos, dattrs['href'], re.M|re.I)\n                        if matchObj:\n                            if not dattrs['href'] in self.history_list:\n                                if end:\n                                    self.href_list.append('@'+dattrs['href'])\n                                    self.history_list.append(dattrs['href'])\n                                else:\n                                    self.href_list.append(dattrs['href'])\n                                    self.history_list.append(dattrs['href'])\n                            return\n                for pos in download_mask.split(';'):\n                    matchObj = re.match( pos, dattrs['href'], re.M|re.I)\n                    if matchObj:\n                        href=dattrs['href'].split('?')[0]\n                        if not href in self.download_list:\n                            self.download_list.append(href)\n                            process_url(href)\n    try:\n        txt = cproxy.input_queue.get_nowait()\n        if txt == \"^C\":\n            return \n    except Empty:\n        pass\n\n    path = urllib.parse.urljoin(base_address, href)\n    r = httpx.get(path)    \n    p = r.text\n    parser = _DownloadHTMLParser(href_list, download_list, history_list)\n    msg(\"SCAN: \" + path)\n    parser.feed(p)\n    return (parser.href_list, parser.download_list, parser.history_list)\n\nhref_list, download_list, history_list  = _process(source_page)\nmsg(\"INFO:\" + source_page)\nx = 0\nwhile x < levels:\n    href_list2 = []\n    for pos in href_list:\n        if pos.startswith('@'):\n            _process(pos[1:], [], download_list, history_list)\n        else:\n            _process(pos, href_list2, download_list, history_list)\n    href_list = href_list2\n    x += 1\nmsg(\"INFO:END!\")\n\n",
+                        "doc": "",
+                        "perms": null,
+                        "publish": null,
+                        "publish_group": null
+                    }
+                }
+            ]
+        }
+    ]
+}

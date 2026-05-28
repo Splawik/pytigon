@@ -1,0 +1,63 @@
+{# -*- coding: utf-8 -*- #}
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block pythoncode %}
+        <script language="python">
+        def init_form(self):
+            import schbrowser.models
+            self.cut_id = None
+            self.history = schbrowser.models.history
+
+        def signal_from_child(self, child, signal):
+            if signal=='set_bitmap_list':
+                bitmaps = {
+                    "go": "client://actions/go-jump.png",
+                    "clear": "wx.ART_DELETE",
+                }
+                child.set_bitmaps(bitmaps)
+
+        def filter_url(self, target, href):
+            if '/go' in href:
+                okno = wx.GetApp().GetTopWindow().new_main_page("^standard/webview/widget_web.html", target)
+                okno.body.WEB.go(target)
+                return True
+            elif '/clear' in href:
+                self.history.objects.all().delete()
+                return True
+            return None
+
+</script>
+{% endblock %}
+{% block all %}
+        {% with form_width=800 form_height=600 %}
+                {{ block.super }}
+        {% endwith %}
+{% endblock %}
+{% block scroll %}
+{% endblock %}
+{% block form_header %}
+        <p>
+                {% list_action "clear" "Clear" %}
+        </p>
+{% endblock %}
+{% block list_row_header %}
+        <td>Date</td>
+        <td>
+        Url
+        </td>
+{% endblock %}
+{% block list_row %}
+        <td><a href="{{object.id}}/info?width=800&height=600" title="History" class="thickbox">{{object.id}}</a></td>
+        <td>{{object.date|isoformat}}</td>
+        <td>
+        {{object.url}}
+        </td>
+{% endblock %}
+{% block list_row_actions %}
+        {% row_actions %}
+                go,Go,None,object.url
+                delete
+        {% endrow_actions %}
+{% endblock %}
+

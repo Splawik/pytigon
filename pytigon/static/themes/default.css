@@ -1171,6 +1171,11 @@ table.layout0 tr td {
 .v-slider-line {
   background-color: #eee; }
 
+/* Additional */
+/* -------------------------------------------------- */
+.height-100p {
+  height: 100% !important; }
+
 /* DocHead & Separators */
 /* -------------------------------------------------- */
 .dochead-separator {

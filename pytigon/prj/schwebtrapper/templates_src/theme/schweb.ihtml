@@ -1,0 +1,11 @@
+% extends 'theme/schweb_base.html'|translate:lang
+
+%% toolbars_start
+    tr
+        td
+        td
+        td...Google
+        td...1
+        td...client://apps/utilities-terminal.png
+        td...html
+        td...Google,http://www.google.com?schtml=browser_panel

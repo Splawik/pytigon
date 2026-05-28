@@ -1,10 +1,7 @@
-*.js linguist-detectable=false
-*.html linguist-detectable=false
-*.css linguist-detectable=false
-*.ihtml linguist-detectable=false
-*.py linguist-detectable=true
+# Vendored/third-party code
 pytigon/static/* linguist-vendored
 pytigon/ext_lib/* linguist-vendored
 pytigon/ext_prg/* linguist-vendored
-pytigon/schappdata/media/* linguist-vendored
-pytigon/templates/* linguist-vendored
+pytigon/appdata/media/* linguist-vendored
+pytigon/templates/* linguist-generated
+pytigon/templates_src/* linguist-detectable=false
