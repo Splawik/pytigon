@@ -55,6 +55,7 @@ def view_importtableform(request, *argi, **argv):
 
 
 def autocomplete_search(request, type):
+
     q = request.GET.get("query", request.POST.get("query", None))
     if not q:
         return HttpResponse(content_type="text/plain")
@@ -77,6 +78,7 @@ def autocomplete_search(request, type):
 
 
 def set_user_param(request, **argv):
+
     key = request.POST.get("param", None)
     value = request.POST.get("value", None)
     user = request.user.username
@@ -97,6 +99,7 @@ def set_user_param(request, **argv):
 
 
 def get_user_param(request, **argv):
+
     key = request.POST.get("param", None)
     user = request.user.username
 
@@ -110,6 +113,7 @@ def get_user_param(request, **argv):
 
 @dict_to_template("schtools/v_import_table.html")
 def import_table(request, app, table):
+
     if request.FILES:
         if "import_file" in request.FILES:
             data = request.FILES["import_file"]

@@ -6,7 +6,6 @@
 % load subreport
 
 %% css
-    {# PDF-specific styles also extracted to pytigon/static_src/themes/inline.sass (body.report-pdf) #}
     style type=text/css{:}
         body:
             font-family:sans-serif

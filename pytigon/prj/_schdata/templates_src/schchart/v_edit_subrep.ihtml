@@ -15,7 +15,7 @@
             % for object in reports:
                 div 
                     %% rep_line
-                    div class=fab fab-scaled
+                    div class=fab,,,style=transform:scale(0.5); -webkit-transform:scale(0.5); -moz-transform:scale(0.5); -o-transform:scale(0.5); margin-left: -40px;
                         nav class=menu
                             input type=checkbox,,,href=#,,,class=menu-open,,,name=menu-open,,,id=menu-open-subrep-{{forloop.counter0}}
                             label class=menu-open-button,,,for=menu-open-subrep-{{forloop.counter0}},,,draggable=true,,,ondrop=subreport_drop(event,'{{base_path}}');,,,ondragstart=subreport_dragstart(event);,,,ondragenter=subreport_ondragenter(event);,,,ondragleave=subreport_ondragleave(event);,,,ondragover=subreport_ondragover(event);,,,name={{object.id}}

@@ -20,6 +20,7 @@ from datetime import datetime
 
 
 class Log(AssociatedModel):
+
     class Meta:
         verbose_name = _("Log")
         verbose_name_plural = _("Logi")
@@ -75,4 +76,4 @@ class Log(AssociatedModel):
             }
 
 
-admin.site.register(Log)
+admin_register(Log)

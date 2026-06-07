@@ -405,6 +405,8 @@ if CSP is not None:
             "data:",
             "http://*.tile.osm.org/",
             "https://*.tile.osm.org/",
+            "http://*.bossanova.uk/",
+            "https://*.bossanova.uk/",
         ],
         "worker-src": [CSP.SELF, "blob:"],
     }

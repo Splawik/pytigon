@@ -58,6 +58,7 @@ class upload_ptig(forms.Form):
     )
 
     def process(self, request, queryset=None):
+
         status = self.cleaned_data["status"]
         if status:
             if status == "1":
@@ -130,13 +131,13 @@ class download_ptig(forms.Form):
     project = forms.ChoiceField(
         label=_("Project"), required=True, choices=models.get_projects
     )
-    export_db = forms.BooleanField(
+    export_db = forms.NullBooleanField(
         label=_("Export database"),
-        required=False,
+        required=True,
     )
-    export_prj_source = forms.BooleanField(
+    export_prj_source = forms.NullBooleanField(
         label=_("Export project source"),
-        required=False,
+        required=True,
     )
 
 

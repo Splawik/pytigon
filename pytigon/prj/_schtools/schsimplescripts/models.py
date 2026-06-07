@@ -30,6 +30,7 @@ VIEW = """#Example:
 
 
 class Script(models.Model):
+
     class Meta:
         verbose_name = _("Script")
         verbose_name_plural = _("Scripts")
@@ -108,4 +109,4 @@ class Script(models.Model):
         return VIEW
 
 
-admin.site.register(Script)
+admin_register(Script)

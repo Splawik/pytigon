@@ -31,4 +31,4 @@ class Teest(models.Model):
     )
 
 
-admin.site.register(Teest)
+admin_register(Teest)

@@ -74,7 +74,7 @@ files = [
     "tbl.py",
     "widget.py",
     "pytigon_inline.py",
-    "pytigon.py",
+    "pytigon_main.py",
 ]
 
 

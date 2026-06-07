@@ -25,6 +25,7 @@ from schelements.models import *
 
 
 class CommonGroupDef(schelements.models.BaseObject):
+
     class Meta:
         verbose_name = _("Common group definition")
         verbose_name_plural = _("Common groups definition")
@@ -60,10 +61,11 @@ class CommonGroupDef(schelements.models.BaseObject):
         return self.name
 
 
-admin.site.register(CommonGroupDef)
+admin_register(CommonGroupDef)
 
 
 class CommonGroup(JSONModel):
+
     class Meta:
         verbose_name = _("Common group")
         verbose_name_plural = _("Common groups")
@@ -181,4 +183,4 @@ class CommonGroup(JSONModel):
             return gdef.action(self, action_name, argv)
 
 
-admin.site.register(CommonGroup)
+admin_register(CommonGroup)

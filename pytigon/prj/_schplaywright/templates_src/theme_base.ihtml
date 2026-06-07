@@ -23,7 +23,6 @@
     %% js_extrascipts
         {{block.super}}
         
-        
 
     %% extrastyle
         {{block.super}}

@@ -52,6 +52,7 @@ menu_icon_size_choices = [
 
 
 class Page(JSONModel):
+
     class Meta:
         verbose_name = _("Page")
         verbose_name_plural = _("Page")
@@ -272,10 +273,11 @@ class Page(JSONModel):
         return ""
 
 
-admin.site.register(Page)
+admin_register(Page)
 
 
 class WikiConf(JSONModel):
+
     class Meta:
         verbose_name = _("Wiki config")
         verbose_name_plural = _("Wiki config")
@@ -361,4 +363,4 @@ class WikiConf(JSONModel):
         return PUBLISH_FUN
 
 
-admin.site.register(WikiConf)
+admin_register(WikiConf)

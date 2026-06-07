@@ -1,0 +1,15 @@
+{
+  "name": "xterm",
+  "version": "1.0.0",
+  "description": "",
+  "main": "xterm.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@xterm/xterm": "^6.0.0"
+  }
+}

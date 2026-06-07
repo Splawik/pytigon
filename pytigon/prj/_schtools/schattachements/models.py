@@ -43,6 +43,7 @@ def upload_path_fun(obj, filename):
 
 
 class Attachement(AssociatedJSONModel):
+
     class Meta:
         verbose_name = _("Attachement")
         verbose_name_plural = _("Attachements")
@@ -117,4 +118,4 @@ class Attachement(AssociatedJSONModel):
             return False
 
 
-admin.site.register(Attachement)
+admin_register(Attachement)

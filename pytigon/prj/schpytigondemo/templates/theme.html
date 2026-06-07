@@ -1,7 +1,7 @@
 {% extends 'theme_base.html'|translate:lang %}
 {% load exsyntax %}
 {% block component_init %}
-        var component_init = { graphql_pub: 'https://www.pytigon.eu/graphql_public/', graphql_prv: 'https://www.pytigon.eu/graphql/', }
+        var component_init = { graphql_pub: 'https://www.pytigon.cloud/graphql_public/', graphql_prv: 'https://www.pytigon.cloud/graphql/', }
 {% endblock %}
 {% block js_app_init__out %}
         
@@ -37,9 +37,7 @@
 {% endblock %}
 {% block ext_js_scripts %}
         {{ block.super }}
-        {% jscript_link 'vanillajs_plugins/nunjucks/nunjucks.min.js' %}
         {% jscript_link 'vanillajs_plugins/pouchdb/pouchdb-7.3.0.min.js' %}
-        {% jscript_link 'vanillajs_plugins/graphql/graphql.min.js' %}
 {% endblock %}
 {% block login_background %}
                 <div class="login_background" style="background-image: url({{base_path}}static/schpytigondemo/kandinsky-style-desk.svg);background-size: 100% auto;background-position: center;"></div>

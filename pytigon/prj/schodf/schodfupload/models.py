@@ -31,4 +31,4 @@ class Rights(models.Model):
     )
 
 
-admin.site.register(Rights)
+admin_register(Rights)

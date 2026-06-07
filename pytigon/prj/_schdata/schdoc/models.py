@@ -129,10 +129,11 @@ class DocDef(schelements.models.BaseObject):
         return standard_table_action(cls, list_view, request, data, ["copy", "paste"])
 
 
-admin.site.register(DocDef)
+admin_register(DocDef)
 
 
 class Doc(JSONModel):
+
     class Meta:
         verbose_name = _("Document")
         verbose_name_plural = _("Documents")
@@ -245,4 +246,4 @@ class Doc(JSONModel):
         super().save(*args, **kwargs)
 
 
-admin.site.register(Doc)
+admin_register(Doc)

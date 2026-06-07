@@ -237,7 +237,7 @@ frontend_view = function flx_frontend_view (url, complete, callback_on_error, pa
         var _callback2, r;
         _callback2 = (function flx__callback2 (context) {
             var _callback3, template;
-            if ((((_pyfunc_op_equals(jQuery.type(context), "object"))) && _pyfunc_truthy(context["template"]))) {
+            if ((((_pyfunc_op_equals(Object.prototype.toString.call(context), "[object Object]"))) && _pyfunc_truthy(context["template"]))) {
                 _callback3 = (function flx__callback3 (template_str) {
                     var res;
                     res = window.nunjucks.renderString(template_str, context);
@@ -673,27 +673,17 @@ load_js = function flx_load_js (path, fun) {
         LOADED_FILES[path] = [fun];
         req = new XMLHttpRequest();
         _onload = (function flx__onload () {
-            var _define, _onload2, _require, _requirejs, blob, script;
-            _requirejs = window.requirejs;
-            _require = window.require;
-            _define = window.define;
-            window.requirejs = null;
-            window.require = null;
-            window.define = null;
+            var _onload2, blob, script;
             script = document.createElement("script");
             blob = new Blob([req.responseText], ({type: "application/javascript"}));
             script.src = URL.createObjectURL(blob);
             _onload2 = (function flx__onload2 () {
-                URL.revokeObjectURL(script.src);
-                window.requirejs = _requirejs;
-                window.require = _require;
-                window.define = _define;
                 on_load_js(path);
                 return null;
             }).bind(this);
 
             script.onload = _onload2;
-            (document.head.appendChild(script).parentNode.removeChild)(script);
+            document.head.appendChild(script);
             return null;
         }).bind(this);
 
@@ -1637,10 +1627,11 @@ DefineWebComponent = function () {
 DefineWebComponent.prototype._base_class = Object;
 DefineWebComponent.prototype.__name__ = "DefineWebComponent";
 
-DefineWebComponent.prototype.__init__ = function (tag, shadow, js, css) {
+DefineWebComponent.prototype.__init__ = function (tag, shadow, js, css, js_modules) {
     shadow = (shadow === undefined) ? false: shadow;
     js = (js === undefined) ? null: js;
     css = (css === undefined) ? null: css;
+    js_modules = (js_modules === undefined) ? false: js_modules;
     // Initialize the component definition.
     // 
     //         Args:
@@ -1653,6 +1644,8 @@ DefineWebComponent.prototype.__init__ = function (tag, shadow, js, css) {
     this.options = ({});
     this.js = js;
     this.css = css;
+    this.js_modules = js_modules;
+    this.modules = null;
     return null;
 };
 
@@ -1668,12 +1661,22 @@ DefineWebComponent.prototype.make_component = function () {
         _component = this;
         _init = (function flx__init (component) {
             var _on_loadjs;
-            _on_loadjs = (function flx__on_loadjs () {
+            _on_loadjs = (function flx__on_loadjs (modules) {
+                modules = (modules === undefined) ? null: modules;
+                component.modules = modules;
                 init(component);
                 return null;
             }).bind(this);
 
-            load_many_js(_component.js, _on_loadjs);
+            if (_pyfunc_truthy(this.js)) {
+                if (_pyfunc_truthy(this.js_modules)) {
+                    jsimp_many(_component.js, _on_loadjs);
+                } else {
+                    load_many_js(_component.js, _on_loadjs);
+                }
+            } else {
+                _on_loadjs();
+            }
             return null;
         }).bind(this);
 
@@ -1995,7 +1998,7 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
         jQuery.each(_pymeth_find.call(jQuery(dest_elem), ".call_on_remove"), _on_remove);
         if ((dest_elem.children.length > 0)) {
             elem2 = dest_elem.cloneNode();
-            if ((_pyfunc_op_equals(jQuery.type(data_or_html), "string"))) {
+            if ((_pyfunc_op_equals(Object.prototype.toString.call(data_or_html), "[object String]"))) {
                 window.IN_MORPH_PROCESS = true;
                 elem2.innerHTML = data_or_html;
                 window.IN_MORPH_PROCESS = false;
@@ -2022,7 +2025,7 @@ mount_html = function flx_mount_html (dest_elem, data_or_html, link) {
                 elem2.appendChild(data_or_html);
             }
             Idiomorph.morph(dest_elem, elem2);
-        } else if ((_pyfunc_op_equals(jQuery.type(data_or_html), "string"))) {
+        } else if ((_pyfunc_op_equals(Object.prototype.toString.call(data_or_html), "[object String]"))) {
             dest_elem.innerHTML = data_or_html;
             if (_pyfunc_truthy(replace)) {
                 if ((dest_elem.children.length > 0)) {
@@ -4369,7 +4372,7 @@ TabMenuItem.prototype.__name__ = "TabMenuItem";
 TabMenuItem.prototype.__init__ = function (id, title, url, data) {
     data = (data === undefined) ? null: data;
     this.id = id;
-    this.title = jQuery.trim(title);
+    this.title = title.trim();
     this.url = url;
     this.data = data;
     return null;
@@ -4488,7 +4491,7 @@ TabMenu.prototype.new_page = function (title, data_or_html, href, title_alt) {
         // Handle tab shown event: update active page and push history.
         window.ACTIVE_PAGE = new Page(_id, jQuery("#" + _id), menu_item);
         menu = get_menu();
-        menu_item = menu.titles[jQuery.trim(e.target.text)];
+        menu_item = menu.titles[e.target.text.trim()];
         this.active_item = menu_item;
         if (_pyfunc_truthy(window.PUSH_STATE)) {
             history_push_state(menu_item.title, menu_item.url);

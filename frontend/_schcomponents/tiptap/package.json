@@ -1,0 +1,16 @@
+{
+  "name": "tiptap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tiptap.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@tiptap/core": "^3.26.0",
+    "@tiptap/starter-kit": "^3.26.0"
+  }
+}

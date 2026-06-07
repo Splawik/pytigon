@@ -5,17 +5,19 @@
 % load static
 % load catch
 
-%% ext_js_scripts
-    {{block.super}}
-    {% jscript_link 'jquery_plugins/sidebar-menu/sidebar-menu.js' %}
+% comment:
+    %% ext_js_scripts
+        {{block.super}}
+        {% jscript_link 'jquery_plugins/sidebar-menu/sidebar-menu.js' %}
 
-%% theme_css_links
-    {{block.super}}
-    {% css_link 'jquery_plugins/sidebar-menu/sidebar-menu.css' %}
+
+% comment: 
+    %% theme_css_links
+        {{block.super}}
+        {% css_link 'jquery_plugins/sidebar-menu/sidebar-menu.css' %}
 
 %% menu_start
     div class=control-sidebar-bg
-
 
 %% menu
     div class=sidebarmenu 

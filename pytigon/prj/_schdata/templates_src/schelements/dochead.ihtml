@@ -108,7 +108,7 @@
 %% row_edit_footer   
     % if object.id:
         %% docitem_list
-            hr class=dochead-separator
+            hr style=height:10px;background:gray;border:0px;
             % frame table_path|append_str:object.id|append_str:"/docitem_set/-/form/sublist/?only_content=1" "200px"
     % else:
-        <button type="button" class="btn btn-warning w-100" target="refresh_frame" rettype="RETURN_HTML" data-region="page-content" get-param="redirect='1'"> << Expand >> </button>
+        <button type="button" class="btn btn-warning" target="refresh_frame" rettype="RETURN_HTML" data-region="page-content" get-param="redirect='1'" style="width:100%"> << Expand >> </button>

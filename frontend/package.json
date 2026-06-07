@@ -1,0 +1,75 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "shims.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "overrides": {
+    "buble": "github:pemrouz/buble#4e639ae"
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "bootstrap": "^5.3.8",
+    "bootstrap-ajax-typeahead": "^0.0.5",
+    "bootstrap-datepicker": "^1.10.1",
+    "bootstrap-hover-dropdown": "^2.2.1",
+    "bootstrap-icons": "^1.13.1",
+    "bootstrap-select": "^1.13.18",
+    "bootstrap-slider": "^11.0.2",
+    "bootstrap-table": "^1.27.3",
+    "bootstrap-tree": "^1.2.0",
+    "csrf.js": "link:./not_node_modules/csrf.js",
+    "daterangepicker": "^3.1.0",
+    "django-select2": "^8.4.8",
+    "event-calendar": "^0.8.1",
+    "events": "^3.3.0",
+    "graphql": "^16.14.1",
+    "htmx.org": "^2.0.10",
+    "idiomorph": "^0.7.4",
+    "imask": "^7.6.1",
+    "inputmask": "^5.0.9",
+    "jquery": "^4.0.0",
+    "jquery-form": "^4.3.0",
+    "jquery-poshytip": "^1.2.0",
+    "jquery-resizable-columns": "^0.2.3",
+    "jquery-treegrid": "^0.3.0",
+    "jquery-treeview": "^1.4.2",
+    "jquery-ui": "^1.14.2",
+    "jquery.draggable.js": "link:./not_node_modules/jquery.draggable.js",
+    "jquery.treegrid.js": "link:./not_node_modules/jquery-treegrid/js/jquery.treegrid.js",
+    "js-cookie": "^3.0.8",
+    "jsi18n.js": "link:./not_node_modules/jsi18n.js",
+    "jsonpath-plus": "^10.4.0",
+    "ladda": "^2.0.3",
+    "lz-string": "^1.5.0",
+    "moment": "^2.30.1",
+    "monaco-editor": "^0.55.1",
+    "nunjucks": "^3.2.4",
+    "om-perfect-scrollbar": "^2.0.1",
+    "pouchdb": "^9.0.0",
+    "pytigon-tools.js": "link:./not_node_modules/pytigon-tools.js",
+    "select2": "^4.1.0",
+    "sidebar-menu.js": "link:./not_node_modules/sidebar-menu/sidebar-menu.js",
+    "spin.js": "^4.1.2",
+    "sprintf": "^0.1.5",
+    "sweetalert2": "^11.26.25",
+    "tether": "^3.0.2",
+    "twbs-pagination": "^1.4.2",
+    "unique-id": "^1.0.2",
+    "x-editable-bootstrap5": "^1.5.7"
+  },
+  "aube": {
+    "allowBuilds": {
+      "core-js-pure": true,
+      "leveldown": true
+    }
+  },
+  "devDependencies": {
+    "monaco-esm": "^2.0.1"
+  }
+}

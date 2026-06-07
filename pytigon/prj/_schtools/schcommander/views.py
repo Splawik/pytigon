@@ -174,26 +174,32 @@ def view_setup(request, *argi, **argv):
 
 
 def grid(request, folder, value):
+
     return vfstable_view(request, folder, value)
 
 
 def open(request, file_name):
+
     return vfsopen(request, file_name)
 
 
 def save(request, file_name):
+
     return vfssave(request, file_name)
 
 
 def open_page(request, file_name, page):
+
     return vfsopen_page(request, file_name, page)
 
 
 def view(request, file_name):
+
     return HttpResponse(vfsview(request, file_name))
 
 
 def convert_html(request, file_name):
+
     headers = {
         "Content-Type": "text/html",
         "Content-Disposition": 'attachment; filename="file.html"',
@@ -203,6 +209,7 @@ def convert_html(request, file_name):
 
 
 def convert_pdf(request, file_name):
+
     headers = {
         "Content-Type": "application/pdf",
         "Content-Disposition": 'attachment; filename="file.pdf"',
@@ -211,6 +218,7 @@ def convert_pdf(request, file_name):
 
 
 def convert_docx(request, file_name):
+
     headers = {
         "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "Content-Disposition": 'attachment; filename="file.docx"',
@@ -219,6 +227,7 @@ def convert_docx(request, file_name):
 
 
 def convert_xlsx(request, file_name):
+
     headers = {
         "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "Content-Disposition": 'attachment; filename="file.xlsx"',
@@ -227,6 +236,7 @@ def convert_xlsx(request, file_name):
 
 
 def convert_spdf(request, file_name):
+
     headers = {
         "Content-Type": "application/spdf",
         "Content-Disposition": 'attachment; filename="file.spdf"',

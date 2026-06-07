@@ -3,14 +3,18 @@
 {% load exsyntax %}
 {% load static %}
 {% load catch %}
-{% block ext_js_scripts %}
-        {{block.super}}
-        {% jscript_link 'jquery_plugins/sidebar-menu/sidebar-menu.js' %}
-{% endblock %}
-{% block theme_css_links %}
-        {{block.super}}
-        {% css_link 'jquery_plugins/sidebar-menu/sidebar-menu.css' %}
-{% endblock %}
+{% comment %}
+        {% block ext_js_scripts %}
+                {{block.super}}
+                {% jscript_link 'jquery_plugins/sidebar-menu/sidebar-menu.js' %}
+        {% endblock %}
+{% endcomment %}
+{% comment %}
+        {% block theme_css_links %}
+                {{block.super}}
+                {% css_link 'jquery_plugins/sidebar-menu/sidebar-menu.css' %}
+        {% endblock %}
+{% endcomment %}
 {% block menu_start %}
         <div class="control-sidebar-bg">
         </div>

@@ -1,0 +1,2 @@
+node_modules/pouchdb/dist/:vanillajs_plugins/pouchdb/
+node_modules/bootstrap-icons/:icons/bootstrap-icons/

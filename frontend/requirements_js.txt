@@ -1,0 +1,66 @@
+./not_node_modules/pytigon-tools.js
+jquery
+@popperjs/core
+events
+moment
+sprintf
+tether
+js-cookie
+lz-string
+inputmask
+nunjucks
+htmx.org
+daterangepicker
+select2
+jquery-form
+bootstrap
+bootstrap-select
+bootstrap-slider
+bootstrap-hover-dropdown
+bootstrap-table
+bootstrap-tree
+twbs-pagination
+bootstrap-ajax-typeahead
+django-select2
+imask
+jsonpath-plus
+bootstrap-datepicker
+spin.js
+ladda
+sweetalert2
+jquery-resizable-columns
+jquery-ui
+jquery-poshytip
+unique-id
+idiomorph
+om-perfect-scrollbar
+x-editable-bootstrap5
+bootstrap-icons
+./not_node_modules/csrf.js
+./not_node_modules/jsi18n.js
+./not_node_modules/jquery.draggable.js
+./not_node_modules/sidebar-menu/sidebar-menu.js
+./not_node_modules/jquery-treegrid/js/jquery.treegrid.js
+#Core & Layout (Tether musi być ładowany przed starym bootstrapem, jeśli go używasz)
+tether/dist/css/tether.css
+#Komponenty i Dodatki Bootstrapa
+bootstrap-select/dist/css/bootstrap-select.css
+bootstrap-slider/dist/css/bootstrap-slider.css
+bootstrap-table/dist/bootstrap-table.css
+bootstrap-datepicker/dist/css/bootstrap-datepicker.css
+bootstrap-tree/dist/bootstrap-treeview.min.css
+x-editable-bootstrap5/dist/bootstrap5-editable/css/bootstrap-editable.css
+x-editable-bootstrap5/dist/bootstrap5-editable/css/editable-form.css
+#Selektory i Kalendarze (jQuery & Vanilla)
+select2/dist/css/select2.css
+daterangepicker/daterangepicker.css
+#jQuery UI i wtyczki UI
+jquery-ui/dist/themes/base/jquery-ui.css
+jquery-resizable-columns/dist/jquery.resizableColumns.css
+jquery-treegrid/css/jquery.treegrid.css
+#UI i Komponenty wizualne (Inne)
+ladda/dist/ladda.min.css
+sweetalert2/dist/sweetalert2.css
+om-perfect-scrollbar/css/perfect-scrollbar.css
+./not_node_modules/sidebar-menu/sidebar-menu.css
+./not_node_modules/select2-material.css

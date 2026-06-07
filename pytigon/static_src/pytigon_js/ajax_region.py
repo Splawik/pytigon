@@ -163,7 +163,7 @@ def mount_html(dest_elem, data_or_html, link=None):
         if dest_elem.children.length > 0:
             # Morph path: clone destination, inject content, then morph
             elem2 = dest_elem.cloneNode()
-            if jQuery.type(data_or_html) == "string":
+            if Object.prototype.toString.call(data_or_html) == "[object String]":
                 window.IN_MORPH_PROCESS = True
                 elem2.innerHTML = data_or_html
                 window.IN_MORPH_PROCESS = False
@@ -190,7 +190,7 @@ def mount_html(dest_elem, data_or_html, link=None):
             Idiomorph.morph(dest_elem, elem2)
         else:
             # Empty destination: direct innerHTML or append
-            if jQuery.type(data_or_html) == "string":
+            if Object.prototype.toString.call(data_or_html) == "[object String]":
                 dest_elem.innerHTML = data_or_html
                 if replace:
                     if dest_elem.children.length > 0:

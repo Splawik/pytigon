@@ -219,7 +219,7 @@ def frontend_view(url, complete, callback_on_error=None, param=None):
         nonlocal url, complete, callback_on_error, param2
 
         def _callback2(context):
-            if jQuery.type(context) == "object" and context["template"]:
+            if Object.prototype.toString.call(context) == "[object Object]" and context["template"]:
 
                 def _callback3(template_str):
                     nonlocal context
@@ -683,12 +683,12 @@ def load_js(path, fun):
 
         def _onload():
             # Save and restore requirejs/require/define to avoid conflicts
-            _requirejs = window.requirejs
-            _require = window.require
-            _define = window.define
-            window.requirejs = None
-            window.require = None
-            window.define = None
+            # _requirejs = window.requirejs
+            # _require = window.require
+            # _define = window.define
+            # window.requirejs = None
+            # window.require = None
+            # window.define = None
             script = document.createElement("script")
 
             # script.text = req.responseText
@@ -698,15 +698,16 @@ def load_js(path, fun):
             script.src = URL.createObjectURL(blob)
 
             def _onload2():
-                URL.revokeObjectURL(script.src)
-                # document.head.removeChild(script)
-                window.requirejs = _requirejs
-                window.require = _require
-                window.define = _define
                 on_load_js(path)
+                # URL.revokeObjectURL(script.src)
+                # document.head.removeChild(script)
+                # window.requirejs = _requirejs
+                # window.require = _require
+                # window.define = _define
 
             script.onload = _onload2
-            document.head.appendChild(script).parentNode.removeChild(script)
+            document.head.appendChild(script)
+            # .parentNode.removeChild(script)
 
             # window.requirejs = _requirejs
             # window.require = _require

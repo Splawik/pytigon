@@ -65,9 +65,7 @@ class ToolCommandHandler(CommandHandler):
                 raise CommandError(f"Unknown tool command: {argv[1]}", code=30)
 
         except Exception as e:
-            return self.handle_error(
-                e, {"command": argv[1] if len(argv) > 1 else "tool"}
-            )
+            return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "tool"})
 
     def _handle_nim(self, argv: List[str], paths: Dict[str, str]) -> int:
         """
@@ -120,6 +118,6 @@ class ToolCommandHandler(CommandHandler):
 
         # Build command
         exe_name = tool_name + ".exe" if os.name == "nt" else tool_name
-        command = [os.path.join(prg_path, exe_name)] + argv[2:]
 
+        command = [os.path.join(prg_path, exe_name)] + argv[2:]
         return self.run_subprocess(command)

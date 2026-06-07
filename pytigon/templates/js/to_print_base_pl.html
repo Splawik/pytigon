@@ -1,0 +1,29 @@
+{% extends "js/base0.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% load static %}
+{% block init %}
+        {% block js_app_init %}
+                function base_fragment_init() {
+                }
+        {% endblock %}
+        {% block component_init %}
+                var component_init = null
+        {% endblock %}
+        pytigon.app_init('{{prj_name}}', 'to_print', '{{app_manager.get_menu_id}}', '{{ lang }}', '{{base_path}}', base_fragment_init, component_init, {% if offline_support %}true{% else %}false{% endif %}, '{{ settings.START_PAGE}}', '{{ gen_time }}' )
+{% endblock %}
+{% block ready_start %}
+        jQuery(document).ready(function() {
+{% endblock %}
+{% block ready %}
+        pytigon.jquery_ready();
+        base_fragment_init();
+{% endblock %}
+{% block ready_end %}
+    });
+{% endblock %}
+{% block body %}
+        {% block jquery_ovr %}
+        {% endblock %}
+{% endblock %}
+

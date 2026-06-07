@@ -23,8 +23,6 @@
     %% js_extrascipts
         {{block.super}}
         
-        {% jscript_link 'system/require.js' %}
-        
 
     %% extrastyle
         {{block.super}}

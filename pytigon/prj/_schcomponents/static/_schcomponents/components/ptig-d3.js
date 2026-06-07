@@ -3,7 +3,7 @@ TAG = "ptig-d3";
 TEMPLATE = '        <div name=\"d3div\"></div>\n' +
     '\n' +
     '';
-BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins";
+BASE_PATH = window.BASE_PATH + "static/_schcomponents/d3";
 HelloWorld = function () {
     _pyfunc_op_instantiate(this, arguments);
 }
@@ -22,7 +22,7 @@ HelloWorld.prototype.connectedCallback = function () {
 };
 
 
-stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/d3/d3.v3.min.js"]));
+stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/d3.js"], null, true));
 comp = stub1_context.__enter__();
 try {
     width = function flx_width (component, old_value, new_value) {
@@ -38,7 +38,9 @@ try {
     comp.options["attributes"] = ({width: width, height: height});
     comp.options["template"] = TEMPLATE;
     init = function flx_init (component) {
-        var _on_mouseout, _on_mouseover, circle, div, sample_svg;
+        var _on_mouseout, _on_mouseover, circle, d3, d3_module, div, sample_svg;
+        d3_module = component.modules[0];
+        d3 = d3_module.d3;
         div = component.root.querySelector("div");
         sample_svg = d3.select(div).append("svg");
         sample_svg.attr("width", 100);
@@ -74,4 +76,3 @@ try {
     if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
     } else { stub1_context.__exit__(null, null, null); }
 }
-export {HelloWorld};

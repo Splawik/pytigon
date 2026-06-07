@@ -1954,7 +1954,9 @@ def icon(context, class_str, width=None, height=None):
             icon_name = x[0].replace("bi-", "")
             if not icon_name in ICON_CACHE:
                 tmp = _read_icon_file(
-                    "icons/bootstrap-icons/" + icon_name.replace("--", "/") + ".svg"
+                    "icons/bootstrap-icons/icons/"
+                    + icon_name.replace("--", "/")
+                    + ".svg"
                 )
                 if tmp:
                     ICON_CACHE[icon_name] = tmp

@@ -4,7 +4,7 @@
 {% load django_bootstrap5 %}
 {% if standard_web_browser %}
         {% block indexhead %}
-                <table class="table-full-width" border="1">
+                <table style="width: 100%;" border="1">
                         {% if user.is_authenticated %}
                                 <tr><td> login </td><td> 0 </td></tr>
                           {% else %}
@@ -22,7 +22,6 @@
   {% else %}
         {% block js_extrascipts %}
                 {{block.super}}
-                {% jscript_link 'system/require.js' %}
         {% endblock %}
         {% block extrastyle %}
                 {{block.super}}

@@ -62,7 +62,7 @@ class TabMenuItem:
 
     def __init__(self, id, title, url, data=None):
         self.id = id
-        self.title = jQuery.trim(title)
+        self.title = title.trim()
         self.url = url
         self.data = data
 
@@ -189,7 +189,7 @@ class TabMenu:
             window.ACTIVE_PAGE = Page(_id, jQuery("#" + _id), menu_item)
 
             menu = get_menu()
-            menu_item = menu.titles[jQuery.trim(e.target.text)]
+            menu_item = menu.titles[e.target.text.trim()]
             self.active_item = menu_item
             if window.PUSH_STATE:
                 history_push_state(menu_item.title, menu_item.url)

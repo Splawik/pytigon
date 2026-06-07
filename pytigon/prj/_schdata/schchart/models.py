@@ -84,6 +84,7 @@ def on_event(obj, data, request_param):
 
 
 class Plot(models.Model):
+
     class Meta:
         verbose_name = _("Plot")
         verbose_name_plural = _("Polts")
@@ -143,4 +144,4 @@ class Plot(models.Model):
         return ON_EVENT
 
 
-admin.site.register(Plot)
+admin_register(Plot)

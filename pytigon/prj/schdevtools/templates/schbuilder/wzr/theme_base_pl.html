@@ -24,8 +24,6 @@
         {% spec '{' %}block.super{% spec '}' %}
         {% for prj_tab in static_items %}{% for js_static2 in prj_tab.1 %}{% spec '[' %} module_link '{{prj_tab.0}}/js/{{js_static2.name}}.js' {% spec ']' %}
         {% endfor %}{% endfor %}
-        {% if component_elements %}{% spec "[" %} jscript_link 'system/require.js' {% spec "]" %}
-        {% endif %}
 
     %% extrastyle
         {% spec '{' %}block.super{% spec '}' %}

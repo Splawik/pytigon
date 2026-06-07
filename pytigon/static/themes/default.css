@@ -9,7 +9,8 @@
 
 div.content-wrapper {
   width: 100%;
-  height: 100vh; }
+  height: 100vh;
+  padding: 0px; }
 
 div.page-content {
   height: 100%; }

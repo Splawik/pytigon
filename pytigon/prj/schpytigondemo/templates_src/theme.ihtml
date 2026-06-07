@@ -3,7 +3,7 @@
 % load exsyntax
 
 %% component_init
-    .var component_init = { graphql_pub: 'https://www.pytigon.eu/graphql_public/', graphql_prv: 'https://www.pytigon.eu/graphql/', }
+    .var component_init = { graphql_pub: 'https://www.pytigon.cloud/graphql_public/', graphql_prv: 'https://www.pytigon.cloud/graphql/', }
 
 %% js_app_init__out
     ===>
@@ -37,9 +37,7 @@
 
 %% ext_js_scripts
     {{ block.super }}
-    {% jscript_link 'vanillajs_plugins/nunjucks/nunjucks.min.js' %}
     {% jscript_link 'vanillajs_plugins/pouchdb/pouchdb-7.3.0.min.js' %}
-    {% jscript_link 'vanillajs_plugins/graphql/graphql.min.js' %}
 
 
 %% login_background

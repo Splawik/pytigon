@@ -164,6 +164,9 @@ ul.sidebar-menu ul.treeview-menu {
   .sidebar-menu ul.sidebar-submenu li a > span > .fa {
     width: 20px; }
 
+.sidebar-menu ul.sidebar-submenu li a.ladda-button {
+  background: none; }
+
 .sidebar-menu a.logo {
   padding-left: 3.2rem;
   padding-top: 0.6rem; }

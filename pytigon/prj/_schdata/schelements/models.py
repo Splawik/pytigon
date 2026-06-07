@@ -329,6 +329,7 @@ doctype_status = [
 
 
 class Element(TreeModel):
+
     class Meta:
         verbose_name = _("Element")
         verbose_name_plural = _("Elements")
@@ -699,8 +700,7 @@ class Element(TreeModel):
                     t = self.type
                     if t in s:
                         if hasattr(self, s[t]["table"].lower()):
-                            ret = getattr(self, s[t]["table"].lower())
-                            return ret
+                            return getattr(self, s[t]["table"].lower())
                         else:
                             if (
                                 s[t]["app"] == "schelements"
@@ -717,6 +717,7 @@ class Element(TreeModel):
                                 )
                                 ret = self
                             return ret
+
         return self
 
     def template_for_object(self, view, context, doc_type):
@@ -916,10 +917,11 @@ class Element(TreeModel):
     objects = ElementManager()
 
 
-admin.site.register(Element)
+admin_register(Element)
 
 
 class DocReg(models.Model):
+
     class Meta:
         verbose_name = _("Document register")
         verbose_name_plural = _("Document registers")
@@ -1121,10 +1123,11 @@ class DocReg(models.Model):
         )
 
 
-admin.site.register(DocReg)
+admin_register(DocReg)
 
 
 class DocType(models.Model):
+
     class Meta:
         verbose_name = _("Type of document")
         verbose_name_plural = _("Types of documents")
@@ -1255,10 +1258,11 @@ class DocType(models.Model):
         return ACCESS_FUN
 
 
-admin.site.register(DocType)
+admin_register(DocType)
 
 
 class DocHead(JSONModel):
+
     class Meta:
         verbose_name = _("Document header")
         verbose_name_plural = _("Document headers")
@@ -1988,9 +1992,9 @@ class DocHead(JSONModel):
                         if action != "accept":
                             DocItem.objects.filter(
                                 parent=self,
-                                level__gt=reg_status.order
-                                if reg_status.order >= 0
-                                else 0,
+                                level__gt=(
+                                    reg_status.order if reg_status.order >= 0 else 0
+                                ),
                             ).delete()
 
                         doc_status.date = timezone.now()
@@ -2097,10 +2101,11 @@ class DocHead(JSONModel):
         return new_obj
 
 
-admin.site.register(DocHead)
+admin_register(DocHead)
 
 
 class DocItem(JSONModel):
+
     class Meta:
         verbose_name = _("Document item")
         verbose_name_plural = _("Document items")
@@ -2584,10 +2589,11 @@ class DocItem(JSONModel):
         doc_item_dest.param3 = self.param3
 
 
-admin.site.register(DocItem)
+admin_register(DocItem)
 
 
 class DocRegStatus(models.Model):
+
     class Meta:
         verbose_name = _("Document status")
         verbose_name_plural = _("Document status")
@@ -2747,6 +2753,7 @@ class DocRegStatus(models.Model):
             and "table" in data
             and data["table"] == "DocRegStatus"
         ):
+            print("X1: ", data)
             try:
                 parent_pk = int(list_view.kwargs["parent_pk"])
             except:
@@ -2780,10 +2787,11 @@ class DocRegStatus(models.Model):
         )
 
 
-admin.site.register(DocRegStatus)
+admin_register(DocRegStatus)
 
 
 class DocHeadStatus(JSONModel):
+
     class Meta:
         verbose_name = _("Document head status")
         verbose_name_plural = _("Documents head status")
@@ -2826,10 +2834,11 @@ class DocHeadStatus(JSONModel):
         return self.name
 
 
-admin.site.register(DocHeadStatus)
+admin_register(DocHeadStatus)
 
 
 class Account(TreeModel):
+
     class Meta:
         verbose_name = _("Account")
         verbose_name_plural = _("Account")
@@ -2932,10 +2941,11 @@ class Account(TreeModel):
         return Account.objects.get(name=account_name)
 
 
-admin.site.register(Account)
+admin_register(Account)
 
 
 class AccountState(models.Model):
+
     class Meta:
         verbose_name = _("State of account")
         verbose_name_plural = _("States of account")
@@ -3385,10 +3395,11 @@ class AccountState(models.Model):
         super().save(*args, **kwargs)
 
 
-admin.site.register(AccountState)
+admin_register(AccountState)
 
 
 class AccountOperation(models.Model):
+
     class Meta:
         verbose_name = _("Account operation")
         verbose_name_plural = _("Account operations")
@@ -3519,10 +3530,11 @@ class AccountOperation(models.Model):
         return ret
 
 
-admin.site.register(AccountOperation)
+admin_register(AccountOperation)
 
 
 class BaseObject(models.Model):
+
     class Meta:
         verbose_name = _("Base object")
         verbose_name_plural = _("Base objects")

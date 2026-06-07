@@ -316,5 +316,3 @@ try {
 test = function flx_test (x) {
     return x;
 };
-
-export {test};

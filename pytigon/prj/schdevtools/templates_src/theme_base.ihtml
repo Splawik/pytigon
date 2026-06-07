@@ -25,8 +25,6 @@
         {% module_link 'schdevtools/js/test_javascript.js' %}
         {% module_link 'schdevtools/js/test_python.js' %}
         
-        {% jscript_link 'system/require.js' %}
-        
 
     %% extrastyle
         {{block.super}}

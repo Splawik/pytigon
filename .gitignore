@@ -6,6 +6,7 @@ pip-log.txt
 pip-delete-this-directory.txt
 launch.json
 extensions.json
+tmp.js
 
 .cache
 .idea/
@@ -23,6 +24,8 @@ migrations/
 *.so.*
 *.o
 *zig-cache*
+**/node_modules/**
+*aube*
 *.ipynb
 
 # Project directories: ignore all, then selectively include

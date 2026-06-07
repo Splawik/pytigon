@@ -1,0 +1,15 @@
+{
+  "name": "plotly",
+  "version": "1.0.0",
+  "description": "",
+  "main": "plotly.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "plotly.js-dist": "^3.6.0"
+  }
+}

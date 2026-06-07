@@ -44,6 +44,7 @@ from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, Modu
 
 @dict_to_json
 def plot_service(request, **argv):
+
     request_param = {"argv": argv}
     request_param["GET"] = request.GET
     if "param" in request.GET:

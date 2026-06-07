@@ -478,7 +478,7 @@ def _handle_static_file(static_file, base_path, prj, app=None):
         return
 
     dest_path = None
-
+    print("C1: ", file_name, typ)
     if typ == "U":
         dest_path = os.path.join(static_root, file_name)
         if ".pyj" in file_name:
@@ -506,7 +506,7 @@ def _handle_static_file(static_file, base_path, prj, app=None):
         t = Template(txt)
         txt2 = t.render(Context({"prj": prj}))
         try:
-            codejs = pytigon_lib.schindent.indent_style.py_to_js(txt2, None)
+            codejs = pytigon_lib.schindent.indent_style.py_to_js(txt2)
         except:
             codejs = ""
         f = open_and_create_dir(
@@ -516,10 +516,11 @@ def _handle_static_file(static_file, base_path, prj, app=None):
         f.write(codejs.encode("utf-8"))
         f.close()
     elif typ == "R":
-        try:
-            codejs = pytigon_lib.schindent.indent_style.py_to_js(txt, None)
-        except:
-            codejs = ""
+        print("C2: Compiling Python component to JavaScript...")
+        # try:
+        codejs = pytigon_lib.schindent.indent_style.py_to_js(txt)
+        # except:
+        # codejs = ""
         f = open_and_create_dir(
             (
                 dest_path
@@ -867,7 +868,7 @@ def build_prj(pk, config={}):
                 )
                 try:
                     codejs = pytigon_lib.schindent.indent_style.py_to_js(
-                        file_obj.content, None
+                        file_obj.content
                     )
                 except:
                     codejs = ""
@@ -939,6 +940,7 @@ def build_prj(pk, config={}):
         offline_support = False
 
         for static_file in static_files:
+            print("B1: " + static_file.name)
             _handle_static_file(static_file, base_path, prj)
 
         component_elements = []
@@ -1072,7 +1074,6 @@ def build_prj(pk, config={}):
         )
 
     if "files" not in config or config["files"]:
-
         base_path_src = base_path + "/src"
 
         if os.path.exists(base_path_src):

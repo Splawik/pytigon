@@ -92,6 +92,7 @@ workflow_item_status_choices = [
 
 
 class WorkflowType(models.Model):
+
     class Meta:
         verbose_name = _("Workflow type")
         verbose_name_plural = _("Workflow types")
@@ -237,10 +238,11 @@ class WorkflowType(models.Model):
         return REJECT
 
 
-admin.site.register(WorkflowType)
+admin_register(WorkflowType)
 
 
 class WorkflowItem(AssociatedJSONModel):
+
     class Meta:
         verbose_name = _("Workflow item")
         verbose_name_plural = _("Workflow items")
@@ -358,4 +360,4 @@ class WorkflowItem(AssociatedJSONModel):
         return WorkflowType.reject_workflow_item(self)
 
 
-admin.site.register(WorkflowItem)
+admin_register(WorkflowItem)

@@ -51,9 +51,7 @@ def set_state(component, state):
         if component.root != None:
             # Search both component.root and component for matching bindings
             for c in (component.root, component):
-                nodes = Array.prototype.slice.call(
-                    c.querySelectorAll('[data-bind*="' + key + '"]')
-                )
+                nodes = Array.prototype.slice.call(c.querySelectorAll('[data-bind*="' + key + '"]'))
                 for node in nodes:
                     xx = node.getAttribute("data-bind")
                     # Each data-bind can contain multiple ;-separated bindings
@@ -155,7 +153,7 @@ class DefineWebComponent:
         css: List of CSS file URLs to load.
     """
 
-    def __init__(self, tag, shadow=False, js=None, css=None):
+    def __init__(self, tag, shadow=False, js=None, css=None, js_modules=False):
         """Initialize the component definition.
 
         Args:
@@ -169,6 +167,8 @@ class DefineWebComponent:
         self.options = {}
         self.js = js
         self.css = css
+        self.js_modules = js_modules
+        self.modules = None
 
     def make_component(self):
         """Build and register the custom element with the browser.
@@ -186,11 +186,18 @@ class DefineWebComponent:
             def _init(component):
                 nonlocal _component, init
 
-                def _on_loadjs():
-                    nonlocal component
+                def _on_loadjs(modules=None):
+                    nonlocal component, _component, init
+                    component.modules = modules
                     init(component)
 
-                load_many_js(_component.js, _on_loadjs)
+                if self.js:
+                    if self.js_modules:
+                        jsimp_many(_component.js, _on_loadjs)
+                    else:
+                        load_many_js(_component.js, _on_loadjs)
+                else:
+                    _on_loadjs()
 
             self.options["init"] = _init
 
@@ -200,15 +207,10 @@ class DefineWebComponent:
                 if self.shadow:
                     if self.options.hasOwnProperty("template"):
                         self.options["template"] = (
-                            '<style>@import "'
-                            + css
-                            + '"</style>\n'
-                            + self.options["template"]
+                            '<style>@import "' + css + '"</style>\n' + self.options["template"]
                         )
                     else:
-                        self.options["template"] = (
-                            '<style>@import "' + css + '"</style>\n'
-                        )
+                        self.options["template"] = '<style>@import "' + css + '"</style>\n'
                 else:
                     load_css(css)
 

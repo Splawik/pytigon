@@ -57,8 +57,8 @@ TEMPLATE = '<style>\n' +
     '</div>\n' +
     '\n' +
     '';
-BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins/vs";
-stub1_context = (new DefineWebComponent(TAG, true, [], [BASE_PATH + "/editor/editor.main.css"]));
+BASE_PATH = window.BASE_PATH + "static/_schcomponents/vs";
+stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/monaco.js"], [BASE_PATH + "/monaco.css"], true));
 comp = stub1_context.__enter__();
 try {
     comp.options["template"] = TEMPLATE;
@@ -84,47 +84,41 @@ try {
 
     comp.options["attributes"] = _pyfunc_create_dict("width", width, "height", height, "function-title", null, "title", null);
     init = function flx_init (component) {
-        var _on_loadjs, function_title_visibility, on_save, save, state;
-        _on_loadjs = (function flx__on_loadjs () {
-            var _changed, ed, state, theme, top, value;
-            ed = component.root.querySelector("div.vseditor");
-            if (_pyfunc_truthy(component.hasAttribute("value"))) {
-                value = decodeURIComponent(escape(atob(component.getAttribute("value"))));
-            } else {
-                value = "";
-            }
-            if (_pyfunc_truthy(component.hasAttribute("theme"))) {
-                theme = component.getAttribute("theme");
-            } else {
-                theme = "vs";
-            }
-            component.editor = monaco.editor.create(ed, ({value: value, language: "python", theme: theme, wordWrap: "off", wordWrapMinified: false}));
-            _changed = (function flx__changed (event) {
-                component.set_state(({changed: true}));
-                return null;
-            }).bind(this);
-
-            component.editor.onDidChangeModelContent(_changed);
-            top = ed.offsetTop;
-            state = ({top: top + "px", bottom: 0});
-            if (_pyfunc_truthy(component.hasAttribute("width"))) {
-                state["width"] = component.getAttribute("width");
-            }
-            if (_pyfunc_truthy(component.hasAttribute("height"))) {
-                state["height"] = component.getAttribute("height");
-            }
-            if (_pyfunc_truthy(component.hasAttribute("offset"))) {
-                state["top"] = component.getAttribute("offset");
-            } else {
-                state["top"] = "3.5rem";
-            }
-            component.set_state(state);
-            component.editor.layout();
+        var _changed, ed, function_title_visibility, monaco_module, on_save, save, state, theme, top, value;
+        monaco_module = component.modules[0];
+        ed = component.root.querySelector("div.vseditor");
+        if (_pyfunc_truthy(component.hasAttribute("value"))) {
+            value = decodeURIComponent(escape(atob(component.getAttribute("value"))));
+        } else {
+            value = "";
+        }
+        if (_pyfunc_truthy(component.hasAttribute("theme"))) {
+            theme = component.getAttribute("theme");
+        } else {
+            theme = "vs";
+        }
+        component.editor = monaco_module.load_monaco(ed, ({value: value, language: "python", theme: theme, wordWrap: "off", wordWrapMinified: false}));
+        _changed = (function flx__changed (event) {
+            component.set_state(({changed: true}));
             return null;
         }).bind(this);
 
-        require.config(({paths: ({vs: BASE_PATH})}));
-        require(["vs/editor/editor.main"], _on_loadjs);
+        component.editor.onDidChangeModelContent(_changed);
+        top = ed.offsetTop;
+        state = ({top: top + "px", bottom: 0});
+        if (_pyfunc_truthy(component.hasAttribute("width"))) {
+            state["width"] = component.getAttribute("width");
+        }
+        if (_pyfunc_truthy(component.hasAttribute("height"))) {
+            state["height"] = component.getAttribute("height");
+        }
+        if (_pyfunc_truthy(component.hasAttribute("offset"))) {
+            state["top"] = component.getAttribute("offset");
+        } else {
+            state["top"] = "3.5rem";
+        }
+        component.set_state(state);
+        component.editor.layout();
         save = (function flx_save (callback) {
             var ajax_options, href;
             if (_pyfunc_truthy(component.hasAttribute("href"))) {

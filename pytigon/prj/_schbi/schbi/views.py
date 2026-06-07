@@ -56,6 +56,7 @@ models.refresh_data("begin")
 
 
 def project_view(request, prj_name):
+
     try:
         prj = models.Project.objects.get(name=prj_name)
     except:
@@ -120,6 +121,7 @@ def project_view(request, prj_name):
 
 
 def page_view(request, page_id):
+
     try:
         page = models.Page.objects.get(pk=page_id)
     except:
@@ -185,6 +187,7 @@ def page_view(request, page_id):
 
 
 def chart_view(request, chart_id):
+
     try:
         chart = models.Chart.objects.get(pk=chart_id)
     except:

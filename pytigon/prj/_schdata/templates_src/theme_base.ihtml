@@ -7,7 +7,7 @@
 
 % if standard_web_browser:
     %% indexhead
-        table class=table-full-width,,,border=1
+        table style=width: 100%;,,,border=1
             % if user.is_authenticated
                 [ login | 0 ]
             % else
@@ -22,8 +22,6 @@
 % else:    
     %% js_extrascipts
         {{block.super}}
-        
-        {% jscript_link 'system/require.js' %}
         
 
     %% extrastyle
