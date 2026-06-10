@@ -39,7 +39,8 @@ from pytigon_lib.schdjangoext.import_from_db import (
     get_fun_from_db_field,
     ModuleStruct,
 )
-from pytigon_lib.schtools.tools import is_in_cancan_rules
+from pytigon_lib.schviews.schrules import filter_queryset_by_rules, is_rules_active
+
 
 from pytigon_lib.schviews import actions
 

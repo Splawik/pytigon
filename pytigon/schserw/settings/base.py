@@ -139,10 +139,10 @@ if ENV("REST"):
 else:
     REST = False
 
-if ENV("CANCAN_ENABLED"):
-    CANCAN_ENABLED = True
+if ENV("RULES_ENABLED"):
+    RULES_ENABLED = True
 else:
-    CANCAN_ENABLED = False
+    RULES_ENABLED = False
 
 if ENV("MAILER"):
     MAILER = True

@@ -12,4 +12,4 @@ django-bootstrap5>=24.0
 django-cors-headers>=4.0
 django_select2>=8.0
 django-widget-tweaks>=1.5
-django-cancan>=3.0
+rules>=3.0

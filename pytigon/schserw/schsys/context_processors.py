@@ -510,25 +510,25 @@ class Env:
         return self.env(name)
 
 
-class CanCanWrapper:
-    def __init__(self, action, request):
-        self.action = action
-        self.request = request
-
-    def call(self, obj):
-        return self.request.ability.can(self.action, obj)
-
-
 if PermWrapper:
 
-    class CanCanPermWrapper(PermWrapper):
+    class RulesWrapper:
+        def __init__(self, action, request):
+            self.action = action
+            self.request = request
+
+        def call(self, obj):
+            from pytigon_lib.schviews.schrules import user_can
+            return user_can(self.request.user, self.action, type(obj), obj)
+
+    class RulesPermWrapper(PermWrapper):
         def __init__(self, request):
             super().__init__(request.user)
             self.request = request
 
         def __getitem__(self, app_label):
             if app_label.startswith("can_"):
-                return CanCanWrapper(app_label[4:], self.request)
+                return RulesWrapper(app_label[4:], self.request)
             else:
                 return super().__getitem(app_label)
 
@@ -818,8 +818,9 @@ def sch_standard(request):
         ret["context"] = ret
 
     if PermWrapper:
-        if hasattr(settings, "CANCAN") and settings.CANCAN:
-            ret["perms"] = CanCanPermWrapper(request)
+        from pytigon_lib.schviews.schrules import is_rules_active
+        if is_rules_active():
+            ret["perms"] = RulesPermWrapper(request)
 
     # print("FRAGMENT: ", get_fragment(request))
     # print("TEMPLATE: ", d_template)

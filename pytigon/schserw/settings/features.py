@@ -2,7 +2,7 @@ import os
 import sys
 
 from .base import (
-    ENV, DEBUG, GRAPHQL, REST, CANCAN_ENABLED, MAILER, ALLAUTH,
+    ENV, DEBUG, GRAPHQL, REST, RULES_ENABLED, MAILER, ALLAUTH,
     COMPRESS_ENABLED, PWA, PYTIGON_PATH, DATA_PATH, PRJ_PATH, PRJ_PATH_ALT,
     BASE_PRJ_NAME, PRODUCTION_VERSION, SERW_PATH, PLATFORM_TYPE,
 )
@@ -152,15 +152,9 @@ if GRAPHQL or REST:
 
     OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"
 
-if CANCAN_ENABLED:
-    INSTALLED_APPS.append("cancan")
-    MIDDLEWARE.append("cancan.middleware.CanCanMiddleware")
-    i = TEMPLATES[0]["OPTIONS"]["context_processors"].index(
-        "pytigon.schserw.schsys.context_processors.sch_standard"
-    )
-    TEMPLATES[0]["OPTIONS"]["context_processors"].insert(
-        i, "cancan.context_processors.abilities"
-    )
+if RULES_ENABLED:
+    INSTALLED_APPS.append("rules")
+    AUTHENTICATION_BACKENDS.append("rules.permissions.ObjectPermissionBackend")
 
 if ALLAUTH:
     INSTALLED_APPS.append("allauth")
