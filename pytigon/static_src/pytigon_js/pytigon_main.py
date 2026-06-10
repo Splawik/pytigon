@@ -134,6 +134,8 @@ def app_init(
     window.LANG = lang
     window.GEN_TIME = gen_time
 
+    window.pytigon_lib_init()
+
     # Register service worker for offline support if available
     if offline_support:
         if navigator.onLine and service_worker_and_indexedDB_test():

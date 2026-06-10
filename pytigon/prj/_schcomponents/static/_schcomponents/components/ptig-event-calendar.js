@@ -1,15 +1,14 @@
-var BASE_PATH, BASE_PATH0, TAG, TEMPLATE, comp, css_tab, height, init, js_tab, stub1_context, stub2_err, width;
+var BASE_PATH, TAG, TEMPLATE, comp, css_tab, height, init, js_tab, stub1_context, stub2_err, width;
 TAG = "ptig-event-calendar";
 TEMPLATE = '        <div class=\"ajax-frame ajax-link ajax-region\" data-region=\"table\" data-bind=\"onloadeddata:on_loaded_data\" style=\"position:absolute;top:5px;bottom:5px;left:5px;right:5px;\">\n' +
     '                <div name=\"calendar\"></div>\n' +
     '        </div>\n' +
     '\n' +
     '';
-BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins/event-calendar";
-BASE_PATH0 = window.BASE_PATH + "static/vanillajs_plugins";
-js_tab = [BASE_PATH + "/event-calendar.min.js"];
-css_tab = [BASE_PATH + "/event-calendar.min.css", BASE_PATH0 + "/event-calendar-extra-styles.css"];
-stub1_context = (new DefineWebComponent(TAG, false, js_tab, css_tab));
+BASE_PATH = window.BASE_PATH + "static/_schcomponents/event-calendar/";
+js_tab = [BASE_PATH + "event-calendar.js"];
+css_tab = [BASE_PATH + "event-calendar.css"];
+stub1_context = (new DefineWebComponent(TAG, false, js_tab, css_tab, true));
 comp = stub1_context.__enter__();
 try {
     width = function flx_width (component, old_value, new_value) {
@@ -25,8 +24,16 @@ try {
     comp.options["attributes"] = ({width: width, height: height});
     comp.options["template"] = TEMPLATE;
     init = function flx_init (component) {
-        var button_text, calendar, click1, div, event_change, event_click, get_events, item, l, on_loaded_data, options, resources, rid, select, state, stub5_seq, stub6_itr, stub7_, stub8_seq, stub9_itr, views;
+        var DayGrid, Interaction, List, ResourceTimeGrid, ResourceTimeline, button_text, calendar, calendar_module, click1, createCalendar, div, event_change, event_click, get_events, item, l, on_loaded_data, options, resources, rid, select, state, stub5_seq, stub6_itr, stub7_, stub8_seq, stub9_itr, views;
         div = component.root.querySelector("div");
+        calendar_module = component.modules[0];
+        createCalendar = calendar_module.createCalendar;
+        ResourceTimeGrid = calendar_module.ResourceTimeGrid;
+        DayGrid = calendar_module.DayGrid;
+        ResourceTimeline = calendar_module.ResourceTimeline;
+        ResourceTimeGrid = calendar_module.ResourceTimeGrid;
+        List = calendar_module.List;
+        Interaction = calendar_module.Interaction;
         get_events = (function flx_get_events (info, successCallback, failureCallback) {
             var _callback;
             if (_pyfunc_truthy(component.hasAttribute("href"))) {
@@ -210,7 +217,7 @@ try {
         if (_pyfunc_truthy(component.hasAttribute("duration"))) {
             options["slotDuration"] = component.getAttribute("duration");
         }
-        calendar = new EventCalendar(div, options);
+        calendar = createCalendar(div, [DayGrid, List, ResourceTimeline, ResourceTimeGrid, Interaction], options);
         on_loaded_data = (function flx_on_loaded_data (event) {
             calendar.refetchEvents();
             return null;

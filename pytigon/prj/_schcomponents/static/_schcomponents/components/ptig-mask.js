@@ -1,14 +1,13 @@
-var BASE_PATH, TAG, TEMPLATE, comp, decimal_separator, init, stub1_context, stub2_err;
+var TAG, TEMPLATE, comp, decimal_separator, init, stub1_context, stub2_err;
 TAG = "ptig-imask";
 TEMPLATE = '        <slot></slot>\n' +
     '\n' +
     '';
-BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins";
 decimal_separator = function flx_decimal_separator () {
     return 1.1.toLocaleString()[1];
 };
 
-stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/imask/imask.js"]));
+stub1_context = (new DefineWebComponent(TAG, true, []));
 comp = stub1_context.__enter__();
 try {
     comp.options["attributes"] = ({});
@@ -80,7 +79,7 @@ try {
         } else {
             options["mask"] = mask;
         }
-        imask = new IMask(input, options);
+        imask = new window.imask.InputMask(input, options);
         return null;
     };
 

@@ -42,6 +42,10 @@ import plotly
 from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct
 
 
+from django.views.decorators.csrf import csrf_exempt
+
+
+@csrf_exempt
 @dict_to_json
 def plot_service(request, **argv):
 

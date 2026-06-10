@@ -7,14 +7,16 @@ TEMPLATE = '        <video name=\"videodiv\" class=\"video-js vjs-default-skin\"
     '        </video>\n' +
     '\n' +
     '';
-BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins/video-js";
-stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/video.min.js"], [BASE_PATH + "/video-js.min.css"]));
+BASE_PATH = window.BASE_PATH + "static/_schcomponents/videojs/";
+stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "videojs.js"], [BASE_PATH + "videojs.css"], true));
 comp = stub1_context.__enter__();
 try {
     comp.options["attributes"] = ({width: null, height: null, src: null, type: null});
     comp.options["template"] = TEMPLATE;
     init = function flx_init (component) {
-        var _on_video, div;
+        var _on_video, div, video_module, videojs;
+        video_module = component.modules[0];
+        videojs = video_module.videojs;
         div = component.root.querySelector("video");
         videojs.options.flash.swf = "video-js.swf";
         _on_video = (function flx__on_video () {

@@ -6,8 +6,8 @@ TEMPLATE = '        <div class=\"leafletframe\" data-bind=\"style-width:width;st
     '        <slot></slot>\n' +
     '\n' +
     '';
-BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins/leaflet";
-stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/leaflet.js"], [BASE_PATH + "/leaflet.css"]));
+BASE_PATH = window.BASE_PATH + "static/_schcomponents/leaflet";
+stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/leaflet.js"], [BASE_PATH + "/leaflet.css"], true));
 comp = stub1_context.__enter__();
 try {
     comp.options["attributes"] = ({width: null, height: null});
@@ -26,9 +26,10 @@ try {
 
     comp.options["constructor"] = constructor;
     init = function flx_init (component) {
-        var create, div, state, x, y, z;
+        var create, div, leaflet, state, x, y, z;
+        leaflet = component.modules[0];
         div = component.root.querySelector("div.leafletdiv");
-        L.Icon.Default.imagePath = BASE_PATH + "/images";
+        leaflet.L.Icon.Default.imagePath = BASE_PATH + "/images";
         if (_pyfunc_truthy(component.hasAttribute("x"))) {
             x = _pyfunc_float(component.getAttribute("x"));
         } else {
@@ -50,14 +51,14 @@ try {
         }
         create = (function flx_create () {
             var mapobj, marker, pos, stub3_seq, stub4_itr;
-            mapobj = (L.map(div).setView)([x, y], z);
-            ((L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", ({attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"}))).addTo)(mapobj);
+            mapobj = (leaflet.L.map(div).setView)([x, y], z);
+            ((leaflet.L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", ({attribution: "&copy; <a href=\"http://osm.org/copyright\">OpenStreetMap</a> contributors"}))).addTo)(mapobj);
             if (_pyfunc_truthy(component.markers)) {
                 stub3_seq = component.markers;
                 if ((typeof stub3_seq === "object") && (!Array.isArray(stub3_seq))) { stub3_seq = Object.keys(stub3_seq);}
                 for (stub4_itr = 0; stub4_itr < stub3_seq.length; stub4_itr += 1) {
                     pos = stub3_seq[stub4_itr];
-                    marker = L.marker([pos[0], pos[1]]);
+                    marker = leaflet.L.marker([pos[0], pos[1]]);
                     marker.addTo(mapobj);
                     marker.bindPopup(pos[2]);
                     marker.openPopup();

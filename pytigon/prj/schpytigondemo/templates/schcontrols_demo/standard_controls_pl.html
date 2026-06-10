@@ -391,20 +391,10 @@
                         {% endif %}
                         <td>
                                 <ptig-imask mask="+{7}(000)000-00-00">
-                                        <input class="form-control" type="text" />
-                                </ptig-imask>
-                        </td>
-                </tr>
-                <tr>
-                        <td>Mask number</td>
-                        {% if client_type == 'schweb' %}
-                                <td><ctrl-masktext></ctrl-masktext></td>
-                        {% endif %}
-                        <td>
-                                <ptig-imask mask="number">
                                         <input class="form-control" type="text">
                                         </input>
                                 </ptig-imask>
+                                <ptig-imask mask="number"></ptig-imask>
                         </td>
                 </tr>
                 <tr>

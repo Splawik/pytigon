@@ -5,11 +5,15 @@ from pytigon.pytigon_run import run
 
 SETUP_TRIGGERS = {
     "jquery": """
-import * as jQuery from 'jquery'
-globalThis.jQuery = jQuery.jQuery
-globalThis.$ = jQuery.jQuery
-import initSelect2 from 'select2';
-initSelect2(jQuery); 
+import { jQuery } from 'jquery';
+
+globalThis.jQuery = jQuery;
+globalThis.$ = jQuery;
+
+jQuery.isFunction = function(obj) {
+    return typeof obj === 'function';
+}
+jQuery.isArray = Array.isArray;
 """,
     "sprintf": """
 import { vsprintf, sprintf } from 'sprintf'
@@ -28,18 +32,17 @@ IMPORT_MODLUES = [
     "bootstrap",
     "js-cookie:Cookies",
     "idiomorph:Idiomorph",
-    "imask:IMask",
+    # "imask:IMask",
 ]
 
 IMPORT_ELEMENTS = {
     "om-perfect-scrollbar": "PerfectScrollbar",
     "idiomorph": "Idiomorph",
     "jsi18n": "gettext",
+    "jquery": "jQuery",
 }
 
-NO_JS_MODULES = [
-    "bootstrap-icons",
-]
+NO_JS_MODULES = ["bootstrap-icons", "select2-bootstrap-5-theme"]
 
 with open("requirements_js.txt", "rt") as f:
     requirements = f.read().splitlines()
@@ -50,17 +53,12 @@ shims = ""
 for requirement in requirements:
     if requirement.startswith("#") or not requirement.strip():
         continue
-    name = (
-        requirement.replace("-", "_")
-        .replace(".", "_")
-        .replace("@", "")
-        .replace("/", "_")
-    )
+    name = requirement.replace("-", "_").replace(".", "_").replace("@", "").replace("/", "_")
     test = True
     if ".css" in requirement:
         test = False
         buf += f"import '{requirement}';\n"
-    elif requirement not in NO_JS_MODULES:
+    elif requirement not in NO_JS_MODULES and requirement not in IMPORT_ELEMENTS:
         buf += f"import * as {name} from '{requirement}';\n"
     else:
         test = False
@@ -69,8 +67,8 @@ for requirement in requirements:
         shims += SETUP_TRIGGERS[requirement] + "\n"
         test = False
     elif requirement in IMPORT_ELEMENTS:
-        shims += f"import {{ {IMPORT_ELEMENTS[requirement]} }} from '{requirement}';\n"
-        shims += f"globalThis.{IMPORT_ELEMENTS[requirement]} = {IMPORT_ELEMENTS[requirement]};\n"
+        buf += f"import {{ {IMPORT_ELEMENTS[requirement]} }} from '{requirement}';\n"
+        buf += f"window.{IMPORT_ELEMENTS[requirement]} = {IMPORT_ELEMENTS[requirement]};\n"
         test = False
     else:
         for element in IMPORT_MODLUES:
@@ -82,7 +80,7 @@ for requirement in requirements:
                 break
     if test:
         buf += f"window.{name} = {name};\n"
-
+        # buf += f"export * as {name} from '{requirement}';\n"
 with open("tmp.js", "wt") as f:
     f.write(buf)
 
@@ -100,7 +98,7 @@ def run_esbuild(entry_point, outfile):
                 entry_point,
                 f"--outfile={outfile}",
                 "--bundle",
-                "--minify",
+                # "--minify",
                 "--loader:.ttf=dataurl",
                 "--loader:.png=dataurl",
                 "--loader:.gif=dataurl",

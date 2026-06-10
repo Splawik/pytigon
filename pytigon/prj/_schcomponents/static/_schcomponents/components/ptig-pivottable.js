@@ -1,7 +1,7 @@
 var BASE_PATH, TAG, comp, height, init, stub1_context, stub2_err, width;
 TAG = "ptig-pivottable";
-BASE_PATH = window.BASE_PATH + "static/jquery_plugins/pivottable";
-stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/pivot.js", BASE_PATH + "/../jquery.ui/jquery-ui.min.js"], [BASE_PATH + "/pivot.min.css"]));
+BASE_PATH = window.BASE_PATH + "static/_schcomponents/";
+stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "pivottable/pivot.min.js", BASE_PATH + "pivottable/pivot.min.js", BASE_PATH + "jquery-ui/jquery-ui.min.js"], [BASE_PATH + "pivottable/pivot.min.css"], false));
 comp = stub1_context.__enter__();
 try {
     width = function flx_width (component, old_value, new_value) {
@@ -19,7 +19,7 @@ try {
     init = function flx_init (component) {
         var data, options;
         data = [({color: "blue", shape: "circle"}), ({color: "red", shape: "triangle"})];
-        options = ({rows: ["color"], cols: ["shape"]});
+        options = ({rows: ["color"], cols: ["shape"], renderers: jQuery.pivotUtilities.d3_renderers});
         component["pivottable"] = (jQuery(component.root).pivotUI)(data, options);
         return null;
     };

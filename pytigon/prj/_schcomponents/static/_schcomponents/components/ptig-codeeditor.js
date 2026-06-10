@@ -57,7 +57,7 @@ TEMPLATE = '<style>\n' +
     '</div>\n' +
     '\n' +
     '';
-BASE_PATH = window.BASE_PATH + "static/_schcomponents/vs";
+BASE_PATH = window.BASE_PATH + "static/_schcomponents/monaco";
 stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/monaco.js"], [BASE_PATH + "/monaco.css"], true));
 comp = stub1_context.__enter__();
 try {

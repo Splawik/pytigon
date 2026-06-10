@@ -125,5 +125,11 @@ Urls = (
         None,
         """png://mimetypes/x-office-calendar.png""",
     ),
+    (
+        "maplibre?view_in=browser",
+        _("Maplibre"),
+        None,
+        """png://apps/preferences-system-network-proxy.png""",
+    ),
 )
 UserParam = {}

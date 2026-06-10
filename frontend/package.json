@@ -54,6 +54,7 @@
     "pouchdb": "^9.0.0",
     "pytigon-tools.js": "link:./not_node_modules/pytigon-tools.js",
     "select2": "^4.1.0",
+    "select2-bootstrap-5-theme": "^1.3.0",
     "sidebar-menu.js": "link:./not_node_modules/sidebar-menu/sidebar-menu.js",
     "spin.js": "^4.1.2",
     "sprintf": "^0.1.5",

@@ -1,2 +1,4 @@
 import * as pivottable from 'pivottable'
-export { pivottable }
+export * from 'pivottable'
+
+import 'pivottable/dist/pivot.css'

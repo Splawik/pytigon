@@ -1,2 +1,2 @@
-import * as videojs from 'video.js'
-export { videojs }
+export * from 'video.js'
+import 'video.js/dist/video-js.css'

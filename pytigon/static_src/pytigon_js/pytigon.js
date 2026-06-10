@@ -5504,6 +5504,7 @@ app_init = function flx_app_init (prj_name, application_template, menu_id, lang,
     window.COMPONENT_INIT = component_init;
     window.LANG = lang;
     window.GEN_TIME = gen_time;
+    window.pytigon_lib_init();
     if (_pyfunc_truthy(offline_support)) {
         if ((_pyfunc_truthy(navigator.onLine) && (_pyfunc_truthy(service_worker_and_indexedDB_test())))) {
             install_service_worker();

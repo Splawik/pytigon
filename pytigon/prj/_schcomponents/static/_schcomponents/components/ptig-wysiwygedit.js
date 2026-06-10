@@ -6,8 +6,8 @@ TEMPLATE = '        <slot></slot>\n' +
     '        </div>\n' +
     '\n' +
     '';
-BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins/quill";
-stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/shadowquill.js"], [BASE_PATH + "/quill.snow.css"]));
+BASE_PATH = window.BASE_PATH + "static/_schcomponents/tiptap/";
+stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "tiptap.js"], [], true));
 comp = stub1_context.__enter__();
 try {
     comp.options["attributes"] = ({width: null, height: null, name: null});
@@ -29,13 +29,16 @@ try {
 
     comp.options["constructor"] = constructor;
     init = function flx_init (component) {
-        var editor, editor_div, editor_options, on_change, on_save, state, sync;
+        var Editor, StarterKit, editor, editor_div, editor_module, editor_options, on_change, on_save, state, sync;
         editor_div = component.root.querySelector("div.editor-container");
+        editor_module = component.modules[0];
+        Editor = editor_module.Editor;
+        StarterKit = editor_module.StarterKit;
         editor_options = ({modules: ({syntax: false}), theme: "snow"});
         if (_pyfunc_truthy(component.toolbar)) {
             editor_options["modules"]["toolbar"] = component.toolbar;
         }
-        editor = new Quill(editor_div, editor_options);
+        editor = new Editor(({element: editor_div, extensions: [StarterKit], content: "<p>Hej</p>"}));
         component.editor = editor;
         sync = (function flx_sync () {
             if ((component.textarea.childNodes.length > 0)) {

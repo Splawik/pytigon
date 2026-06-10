@@ -390,25 +390,87 @@ if ENV("PROMETHEUS_ENABLED"):
     PROMETHEUS_ENABLED = True
     INSTALLED_APPS.append("django_prometheus")
 
+if False:
+    if CSP is not None:
+        SECURE_CSP = {
+            "default-src": [CSP.SELF],
+            "script-src": [
+                CSP.SELF,
+                CSP.NONCE,
+                "blob:",
+            ],
+            "style-src": [
+                CSP.SELF,
+                CSP.UNSAFE_INLINE,
+                "https://fonts.googleapis.com",
+            ],
+            "font-src": [CSP.SELF, "https://fonts.gstatic.com", "data:"],
+            "img-src": [
+                CSP.SELF,
+                "data:",
+                "http://*.tile.osm.org/",
+                "https://*.tile.osm.org/",
+                "http://*.bossanova.uk/",
+                "https://*.bossanova.uk/",
+                "http://*.tile.openstreetmap.org",
+                "https://*.tile.openstreetmap.org",
+            ],
+            "worker-src": [CSP.SELF, "blob:"],
+            "connect-src": [
+                CSP.SELF,
+                "https://*.tile.openstreetmap.org",
+                "http://*.tile.openstreetmap.org",
+            ],
+        }
+    else:
+        SECURE_CSP = {}
+
 if CSP is not None:
     SECURE_CSP = {
         "default-src": [CSP.SELF],
-        "script-src": [CSP.SELF, CSP.NONCE, "blob:"],
+        "script-src": [
+            CSP.SELF,
+            CSP.NONCE,
+            "blob:",  # Przekazane jako zwykły ciąg znaków
+        ],
         "style-src": [
             CSP.SELF,
             CSP.UNSAFE_INLINE,
-            "https://fonts.googleapis.com",
+            "http://googleapis.com",
+            "http://*.googleapis.com",
+            "https://googleapis.com",
+            "https://*.googleapis.com",
         ],
-        "font-src": [CSP.SELF, "https://fonts.gstatic.com", "data:"],
+        "font-src": [
+            CSP.SELF,
+            "http://gstatic.com",
+            "http://*.gstatic.com",
+            "https://gstatic.com",
+            "https://*.gstatic.com",
+            "data:",  # Przekazane jako zwykły ciąg znaków
+        ],
         "img-src": [
             CSP.SELF,
-            "data:",
-            "http://*.tile.osm.org/",
-            "https://*.tile.osm.org/",
-            "http://*.bossanova.uk/",
-            "https://*.bossanova.uk/",
+            "data:",  # Przekazane jako zwykły ciąg znaków
+            "blob:",  # Przekazane jako zwykły ciąg znaków (wymagane przez MapLibre)
+            "http://*.tile.osm.org",
+            "https://*.tile.osm.org",
+            "http://*.bossanova.uk",
+            "https://*.bossanova.uk",
+            "http://*.tile.openstreetmap.org",
+            "https://*.tile.openstreetmap.org",
         ],
-        "worker-src": [CSP.SELF, "blob:"],
+        "worker-src": [
+            CSP.SELF,
+            "blob:",  # Przekazane jako zwykły ciąg znaków
+        ],
+        "connect-src": [
+            CSP.SELF,
+            "https://tile.openstreetmap.org",
+            "http://tile.openstreetmap.org",
+            "https://*.tile.openstreetmap.org",
+            "http://*.tile.openstreetmap.org",
+        ],
     }
 else:
     SECURE_CSP = {}

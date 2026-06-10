@@ -3,7 +3,7 @@ TAG = "ptig-plotly";
 TEMPLATE = '        <div name=\"plotlydiv\" data-bind:style-width:width;style-height:height></div>\n' +
     '\n' +
     '';
-BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins";
+BASE_PATH = window.BASE_PATH + "static/_schcomponents/plotly/";
 BASE_PLOTLY_PATH = window.BASE_PATH + "schchart/plot_service/";
 from_dict = function flx_from_dict (d, name) {
     if (_pyfunc_op_contains(name, d)) {
@@ -103,7 +103,7 @@ process_response_data = function flx_process_response_data (component, data) {
     return null;
 };
 
-stub5_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/plotly/plotly.min.js", BASE_PATH + "/d3/d3.v3.min.js"], [BASE_PATH + "/plotly/plotly.css"]));
+stub5_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "plotly.min.js"], [BASE_PATH + "plotly.css"], false));
 comp = stub5_context.__enter__();
 try {
     comp.options["attributes"] = ({width: null, height: null, param: null});

@@ -1,5 +1,4 @@
-var BASE_PATH, TAG, TEMPLATE, comp, constructor, init, stub1_context, stub2_err;
-import {JSONPath} from '../../vanillajs_plugins/jsonpath_plus/index-es.min.js';;
+var TAG, TEMPLATE, comp, constructor, init, stub1_context, stub2_err;
 TAG = "ptig-select2";
 TEMPLATE = '        <div class=\"ajax-region input-group flex-nowrap\" style=\"position:relative;\" data-bind=\"style-padding-right:padding;style-width:width\" data-region=\"get_row\">\n' +
     '                <select style=\"width:100%;\" data-bind=\":multiple\"></select>\n' +
@@ -9,7 +8,6 @@ TEMPLATE = '        <div class=\"ajax-region input-group flex-nowrap\" style=\"p
     '        </div>\n' +
     '\n' +
     '';
-BASE_PATH = window.BASE_PATH + "static/jquery_plugins/select2";
 stub1_context = (new DefineWebComponent(TAG, false));
 comp = stub1_context.__enter__();
 try {
@@ -77,7 +75,7 @@ try {
                     return null;
                 }).bind(this);
 
-                children.forEach(append);
+                Array.prototype.forEach.call(children, append);
                 return null;
             }).bind(this);
 

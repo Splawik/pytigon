@@ -87,6 +87,11 @@ urlpatterns = [
         TemplateView.as_view(template_name="schcomponents_demo/testinlinecontent.html"),
         {},
     ),
+    path(
+        "maplibre",
+        TemplateView.as_view(template_name="schcomponents_demo/maplibre.html"),
+        {},
+    ),
 ]
 
 gen = generic_table_start(urlpatterns, "schcomponents_demo", views)

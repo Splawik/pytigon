@@ -12,6 +12,7 @@ def run_esbuild(entry_point, outfile):
                 entry_point,
                 f"--outfile={outfile}",
                 "--bundle",
+                "--format=esm",
                 "--minify",
                 "--loader:.ttf=dataurl",
                 "--loader:.png=dataurl",

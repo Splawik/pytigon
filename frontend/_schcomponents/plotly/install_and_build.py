@@ -1,29 +1,5 @@
-import subprocess
 from pytigon.pytigon_run import run
-import sys
-
-
-def run_esbuild(entry_point, outfile):
-    try:
-        ret = run(
-            [
-                "ptig",
-                "@esbuild",
-                entry_point,
-                f"--outfile={outfile}",
-                "--bundle",
-                "--minify",
-                "--loader:.ttf=dataurl",
-                "--loader:.png=dataurl",
-                "--loader:.gif=dataurl",
-                "--log-limit=0",
-            ]
-        )
-        print(ret)
-        print(f"✅ Sukces: {outfile}")
-    except subprocess.CalledProcessError as e:
-        print(f"❌ Błąd budowania: {e}", file=sys.stderr)
-        sys.exit(1)
+from pytigon_lib.schfs.sync import rsync_style_sync
 
 
 def install_dependencies(dependencies):
@@ -41,12 +17,12 @@ def install_dependencies(dependencies):
 
 
 if __name__ == "__main__":
-    install_dependencies(
-        [
-            "plotly.js-dist",
-        ]
+    install_dependencies(["plotly.js-dist-min", "plotly.js"])
+    rsync_style_sync(
+        "./node_modules/plotly.js-dist-min/",
+        "../../../pytigon/prj/_schcomponents/static/_schcomponents/plotly/",
     )
-    run_esbuild(
-        "plotly.mjs",
-        "../../../pytigon/prj/_schcomponents/static/_schcomponents/plotly/plotly.js",
+    rsync_style_sync(
+        "./node_modules/plotly.js/dist/plotly.css",
+        "../../../pytigon/prj/_schcomponents/static/_schcomponents/plotly/plotly.css",
     )

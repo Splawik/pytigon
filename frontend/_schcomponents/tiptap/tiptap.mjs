@@ -1,4 +1,2 @@
-import { Editor } from '@tiptap/core'
-import StarterKit from '@tiptap/starter-kit'
-
-export { Editor, StarterKit }
+export * from '@tiptap/core'
+export * from '@tiptap/starter-kit'

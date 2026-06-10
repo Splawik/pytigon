@@ -3,7 +3,7 @@ TAG = "ptig-d3";
 TEMPLATE = '        <div name=\"d3div\"></div>\n' +
     '\n' +
     '';
-BASE_PATH = window.BASE_PATH + "static/_schcomponents/d3";
+BASE_PATH = window.BASE_PATH + "static/_schcomponents/d3/";
 HelloWorld = function () {
     _pyfunc_op_instantiate(this, arguments);
 }
@@ -22,7 +22,7 @@ HelloWorld.prototype.connectedCallback = function () {
 };
 
 
-stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/d3.js"], null, true));
+stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "d3.js"], null, true));
 comp = stub1_context.__enter__();
 try {
     width = function flx_width (component, old_value, new_value) {

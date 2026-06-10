@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "jquery-ui": "^1.14.2",
     "pivottable": "^2.23.0"
   }
 }
