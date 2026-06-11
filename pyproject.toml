@@ -2,6 +2,9 @@
 requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools.exclude-package-data]
+"*" = ["**/__pycache__/*", "*.pyc"]
+
 [project]
 name = "pytigon"
 version = "0.260511"
@@ -109,7 +112,7 @@ addopts = [
 ]
 
 [tool.setuptools.packages.find]
-exclude = ["pytigon_gui*", "pytigon_lib*"]
+exclude = ["pytigon_gui*", "pytigon_lib*", "**/__pycache__", "__pycache__"]
 
 [tool.coverage.run]
 source = ["pytigon"]
