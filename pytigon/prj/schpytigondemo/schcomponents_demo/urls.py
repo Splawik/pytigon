@@ -28,11 +28,6 @@ urlpatterns = [
         {},
     ),
     path(
-        "leaflet",
-        TemplateView.as_view(template_name="schcomponents_demo/leaflet.html"),
-        {},
-    ),
-    path(
         "video", TemplateView.as_view(template_name="schcomponents_demo/video.html"), {}
     ),
     path(
@@ -42,11 +37,6 @@ urlpatterns = [
     ),
     path(
         "xterm", TemplateView.as_view(template_name="schcomponents_demo/xterm.html"), {}
-    ),
-    path(
-        "calendar",
-        TemplateView.as_view(template_name="schcomponents_demo/calendar.html"),
-        {},
     ),
     path(
         "mask", TemplateView.as_view(template_name="schcomponents_demo/mask.html"), {}

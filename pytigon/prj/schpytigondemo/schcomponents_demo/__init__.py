@@ -27,12 +27,6 @@ Urls = (
         """png://mimetypes/x-office-spreadsheet.png""",
     ),
     (
-        "leaflet?view_in=browser",
-        _("Leaflet"),
-        None,
-        """png://apps/preferences-system-network-proxy.png""",
-    ),
-    (
         "video?view_in=browser",
         _("Video"),
         None,
@@ -49,12 +43,6 @@ Urls = (
         _("Xterm"),
         None,
         """png://apps/utilities-terminal.png""",
-    ),
-    (
-        "calendar?view_in=browser",
-        _("Calendar"),
-        None,
-        """png://actions/appointment-new.png""",
     ),
     (
         "mask?view_in=browser",
