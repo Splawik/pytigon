@@ -112,7 +112,7 @@ addopts = [
 ]
 
 [tool.setuptools.packages.find]
-exclude = ["pytigon_gui*", "pytigon_lib*", "**/__pycache__", "__pycache__"]
+exclude = ["pytigon_lib*", "pytigon_gui*", "**/__pycache__", "__pycache__"]
 
 [tool.coverage.run]
 source = ["pytigon"]
