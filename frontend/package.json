@@ -13,6 +13,7 @@
     "buble": "github:pemrouz/buble#4e639ae"
   },
   "dependencies": {
+    "@octokit/graphql": "^9.0.3",
     "@popperjs/core": "^2.11.8",
     "bootstrap": "^5.3.8",
     "bootstrap-ajax-typeahead": "^0.0.5",
@@ -28,7 +29,7 @@
     "django-select2": "^8.4.8",
     "event-calendar": "^0.8.1",
     "events": "^3.3.0",
-    "graphql": "^16.14.1",
+    "graphql.js": "^0.6.8",
     "htmx.org": "^2.0.10",
     "idiomorph": "^0.7.4",
     "imask": "^7.6.1",
@@ -46,13 +47,14 @@
     "jsi18n.js": "link:./not_node_modules/jsi18n.js",
     "jsonpath-plus": "^10.4.0",
     "ladda": "^2.0.3",
+    "liquidjs": "^10.27.0",
     "lz-string": "^1.5.0",
     "moment": "^2.30.1",
     "monaco-editor": "^0.55.1",
-    "nunjucks": "^3.2.4",
     "om-perfect-scrollbar": "^2.0.1",
     "pouchdb": "^9.0.0",
     "pytigon-tools.js": "link:./not_node_modules/pytigon-tools.js",
+    "pytigon_lib_init.js": "link:./not_node_modules/pytigon_lib_init.js",
     "select2": "^4.1.0",
     "select2-bootstrap-5-theme": "^1.3.0",
     "sidebar-menu.js": "link:./not_node_modules/sidebar-menu/sidebar-menu.js",
@@ -62,6 +64,7 @@
     "tether": "^3.0.2",
     "twbs-pagination": "^1.4.2",
     "unique-id": "^1.0.2",
+    "uuid": "^14.0.0",
     "x-editable-bootstrap5": "^1.5.7"
   },
   "aube": {

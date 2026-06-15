@@ -11,3 +11,5 @@ request = function flx_request (param, complete) {
     complete(context);
     return null;
 };
+
+export {request};

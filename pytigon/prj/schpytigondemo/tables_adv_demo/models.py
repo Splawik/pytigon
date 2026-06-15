@@ -21,7 +21,6 @@ import tables_demo.models
 from tables_demo.models import *
 from django.forms import fields as form_fields
 
-
 GenreChoices = [
     ("r", "Rock"),
     ("p", "Pop"),

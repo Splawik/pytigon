@@ -2,6 +2,7 @@ from graphene_django import DjangoObjectType
 from django.contrib.auth import get_user_model
 from django.conf import settings
 import graphene
+import graphql_jwt
 import importlib
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
 
@@ -51,15 +52,14 @@ class UserMutation(graphene.Mutation):
 
 # Define the base Query class
 class _Query:
-    users = graphene.List(UserType)
-
-    def resolve_users(self, info):
-        return get_user_model().objects.all()
+    ping = graphene.String(description="graphql api test")
 
 
 # Define the base Mutation class
 class _Mutation:
-    pass
+    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
+    verify_token = graphql_jwt.Verify.Field()
+    refresh_token = graphql_jwt.Refresh.Field()
 
 
 class PublicQuery(graphene.ObjectType, _Query):
@@ -94,11 +94,15 @@ for app in settings.INSTALLED_APPS:
         if hasattr(m, "extend_mutation"):
             _Mutation = m.extend_mutation(_Mutation)
     except ModuleNotFoundError:
+        print(f"Module {module_name} - problem with graphene")
         pass
 
 
 class Query(graphene.ObjectType, _Query):
-    pass
+    users = graphene.List(UserType)
+
+    def resolve_users(self, info):
+        return get_user_model().objects.all()
 
 
 class Mutation(graphene.ObjectType, _Mutation):

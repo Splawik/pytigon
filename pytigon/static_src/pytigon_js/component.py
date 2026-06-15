@@ -51,7 +51,9 @@ def set_state(component, state):
         if component.root != None:
             # Search both component.root and component for matching bindings
             for c in (component.root, component):
-                nodes = Array.prototype.slice.call(c.querySelectorAll('[data-bind*="' + key + '"]'))
+                nodes = Array.prototype.slice.call(
+                    c.querySelectorAll('[data-bind*="' + key + '"]')
+                )
                 for node in nodes:
                     xx = node.getAttribute("data-bind")
                     # Each data-bind can contain multiple ;-separated bindings
@@ -121,6 +123,8 @@ def set_state(component, state):
 
         component.state[key] = value
 
+
+window.set_state = set_state
 
 # =============================================================================
 # Web Component definition
@@ -207,10 +211,15 @@ class DefineWebComponent:
                 if self.shadow:
                     if self.options.hasOwnProperty("template"):
                         self.options["template"] = (
-                            '<style>@import "' + css + '"</style>\n' + self.options["template"]
+                            '<style>@import "'
+                            + css
+                            + '"</style>\n'
+                            + self.options["template"]
                         )
                     else:
-                        self.options["template"] = '<style>@import "' + css + '"</style>\n'
+                        self.options["template"] = (
+                            '<style>@import "' + css + '"</style>\n'
+                        )
                 else:
                     load_css(css)
 
@@ -272,7 +281,7 @@ class GlobalBus:
         bus = GlobalBus()
         bus.register(my_component)
         bus.set_state({"theme": "dark"})
-        bus.send_event("refresh", None)
+        bus.send_event("refresh", None, None)
     """
 
     def __init__(self):
@@ -295,10 +304,10 @@ class GlobalBus:
                     self.state[key] = value
                     self.emit(key, value)
 
-    def send_event(self, name, value):
+    def send_event(self, name, value, src=None, callback=None):
         """Send a named event to all registered components.
 
-        Components that implement handle_event(name, value) will receive it.
+        Components that implement handle_event(name, value, src, callback) will receive it.
 
         Args:
             name: Event name.
@@ -307,7 +316,7 @@ class GlobalBus:
         for component in self.components:
             if component:
                 if hasattr(component, "handle_event"):
-                    component.handle_event(name, value)
+                    component.handle_event(name, value, src, callback)
 
     def emit(self, name, value):
         """Emit a state change to all registered components.

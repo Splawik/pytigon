@@ -33,6 +33,7 @@
                 {% component '_schcomponents/components/ptig-ai.js' %}
                 {% component '_schcomponents/components/ptig-codeeditor.js' %}
                 {% component '_schcomponents/components/ptig-d3.js' %}
+                {% component '_schcomponents/components/ptig-db.js' %}
                 {% component '_schcomponents/components/ptig-event-calendar.js' %}
                 {% component '_schcomponents/components/ptig-form.js' %}
                 {% component '_schcomponents/components/ptig-frame.js' %}
@@ -52,15 +53,13 @@
                 {% component '_schcomponents/components/ptig-wysiwygedit.js' %}
                 {% component '_schcomponents/components/ptig-xterm.js' %}
                 {% component 'schpytigondemo/components/clock-channel.js' %}
-                {% component 'schpytigondemo/components/ptig-db.js' %}
-                {% component 'schpytigondemo/components/ptig-db2.js' %}
                 {% component 'schpytigondemo/components/test.js' %}
                 {% component 'schwiki/components/insert_object.js' %}
         {% endblock %}
         {% block component_init %}
                         var initial_state={};
                         GLOBAL_BUS.set_state(initial_state);
-                        var component_init = [ "ptig-ai.js", "ptig-codeeditor.js", "ptig-d3.js", "ptig-event-calendar.js", "ptig-form.js", "ptig-frame.js", "ptig-maplibre.js", "ptig-margin-left.js", "ptig-mask.js", "ptig-pivottable.js", "ptig-plotly.js", "ptig-scroll-action.js", "ptig-select2.js", "ptig-spreadsheet.js", "ptig-svg.js", "ptig-task.js", "ptig-time.js", "ptig-video.js", "ptig-webrtc.js", "ptig-wysiwygedit.js", "ptig-xterm.js", "clock-channel.js", "ptig-db.js", "ptig-db2.js", "test.js", "insert_object.js",  ];
+                        var component_init = [ "ptig-ai.js", "ptig-codeeditor.js", "ptig-d3.js", "ptig-db.js", "ptig-event-calendar.js", "ptig-form.js", "ptig-frame.js", "ptig-maplibre.js", "ptig-margin-left.js", "ptig-mask.js", "ptig-pivottable.js", "ptig-plotly.js", "ptig-scroll-action.js", "ptig-select2.js", "ptig-spreadsheet.js", "ptig-svg.js", "ptig-task.js", "ptig-time.js", "ptig-video.js", "ptig-webrtc.js", "ptig-wysiwygedit.js", "ptig-xterm.js", "clock-channel.js", "test.js", "insert_object.js",  ];
         {% endblock %}
 {% endif %}
 

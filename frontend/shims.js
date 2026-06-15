@@ -5,8 +5,6 @@ import { vsprintf, sprintf } from 'sprintf'
 globalThis.vsprintf = vsprintf
 globalThis.sprintf = sprintf
 
-import * as Cookies from 'js-cookie';
-globalThis.Cookies = Cookies;
 
 import { jQuery } from 'jquery';
 

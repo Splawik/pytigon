@@ -1,5 +1,11 @@
-<h1>Hello world!</h1>
-{% for row in table %}
-        {{row.id}}: {{row.doc.name}} <br />
-{% endfor %}
+<body:>
+        <h1>Hello world!</h1>
+        <pre>{{ global | json }}</pre>
+        <!-- lub jeśli używasz nowszej wersji Liquidjs -->
+        <pre>{{ _context | json }}</pre>
+        {{ table.size }}
+        {% for row in table %}
+                {{ row }}, {{ row.id }}: {{ row.title }} {{ row.createdAt }} {{ row.done }} <br />
+        {% endfor %}
+</body:>
 

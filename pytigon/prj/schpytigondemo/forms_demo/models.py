@@ -15,7 +15,6 @@ import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
-
 test_choice = [
     ("1", "Test 1"),
     ("2", "Test 2"),

@@ -1,4 +1,3 @@
-{# -*- coding: utf-8 -*- #}
 % extends "forms/form.html"
 
 % load exfiltry
@@ -6,29 +5,67 @@
 
 
 %% content
-    ptig-wysiwygedit width=100%,,,height=600px
-        div slot=toolbar,,,class=d-none
-            [
-                ["bold", "italic"],
-                [{ "color": [] }],
-                ["clean"]
-            ]
+    ptig-wysiwygedit width=100%,,,height=600px,,,namespace={{uuid}}_c1        
+        div class=toolbar,,,slot=toolbar,,,style=display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+            
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=undo...<i class="fa fa-undo"></i>
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=redo...<i class="fa fa-repeat"></i>
+
+            div class=divider
+
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleBold,,,style=font-weight: bold;...<i class="fa fa-bold"></i>
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleItalic,,,style=font-style: italic;...<i class="fa fa-italic"></i>
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleStrike,,,style=text-decoration: line-through;...<i class="fa fa-strikethrough"></i>
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleLink...<i class="fa fa-link"></i>
+
+            div class=divider
+        
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleHeading,,,data-level=1...<i class="fa fa-header"></i>1
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleHeading,,,data-level=2...<i class="fa fa-header"></i>2
+            
+            div class=divider
+
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleBulletList...<i class="fa fa-list-ul"></i>
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleOrderedList...<i class="fa fa-list-ol"></i>
+
+            div class=divider
+
+            label class=color-picker
+                .<i class="fa fa-paint-brush"></i>: <input type="color" data-command-input="setColor" value="#000000">
+            label class=color-picker
+                .<i class="fa fa-tint"></i>: <input type="color" data-command-input="setHighlight" value="#ffff00">
+            
+            div class=divider
+
+
+            label class=my-btn file-upload
+                .<i class="fa fa-folder-open-o"></i>
+                input type=file,,,accept=image/*,,,data-command-file=insertImageFile
+
+            div class=divider
+
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=insertTable...<i class="fa fa-table"></i>
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=addColumnAfter...<i class="fa fa-columns"></i>+
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=deleteColumn...<i class="fa fa-columns"></i>-
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=addRowAfter...<i class="fa fa-bars"></i>+
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=deleteRow...<i class="fa fa-bars"></i>-
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=deleteTable,,,style=color: red;...<i class="fa fa-trash"></i>        
+
+        
         <textarea name="text">Abracadabra abracadabra</textarea>
 
     br
     
-    ptig-wysiwygedit width=100%,,,height=600px
-        button href=https://www.onet.pl,,,class=btn btn-primary,,,data-bind=onclick:on_save;disabled:!changed
-            .Save
-        div slot=toolbar,,,class=d-none
-            [
-                [{ "font": [] }, { "size": [] }],
-                ["bold", "italic", "underline", "strike" ],
-                [{ "color": [] }, { "background": [] }],
-                [{ "script": "super" }, { "script": "sub" }],
-                [{ "header": "1" }, { "header": "2" }, "blockquote", "code-block" ],
-                [{ "list": "ordered" }, { "list": "bullet"}, { "indent": "-1" }, { "indent": "+1" }],
-                ["direction", { "align": [] }],
-                ["link", "image", "video", "formula" ],
-                ["clean"]
-            ]
+    ptig-wysiwygedit width=100%,,,height=600px,,,namespace={{uuid}}_c2
+        div class=toolbar,,,slot=toolbar,,,style=display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+            ptig-action-btn event-name=save_click,,,label=Save,,,namespace={{uuid}}_c2
+            ptig-log-handler event-name=save,,,namespace={{uuid}}_c2
+            
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=undo...<i class="fa fa-undo"></i>
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=redo...<i class="fa fa-repeat"></i>
+
+            div class=divider
+
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleBold,,,style=font-weight: bold;...<i class="fa fa-bold"></i>
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleItalic,,,style=font-style: italic;...<i class="fa fa-italic"></i>
+            button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleStrike,,,style=text-decoration: line-through;...<i class="fa fa-strikethrough"></i>

@@ -89,3 +89,4 @@ try {
     if (stub2_err) { if (!stub1_context.__exit__(stub2_err.name || "error", stub2_err, null)) { throw stub2_err; }
     } else { stub1_context.__exit__(null, null, null); }
 }
+export {decimal_separator};

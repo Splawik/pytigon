@@ -330,7 +330,6 @@ doctype_status = [
 
 
 class Element(TreeModel):
-
     class Meta:
         verbose_name = _("Element")
         verbose_name_plural = _("Elements")
@@ -368,9 +367,7 @@ class Element(TreeModel):
     path = models.CharField(
         "Path", null=True, blank=True, editable=True, db_index=True, max_length=1024
     )
-    name = models.CharField(
-        "Name", null=False, blank=False, editable=True, max_length=64
-    )
+    name = models.CharField("Name", null=False, blank=False, editable=True, max_length=64)
     description = models.CharField(
         "Description", null=True, blank=True, editable=True, max_length=256
     )
@@ -638,9 +635,7 @@ class Element(TreeModel):
                 n = href + parent.code + "</a>/" + n
             else:
                 n = href + "?</a>/" + n
-        return (
-            "<a target='_refresh_data' href='../../0/form/tree'>/</a>" + n + self.code
-        )
+        return "<a target='_refresh_data' href='../../0/form/tree'>/</a>" + n + self.code
 
     def href_path_list(self):
         p = self.parents()
@@ -703,10 +698,7 @@ class Element(TreeModel):
                         if hasattr(self, s[t]["table"].lower()):
                             return getattr(self, s[t]["table"].lower())
                         else:
-                            if (
-                                s[t]["app"] == "schelements"
-                                and s[t]["table"] == "Element"
-                            ):
+                            if s[t]["app"] == "schelements" and s[t]["table"] == "Element":
                                 return self
                             model = apps.get_model(s[t]["app"], s[t]["table"])
                             try:
@@ -816,16 +808,11 @@ class Element(TreeModel):
 
     @classmethod
     def filter(cls, value, view=None, request=None):
-        if (
-            hasattr(settings, "CANCAN")
-            and settings.CANCAN
-            and request
-            and is_in_cancan_rules(cls, request.ability.access_rules.rules)
-        ):
+        if request and is_rules_active():
             if value and value != "-":
-                return request.ability.queryset_for("view", cls).filter(type=value)
+                return filter_queryset_by_rules(request.user, "view", cls).filter(type=value)
             else:
-                return request.ability.queryset_for("view", cls)
+                return filter_queryset_by_rules(request.user, "view", cls)
         else:
             if value and value != "-":
                 return cls.objects.filter(type=value)
@@ -911,9 +898,7 @@ class Element(TreeModel):
 
     @classmethod
     def table_action(cls, list_view, request, data):
-        return standard_table_action(
-            cls, list_view, request, data, ["copy", "paste", "delete"]
-        )
+        return standard_table_action(cls, list_view, request, data, ["copy", "paste", "delete"])
 
     objects = ElementManager()
 
@@ -922,7 +907,6 @@ admin_register(Element)
 
 
 class DocReg(models.Model):
-
     class Meta:
         verbose_name = _("Document register")
         verbose_name_plural = _("Document registers")
@@ -1023,39 +1007,25 @@ class DocReg(models.Model):
         else:
             return self.name
 
-    def get_save_head_fun_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_save_head_fun_if_empty(self, request, template_name, ext, extra_context, target):
         return SAVE_HEAD
 
-    def get_save_item_fun_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_save_item_fun_if_empty(self, request, template_name, ext, extra_context, target):
         return SAVE_ITEM
 
-    def get_head_form_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_head_form_if_empty(self, request, template_name, ext, extra_context, target):
         return HEAD_FORM
 
-    def get_item_form_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_item_form_if_empty(self, request, template_name, ext, extra_context, target):
         return ITEM_FORM
 
-    def get_head_template_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_head_template_if_empty(self, request, template_name, ext, extra_context, target):
         return HEAD_TEMPLATE
 
-    def get_item_template_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_item_template_if_empty(self, request, template_name, ext, extra_context, target):
         return ITEM_TEMPLATE
 
-    def get_access_fun_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_access_fun_if_empty(self, request, template_name, ext, extra_context, target):
         return ACCESS_FUN
 
     def copy_to_clipboard(self):
@@ -1119,16 +1089,13 @@ class DocReg(models.Model):
                 return new_row_ok(request, int(obj.id), str(obj))
             return True
 
-        return standard_table_action(
-            cls, list_view, request, data, ["copy", "paste", "delete"]
-        )
+        return standard_table_action(cls, list_view, request, data, ["copy", "paste", "delete"])
 
 
 admin_register(DocReg)
 
 
 class DocType(models.Model):
-
     class Meta:
         verbose_name = _("Type of document")
         verbose_name_plural = _("Types of documents")
@@ -1223,39 +1190,25 @@ class DocType(models.Model):
     def __str__(self):
         return self.name
 
-    def get_save_head_fun_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_save_head_fun_if_empty(self, request, template_name, ext, extra_context, target):
         return SAVE_HEAD
 
-    def get_save_item_fun_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_save_item_fun_if_empty(self, request, template_name, ext, extra_context, target):
         return SAVE_ITEM
 
-    def get_head_form_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_head_form_if_empty(self, request, template_name, ext, extra_context, target):
         return HEAD_FORM
 
-    def get_item_form_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_item_form_if_empty(self, request, template_name, ext, extra_context, target):
         return ITEM_FORM
 
-    def get_head_template_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_head_template_if_empty(self, request, template_name, ext, extra_context, target):
         return HEAD_TEMPLATE
 
-    def get_item_template_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_item_template_if_empty(self, request, template_name, ext, extra_context, target):
         return ITEM_TEMPLATE
 
-    def get_access_fun_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_access_fun_if_empty(self, request, template_name, ext, extra_context, target):
         return ACCESS_FUN
 
 
@@ -1263,7 +1216,6 @@ admin_register(DocType)
 
 
 class DocHead(JSONModel):
-
     class Meta:
         verbose_name = _("Document header")
         verbose_name_plural = _("Document headers")
@@ -1330,9 +1282,7 @@ class DocHead(JSONModel):
     description = models.CharField(
         "Description", null=True, blank=True, editable=True, max_length=128
     )
-    comments = models.CharField(
-        "Comments", null=True, blank=True, editable=True, max_length=256
-    )
+    comments = models.CharField("Comments", null=True, blank=True, editable=True, max_length=256)
     status = models.CharField(
         "Status",
         null=True,
@@ -1342,9 +1292,7 @@ class DocHead(JSONModel):
         db_index=True,
         max_length=16,
     )
-    operator = models.CharField(
-        "Operator", null=True, blank=True, editable=False, max_length=255
-    )
+    operator = models.CharField("Operator", null=True, blank=True, editable=False, max_length=255)
     param1 = models.CharField(
         "Parameter 1",
         null=True,
@@ -1440,9 +1388,7 @@ class DocHead(JSONModel):
     @staticmethod
     def template_for_list(view, model, context, doc_type):
         if doc_type in ("html", "json") and "filter" in context:
-            reg = DocReg.objects.filter(
-                name=context["filter"].replace("_", "/")
-            ).first()
+            reg = DocReg.objects.filter(name=context["filter"].replace("_", "/")).first()
             if reg:
                 names = []
                 if "version" in context and context["version"]:
@@ -1466,11 +1412,7 @@ class DocHead(JSONModel):
                     else:
                         names.append(
                             (
-                                app
-                                + "/"
-                                + reg.name.replace("/", "_")
-                                + "_dochead_list"
-                                + ".html"
+                                app + "/" + reg.name.replace("/", "_") + "_dochead_list" + ".html"
                             ).lower()
                         )
 
@@ -1482,12 +1424,7 @@ class DocHead(JSONModel):
                     x = reg
                     while x:
                         names.append(
-                            (
-                                x.app
-                                + "/"
-                                + x.name.replace("/", "_")
-                                + "_dochead_list.html"
-                            ).lower()
+                            (x.app + "/" + x.name.replace("/", "_") + "_dochead_list.html").lower()
                         )
                         x = x.get_parent()
 
@@ -1532,42 +1469,23 @@ class DocHead(JSONModel):
                     if reg.head_template:
                         names.append("db/DocReg-%d-head_template.html" % reg.id)
 
-                    names.append(
-                        "%s/%s" % (self._meta.app_label, self._meta.model.__name__)
-                    )
+                    names.append("%s/%s" % (self._meta.app_label, self._meta.model.__name__))
                     if obj:
                         names.append(
                             (
-                                reg.app
-                                + "/"
-                                + obj.doc_type_parent.name
-                                + "_dochead_edit.html"
+                                reg.app + "/" + obj.doc_type_parent.name + "_dochead_edit.html"
                             ).lower()
                         )
                     else:
-                        names.append(
-                            (
-                                reg.app + "/" + doc_type.name + "_dochead_edit.html"
-                            ).lower()
-                        )
+                        names.append((reg.app + "/" + doc_type.name + "_dochead_edit.html").lower())
                     names.append(
-                        (
-                            reg.app
-                            + "/"
-                            + reg.name.replace("/", "_")
-                            + "_dochead_edit.html"
-                        ).lower()
+                        (reg.app + "/" + reg.name.replace("/", "_") + "_dochead_edit.html").lower()
                     )
 
                     x = reg.get_parent()
                     while x:
                         names.append(
-                            (
-                                x.app
-                                + "/"
-                                + x.name.replace("/", "_")
-                                + "_dochead_edit.html"
-                            ).lower()
+                            (x.app + "/" + x.name.replace("/", "_") + "_dochead_edit.html").lower()
                         )
                         x = x.get_parent()
                     names.append(context["view"].template_name)
@@ -1771,9 +1689,7 @@ class DocHead(JSONModel):
 
     @classmethod
     def table_action(cls, list_view, request, data):
-        return standard_table_action(
-            cls, list_view, request, data, ["copy", "paste", "delete"]
-        )
+        return standard_table_action(cls, list_view, request, data, ["copy", "paste", "delete"])
 
     @staticmethod
     def filter_by_permissions(view, queryset_or_obj, request):
@@ -1982,20 +1898,14 @@ class DocHead(JSONModel):
                         if new_status:
                             self.status = action_name
                             self.save()
-                        elif (
-                            action_name
-                            and action_name[:1] != "_"
-                            and action_name != self.status
-                        ):
+                        elif action_name and action_name[:1] != "_" and action_name != self.status:
                             self.status = action_name
                             self.save()
 
                         if action != "accept":
                             DocItem.objects.filter(
                                 parent=self,
-                                level__gt=(
-                                    reg_status.order if reg_status.order >= 0 else 0
-                                ),
+                                level__gt=(reg_status.order if reg_status.order >= 0 else 0),
                             ).delete()
 
                         doc_status.date = timezone.now()
@@ -2017,9 +1927,7 @@ class DocHead(JSONModel):
                                     "description": str(self),
                                 }
                             else:
-                                return actions.update_row_ok(
-                                    request, int(self.id), str(self)
-                                )
+                                return actions.update_row_ok(request, int(self.id), str(self))
                     else:
                         return {
                             "errors": errors,
@@ -2106,7 +2014,6 @@ admin_register(DocHead)
 
 
 class DocItem(JSONModel):
-
     class Meta:
         verbose_name = _("Document item")
         verbose_name_plural = _("Document items")
@@ -2265,29 +2172,16 @@ class DocItem(JSONModel):
 
                     names.append(
                         (
-                            reg.app
-                            + "/"
-                            + dochead.doc_type_parent.name
-                            + "_docitem_list.html"
+                            reg.app + "/" + dochead.doc_type_parent.name + "_docitem_list.html"
                         ).lower()
                     )
                     names.append(
-                        (
-                            reg.app
-                            + "/"
-                            + reg.name.replace("/", "_")
-                            + "_docitem_list.html"
-                        ).lower()
+                        (reg.app + "/" + reg.name.replace("/", "_") + "_docitem_list.html").lower()
                     )
 
                     x = reg.get_parent()
                     while x:
-                        names.append(
-                            x.app
-                            + "/"
-                            + x.name.replace("/", "_")
-                            + "_docitem_list.html"
-                        )
+                        names.append(x.app + "/" + x.name.replace("/", "_") + "_docitem_list.html")
                         x = x.get_parent()
                     names.append(view.template_name)
                 return names
@@ -2341,32 +2235,18 @@ class DocItem(JSONModel):
                     names.append("db/DocReg-%d-item_template.html" % reg.id)
 
                 names.append(
-                    (
-                        reg.app
-                        + "/"
-                        + doc.name.replace("/", "_")
-                        + "_docitem_edit.html"
-                    ).lower()
+                    (reg.app + "/" + doc.name.replace("/", "_") + "_docitem_edit.html").lower()
                 )
                 names.append(
-                    (
-                        reg.app
-                        + "/"
-                        + reg.name.replace("/", "_")
-                        + "_docitem_edit.html"
-                    ).lower()
+                    (reg.app + "/" + reg.name.replace("/", "_") + "_docitem_edit.html").lower()
                 )
 
                 x = reg.get_parent()
                 while x:
-                    names.append(
-                        x.app + "/" + x.name.replace("/", "_") + "_docitem_edit.html"
-                    )
+                    names.append(x.app + "/" + x.name.replace("/", "_") + "_docitem_edit.html")
                     x = x.get_parent()
 
-                names.append(
-                    context["view"].template_name.replace(reg.app + "/", "schelements/")
-                )
+                names.append(context["view"].template_name.replace(reg.app + "/", "schelements/"))
             return names
         return None
 
@@ -2454,9 +2334,7 @@ class DocItem(JSONModel):
                 t = param["view"].kwargs["add_param"]
                 if t == "-":
                     return self
-                return ContentType.objects.get(
-                    model=t.lower() + "docitem"
-                ).model_class()()
+                return ContentType.objects.get(model=t.lower() + "docitem").model_class()()
             else:
                 t = self.parent.doc_type_parent.parent.name
                 name = t.lower() + "docitem"
@@ -2594,7 +2472,6 @@ admin_register(DocItem)
 
 
 class DocRegStatus(models.Model):
-
     class Meta:
         verbose_name = _("Document status")
         verbose_name_plural = _("Document status")
@@ -2622,9 +2499,7 @@ class DocRegStatus(models.Model):
         blank=False,
         editable=True,
     )
-    name = models.CharField(
-        "Name", null=False, blank=False, editable=True, max_length=16
-    )
+    name = models.CharField("Name", null=False, blank=False, editable=True, max_length=16)
     description = models.CharField(
         "Description", null=True, blank=True, editable=True, max_length=64
     )
@@ -2693,34 +2568,22 @@ class DocRegStatus(models.Model):
         else:
             return "refresh_frame"
 
-    def get_accept_proc_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_accept_proc_if_empty(self, request, template_name, ext, extra_context, target):
         return ACCEPT_PROC
 
-    def get_undo_proc_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_undo_proc_if_empty(self, request, template_name, ext, extra_context, target):
         return UNDO_PROC
 
-    def get_can_set_proc_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_can_set_proc_if_empty(self, request, template_name, ext, extra_context, target):
         return CAN_SET
 
-    def get_can_undo_proc_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_can_undo_proc_if_empty(self, request, template_name, ext, extra_context, target):
         return CAN_UNDO
 
-    def get_accept_form_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_accept_form_if_empty(self, request, template_name, ext, extra_context, target):
         return ACCEPT_FORM
 
-    def get_undo_form_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_undo_form_if_empty(self, request, template_name, ext, extra_context, target):
         return UNDO_FORM
 
     def copy_to_clipboard(self):
@@ -2783,16 +2646,13 @@ class DocRegStatus(models.Model):
                     return new_row_ok(request, int(obj.id), str(obj))
                 # print("PASTE: ", data)
             return True
-        return standard_table_action(
-            cls, list_view, request, data, ["copy", "paste", "delete"]
-        )
+        return standard_table_action(cls, list_view, request, data, ["copy", "paste", "delete"])
 
 
 admin_register(DocRegStatus)
 
 
 class DocHeadStatus(JSONModel):
-
     class Meta:
         verbose_name = _("Document head status")
         verbose_name_plural = _("Documents head status")
@@ -2821,15 +2681,11 @@ class DocHeadStatus(JSONModel):
         editable=True,
         db_index=True,
     )
-    name = models.CharField(
-        "Name", null=False, blank=False, editable=True, max_length=16
-    )
+    name = models.CharField("Name", null=False, blank=False, editable=True, max_length=16)
     description = models.CharField(
         "Description", null=True, blank=True, editable=False, max_length=64
     )
-    operator = models.CharField(
-        "Operator", null=True, blank=True, editable=True, max_length=255
-    )
+    operator = models.CharField("Operator", null=True, blank=True, editable=True, max_length=255)
 
     def __str__(self):
         return self.name
@@ -2839,7 +2695,6 @@ admin_register(DocHeadStatus)
 
 
 class Account(TreeModel):
-
     class Meta:
         verbose_name = _("Account")
         verbose_name_plural = _("Account")
@@ -2946,7 +2801,6 @@ admin_register(Account)
 
 
 class AccountState(models.Model):
-
     class Meta:
         verbose_name = _("State of account")
         verbose_name_plural = _("States of account")
@@ -3070,12 +2924,7 @@ class AccountState(models.Model):
         if self.subcode:
             s += "-" + self.subcode
 
-        if (
-            self.target
-            or self.classifier1value
-            or self.classifier2value
-            or self.classifier3value
-        ):
+        if self.target or self.classifier1value or self.classifier2value or self.classifier3value:
             s += "/"
         else:
             s += " [" + self.element.name + "]"
@@ -3352,14 +3201,9 @@ class AccountState(models.Model):
                 error_txt = x[1]
             else:
                 expression = x[0]
-                error_txt = (
-                    "The validation rule is not ensured: "
-                    + self.parent.correctness_rule
-                )
+                error_txt = "The validation rule is not ensured: " + self.parent.correctness_rule
 
-            s = expression.replace("DEBIT", str(self.debit)).replace(
-                "CREDIT", str(self.credit)
-            )
+            s = expression.replace("DEBIT", str(self.debit)).replace("CREDIT", str(self.credit))
             if self.period:
                 s = s.replace("PERIOD", self.period)
             ret = eval(s)
@@ -3400,7 +3244,6 @@ admin_register(AccountState)
 
 
 class AccountOperation(models.Model):
-
     class Meta:
         verbose_name = _("Account operation")
         verbose_name_plural = _("Account operations")
@@ -3535,7 +3378,6 @@ admin_register(AccountOperation)
 
 
 class BaseObject(models.Model):
-
     class Meta:
         verbose_name = _("Base object")
         verbose_name_plural = _("Base objects")
@@ -3682,24 +3524,16 @@ class BaseObject(models.Model):
             argv=argv,
         )
 
-    def get_declaration_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_declaration_if_empty(self, request, template_name, ext, extra_context, target):
         return DECLARATION
 
-    def get_to_str_fun_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_to_str_fun_if_empty(self, request, template_name, ext, extra_context, target):
         return TO_STR
 
-    def get_to_html_rec_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_to_html_rec_if_empty(self, request, template_name, ext, extra_context, target):
         return TO_HTML_REC
 
-    def get_template_src_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_template_src_if_empty(self, request, template_name, ext, extra_context, target):
         return TEMPLATE_SRC
 
     def get_load_fun_if_empty(self, request, template_name, ext, extra_context, target):
@@ -3708,19 +3542,13 @@ class BaseObject(models.Model):
     def get_save_fun_if_empty(self, request, template_name, ext, extra_context, target):
         return SAVE_BASE_OBJ
 
-    def get_action_template_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_action_template_if_empty(self, request, template_name, ext, extra_context, target):
         return ACTION_TEMPLATE
 
-    def get_on_delete_fun_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_on_delete_fun_if_empty(self, request, template_name, ext, extra_context, target):
         return ON_DELETE
 
-    def get_action_fun_if_empty(
-        self, request, template_name, ext, extra_context, target
-    ):
+    def get_action_fun_if_empty(self, request, template_name, ext, extra_context, target):
         return ACTION
 
 

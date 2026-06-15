@@ -1,6 +1,9 @@
 import subprocess
 from pytigon.pytigon_run import run
 import sys
+import os
+
+# os.environ["AUBE_CONFIG_TRUST_POLICY"] = "off"
 
 
 def run_esbuild(entry_point, outfile):
@@ -44,22 +47,13 @@ def install_dependencies(dependencies):
 if __name__ == "__main__":
     install_dependencies(
         [
-            "@tiptap/core",
-            "@tiptap/starter-kit",
-            "@tiptap/starter-kit",
-            "@tiptap/extension-link",
-            "@tiptap/extension-text-style",
-            "@tiptap/extension-color",
-            "@tiptap/extension-highlight",
-            "@tiptap/extension-table",
-            "@tiptap/extension-table-row",
-            "@tiptap/extension-table-cell",
-            "@tiptap/extension-table-header",
-            "@tiptap/extension-image",
-            "@tiptap/extensions",
+            "graphql",
+            "rxdb",
+            "rxjs",
+            "dexie",
         ]
     )
     run_esbuild(
-        "tiptap.mjs",
-        "../../../pytigon/prj/_schcomponents/static/_schcomponents/tiptap/tiptap.js",
+        "rxdb.mjs",
+        "../../../pytigon/prj/_schcomponents/static/_schcomponents/rxdb/rxdb.js",
     )

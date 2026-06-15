@@ -31,7 +31,6 @@ import sys
 import datetime
 from django.utils import timezone
 
-
 PFORM = form_with_perms("forms_demo")
 
 

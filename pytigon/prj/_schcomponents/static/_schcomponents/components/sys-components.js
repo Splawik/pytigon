@@ -1,4 +1,4 @@
-var comp, convert_rem_to_pixels, drag_element, init, stub10_err, stub11_context, stub12_err, stub13_context, stub14_err, stub15_context, stub16_err, stub17_context, stub18_err, stub1_context, stub2_err, stub3_context, stub4_err, stub5_context, stub6_err, stub9_context, test;
+var comp, convert_rem_to_pixels, drag_element, event_handler, init, on_log, on_save, stub10_err, stub11_context, stub12_err, stub13_context, stub14_err, stub15_context, stub16_err, stub17_context, stub18_err, stub19_context, stub1_context, stub20_err, stub21_context, stub22_err, stub23_context, stub24_err, stub2_err, stub3_context, stub4_err, stub5_context, stub6_err, stub9_context, test;
 stub1_context = (new DefineWebComponent("sys-pytigon-init", false));
 comp = stub1_context.__enter__();
 try {
@@ -234,8 +234,104 @@ try {
     if (stub16_err) { if (!stub15_context.__exit__(stub16_err.name || "error", stub16_err, null)) { throw stub16_err; }
     } else { stub15_context.__exit__(null, null, null); }
 }
-stub17_context = (new DefineWebComponent("ptig-sliderline", false));
+stub17_context = (new DefineWebComponent("ptig-action-btn", false));
 comp = stub17_context.__enter__();
+try {
+    comp.options["template"] = '                <button class=\"btn btn-primary\" type=\"button\" data-bind=\":onclick\">\n' +
+    '                        <span class=\"spinner-border spinner-border-sm d-none\" role=\"status\" aria-hidden=\"true\"></span>\n' +
+    '                        <span class=\"label\">\n' +
+    '                        </span>\n' +
+    '                </button>\n' +
+    '\n' +
+    '';
+    comp.options["attributes"] = _pyfunc_create_dict("event-name", null, "onclick", null, "label", null);
+    init = function flx_init (component) {
+        var _onclick, span, state;
+        state = ({});
+        span = component.root.querySelector("span.label");
+        span.innerHTML = component.getAttribute("label");
+        _onclick = (function flx__onclick (event) {
+            var _complete, button, spinner;
+            button = component.root.querySelector("button");
+            spinner = button.querySelector("span.spinner-border");
+            button.disabled = true;
+            _pymeth_remove.call(spinner.classList, "d-none");
+            _complete = (function flx__complete () {
+                button.disabled = false;
+                spinner.classList.add("d-none");
+                return null;
+            }).bind(this);
+
+            window.GLOBAL_BUS.send_event(component.getAttribute("event-name"), null, component, _complete);
+            return null;
+        }).bind(this);
+
+        state["onclick"] = _onclick;
+        component.set_state(state);
+        return null;
+    };
+
+    comp.options["init"] = init;
+} catch(err_0)  { stub18_err=err_0;
+} finally {
+    if (stub18_err) { if (!stub17_context.__exit__(stub18_err.name || "error", stub18_err, null)) { throw stub18_err; }
+    } else { stub17_context.__exit__(null, null, null); }
+}
+stub19_context = (new DefineWebComponent("ptig-save-handler", false));
+comp = stub19_context.__enter__();
+try {
+    comp.options["attributes"] = _pyfunc_create_dict("event-name", null, "href", null);
+    init = function flx_init (component) {
+        return null;
+    };
+
+    on_save = function flx_on_save (component, data, src, callback) {
+        var _complete;
+        if ((_pyfunc_op_equals(src.gettAtribute("namespace"), component.getAttribute("namespace")))) {
+            _complete = (function flx__complete () {
+                callback();
+                return null;
+            }).bind(this);
+
+            ajax_post(component.getAttribute("href"), data, _callback, null, null, "application/json");
+        }
+        return null;
+    };
+
+    event_handler = ({on_save: on_save});
+    comp.options["init"] = init;
+    comp.options["event_handler"] = event_handler;
+} catch(err_0)  { stub20_err=err_0;
+} finally {
+    if (stub20_err) { if (!stub19_context.__exit__(stub20_err.name || "error", stub20_err, null)) { throw stub20_err; }
+    } else { stub19_context.__exit__(null, null, null); }
+}
+stub21_context = (new DefineWebComponent("ptig-log-handler", false));
+comp = stub21_context.__enter__();
+try {
+    comp.options["attributes"] = _pyfunc_create_dict("event-name", null, "href", null);
+    init = function flx_init (component) {
+        return null;
+    };
+
+    on_log = function flx_on_log (component, data, src, callback) {
+        if ((_pyfunc_op_equals(src.getAttribute("namespace"), component.getAttribute("namespace")))) {
+            console.log(data);
+            callback();
+        }
+        return null;
+    };
+
+    event_handler = ({on_log: on_log});
+    comp.options["init"] = init;
+    comp.options["event_handler"] = event_handler;
+} catch(err_0)  { stub22_err=err_0;
+} finally {
+    if (stub22_err) { if (!stub21_context.__exit__(stub22_err.name || "error", stub22_err, null)) { throw stub22_err; }
+    } else { stub21_context.__exit__(null, null, null); }
+}
+stub23_context = (new DefineWebComponent("ptig-sliderline", false));
+comp = stub23_context.__enter__();
 try {
     comp.options["template"] = '<div class=\"slider-line\" style=\"width:100%;height:7px;cursor:move;\"></div>\n' +
     '\n' +
@@ -292,12 +388,12 @@ try {
     };
 
     init = function flx_init (component) {
-        var div, elem, stub19_;
+        var div, elem, stub25_;
         div = component.root.querySelector("div");
         elem = window.super_query_selector(div, component.getAttribute("rel"));
         if (((_pyfunc_truthy(component.hasAttribute("vertical"))) && ((_pyfunc_op_equals(component.getAttribute("vertical"), "1"))))) {
-            stub19_ = [div.style.height, div.style.width];
-            div.style.width = stub19_[0];div.style.height = stub19_[1];
+            stub25_ = [div.style.height, div.style.width];
+            div.style.width = stub25_[0];div.style.height = stub25_[1];
             _pymeth_remove.call(div.classList, "slider-line");
             div.classList.add("v-slider-line");
             drag_element(div, elem, 1, true);
@@ -308,11 +404,13 @@ try {
     };
 
     comp.options["init"] = init;
-} catch(err_0)  { stub18_err=err_0;
+} catch(err_0)  { stub24_err=err_0;
 } finally {
-    if (stub18_err) { if (!stub17_context.__exit__(stub18_err.name || "error", stub18_err, null)) { throw stub18_err; }
-    } else { stub17_context.__exit__(null, null, null); }
+    if (stub24_err) { if (!stub23_context.__exit__(stub24_err.name || "error", stub24_err, null)) { throw stub24_err; }
+    } else { stub23_context.__exit__(null, null, null); }
 }
 test = function flx_test (x) {
     return x;
 };
+
+export {test};

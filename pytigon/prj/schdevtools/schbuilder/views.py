@@ -94,7 +94,6 @@ except:
 
 import configparser
 
-
 _template = """
         [ gui_style | {{prj.gui_type}}({{prj.gui_elements}}) ]
         [ title  | {{prj.title}} ]
@@ -478,7 +477,7 @@ def _handle_static_file(static_file, base_path, prj, app=None):
         return
 
     dest_path = None
-    print("C1: ", file_name, typ)
+
     if typ == "U":
         dest_path = os.path.join(static_root, file_name)
         if ".pyj" in file_name:
@@ -506,7 +505,7 @@ def _handle_static_file(static_file, base_path, prj, app=None):
         t = Template(txt)
         txt2 = t.render(Context({"prj": prj}))
         try:
-            codejs = pytigon_lib.schindent.indent_style.py_to_js(txt2)
+            codejs = pytigon_lib.schindent.indent_style.py_to_js(txt2, True)
         except:
             codejs = ""
         f = open_and_create_dir(
@@ -516,11 +515,10 @@ def _handle_static_file(static_file, base_path, prj, app=None):
         f.write(codejs.encode("utf-8"))
         f.close()
     elif typ == "R":
-        print("C2: Compiling Python component to JavaScript...")
-        # try:
-        codejs = pytigon_lib.schindent.indent_style.py_to_js(txt)
-        # except:
-        # codejs = ""
+        try:
+            codejs = pytigon_lib.schindent.indent_style.py_to_js(txt, True)
+        except:
+            codejs = ""
         f = open_and_create_dir(
             (
                 dest_path
@@ -868,7 +866,7 @@ def build_prj(pk, config={}):
                 )
                 try:
                     codejs = pytigon_lib.schindent.indent_style.py_to_js(
-                        file_obj.content
+                        file_obj.content, True
                     )
                 except:
                     codejs = ""
@@ -940,7 +938,6 @@ def build_prj(pk, config={}):
         offline_support = False
 
         for static_file in static_files:
-            print("B1: " + static_file.name)
             _handle_static_file(static_file, base_path, prj)
 
         component_elements = []
@@ -1074,6 +1071,7 @@ def build_prj(pk, config={}):
         )
 
     if "files" not in config or config["files"]:
+
         base_path_src = base_path + "/src"
 
         if os.path.exists(base_path_src):
@@ -1469,7 +1467,7 @@ def installer(request, pk):
 
     buf.append("COMPILE TEMPLETE FILES:")
 
-    (code, output, err) = py_run(
+    code, output, err = py_run(
         [os.path.join(base_path, "manage.py"), "compiletemplates"]
     )
 
@@ -1515,7 +1513,7 @@ def installer(request, pk):
 
     buf.append("ADDING DATABASE FILES")
 
-    (code, output, err) = py_run(
+    code, output, err = py_run(
         [os.path.join(base_path, "manage.py"), "export_to_local_db"]
     )
 
@@ -1726,7 +1724,7 @@ def translate_sync(request, pk):
         with open(po_path, "wt") as f:
             f.write(po_init2)
 
-    (code, output, err) = py_run(
+    code, output, err = py_run(
         [os.path.join(app_path, "manage.py"), "compiletemplates"]
     )
     locale_gen_internal(prj.id)

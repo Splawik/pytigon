@@ -223,8 +223,13 @@ def frontend_view(url, complete, callback_on_error=None, param=None):
 
                 def _callback3(template_str):
                     nonlocal context
-                    res = window.nunjucks.renderString(template_str, context)
-                    complete(res)
+
+                    def on_error(err):
+                        console.error("Liquid error:", err)
+                        console.error(err.message)
+
+                    engine = window.Liquid({"ownPropertyOnly": False})
+                    engine.parseAndRender(template_str, context).then(complete).catch(on_error)
 
                 template = context["template"]
                 if template == ".":
@@ -399,7 +404,9 @@ window.ajax_get = ajax_get
 # =============================================================================
 
 
-def _req_post(req, url, data, complete, callback_on_error=None, content_type=None):
+def _req_post(
+    req, url, data, complete, callback_on_error=None, content_type=None, process_req=None
+):
     """Internal POST request handler.
 
     Handles .fview URLs, blob responses, and standard text responses.
@@ -456,12 +463,15 @@ def _req_post(req, url, data, complete, callback_on_error=None, content_type=Non
     req.open("POST", url, True)
 
     # Set CSRF token and content type headers
-    req.setRequestHeader("X-CSRFToken", Cookies.get("csrftoken"))
+    req.setRequestHeader("X-CSRFToken", window.Cookies["get"]("csrftoken"))
     if content_type:
         if content_type != "pass":
             req.setRequestHeader("Content-Type", content_type)
     else:
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded")
+
+    if process_req:
+        process_req(req)
 
     req.send(data)
     return req
@@ -482,10 +492,8 @@ def ajax_post(url, data, complete, callback_on_error, process_req=None, content_
         The XMLHttpRequest object.
     """
     req = XMLHttpRequest()
-    if process_req:
-        process_req(req)
 
-    _req_post(req, url, data, complete, callback_on_error, content_type)
+    _req_post(req, url, data, complete, callback_on_error, content_type, process_req)
     return req
 
 
@@ -518,7 +526,7 @@ def ajax_json(url, data, complete, callback_on_error, process_req=None):
         complete(_data)
 
     data2 = JSON.stringify(data)
-    return ajax_post(url, data2, _complete, callback_on_error, None, "application/json")
+    return ajax_post(url, data2, _complete, callback_on_error, process_req, "application/json")
 
 
 window.ajax_json = ajax_json
@@ -604,6 +612,46 @@ def ajax_submit(
 
 window.ajax_submit = ajax_submit
 
+
+def _grapql_client(url, data, complete, callback_on_error, process_req=None):
+    return ajax_json(url, data, complete, callback_on_error, process_req)
+
+
+def grapql_client(data, complete, callback_on_error, url=None, process_req=None):
+    def _process_req(req):
+        nonlocal process_req
+        token = window.localStorage.getItem("api_token")
+        req.setRequestHeader("authorization", "JWT " + token)
+        if process_req:
+            process_req(req)
+
+    if url:
+        href = url
+    else:
+        if window.COMPONENT_INIT and "graphql_prv" in window.COMPONENT_INIT:
+            href = window.COMPONENT_INIT.graphql_prv
+        else:
+            href = window.BASE_PATH + "graphql/"
+
+    return _grapql_client(href, data, complete, callback_on_error, _process_req)
+
+
+window.graphql_client = grapql_client
+
+
+def grapql_public_client(data, complete, callback_on_error, url=None, process_req=None):
+    if url:
+        href = url
+    else:
+        if window.COMPONENT_INIT and "graphql_pub" in window.COMPONENT_INIT:
+            href = window.COMPONENT_INIT.graphql_pub
+        else:
+            href = window.BASE_PATH + "graphql_public/"
+
+    return _grapql_client(href, data, complete, callback_on_error, process_req)
+
+
+window.graphql_public_client = grapql_public_client
 
 # =============================================================================
 # Dynamic CSS loading

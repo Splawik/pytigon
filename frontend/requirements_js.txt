@@ -2,11 +2,12 @@
 @popperjs/core
 events
 moment
+uuid
 sprintf
 tether
 js-cookie
 lz-string
-nunjucks
+liquidjs
 daterangepicker
 jquery
 select2
@@ -35,6 +36,7 @@ unique-id
 idiomorph
 om-perfect-scrollbar
 htmx.org
+@octokit/graphql
 ./not_node_modules/csrf.js
 ./not_node_modules/jsi18n.js
 ./not_node_modules/pytigon_lib_init.js

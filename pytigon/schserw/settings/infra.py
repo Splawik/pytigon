@@ -398,6 +398,10 @@ if False:
                 CSP.SELF,
                 CSP.NONCE,
                 "blob:",
+                "https://*.jsdelivr.net",
+                "http://*.jsdelivr.net",
+                "https://*.googleapis.com",
+                "http://*.googleapis.com",
             ],
             "style-src": [
                 CSP.SELF,
@@ -431,11 +435,18 @@ if CSP is not None:
         "script-src": [
             CSP.SELF,
             CSP.NONCE,
-            "blob:",  # Przekazane jako zwykły ciąg znaków
+            "blob:",
+            "https://*.jsdelivr.net",
+            "http://*.jsdelivr.net",
+            "https://*.googleapis.com",
+            "http://*.googleapis.com",
+            "'sha256-HHh/PGb5Jp8ck+QB/v7zeWzuHf3vYssM0CBPvYgEHR4='",
         ],
         "style-src": [
             CSP.SELF,
             CSP.UNSAFE_INLINE,
+            "https://*.jsdelivr.net",
+            "http://*.jsdelivr.net",
             "http://googleapis.com",
             "http://*.googleapis.com",
             "https://googleapis.com",
@@ -466,6 +477,7 @@ if CSP is not None:
         ],
         "connect-src": [
             CSP.SELF,
+            "https://cdn.jsdelivr.net/",
             "https://tile.openstreetmap.org",
             "http://tile.openstreetmap.org",
             "https://*.tile.openstreetmap.org",

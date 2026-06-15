@@ -2,12 +2,9 @@
 requires = ["setuptools>=64", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.exclude-package-data]
-"*" = ["**/__pycache__/*", "*.pyc"]
-
 [project]
 name = "pytigon"
-version = "0.260511"
+version = "0.260615"
 description = "Pytigon - Application framework based on Django and wxWidgets"
 authors = [
     {name = "Sławomir Chołaj", email = "slawomir.cholaj@gmail.com"},
@@ -26,6 +23,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
@@ -65,9 +63,12 @@ dev = [
     "libsass>=0.22",
 ]
 
+[tool.setuptools.packages.find]
+exclude = ["pytigon_lib*", "pytigon_gui*", "**/__pycache__", "*.pyc"]
+
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+# Ruff automatycznie odczyta minimalną wersję z project.requires-python
 
 [tool.ruff.lint]
 select = [
@@ -111,14 +112,9 @@ addopts = [
     "-p", "no:xonsh",
 ]
 
-[tool.setuptools.packages.find]
-exclude = ["pytigon_lib*", "pytigon_gui*", "**/__pycache__", "__pycache__"]
-
 [tool.coverage.run]
 source = ["pytigon"]
 omit = [
     "pytigon/prj/*",
-    "pytigon_gui/*",
-    "pytigon_lib/*",
     "*/migrations/*",
 ]

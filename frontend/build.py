@@ -31,15 +31,19 @@ IMPORT_MODLUES = [
     "ladda:Ladda",
     "bootstrap",
     "js-cookie:Cookies",
-    "idiomorph:Idiomorph",
+    # "idiomorph:Idiomorph",
     # "imask:IMask",
 ]
 
 IMPORT_ELEMENTS = {
-    "om-perfect-scrollbar": "PerfectScrollbar",
-    "idiomorph": "Idiomorph",
+    "om-perfect-scrollbar": "{PerfectScrollbar}",
+    "idiomorph": "{Idiomorph}",
     "jsi18n": "gettext",
     "jquery": "jQuery",
+    "js-cookie": "Cookies",
+    "liquidjs": "{Liquid}",
+    "uuid": "{v7}",
+    "@octokit/graphql": "{graphql}",
 }
 
 NO_JS_MODULES = ["bootstrap-icons", "select2-bootstrap-5-theme"]
@@ -67,8 +71,10 @@ for requirement in requirements:
         shims += SETUP_TRIGGERS[requirement] + "\n"
         test = False
     elif requirement in IMPORT_ELEMENTS:
-        buf += f"import {{ {IMPORT_ELEMENTS[requirement]} }} from '{requirement}';\n"
-        buf += f"window.{IMPORT_ELEMENTS[requirement]} = {IMPORT_ELEMENTS[requirement]};\n"
+        el1 = IMPORT_ELEMENTS[requirement]
+        el2 = el1.replace("{", "").replace("}", "")
+        buf += f"import {el1} from '{requirement}';\n"
+        buf += f"window.{el2} = {el2};\n"
         test = False
     else:
         for element in IMPORT_MODLUES:

@@ -2,9 +2,23 @@ import os
 import sys
 
 from .base import (
-    ENV, DEBUG, GRAPHQL, REST, RULES_ENABLED, MAILER, ALLAUTH,
-    COMPRESS_ENABLED, PWA, PYTIGON_PATH, DATA_PATH, PRJ_PATH, PRJ_PATH_ALT,
-    BASE_PRJ_NAME, PRODUCTION_VERSION, SERW_PATH, PLATFORM_TYPE,
+    ENV,
+    DEBUG,
+    GRAPHQL,
+    REST,
+    RULES_ENABLED,
+    MAILER,
+    ALLAUTH,
+    COMPRESS_ENABLED,
+    PWA,
+    PYTIGON_PATH,
+    DATA_PATH,
+    PRJ_PATH,
+    PRJ_PATH_ALT,
+    BASE_PRJ_NAME,
+    PRODUCTION_VERSION,
+    SERW_PATH,
+    PLATFORM_TYPE,
 )
 from pytigon_lib.schtools.main_paths import get_prj_name
 from pytigon_lib.schtools.platform_info import platform_name
@@ -51,9 +65,7 @@ TEMPLATES = [
 ]
 
 if "site-packages" in PRJ_PATH and BASE_PRJ_NAME:
-    TEMPLATES[0]["DIRS"].append(
-        os.path.join(PRJ_PATH_ALT, BASE_PRJ_NAME, "templates")
-    )
+    TEMPLATES[0]["DIRS"].append(os.path.join(PRJ_PATH_ALT, BASE_PRJ_NAME, "templates"))
 
 if DEBUG:
     TEMPLATES[0]["OPTIONS"]["loaders"].insert(
@@ -131,15 +143,12 @@ if REST:
         "DEFAULT_AUTHENTICATION_CLASSES": [
             "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
         ],
-        "DEFAULT_PERMISSION_CLASSES": (
-            "rest_framework.permissions.IsAuthenticated",
-        ),
+        "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     }
 
 if GRAPHQL or REST:
-    AUTHENTICATION_BACKENDS.append(
-        "oauth2_provider.backends.OAuth2Backend",
-    )
+    AUTHENTICATION_BACKENDS.append("graphql_jwt.backends.JSONWebTokenBackend")
+    # AUTHENTICATION_BACKENDS.append("oauth2_provider.backends.OAuth2Backend")
     MIDDLEWARE.append("oauth2_provider.middleware.OAuth2TokenMiddleware")
 
     OAUTH2_PROVIDER = {

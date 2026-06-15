@@ -30,7 +30,7 @@ INLINE_INFO = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(I
 INLINE_DELETE = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", DELETE_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 INLINE_ERROR = _pymeth_replace.call(((_pymeth_replace.call(_pymeth_replace.call(INLINE_BASE, "{{modal_footer}}", ERROR_FOOTER), "data-dismiss='modal'", ""))), "data-bs-dismiss='modal'", "");
 
-var LOADED_FILES, Loading, TEMPLATES, _OPERATOR, _req_post, add_param2url, ajax_get, ajax_json, ajax_post, ajax_submit, animate_combo, can_popup, correct_href, download_binary_file, element_get_url, element_set_url, frontend_view, get_elem_from_string, get_page, get_table_type, get_template, history_push_state, inline_maximize, inline_minimize, is_hidden, is_visible, join_urls, load_css, load_js, load_many_js, on_load_js, process_resize, remove_element, remove_page_from_href, save_as, send_to_dom, standard_error_handler, super_insert, super_query_selector;
+var LOADED_FILES, Loading, TEMPLATES, _OPERATOR, _grapql_client, _req_post, add_param2url, ajax_get, ajax_json, ajax_post, ajax_submit, animate_combo, can_popup, correct_href, download_binary_file, element_get_url, element_set_url, frontend_view, get_elem_from_string, get_page, get_table_type, get_template, grapql_client, grapql_public_client, history_push_state, inline_maximize, inline_minimize, is_hidden, is_visible, join_urls, load_css, load_js, load_many_js, on_load_js, process_resize, remove_element, remove_page_from_href, save_as, send_to_dom, standard_error_handler, super_insert, super_query_selector;
 "\nUtility functions and helper classes for the Pytigon client-side framework.\n\nProvides:\n- Loading indicators (Ladda buttons and global spinner).\n- AJAX communication (GET, POST, JSON, form submit, file upload).\n- Dynamic JS/CSS loading with dependency tracking.\n- DOM manipulation helpers (query, insert, remove, resize).\n- URL manipulation (correct_href, join_urls, history push state).\n- Template rendering and dialog positioning.\n- File download and error handling.\n";
 LOADED_FILES = ({});
 Loading = function () {
@@ -239,9 +239,15 @@ frontend_view = function flx_frontend_view (url, complete, callback_on_error, pa
             var _callback3, template;
             if ((((_pyfunc_op_equals(Object.prototype.toString.call(context), "[object Object]"))) && _pyfunc_truthy(context["template"]))) {
                 _callback3 = (function flx__callback3 (template_str) {
-                    var res;
-                    res = window.nunjucks.renderString(template_str, context);
-                    complete(res);
+                    var engine, on_error;
+                    on_error = (function flx_on_error (err) {
+                        console.error("Liquid error:", err);
+                        console.error(err.message);
+                        return null;
+                    }).bind(this);
+
+                    engine = new window.Liquid(({ownPropertyOnly: false}));
+                    (((engine.parseAndRender(template_str, context).then)(complete)).catch)(on_error);
                     return null;
                 }).bind(this);
 
@@ -405,10 +411,11 @@ ajax_get = function flx_ajax_get (url, complete, callback_on_error, process_req)
 };
 
 window.ajax_get = ajax_get;
-_req_post = function flx__req_post (req, url, data, complete, callback_on_error, content_type) {
+_req_post = function flx__req_post (req, url, data, complete, callback_on_error, content_type, process_req) {
     var _onload, process_blob;
     callback_on_error = (callback_on_error === undefined) ? null: callback_on_error;
     content_type = (content_type === undefined) ? null: content_type;
+    process_req = (process_req === undefined) ? null: process_req;
     // Internal POST request handler.
     // 
     //     Handles .fview URLs, blob responses, and standard text responses.
@@ -468,13 +475,16 @@ _req_post = function flx__req_post (req, url, data, complete, callback_on_error,
 
     req.onload = _onload;
     req.open("POST", url, true);
-    req.setRequestHeader("X-CSRFToken", _pymeth_get.call(Cookies, "csrftoken"));
+    req.setRequestHeader("X-CSRFToken", window.Cookies["get"]("csrftoken"));
     if (_pyfunc_truthy(content_type)) {
         if ((!_pyfunc_op_equals(content_type, "pass"))) {
             req.setRequestHeader("Content-Type", content_type);
         }
     } else {
         req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    }
+    if (_pyfunc_truthy(process_req)) {
+        process_req(req);
     }
     req.send(data);
     return req;
@@ -497,10 +507,7 @@ ajax_post = function flx_ajax_post (url, data, complete, callback_on_error, proc
     //     Returns:
     //         The XMLHttpRequest object.
     req = new XMLHttpRequest();
-    if (_pyfunc_truthy(process_req)) {
-        process_req(req);
-    }
-    _req_post(req, url, data, complete, callback_on_error, content_type);
+    _req_post(req, url, data, complete, callback_on_error, content_type, process_req);
     return req;
 };
 
@@ -532,7 +539,7 @@ ajax_json = function flx_ajax_json (url, data, complete, callback_on_error, proc
     }).bind(this);
 
     data2 = JSON.stringify(data);
-    return ajax_post(url, data2, _complete, callback_on_error, null, "application/json");
+    return ajax_post(url, data2, _complete, callback_on_error, process_req, "application/json");
 };
 
 window.ajax_json = ajax_json;
@@ -601,6 +608,51 @@ ajax_submit = function flx_ajax_submit (_form, complete, callback_on_error, data
 };
 
 window.ajax_submit = ajax_submit;
+_grapql_client = function flx__grapql_client (url, data, complete, callback_on_error, process_req) {
+    process_req = (process_req === undefined) ? null: process_req;
+    return ajax_json(url, data, complete, callback_on_error, process_req);
+};
+
+grapql_client = function flx_grapql_client (data, complete, callback_on_error, url, process_req) {
+    var _process_req, href;
+    url = (url === undefined) ? null: url;
+    process_req = (process_req === undefined) ? null: process_req;
+    _process_req = (function flx__process_req (req) {
+        var token;
+        token = window.localStorage.getItem("api_token");
+        req.setRequestHeader("authorization", "JWT " + token);
+        if (_pyfunc_truthy(process_req)) {
+            process_req(req);
+        }
+        return null;
+    }).bind(this);
+
+    if (_pyfunc_truthy(url)) {
+        href = url;
+    } else if ((_pyfunc_truthy(window.COMPONENT_INIT) && _pyfunc_op_contains("graphql_prv", window.COMPONENT_INIT))) {
+        href = window.COMPONENT_INIT.graphql_prv;
+    } else {
+        href = window.BASE_PATH + "graphql/";
+    }
+    return _grapql_client(href, data, complete, callback_on_error, _process_req);
+};
+
+window.graphql_client = grapql_client;
+grapql_public_client = function flx_grapql_public_client (data, complete, callback_on_error, url, process_req) {
+    var href;
+    url = (url === undefined) ? null: url;
+    process_req = (process_req === undefined) ? null: process_req;
+    if (_pyfunc_truthy(url)) {
+        href = url;
+    } else if ((_pyfunc_truthy(window.COMPONENT_INIT) && _pyfunc_op_contains("graphql_pub", window.COMPONENT_INIT))) {
+        href = window.COMPONENT_INIT.graphql_pub;
+    } else {
+        href = window.BASE_PATH + "graphql_public/";
+    }
+    return _grapql_client(href, data, complete, callback_on_error, process_req);
+};
+
+window.graphql_public_client = grapql_public_client;
 load_css = function flx_load_css (path, on_load) {
     var _onload, req;
     on_load = (on_load === undefined) ? null: on_load;
@@ -1598,6 +1650,7 @@ set_state = function flx_set_state (component, state) {
     return null;
 };
 
+window.set_state = set_state;
 DefineWebComponent = function () {
     // Declarative builder for custom HTML elements (Web Components).
     // 
@@ -1753,7 +1806,7 @@ GlobalBus = function () {
     //         bus = GlobalBus()
     //         bus.register(my_component)
     //         bus.set_state({"theme": "dark"})
-    //         bus.send_event("refresh", None)
+    //         bus.send_event("refresh", None, None)
     _pyfunc_op_instantiate(this, arguments);
 }
 GlobalBus.prototype._base_class = Object;
@@ -1789,11 +1842,13 @@ GlobalBus.prototype.set_state = function (state) {
     return null;
 };
 
-GlobalBus.prototype.send_event = function (name, value) {
+GlobalBus.prototype.send_event = function (name, value, src, callback) {
     var component, stub12_seq, stub13_itr;
+    src = (src === undefined) ? null: src;
+    callback = (callback === undefined) ? null: callback;
     // Send a named event to all registered components.
     // 
-    //         Components that implement handle_event(name, value) will receive it.
+    //         Components that implement handle_event(name, value, src, callback) will receive it.
     // 
     //         Args:
     //             name: Event name.
@@ -1804,7 +1859,7 @@ GlobalBus.prototype.send_event = function (name, value) {
         component = stub12_seq[stub13_itr];
         if (_pyfunc_truthy(component)) {
             if (_pyfunc_hasattr(component, "handle_event")) {
-                component.handle_event(name, value);
+                component.handle_event(name, value, src, callback);
             }
         }
     }
