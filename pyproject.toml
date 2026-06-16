@@ -64,7 +64,11 @@ dev = [
 ]
 
 [tool.setuptools.packages.find]
+include = ["pytigon*"]
 exclude = ["pytigon_lib*", "pytigon_gui*", "**/__pycache__", "*.pyc"]
+
+[tool.setuptools.include-package-data]
+keep-empty-directories = true
 
 [tool.ruff]
 line-length = 100
