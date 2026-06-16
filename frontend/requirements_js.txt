@@ -19,14 +19,13 @@ bootstrap
 bootstrap-slider
 bootstrap-hover-dropdown
 bootstrap-table
-bootstrap-tree
+#bootstrap-tree
 bootstrap-datepicker
 bootstrap-icons
 bootstrap-ajax-typeahead
 x-editable-bootstrap5
 select2-bootstrap-5-theme
 twbs-pagination
-imask
 inputmask
 jsonpath-plus
 spin.js
@@ -42,14 +41,14 @@ htmx.org
 ./not_node_modules/pytigon_lib_init.js
 ./not_node_modules/jquery.draggable.js
 ./not_node_modules/sidebar-menu/sidebar-menu.js
-./not_node_modules/jquery-treegrid/js/jquery.treegrid.js
+#./not_node_modules/jquery-treegrid/js/jquery.treegrid.js
 #Core & Layout (Tether musi być ładowany przed starym bootstrapem, jeśli go używasz)
 tether/dist/css/tether.css
 #Komponenty i Dodatki Bootstrapa
 bootstrap-slider/dist/css/bootstrap-slider.css
 bootstrap-table/dist/bootstrap-table.css
 bootstrap-datepicker/dist/css/bootstrap-datepicker.css
-bootstrap-tree/dist/bootstrap-treeview.min.css
+#bootstrap-tree/dist/bootstrap-treeview.min.css
 x-editable-bootstrap5/dist/bootstrap5-editable/css/bootstrap-editable.css
 x-editable-bootstrap5/dist/bootstrap5-editable/css/editable-form.css
 #Selektory i Kalendarze (jQuery & Vanilla)
@@ -57,7 +56,7 @@ select2/dist/css/select2.css
 daterangepicker/daterangepicker.css
 #jQuery UI i wtyczki UI
 jquery-resizable-columns/dist/jquery.resizableColumns.css
-jquery-treegrid/css/jquery.treegrid.css
+#jquery-treegrid/css/jquery.treegrid.css
 #UI i Komponenty wizualne (Inne)
 ladda/dist/ladda.min.css
 sweetalert2/dist/sweetalert2.css

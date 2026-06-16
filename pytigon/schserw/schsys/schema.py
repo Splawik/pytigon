@@ -94,7 +94,7 @@ for app in settings.INSTALLED_APPS:
         if hasattr(m, "extend_mutation"):
             _Mutation = m.extend_mutation(_Mutation)
     except ModuleNotFoundError:
-        print(f"Module {module_name} - problem with graphene")
+        # print(f"Module {module_name} - problem with graphene")
         pass
 
 

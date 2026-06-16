@@ -44,6 +44,7 @@ IMPORT_ELEMENTS = {
     "liquidjs": "{Liquid}",
     "uuid": "{v7}",
     "@octokit/graphql": "{graphql}",
+    "inputmask": "Inputmask",
 }
 
 NO_JS_MODULES = ["bootstrap-icons", "select2-bootstrap-5-theme"]

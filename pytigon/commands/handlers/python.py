@@ -38,6 +38,7 @@ class PythonCommandHandler(CommandHandler):
                 or argv[1].startswith("python_")
                 or argv[1].endswith(".py")
                 or argv[1][-4:-1] == ".py"
+                or (argv[1].startswith("-") and not argv[1].startswith("--"))
             )
         return False
 
@@ -57,16 +58,18 @@ class PythonCommandHandler(CommandHandler):
             if argv[1].startswith("python_"):
                 return self._handle_python_app(argv)
             # Check if it's a .py file (ptig script.py = ptig python script.py)
-            elif argv[1].endswith(".py") or argv[1][-4:-1] == ".py":
+            elif (
+                argv[1].endswith(".py")
+                or argv[1][-4:-1] == ".py"
+                or (argv[1].startswith("-") and not argv[1].startswith("--"))
+            ):
                 return self._handle_script_file(argv)
             # Otherwise it's just 'python'
             else:
                 return self._handle_python_simple(argv)
 
         except Exception as e:
-            return self.handle_error(
-                e, {"command": argv[1] if len(argv) > 1 else "python"}
-            )
+            return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "python"})
 
     def _handle_python_app(self, argv: List[str]) -> int:
         """
@@ -128,6 +131,7 @@ class PythonCommandHandler(CommandHandler):
             Exit code
         """
         # Get paths for default app
+
         paths = self.setup_paths()
 
         # Initialize project paths if needed
