@@ -65,7 +65,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 include = ["pytigon*"]
-exclude = ["pytigon_lib*", "pytigon_gui*", "tests*", "frontend*", "**/__pycache__", "*.pyc"]
+exclude = ["pytigon_lib*", "pytigon_gui*", "**/__pycache__", "*.pyc"]
 
 [tool.setuptools.package-data]
 "*" = ["*"]
