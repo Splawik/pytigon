@@ -68,7 +68,7 @@ include = ["pytigon*"]
 exclude = ["pytigon_lib*", "pytigon_gui*", "tests*", "frontend*", "**/__pycache__", "*.pyc"]
 
 [tool.setuptools.package-data]
-"pytigon" = ["**/*"]
+"*" = ["*"]
 
 [tool.setuptools]
 include-package-data = true
