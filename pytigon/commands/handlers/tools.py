@@ -6,6 +6,7 @@ Handles external tool commands (nim, zig, @tools).
 import os
 import sys
 from typing import List, Optional, Dict, Any
+import importlib.util
 
 from .base import CommandHandler
 from ..errors import CommandError
@@ -65,7 +66,9 @@ class ToolCommandHandler(CommandHandler):
                 raise CommandError(f"Unknown tool command: {argv[1]}", code=30)
 
         except Exception as e:
-            return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "tool"})
+            return self.handle_error(
+                e, {"command": argv[1] if len(argv) > 1 else "tool"}
+            )
 
     def _handle_nim(self, argv: List[str], paths: Dict[str, str]) -> int:
         """
@@ -112,12 +115,19 @@ class ToolCommandHandler(CommandHandler):
         Returns:
             Exit code
         """
-        # Build tool path
-        prg_path = os.path.join(paths.get("DATA_PATH", ""), "prg")
-        tool_name = argv[1][1:]  # Remove @ prefix
 
-        # Build command
-        exe_name = tool_name + ".exe" if os.name == "nt" else tool_name
+        if importlib.util.find_spec(argv[1][1:]) is not None:
+            # Run Python interpreter
+            executable = self.get_executable()
+            command = [executable, "-m", argv[1][1:]] + argv[2:]
+            return self.run_subprocess(command)
+        else:
+            # Build tool path
+            prg_path = os.path.join(paths.get("DATA_PATH", ""), "prg")
+            tool_name = argv[1][1:]  # Remove @ prefix
 
-        command = [os.path.join(prg_path, exe_name)] + argv[2:]
-        return self.run_subprocess(command)
+            # Build command
+            exe_name = tool_name + ".exe" if os.name == "nt" else tool_name
+
+            command = [os.path.join(prg_path, exe_name)] + argv[2:]
+            return self.run_subprocess(command)

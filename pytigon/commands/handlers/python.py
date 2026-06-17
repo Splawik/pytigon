@@ -69,7 +69,9 @@ class PythonCommandHandler(CommandHandler):
                 return self._handle_python_simple(argv)
 
         except Exception as e:
-            return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "python"})
+            return self.handle_error(
+                e, {"command": argv[1] if len(argv) > 1 else "python"}
+            )
 
     def _handle_python_app(self, argv: List[str]) -> int:
         """

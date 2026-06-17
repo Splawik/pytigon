@@ -1,7 +1,11 @@
 <h1>
 Results:
 </h1>
-{% for user in result.users %}
+A1
+{{users}}
+A2
+{% for user in users %}
+        x<br/>
         {{ user.id }}, {{ user.username }}, {{ user.email }} <br/>
 {% endfor %}
 

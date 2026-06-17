@@ -4,14 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pytigon"
-version = "0.260615"
+version = "0.260617"
 description = "Pytigon - Application framework based on Django and wxWidgets"
 authors = [
     {name = "Sławomir Chołaj", email = "slawomir.cholaj@gmail.com"},
 ]
 license = {text = "LGPLv3"}
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Web Environment",
@@ -19,8 +19,6 @@ classifiers = [
     "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
@@ -46,6 +44,8 @@ dependencies = [
     "django_select2>=8.0",
     "django-widget-tweaks>=1.5",
     "rules>=3.0",
+    "jsmin>=3.0",
+    "libsass>=0.22",
 ]
 
 [project.scripts]
@@ -59,8 +59,6 @@ dev = [
     "ruff>=0.5",
     "mypy>=1.0",
     "invoke>=2.0",
-    "jsmin>=3.0",
-    "libsass>=0.22",
 ]
 
 [tool.setuptools.packages.find]
@@ -100,7 +98,7 @@ indent-style = "space"
 skip-magic-trailing-comma = false
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.12"
 ignore_missing_imports = true
 disallow_untyped_defs = false
 check_untyped_defs = true

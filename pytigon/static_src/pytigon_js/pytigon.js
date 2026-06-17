@@ -247,6 +247,9 @@ frontend_view = function flx_frontend_view (url, complete, callback_on_error, pa
                     }).bind(this);
 
                     engine = new window.Liquid(({ownPropertyOnly: false}));
+                    if ((!_pyfunc_op_contains("body-body", template_str))) {
+                        template_str = ("<section class='body-body'>" + template_str) + "</section>";
+                    }
                     (((engine.parseAndRender(template_str, context).then)(complete)).catch)(on_error);
                     return null;
                 }).bind(this);

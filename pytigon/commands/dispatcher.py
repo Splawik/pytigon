@@ -40,7 +40,6 @@ class CommandDispatcher:
             RunCommandHandler,
             RunServerCommandHandler,
             PythonCommandHandler,
-            PipCommandHandler,
             InitCommandHandler,
             ToolCommandHandler,
             DefaultCommandHandler,
@@ -51,7 +50,6 @@ class CommandDispatcher:
         self.registry.register(RunCommandHandler(self.config))
         self.registry.register(RunServerCommandHandler(self.config))
         self.registry.register(PythonCommandHandler(self.config))
-        self.registry.register(PipCommandHandler(self.config))
         self.registry.register(InitCommandHandler(self.config))
         self.registry.register(ToolCommandHandler(self.config))
         self.registry.register(DefaultCommandHandler(self.config))

@@ -229,6 +229,8 @@ def frontend_view(url, complete, callback_on_error=None, param=None):
                         console.error(err.message)
 
                     engine = window.Liquid({"ownPropertyOnly": False})
+                    if "body-body" not in template_str:
+                        template_str = "<section class='body-body'>" + template_str + "</section>"
                     engine.parseAndRender(template_str, context).then(complete).catch(on_error)
 
                 template = context["template"]

@@ -13,6 +13,14 @@ globalThis.$ = jQuery;
 jQuery.isFunction = function(obj) {
     return typeof obj === 'function';
 }
+jQuery.trim = function(obj) {
+    return obj.trim();
+}
+
+jQuery.type = function(obj) {
+    return typeof obj;
+}
+
 jQuery.isArray = Array.isArray;
 """,
     "sprintf": """
@@ -58,7 +66,12 @@ shims = ""
 for requirement in requirements:
     if requirement.startswith("#") or not requirement.strip():
         continue
-    name = requirement.replace("-", "_").replace(".", "_").replace("@", "").replace("/", "_")
+    name = (
+        requirement.replace("-", "_")
+        .replace(".", "_")
+        .replace("@", "")
+        .replace("/", "_")
+    )
     test = True
     if ".css" in requirement:
         test = False
@@ -95,24 +108,25 @@ with open("shims.js", "wt") as f:
     f.write(shims)
 
 
-def run_esbuild(entry_point, outfile):
+def run_esbuild(entry_point, outfile, minify=True):
     """Uruchamia esbuild jako proces zewnętrzny."""
     try:
-        ret = run(
-            [
-                "ptig",
-                "@esbuild",
-                entry_point,
-                f"--outfile={outfile}",
-                "--bundle",
-                # "--minify",
-                "--loader:.ttf=dataurl",
-                "--loader:.png=dataurl",
-                "--loader:.gif=dataurl",
-                "--log-limit=0",
-                "--inject:./shims.js",
-            ]
-        )
+        options = [
+            "ptig",
+            "@esbuild",
+            entry_point,
+            f"--outfile={outfile}",
+            "--bundle",
+            "--loader:.ttf=dataurl",
+            "--loader:.png=dataurl",
+            "--loader:.gif=dataurl",
+            "--log-limit=0",
+            "--inject:./shims.js",
+            "--metafile=meta.json",
+        ]
+        if minify:
+            options.append("--minify")
+        ret = run(options)
         print(ret)
         print(f"✅ Sukces: {outfile}")
     except subprocess.CalledProcessError as e:
@@ -134,5 +148,6 @@ def sync_static_files():
 
 
 if __name__ == "__main__":
-    run_esbuild("tmp.js", "../pytigon/static/pytigon-lib.js")
+    run_esbuild("tmp.js", "../pytigon/static/pytigon-lib.js", minify=False)
+    run_esbuild("tmp.js", "../pytigon/static/pytigon-lib-min.js", minify=True)
     sync_static_files()

@@ -1,3 +1,7 @@
+import warnings
+
+warnings.filterwarnings("error")
+
 from .base import *
 from .features import *
 from .infra import *
@@ -9,12 +13,8 @@ def finish(settings):
         settings["LOGIN_REDIRECT_URL"] = "/" + settings["URL_ROOT_FOLDER"] + "/"
 
     if ENV("PROMETHEUS_ENABLED"):
-        MIDDLEWARE.insert(
-            0, "django_prometheus.middleware.PrometheusBeforeMiddleware"
-        )
-        MIDDLEWARE.append(
-            "django_prometheus.middleware.PrometheusAfterMiddleware"
-        )
+        MIDDLEWARE.insert(0, "django_prometheus.middleware.PrometheusBeforeMiddleware")
+        MIDDLEWARE.append("django_prometheus.middleware.PrometheusAfterMiddleware")
         if "default" in DATABASES:
             engine = DATABASES["default"]["ENGINE"]
             if engine in (

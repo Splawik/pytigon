@@ -324,15 +324,14 @@ MESSAGE_STORAGE = "pytigon.schserw.schsys.cache_message_storage.CacheStorage"
 SOCIALACCOUNT_ADAPTER = "pytigon_lib.schdjangoext.allauth.SocialAccountAdapter"
 if DEBUG:
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = "http"
-    ACCOUNT_EMAIL_REQUIRED = False
+    ACCOUNT_SIGNUP_FIELDS = ["username*", "email", "password1*", "password2*"]
 else:
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
-    ACCOUNT_EMAIL_REQUIRED = True
+    ACCOUNT_SIGNUP_FIELDS = ["username*", "email*", "password1*", "password2*"]
     ACCOUNT_EMAIL_VERIFICATION = "mandatory"
     ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
-    ACCOUNT_USERNAME_REQUIRED = True
 
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_LOGIN_METHODS = {"username", "email"}
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
 

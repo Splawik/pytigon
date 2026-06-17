@@ -2536,7 +2536,7 @@ def declare_namespace(packageName: str) -> None:
         "See https://setuptools.pypa.io/en/latest/references/"
         "keywords.html#keyword-namespace-packages"
     )
-    warnings.warn(msg, DeprecationWarning, stacklevel=2)
+    # warnings.warn(msg, DeprecationWarning, stacklevel=2)
 
     _imp.acquire_lock()
     try:

@@ -139,6 +139,7 @@ if REST:
         INSTALLED_APPS.append("oauth2_provider")
         INSTALLED_APPS.append("pytigon.schserw.oauth2_ext")
     INSTALLED_APPS.append("drf_yasg")
+    SWAGGER_USE_COMPAT_RENDERERS = False
     REST_FRAMEWORK = {
         "DEFAULT_AUTHENTICATION_CLASSES": [
             "oauth2_provider.contrib.rest_framework.OAuth2Authentication",

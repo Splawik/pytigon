@@ -95,13 +95,11 @@ FILER_DEBUG = True
 EXPLORER_CONNECTIONS = {"Default": "default"}
 EXPLORER_DEFAULT_CONNECTION = "default"
 
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_SIGNUP_FIELDS = ["username*", "email*", "password1*", "password2*"]
 
-GRAPHENE["MIDDLEWARE"] = (
-    [
-        "schserw.schmiddleware.schjwt.JWTUserMiddleware",
-    ],
-)
+# GRAPHENE["MIDDLEWARE"] = [
+#       "schserw.schmiddleware.schjwt.JWTUserMiddleware",
+# ,
 # "sync.schjwt.JWTUserMiddleware"
 from pytigon_lib.schtools.install_init import init
 
@@ -222,7 +220,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2026-06-16 17:08:23"
+GEN_TIME = "2026-06-17 14:25:38"
 
 
 for key, value in os.environ.items():

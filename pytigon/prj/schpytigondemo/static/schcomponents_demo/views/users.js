@@ -3,7 +3,7 @@ request = function flx_request (param, complete) {
     var _callback, data;
     _callback = (function flx__callback (result) {
         var context;
-        context = ({template: ".", result: result});
+        context = ({template: ".", users: result.data["users"]});
         complete(context);
         return null;
     }).bind(this);

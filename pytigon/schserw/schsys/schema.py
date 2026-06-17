@@ -27,6 +27,7 @@ mutation {
 class UserType(DjangoObjectType):
     class Meta:
         model = get_user_model()
+        fields = ["id", "username", "email"]
 
 
 # Define the UserMutation which allows updating or creating a user

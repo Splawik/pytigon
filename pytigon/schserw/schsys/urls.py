@@ -44,7 +44,8 @@ def sch_login(request, *argi, **argv):
         if is_in_dicts("password", (request.POST, request.GET)):
             password = get_from_dicts("password", (request.POST, request.GET))
 
-            if settings.ACCOUNT_AUTHENTICATION_METHOD == "email":
+            login_methods = settings.ACCOUNT_LOGIN_METHODS
+            if login_methods == {"email"}:
                 obj = get_user_model().objects.filter(email=username).first()
                 if obj:
                     username = obj.get_username()
@@ -57,7 +58,7 @@ def sch_login(request, *argi, **argv):
 
             if (
                 user is None
-                and settings.ACCOUNT_AUTHENTICATION_METHOD == "username_email"
+                and login_methods == {"username", "email"}
             ):
                 obj = get_user_model().objects.filter(email=username).first()
                 if obj:
