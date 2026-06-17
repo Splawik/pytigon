@@ -1,6 +1,5 @@
-import warnings
-
-warnings.filterwarnings("error")
+#import warnings
+#warnings.filterwarnings("error")
 
 from .base import *
 from .features import *
