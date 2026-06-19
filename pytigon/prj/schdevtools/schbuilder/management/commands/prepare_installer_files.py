@@ -42,7 +42,7 @@ class Command(BaseCommand):
             if len(prjs)>0:
                 prj = prjs[-1]        
                 x = prj_export(None, prj.pk)
-                path = os.path.join(os.path.join(settings.ROOT_PATH, "install"), f"{prj_name}.prj")
+                path = os.path.join(os.path.join(settings.ROOT_PATH, "install"), f"{prj_name}.ptigprj")
                 print("Export prj: ", path)
                 with open(path, "wt") as f: 
                     if type(x.content)==bytes:

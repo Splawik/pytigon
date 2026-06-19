@@ -1,0 +1,78 @@
+{
+    "model": "SChProject",
+    "attributes": {
+        "jsondata": null,
+        "name": "_schserverless",
+        "title": "Additional tools for serverless mode",
+        "version": "latest",
+        "main_view": true,
+        "ext_apps": null,
+        "plugins": null,
+        "gui_type": "modern",
+        "gui_elements": null,
+        "login_required": false,
+        "public": false,
+        "main": false,
+        "start_page": null,
+        "user_app_template": null,
+        "app_main": null,
+        "doc": null,
+        "desktop_gui_type": "auto",
+        "smartfon_gui_type": "auto",
+        "tablet_gui_type": "auto",
+        "additional_settings": "if \"_schserverless.schnocompress\" in INSTALLED_APPS:\n    INSTALLED_APPS.remove(\"_schserverless.schnocompress\")",
+        "custom_tags": "",
+        "readme_file": null,
+        "license_file": null,
+        "install_file": null,
+        "encoded_zip": null,
+        "icon": "None",
+        "icon_size": "1",
+        "icon_code": null,
+        "git_repository": "https://git.pytigon.eu/pytigon/_schserverless.git",
+        "autor_name": null,
+        "autor_email": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "template_desktop": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_schweb": null,
+        "template_theme": null
+    },
+    "children": [
+        {
+            "model": "SChApp",
+            "attributes": {
+                "jsondata": null,
+                "name": "schnocompress",
+                "title": "No compress",
+                "module_name": "schnocompress",
+                "module_title": "schnocompress",
+                "perms": false,
+                "index": null,
+                "model_code": null,
+                "view_code": null,
+                "urls_code": null,
+                "tasks_code": "",
+                "consumer_code": "",
+                "doc": null,
+                "user_param": "",
+                "icon": "None",
+                "icon_size": "1",
+                "icon_code": null
+            },
+            "children": [
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "t",
+                        "name": "compress",
+                        "content": "from django import template\nfrom django.template.base import Node\n\nregister = template.Library()\n\nclass TransparentNode(Node):\n    def __init__(self, nodelist):\n        self.nodelist = nodelist\n\n    def render(self, context):\n        return self.nodelist.render(context).strip()\n\n@register.tag\ndef compress(parser, token):\n    nodelist = parser.parse(('endcompress',))\n    parser.delete_first_token()\n    return TransparentNode(nodelist)\n",
+                        "doc": null
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -14,3 +14,5 @@ Test.prototype.get_value = function () {
     return this.value;
 };
 
+
+export {Test};

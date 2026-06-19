@@ -3,16 +3,17 @@ TAG = "ptig-xterm";
 TEMPLATE = '        <div name=\"xterm\" data-bind=\"style-width:width;style-height:height\"></div>\n' +
     '\n' +
     '';
-BASE_PATH = window.BASE_PATH + "static/vanillajs_plugins/xterm";
-stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/xterm.js", BASE_PATH + "/fit.js"], [BASE_PATH + "/xterm.css"]));
+BASE_PATH = window.BASE_PATH + "static/_schcomponents/xterm";
+stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/xterm.js"], [BASE_PATH + "/xterm.css"], true));
 comp = stub1_context.__enter__();
 try {
     comp.options["attributes"] = ({width: null});
     comp.options["template"] = TEMPLATE;
     init2 = function flx_init2 (component) {
-        var _on_websocket_open, address, div, on_timer, term, timer, websocket;
+        var FitAddon, Terminal, _on_websocket_open, address, div, fit_addon, on_timer, options, term, timer, websocket;
         div = component.root.querySelector("div");
-        Terminal.applyAddon(fit);
+        Terminal = component.modules[0].Terminal;
+        FitAddon = component.modules[0].FitAddon;
         address = location.hostname;
         if (_pyfunc_truthy(location.port)) {
             address = _pyfunc_op_add(address, ":" + location.port);
@@ -25,12 +26,11 @@ try {
         }
         websocket = new WebSocket(address);
         component.websocket = websocket;
-        term = new Terminal();
+        options = ({fontFamily: "monospace", fontSize: 14, lineHeight: 1.1, theme: ({background: "#222d32"})});
+        term = new Terminal(options);
+        fit_addon = new FitAddon();
+        term.loadAddon(fit_addon);
         term.open(div);
-        term.setOption("fontFamily", "monospace");
-        term.setOption("fontSize", 14);
-        term.setOption("lineHeight", 1.1);
-        term.setOption("theme", ({background: "#222d32"}));
         component.term = term;
         on_timer = (function flx_on_timer () {
             if (_pyfunc_truthy(websocket)) {
@@ -46,7 +46,7 @@ try {
             _fit_to_screen = (function flx__fit_to_screen () {
                 var s;
                 try {
-                    term.fit();
+                    fit_addon.fit();
                 } catch(err_5) {
                     {
                     }
@@ -58,7 +58,7 @@ try {
 
             _on_key = (function flx__on_key (key, ev) {
                 var txt;
-                txt = JSON.stringify(({input: key}));
+                txt = JSON.stringify(({input: key.key}));
                 websocket.send(txt);
                 return null;
             }).bind(this);
@@ -71,7 +71,7 @@ try {
                 return null;
             }).bind(this);
 
-            term.on("key", _on_key);
+            term.onKey(_on_key);
             websocket.onmessage = _on_message;
             _process_resize = (function flx__process_resize (size_object) {
                 component.set_state(({height: ((size_object["h"] - size_object["body_offset_y"]) - 3) + "px"}));

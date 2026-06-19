@@ -1,0 +1,197 @@
+{
+    "model": "SChProject",
+    "attributes": {
+        "jsondata": null,
+        "name": "schodf",
+        "title": "Odf",
+        "version": "latest",
+        "main_view": true,
+        "ext_apps": null,
+        "plugins": null,
+        "gui_type": "modern",
+        "gui_elements": null,
+        "login_required": false,
+        "public": false,
+        "main": false,
+        "start_page": "schodfupload/odf_upload/",
+        "user_app_template": "",
+        "app_main": null,
+        "doc": null,
+        "desktop_gui_type": "auto",
+        "smartfon_gui_type": "auto",
+        "tablet_gui_type": "auto",
+        "additional_settings": "",
+        "custom_tags": "",
+        "readme_file": null,
+        "license_file": null,
+        "install_file": null,
+        "encoded_zip": null,
+        "icon": "None",
+        "icon_size": "1",
+        "icon_code": null,
+        "git_repository": "https://git.pytigon.cloud/pytigon/schodf.git",
+        "autor_name": null,
+        "autor_email": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "template_desktop": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_schweb": null,
+        "template_theme": null
+    },
+    "children": [
+        {
+            "model": "SChApp",
+            "attributes": {
+                "jsondata": null,
+                "name": "schodfupload",
+                "title": "OdfUpload",
+                "module_name": "main",
+                "module_title": "main",
+                "perms": true,
+                "index": "",
+                "model_code": null,
+                "view_code": "from pytigon_lib.schfs.vfstools import get_temp_filename\nfrom pytigon_lib.schdjangoext.spreadsheet_render import render_to_response_odf\n\nclass y(object):\n    name =  \"Hello world!\"\n    \nclass x(object):\n    stanowisko = y()",
+                "urls_code": null,
+                "tasks_code": null,
+                "consumer_code": null,
+                "doc": null,
+                "user_param": null,
+                "icon": null,
+                "icon_size": "1",
+                "icon_code": null
+            },
+            "children": [
+                {
+                    "model": "SChTable",
+                    "attributes": {
+                        "base_table": "",
+                        "name": "Rights",
+                        "verbose_name": "Rights",
+                        "verbose_name_plural": "Rights",
+                        "metaclass_code": null,
+                        "table_code": null,
+                        "ordering": "['id']",
+                        "doc": null,
+                        "generic": false,
+                        "url_params": "",
+                        "proxy_model": null
+                    },
+                    "children": [
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "title",
+                                "description": "Title",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": "",
+                                "help_text": "",
+                                "choices": "",
+                                "rel_to": "",
+                                "param": "max_length=64",
+                                "url_params": ""
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "odf_upload",
+                        "view_type": "u",
+                        "param": "*args, **argv",
+                        "url": "odf_upload/",
+                        "view_code": "return PFORM(request, OdfUploadForm, \"schodfupload/odf_upload.html\", {})",
+                        "url_params": "{}",
+                        "ret_type": "U",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "odf_upload",
+                        "direct_to_template": null,
+                        "url": "",
+                        "url_parm": "",
+                        "template_code": "% extends \"base.html\"\n\n%% content\n    h1...Wczytywanie dokumentu odf\n    form action=./,,,method=post,,,enctype=multipart/form-data\n        % csrf_token\n        table\n            {{form}}\n        input type=submit,,,value=Wczytaj dokument\n    br\n    h2...Sk\u0142adnia znacznik\u00f3w w pliku odf:\n    br    \n    .Pierwszy dwa znaki w kom\u00f3rce arkusza:<br>\n    .    :* - wynik w postaci tekstowej<br>\n    .    :0 - wynik jako liczba<br>\n    .    :? - typ wyniku wybierany atuomatycznie wg zawarto\u015bci kom\u00f3rki<br>\n    .    := - wynik jako formu\u0142a<br>\n    .Pierwszy znak w notatce:<br>\n    .    .   - przeniesienie wyra\u017cenia do poziomu aktualnej kom\u00f3rki <br>\n    .    ^   - przeniesienie wyra\u017cenia do poziomu aktualnej kom\u00f3rki <br>\n    .          ^ przenosi wyra\u017cenie przed aktualn\u0105 kom\u00f3rk\u0119, $ za aktualn\u0105 kom\u00f3rk\u0119<br>\n    .          element przed kom\u00f3rk\u0105 oddzielony od elementu za kom\u00f3rk\u0105 znakiem @<br>\n    .          ^{% for i in lista %}@{%endfor%}<br>\n    .   ^^   - przeniesienie wyra\u017cenia do poziomu aktualnego wiersza <br>\n    .  ^^^   - przeniesienie wyra\u017cenia do poziomu aktualnego arkusza<br>\n    .Podobnie jak znak ^ dzia\u0142a $ tylko zamiast przed aktualny element wyra\u017cenie jest przenoszone za aktualny element\n    .    <br>\n    .W dowolnym miejscu sk\u0142adnia zgodna z django:<br>\n    .    {&#123;zmienna&#125;], &#123;% blok %&#125; itp. <br>\n    .Dodatkowo wyra\u017cenie: _start_ zamieniane jest na: {&#123;<br>\n    .                     _end_ zamieniane jest na: &#125;}<br>\n    .                    <br>\n    .<br>\n    ",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "FormOdfUploadForm",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                    \"<<name1>>\": \"<<image_path1>>\",\n                    \"<<name2>>\": \"<<image_path2>>\",\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with form_width=<<dx>> form_height=<<dy>>\n        {{ block.super }}\n\n%% scroll\n\n%% form\n    %if form\n         table class=form\n            tr\n                td...title\n                td...{{ form.[[field]] }}\n            tr\n                td\n                td\n                    input type=submit,,,value=Refresh\n         br\n    %if tabela\n        h2...OK\n\n\n%% form_header\n    p\n        % new_row \"<<new_row_title>>\"\n        % list_action \"<<action>>\" \"<<action_title>>\"\n\n%% table_header\n  tr\n    td...ID\n    td...<<col_name>>\n    td...Action\n\n%% table_content\n    tr\n        td:::a href={{object.id}}/info?width=<<info_dy>>&height=<<info_dx>>,,,title=<<info_title>>,,,class=thickbox...{{object.id}}\n        td...{{object.<<object_name>>}}\n        td\n            % list_field \"<<child_name>>_set\" \"<<child_id>>\" \"<<child_title>>\"\n\n            % edit_field \"<<field_name>>\" \"<<field_id>>\" \"<<field_title>>\"\n\n            % action_row \"<<name1>>\" \"<<action_title_1>>\"\n            % action_row \"<<name2>>\" \"<<action_title_2>>\"\n\n            % edit_row \"update\"\n            % delete_row \"delete\"\n\n%% table_footer\n  tr\n    td...-\n    td...-\n    td:::\n        % new_row \"<<new_row_title>>\"\n\n%% row_edit\n    {{form.as_table}}\n    {{form.fields_as_table.<<field1>>__<<field2>>__<<field3>>}}",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "Rights",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% pythoncode\n    script language=python\n        def signal_from_child(self, child, signal):\n            if signal=='set_bitmap_list':\n                bitmaps = {\n                    \"<<name1>>\": \"<<image_path1>>\",\n                    \"<<name2>>\": \"<<image_path2>>\",\n                }\n                child.set_bitmaps(bitmaps)\n\n        def filter_url(self, target, href):\n            return href\n\n%% all\n    %with form_width=<<dx>> form_height=<<dy>>\n        {{ block.super }}\n\n%% scroll\n\n%% form_header\n    p\n        % new_row \"<<new_row_title>>\"\n        % action_table \"<<action>>\" \"<<action_title>>\"\n\n%% table_header\n  tr\n    td...ID\n    td...<<col_name>>\n    td...Action\n\n%% table_content\n    tr\n        td:::a href={{object.id}}/info?width=<<info_dy>>&height=<<info_dx>>,,,title=<<info_title>>,,,class=thickbox...{{object.id}}\n        td...{{object.<<object_name>>}}\n        td\n            % list_field \"<<child_name>>_set\" \"<<child_id>>\" \"<<child_title>>\"\n\n            % edit_field \"<<field_name>>\" \"<<field_id>>\" \"<<field_title>>\"\n\n            % action_row \"<<name1>>\" \"<<action_title_1>>\"\n            % action_row \"<<name2>>\" \"<<action_title_2>>\"\n\n            % edit_row \"update\"\n            % delete_row \"delete\"\n\n%% table_footer\n  tr\n    td...-\n    td...-\n    td:::\n        % new_row \"<<new_row_title>>\"\n\n%% table_row_edit\n    {{form.as_table}}\n    {{form.fields_as_table.<<field1>>__<<field2>>__<<field3>>}}",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "Odf upload",
+                        "url": "odf_upload/",
+                        "url_type": "desktop",
+                        "perms": null,
+                        "icon": "wx.ART_REDO",
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                },
+                {
+                    "model": "SChForm",
+                    "attributes": {
+                        "name": "OdfUploadForm",
+                        "module": "schodf",
+                        "process_code": "return {'object':  x() }",
+                        "end_class_code": "def render_to_response(self, request, template, context_instance):\n    odfdata= request.FILES['odf_file']\n    file_name = get_temp_filename(\"temp.ods\")\n\n    plik = open(file_name, 'wb')\n    plik.write(odfdata.read())\n    plik.close()\n    \n    return render_to_response_odf(file_name, context_instance=context_instance)",
+                        "end_code": "",
+                        "asynchronous": false,
+                        "doc": ""
+                    },
+                    "children": [
+                        {
+                            "model": "SChFormField",
+                            "attributes": {
+                                "name": "odf_file",
+                                "type": "FileField",
+                                "required": true,
+                                "label": "Odf file",
+                                "initial": "",
+                                "widget": "",
+                                "help_text": "",
+                                "error_messages": "",
+                                "param": ""
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

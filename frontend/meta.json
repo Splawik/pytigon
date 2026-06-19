@@ -2320,7 +2320,7 @@
       ],
       "format": "cjs"
     },
-    "../../../.cache/aube/virtual-store/jsonpath-plus@10.4.0_jsep@1.4.0_-4c05dc62b9909262/node_modules/jsonpath-plus/dist/index-browser-esm.js": {
+    "../../../.cache/aube/virtual-store/jsonpath-plus@10.4.0-4c05dc62b9909262/node_modules/jsonpath-plus/dist/index-browser-esm.js": {
       "bytes": 66418,
       "imports": [
         {
@@ -2375,7 +2375,7 @@
       ],
       "format": "esm"
     },
-    "not_node_modules/csrf.js": {
+    "not_node_modules/csrf/csrf.js": {
       "bytes": 1594,
       "imports": [
         {
@@ -2534,6 +2534,21 @@
         }
       ]
     },
+    "not_node_modules/fab/fab.css": {
+      "bytes": 4718,
+      "imports": [
+        {
+          "path": "#shadowed-goo",
+          "kind": "url-token",
+          "external": true
+        },
+        {
+          "path": "#shadowed-goo",
+          "kind": "url-token",
+          "external": true
+        }
+      ]
+    },
     "../../../.cache/aube/virtual-store/select2-bootstrap-5-theme@1.3.0_@popperjs+core@2.11.8_-15b6e3eb5b0c7dd9/node_modules/select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.css": {
       "bytes": 33700,
       "imports": [
@@ -2645,7 +2660,7 @@
       ]
     },
     "tmp.js": {
-      "bytes": 4431,
+      "bytes": 4492,
       "imports": [
         {
           "path": "not_node_modules/pytigon-tools.js",
@@ -2768,7 +2783,7 @@
           "original": "inputmask"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/jsonpath-plus@10.4.0_jsep@1.4.0_-4c05dc62b9909262/node_modules/jsonpath-plus/dist/index-browser-esm.js",
+          "path": "../../../.cache/aube/virtual-store/jsonpath-plus@10.4.0-4c05dc62b9909262/node_modules/jsonpath-plus/dist/index-browser-esm.js",
           "kind": "import-statement",
           "original": "jsonpath-plus"
         },
@@ -2808,9 +2823,9 @@
           "original": "htmx.org"
         },
         {
-          "path": "not_node_modules/csrf.js",
+          "path": "not_node_modules/csrf/csrf.js",
           "kind": "import-statement",
-          "original": "./not_node_modules/csrf.js"
+          "original": "./not_node_modules/csrf/csrf.js"
         },
         {
           "path": "not_node_modules/jsi18n.js",
@@ -2901,6 +2916,11 @@
           "path": "not_node_modules/bootstrap5-editable/css/bootstrap-editable.css",
           "kind": "import-statement",
           "original": "./not_node_modules/bootstrap5-editable/css/bootstrap-editable.css"
+        },
+        {
+          "path": "not_node_modules/fab/fab.css",
+          "kind": "import-statement",
+          "original": "./not_node_modules/fab/fab.css"
         },
         {
           "path": "../../../.cache/aube/virtual-store/select2-bootstrap-5-theme@1.3.0_@popperjs+core@2.11.8_-15b6e3eb5b0c7dd9/node_modules/select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.css",
@@ -3172,7 +3192,7 @@
         "../../../.cache/aube/virtual-store/unique-id@1.0.2-8d144e8af77bd6fe/node_modules/unique-id/unique-id.js": {
           "bytesInOutput": 279
         },
-        "not_node_modules/csrf.js": {
+        "not_node_modules/csrf/csrf.js": {
           "bytesInOutput": 639
         },
         "not_node_modules/jsi18n.js": {
@@ -3188,7 +3208,7 @@
           "bytesInOutput": 76499
         },
         "tmp.js": {
-          "bytesInOutput": 1319
+          "bytesInOutput": 1324
         },
         "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/index.js": {
           "bytesInOutput": 5
@@ -3214,7 +3234,7 @@
         "../../../.cache/aube/virtual-store/bootstrap-table@1.27.3_jquery@4.0.0_-3a90d43a4efe8ea2/node_modules/bootstrap-table/dist/bootstrap-table.min.js": {
           "bytesInOutput": 174576
         },
-        "../../../.cache/aube/virtual-store/jsonpath-plus@10.4.0_jsep@1.4.0_-4c05dc62b9909262/node_modules/jsonpath-plus/dist/index-browser-esm.js": {
+        "../../../.cache/aube/virtual-store/jsonpath-plus@10.4.0-4c05dc62b9909262/node_modules/jsonpath-plus/dist/index-browser-esm.js": {
           "bytesInOutput": 25617
         },
         "../../../.cache/aube/virtual-store/idiomorph@0.7.4-27f3024390a99a1d/node_modules/idiomorph/dist/idiomorph.esm.js": {
@@ -3268,11 +3288,14 @@
         "not_node_modules/bootstrap5-editable/css/bootstrap-editable.css": {
           "bytesInOutput": 0
         },
+        "not_node_modules/fab/fab.css": {
+          "bytesInOutput": 0
+        },
         "../../../.cache/aube/virtual-store/select2-bootstrap-5-theme@1.3.0_@popperjs+core@2.11.8_-15b6e3eb5b0c7dd9/node_modules/select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.css": {
           "bytesInOutput": 0
         }
       },
-      "bytes": 1272600
+      "bytes": 1272691
     },
     "../pytigon/static/pytigon-lib-min.css": {
       "imports": [
@@ -3298,6 +3321,16 @@
         {
           "path": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA0AAAANCAQAAADY4iz3AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAAAEgAAABIAEbJaz4AAAAJdnBBZwAAAA0AAAANABzi0JoAAAEFSURBVBjTNdC/alNhAIbx3/edpGeQlJqElIihpqKYpfYPyRXoUEe33pdXUOjolqXQG2glUnDQkkKVgIRoIDQIpsnJ6ZD2Wd/lfZ5gxYZXqgrmxq7cQkDijabgkaW+vjzBri0hlYFUFlQVjaJNzzmu/D5oBFrJqPNpA03laItS+Pi6XL/cf1c8b6/Xjl6m8CI4VKCVfOk8qViKk+FOb5Djf1SA79lRz1JcLj5cDnKwFi2glZzsi8RC921j9fUuGlMK5+1SdTJ8f/pvXK5/3UthHP1imnevJ8Od3tm8fTH9+/lmBj8DDjwjNXvwWg2+JRhJPM0eUmTkrv2QP+ap2FYTZf7om8A9PrJPoYpSXtIAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTEtMDItMTRUMTE6MTI6MTUrMDI6MDD7C2qGAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDExLTAyLTE0VDExOjEyOjE1KzAyOjAwilbSOgAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAAASUVORK5CYII=",
           "kind": "url-token"
+        },
+        {
+          "path": "#shadowed-goo",
+          "kind": "url-token",
+          "external": true
+        },
+        {
+          "path": "#shadowed-goo",
+          "kind": "url-token",
+          "external": true
         },
         {
           "path": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23676a6d'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e",
@@ -3445,11 +3478,14 @@
         "not_node_modules/bootstrap5-editable/css/bootstrap-editable.css": {
           "bytesInOutput": 20453
         },
+        "not_node_modules/fab/fab.css": {
+          "bytesInOutput": 3754
+        },
         "../../../.cache/aube/virtual-store/select2-bootstrap-5-theme@1.3.0_@popperjs+core@2.11.8_-15b6e3eb5b0c7dd9/node_modules/select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.css": {
           "bytesInOutput": 31326
         }
       },
-      "bytes": 148169
+      "bytes": 151923
     }
   }
 }

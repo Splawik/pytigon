@@ -11,11 +11,20 @@
     if (typeof require !== "undefined") return require.apply(this, arguments);
     throw Error('Dynamic require of "' + x + '" is not supported');
   });
-  var __esm = (fn2, res) => function __init() {
-    return fn2 && (res = (0, fn2[__getOwnPropNames(fn2)[0]])(fn2 = 0)), res;
+  var __esm = (fn2, res, err) => function __init() {
+    if (err) throw err[0];
+    try {
+      return fn2 && (res = (0, fn2[__getOwnPropNames(fn2)[0]])(fn2 = 0)), res;
+    } catch (e) {
+      throw err = [e], e;
+    }
   };
   var __commonJS = (cb, mod) => function __require2() {
-    return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+    try {
+      return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+    } catch (e) {
+      throw mod = 0, e;
+    }
   };
   var __export = (target, all) => {
     for (var name in all)
@@ -42002,9 +42011,9 @@ async def http_get(url, params=None):
     }
   });
 
-  // not_node_modules/csrf.js
+  // not_node_modules/csrf/csrf.js
   var require_csrf = __commonJS({
-    "not_node_modules/csrf.js"() {
+    "not_node_modules/csrf/csrf.js"() {
       init_shims();
       jQuery(document).ajaxSend(function(event, xhr, settings) {
         function getCookie(name) {
@@ -57857,7 +57866,7 @@ async def http_get(url, params=None):
   var twbs_pagination = __toESM(require_jquery_twbsPagination());
   var import_inputmask = __toESM(require_inputmask());
 
-  // ../../../.cache/aube/virtual-store/jsonpath-plus@10.4.0_jsep@1.4.0_-4c05dc62b9909262/node_modules/jsonpath-plus/dist/index-browser-esm.js
+  // ../../../.cache/aube/virtual-store/jsonpath-plus@10.4.0-4c05dc62b9909262/node_modules/jsonpath-plus/dist/index-browser-esm.js
   var index_browser_esm_exports = {};
   __export(index_browser_esm_exports, {
     JSONPath: () => JSONPath
@@ -65073,7 +65082,7 @@ async def http_get(url, params=None):
   var htmx_esm_default = htmx2;
 
   // tmp.js
-  var __not_node_modules_csrf_js = __toESM(require_csrf());
+  var __not_node_modules_csrf_csrf_js = __toESM(require_csrf());
   var __not_node_modules_jsi18n_js = __toESM(require_jsi18n());
 
   // not_node_modules/pytigon_lib_init.js
@@ -65120,7 +65129,7 @@ async def http_get(url, params=None):
   window.Idiomorph = Idiomorph;
   window.PerfectScrollbar = PerfectScrollbar;
   window.htmx_org = htmx_esm_exports;
-  window.__not_node_modules_csrf_js = __not_node_modules_csrf_js;
+  window.__not_node_modules_csrf_csrf_js = __not_node_modules_csrf_csrf_js;
   window.__not_node_modules_jsi18n_js = __not_node_modules_jsi18n_js;
   window.__not_node_modules_pytigon_lib_init_js = pytigon_lib_init_exports;
   window.__not_node_modules_jquery_draggable_js = __not_node_modules_jquery_draggable_js;

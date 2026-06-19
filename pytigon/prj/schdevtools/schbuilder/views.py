@@ -1243,7 +1243,7 @@ class Install(forms.Form):
         # else:
         #    base_path = settings.PRJ_PATH_ALT
 
-        prj_file_path = os.path.join(ptig.extract_to, name, name + ".prj")
+        prj_file_path = os.path.join(ptig.extract_to, name, name + ".ptigprj")
 
         if os.path.exists(prj_file_path):
             with open(prj_file_path, "rt") as f:
@@ -1297,7 +1297,7 @@ class ImportFromGit(forms.Form):
             except Exception as e:
                 object_list.append((datetime.datetime.now(), "git clone error", str(e)))
 
-        prj_path = os.path.join(base_path, f"{prj_name}.prj")
+        prj_path = os.path.join(base_path, f"{prj_name}.ptigprj")
         if os.path.exists(prj_path):
             with open(prj_path, "rt") as f:
                 content = f.read()
@@ -1643,7 +1643,7 @@ def update(request):
         success = True
 
         hash1 = ""
-        prj_file_path = os.path.join(prj_path, prj_name + ".prj")
+        prj_file_path = os.path.join(prj_path, prj_name + ".ptigprj")
         if os.path.exists(prj_file_path):
             with open(prj_file_path, "rt") as f:
                 content = f.read()
@@ -1677,7 +1677,7 @@ def update(request):
                 success = False
                 object_list.append((datetime.datetime.now(), "git clone error", str(e)))
         if success:
-            prj_file_path = os.path.join(prj_path, prj_name + ".prj")
+            prj_file_path = os.path.join(prj_path, prj_name + ".ptigprj")
             if os.path.exists(prj_file_path):
                 with open(prj_file_path, "rt") as f:
                     content = f.read()
@@ -1992,9 +1992,6 @@ def gen_milestone(request, pk):
         else:
             git_repository = prj.git_repository
 
-        print("A1: ", git_repository)
-        print("A2: ", git_path)
-
         if os.path.exists(git_path):
             repo = Repo(base_path)
             try:
@@ -2026,7 +2023,7 @@ def gen_milestone(request, pk):
 
     content = prj_export_to_str(prj.pk)
 
-    prj_path = os.path.join(base_path, f"{prj.name}.prj")
+    prj_path = os.path.join(base_path, f"{prj.name}.ptigprj")
     with open(prj_path, "wt") as f:
         f.write(content)
 
@@ -2058,7 +2055,6 @@ def gen_milestone(request, pk):
                         porcelain.add(repo, p)
 
         x = gen_list_for_delete(l_start, l_end)
-        print("TO DELETE: ", x)
 
         for file_name in x:
             porcelain.remove(
@@ -2158,7 +2154,7 @@ def sync_from_filesystem(request, pk):
                 if (
                     "__pycache__" in file_name
                     or file_name.endswith(".pyc")
-                    or file_name.endswith(".prj")
+                    or file_name.endswith(".ptigprj")
                     or file_name.endswith(".bak")
                 ):
                     continue

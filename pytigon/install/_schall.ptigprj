@@ -1,0 +1,54 @@
+{
+    "model": "SChProject",
+    "attributes": {
+        "jsondata": null,
+        "name": "_schall",
+        "title": "Pytigon",
+        "version": "latest",
+        "main_view": true,
+        "ext_apps": null,
+        "plugins": null,
+        "gui_type": "modern",
+        "gui_elements": "toolbar(file(open,exit),clipboard)",
+        "login_required": false,
+        "public": false,
+        "main": false,
+        "start_page": null,
+        "user_app_template": "###<|init(PRJ_NAME, ROOT_PATH, DATA_PATH, PRJ_PATH, STATIC_ROOT, [MEDIA_ROOT, UPLOAD_PATH])> settings_app.py\nfrom pytigon_lib.schtools.main_paths import get_main_paths\npaths = get_main_paths()\napp_pack_folders = []\nfor base_apps_path in (paths['PRJ_PATH'], paths['PRJ_PATH_ALT']):\n    if os.path.exists(base_apps_path):\n        if not base_apps_path in sys.path:\n            sys.path.append(base_apps_path)\n        for ff in os.listdir(base_apps_path):\n            p = os.path.join(base_apps_path,ff)\n            if os.path.isdir(p):\n                if not ff.startswith('_'):\n                    if not ff in app_pack_folders:\n                        app_pack_folders.append(ff)\n                        if not p in sys.path:\n                            sys.path.append(p)\n\nfor app_pack in app_pack_folders:\n    base_apps_path2 = os.path.join(base_apps_path, app_pack)\n    try:\n        x = __import__(app_pack+\".apps\")\n        if hasattr(x.apps, 'PUBLIC') and x.apps.PUBLIC:\n            PRJS.append(app_pack)\n            apps = x.apps.APPS\n            for pos in apps:\n                if '.' in pos:\n                    name = pos\n                else:\n                    name = app_pack + '.' + pos\n                if not name in APPS:\n                    APPS.append(name)\n    except:\n        print(\"Error importing module: \", app_pack+\".apps\")\n\n#URL_ROOT_FOLDER=''\n#STATIC_URL = '/static/'\n#MEDIA_URL = '/site_media/'\n\nINSTALLED_APPS.append('easy_thumbnails')\nINSTALLED_APPS.append('filer')\nINSTALLED_APPS.append('explorer')\n\nTHUMBNAIL_PROCESSORS = (\n    'easy_thumbnails.processors.colorspace',\n    'easy_thumbnails.processors.autocrop',\n    #'easy_thumbnails.processors.scale_and_crop',\n    'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n    'easy_thumbnails.processors.filters',\n)\n\nFILER_DEBUG = True\n\nEXPLORER_CONNECTIONS = { 'Default': 'default' } \nEXPLORER_DEFAULT_CONNECTION = 'default'\n\n",
+        "app_main": null,
+        "doc": null,
+        "desktop_gui_type": "tablet_modern",
+        "smartfon_gui_type": "smartfon_standard",
+        "tablet_gui_type": "tablet_modern",
+        "additional_settings": "",
+        "custom_tags": "_schcomponents/components/ptig-codeeditor.js;",
+        "readme_file": null,
+        "license_file": null,
+        "install_file": null,
+        "encoded_zip": null,
+        "icon": "None",
+        "icon_size": "1",
+        "icon_code": null,
+        "git_repository": "https://git.pytigon.eu/pytigon/_schall.git",
+        "autor_name": null,
+        "autor_email": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "template_desktop": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_schweb": null,
+        "template_theme": null
+    },
+    "children": [
+        {
+            "model": "SChStatic",
+            "attributes": {
+                "type": "O",
+                "name": "env",
+                "content": "GRAPHQL=true\nREST=true\nALLAUTH=true\n",
+                "doc": null
+            }
+        }
+    ]
+}

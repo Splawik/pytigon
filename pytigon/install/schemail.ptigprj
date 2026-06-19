@@ -1,0 +1,78 @@
+{
+    "model": "SChProject",
+    "attributes": {
+        "jsondata": null,
+        "name": "schemail",
+        "title": "Emails",
+        "version": "latest",
+        "main_view": true,
+        "ext_apps": null,
+        "plugins": null,
+        "gui_type": "modern",
+        "gui_elements": "toolbar(file(open,exit),clipboard)",
+        "login_required": true,
+        "public": true,
+        "main": false,
+        "start_page": null,
+        "user_app_template": null,
+        "app_main": null,
+        "doc": null,
+        "desktop_gui_type": "auto",
+        "smartfon_gui_type": "auto",
+        "tablet_gui_type": "auto",
+        "additional_settings": null,
+        "custom_tags": "",
+        "readme_file": null,
+        "license_file": null,
+        "install_file": "PIP=aiosmtpd",
+        "encoded_zip": null,
+        "icon": "None",
+        "icon_size": "1",
+        "icon_code": null,
+        "git_repository": null,
+        "autor_name": null,
+        "autor_email": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "template_desktop": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_schweb": null,
+        "template_theme": null
+    },
+    "children": [
+        {
+            "model": "SChApp",
+            "attributes": {
+                "jsondata": null,
+                "name": "smtpd",
+                "title": "smtpd",
+                "module_name": "smtpd",
+                "module_title": "smtpd",
+                "perms": false,
+                "index": null,
+                "model_code": null,
+                "view_code": null,
+                "urls_code": null,
+                "tasks_code": "",
+                "consumer_code": "",
+                "doc": null,
+                "user_param": "",
+                "icon": "None",
+                "icon_size": "1",
+                "icon_code": null
+            },
+            "children": [
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "m",
+                        "name": "smtpd.py",
+                        "content": "from django.core.management.base import BaseCommand, CommandError\nimport asyncio\nfrom aiosmtpd.controller import Controller\n\n\nclass CustomHandler:\n    async def handle_DATA(self, server, session, envelope):\n        peer = session.peer\n        mail_from = envelope.mail_from\n        rcpt_tos = envelope.rcpt_tos\n        data = envelope.content         # type: bytes\n        # Process message data...\n        print(data)\n        # pass\n        if error_occurred:\n            return '500 Could not process your message'\n        return '250 OK'\n\n\nclass Command(BaseCommand):\n    help = 'run smtpd server'\n\n    def add_arguments(self, parser):\n        parser.add_argument('port', nargs='+', type=int)\n\n    def handle(self, *args, **options):\n        if 'port' in options:\n            port = options['port']\n        else:\n            port = 25\n            \n        handler = CustomHandler()\n        controller = Controller(handler, hostname='0.0.0.0', port=port)\n        controller.start()\n        # Wait for the user to press Return.\n        input('SMTP server running. Press Return to stop server and exit.')\n        controller.stop()\n",
+                        "doc": null
+                    }
+                }
+            ]
+        }
+    ]
+}

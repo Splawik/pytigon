@@ -33,7 +33,7 @@ unique-id
 idiomorph
 om-perfect-scrollbar
 htmx.org
-./not_node_modules/csrf.js
+./not_node_modules/csrf/csrf.js
 ./not_node_modules/jsi18n.js
 ./not_node_modules/pytigon_lib_init.js
 ./not_node_modules/jquery.draggable.js
@@ -52,4 +52,5 @@ om-perfect-scrollbar/css/perfect-scrollbar.css
 ./not_node_modules/sidebar-menu/sidebar-menu.css
 ./not_node_modules/select2-material.css
 ./not_node_modules/bootstrap5-editable/css/bootstrap-editable.css
+./not_node_modules/fab/fab.css
 select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.css

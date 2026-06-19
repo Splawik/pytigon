@@ -1,3 +1,4 @@
 import { Terminal } from '@xterm/xterm'
-
-export { Terminal }
+import { FitAddon } from '@xterm/addon-fit'
+export { Terminal, FitAddon }
+import '@xterm/xterm/css/xterm.css'

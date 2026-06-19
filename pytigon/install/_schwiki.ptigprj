@@ -1,0 +1,1079 @@
+{
+    "model": "SChProject",
+    "attributes": {
+        "jsondata": null,
+        "name": "_schwiki",
+        "title": "Wiki",
+        "version": "latest",
+        "main_view": true,
+        "ext_apps": "_schtools.schattachements,_schdata.schelements",
+        "plugins": null,
+        "gui_type": "modern",
+        "gui_elements": null,
+        "login_required": false,
+        "public": true,
+        "main": false,
+        "start_page": null,
+        "user_app_template": "###> schwiki/__init__.py\n\n#from django.utils.translation import gettext_lazy as _\n\n#ModuleTitle = _(\"main tools\")\n#Title = _(\"Wiki\")\n#Perms = True\n#Index = \"None\"\n#Urls = (\n#    (\"table/Page/-/form/list/?view_in=desktop\", _(\"Wiki\"), \"wiki.change_page\", \"\"\"\"\"\"),\n#    (\n#        \"table/WikiConf/-/form/list/?view_in=desktop\",\n#        _(\"Publish options\"),\n#        None,\n#        \"\"\"png://categories/applications-system.png\"\"\",\n#    ),\n#)\n#UserParam = {}\n\n#from django.utils.translation import gettext_lazy as _\n\n\ndef AdditionalUrls(prj_name, lang):\n    from .models import Page\n\n    ret = []\n    ret_buf = []\n    for object in Page.objects.filter(published=True):\n        if object.menu:\n            if object.prj_name and object.prj_name != prj_name:\n                continue\n            menu_path = object.menu.split(\"/\")\n            module_title = \"\"\n            app_name = \"\"\n            app_name = menu_path[-1]\n            if len(menu_path) > 1:\n                module_title = menu_path[0]\n\n            if object.content:\n                if object.menu_icon:\n                    icon = object.menu_icon\n                else:\n                    icon = \"fa://arrow-circle-right.png\"\n            else:\n                icon = \"png://status/dialog-error.png\"\n\n            if object.menu_position:\n                lp = int(object.menu_position)\n            else:\n                lp = 0\n            ret_buf.append(\n                (\n                    lp,\n                    (\n                        \"schwiki/\" + object.subject + \"/\" + object.name + \"/view/\",\n                        object.description,\n                        object.rights_group,\n                        icon,\n                        module_title if module_title else app_name,\n                        _(module_title) if module_title else _(app_name),\n                        app_name,\n                        _(app_name),\n                    ),\n                )\n            )\n    if ret_buf:\n        buf = sorted(ret_buf, key=lambda pos: pos[0])\n        for pos in buf:\n            ret.append(pos[1])\n        return ret\n    else:\n        return []\n",
+        "app_main": null,
+        "doc": null,
+        "desktop_gui_type": "auto",
+        "smartfon_gui_type": "auto",
+        "tablet_gui_type": "auto",
+        "additional_settings": "if platform_name()!='Android':\n    INSTALLED_APPS.append('easy_thumbnails')\n\n    THUMBNAIL_PROCESSORS = (\n        'easy_thumbnails.processors.colorspace',\n        'easy_thumbnails.processors.autocrop',\n        #'easy_thumbnails.processors.scale_and_crop',\n        'filer.thumbnail_processors.scale_and_crop_with_subject_location',\n        'easy_thumbnails.processors.filters',\n    )",
+        "custom_tags": "",
+        "readme_file": null,
+        "license_file": null,
+        "install_file": null,
+        "encoded_zip": null,
+        "icon": "None",
+        "icon_size": "1",
+        "icon_code": null,
+        "git_repository": "https://git.pytigon.cloud/pytigon/_schwiki.git",
+        "autor_name": null,
+        "autor_email": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "template_desktop": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_schweb": null,
+        "template_theme": null
+    },
+    "children": [
+        {
+            "model": "SChApp",
+            "attributes": {
+                "jsondata": null,
+                "name": "schwiki",
+                "title": "Wiki",
+                "module_name": "config",
+                "module_title": "Config",
+                "perms": true,
+                "index": null,
+                "model_code": "from django.template import RequestContext,Context, Template\nimport markdown\nfrom pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html\nfrom pytigon_lib.schtools.wiki import wikify, wiki_from_str, make_href\nfrom pytigon_lib.schtools.tools import norm_indent\nfrom django.template.loader import select_template\nfrom datetime import datetime\nfrom collections import namedtuple\nfrom pytigon_lib.schindent.indent_markdown import IndentMarkdownProcessor, REG_OBJ_RENDERER\n\nPUBLISH_FUN = \"\"\"#Example: \n#import datetime\n#\n#def publish(page, conf):\n#    pass\n    \n\"\"\"",
+                "view_code": "from .models import Page\nfrom pytigon_lib.schdjangoext.fastform import form_from_str\nfrom django.template.loader import select_template\nfrom django.http import JsonResponse\nfrom pytigon_lib.schviews import make_path\nfrom pytigon_lib.schtools.schjson import json_loads, json_dumps\n\nfrom pytigon_lib.schtools.tools import bencode, bdecode, is_null\n\nfrom django.views.decorators.cache import cache_page\nfrom django.views.decorators.csrf import csrf_exempt\n\nfrom django.core.cache import cache\n\nfrom schwiki.applib import makdown_obj_simple, markdown_obj_subblocks\nfrom pytigon_lib.schindent.indent_markdown import get_obj_renderer\n\nfrom pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct\n\ntemplate_start_wiki = \"\"\"\n{# -*- coding: utf-8 -*- #}\n\n{% extends \"schwiki/wiki_view.html\" %}\n\n{% load exfiltry %}\n{% load exsyntax %}\n\n\"\"\"\n\ntemplate_start = \"\"\"\n{# -*- coding: utf-8 -*- #}\n\n{%% extends \"schwiki/%s\" %%}\n\n{%% load exfiltry %%}\n{%% load exsyntax %%}\n\"\"\"\n\ntemplate_simple = \"\"\"\n{# -*- coding: utf-8 -*- #}\n\n{% load exfiltry %}\n{% load exsyntax %}\n\"\"\"\n",
+                "urls_code": null,
+                "tasks_code": "",
+                "consumer_code": "",
+                "doc": null,
+                "user_param": "",
+                "icon": "None",
+                "icon_size": "1",
+                "icon_code": null
+            },
+            "children": [
+                {
+                    "model": "SChChoice",
+                    "attributes": {
+                        "name": "page_type_choices",
+                        "verbose_name": "page_type_choices"
+                    },
+                    "children": [
+                        {
+                            "model": "SChChoiceItem",
+                            "attributes": {
+                                "name": "W",
+                                "value": "Wiki"
+                            }
+                        },
+                        {
+                            "model": "SChChoiceItem",
+                            "attributes": {
+                                "name": "I",
+                                "value": "Indent html"
+                            }
+                        },
+                        {
+                            "model": "SChChoiceItem",
+                            "attributes": {
+                                "name": "H",
+                                "value": "Html"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChChoice",
+                    "attributes": {
+                        "name": "menu_icon_size_choices",
+                        "verbose_name": "menu_icon_size_choices"
+                    },
+                    "children": [
+                        {
+                            "model": "SChChoiceItem",
+                            "attributes": {
+                                "name": "0",
+                                "value": "small"
+                            }
+                        },
+                        {
+                            "model": "SChChoiceItem",
+                            "attributes": {
+                                "name": "1",
+                                "value": "medium"
+                            }
+                        },
+                        {
+                            "model": "SChChoiceItem",
+                            "attributes": {
+                                "name": "2",
+                                "value": "large"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChTable",
+                    "attributes": {
+                        "base_table": "JSONModel",
+                        "name": "Page",
+                        "verbose_name": "Page",
+                        "verbose_name_plural": "Page",
+                        "metaclass_code": null,
+                        "table_code": "def save_from_request(self, request, view_type, param):\n    if 'direct_save' in request.POST:\n        self.operator = request.user.username\n        super(Page, self).save() \n    else:\n        conf_list = WikiConf.objects.filter(subject=self.subject)\n        conf_exists = False\n        if len(conf_list)>0:\n            conf = conf_list[0]\n            conf_exists = True\n            if conf.backup_copies>0:\n                pages = Page.objects.filter(subject = self.subject, name = self.name).update(latest=False)\n                obj_to_save = Page()\n                obj_to_save.subject = self.subject\n                obj_to_save.name = self.name\n                obj_to_save.description = self.description\n                obj_to_save.content_src = self.content_src\n                obj_to_save.content = self.content\n                obj_to_save.base_template = self.base_template\n                obj_to_save.rights_group = self.rights_group\n                obj_to_save.menu = self.menu\n                obj_to_save.operator = self.operator\n                obj_to_save.update_time = self.update_time\n                obj_to_save.jsondata = self.jsondata\n                obj_to_save.published = False\n                obj_to_save.latest = True\n                obj_to_save.update_time = timezone.now()\n                obj_to_save.save()\n                pages = Page.objects.filter(subject = self.subject, name = self.name).order_by('update_time')\n                if len(pages) > conf.backup_copies:\n                    to_delete_count = len(pages) - conf.backup_copies\n                    to_delete = []\n                    for pos in pages:\n                        if not pos.published and not pos.latest:\n                            to_delete.append(pos)\n                            to_delete_count -= 1\n                        if to_delete_count <= 0:\n                            break\n                    if to_delete:\n                        for pos2 in to_delete:\n                            pos2.delete()\n                return\n                \n        self.operator = request.user.username\n        self.update_time = timezone.now()\n        self.latest = True\n        if not conf_exists:\n            self.published = True            \n        self.save()\n\ndef save(self, *args, **kwargs):\n    #if not self.id:\n    super(Page, self).save(*args, **kwargs) \n    if self.content_src:\n        #content = html_from_wiki(self, self.content_src+\"\\n\\n\\n&nbsp;\")\n        conf = WikiConf.objects.filter(subject=self.subject).first()\n        header = \"\"\n        footer = \"\"\n        line_number = 0\n        if conf:\n            if conf.page_header:\n                header = conf.page_header + \"\\n\"\n                line_number -= len(conf.page_header.split('\\n')) \n            if conf.page_footer:\n                footer = conf.page_footer + \"\\n\"\n\n        x = IndentMarkdownProcessor(output_format=\"html\", line_number=line_number)\n        content = x.convert(header + self.content_src + footer)\n    else:\n        content = \"\"\n    self.content = content\n    super(Page, self).save(*args, **kwargs) \n\ndef template_for_object(self, view, context, doc_type):\n    if doc_type=='py':\n        return \"schwiki/edit_wiki_content.html\"\n    return None\n\ndef get_page_for_wiki(self, wiki_str, user=None):\n    wiki_word = wiki_from_str(wiki_str)\n    return Page.get_page(user, self.subject, wiki_word)\n\ndef get_href(self, path=None):\n    return make_href(self.description if self.description else self.name, new_win=False, section=self.subject, path=path)\n\n@staticmethod\ndef get_page(request_or_username, subject, name):\n    if type(request_or_username)==str:\n        username = request_or_username\n    elif request_or_username.user:\n        username = request_or_username.user.username\n    else:\n        username = None\n    objs = None\n    if username:\n        objs = Page.objects.filter(subject=subject, name = name, operator=username, latest=True)\n    if not objs or len(objs)==0:\n        objs = Page.objects.filter(subject=subject, name = name, published=True)\n    if not objs or len(objs)==0:\n        objs = Page.objects.filter(subject=subject, name = name)\n    if len(objs)>0:\n        return objs[0]\n    else:\n        return None\n    \n    \ndef __str__(self):\n    return self.name\n\n\n@staticmethod\ndef get_wiki_objects():\n    global REG_OBJ_RENDERER\n    ret = []\n    for key, obj in REG_OBJ_RENDERER.items():\n        ret.append(obj.get_info())\n    return ret\n\n\n\ndef get_user_blocks(self):\n    conf = WikiConf.objects.filter(subject=self.subject).first()\n    if conf:\n        if conf.page_header:\n            tab = []\n            for line in conf.page_header.split(\"\\n\"):\n                if line and line.startswith('%') and 'name/' in line:\n                    tab.append(line.split('/',1)[1].split(':')[0].strip())\n            return tab\n    return \"\"\n    ",
+                        "ordering": "['id']",
+                        "doc": null,
+                        "generic": true,
+                        "url_params": null,
+                        "proxy_model": null
+                    },
+                    "children": [
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "subject",
+                                "description": "Subject",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": true,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "name",
+                                "description": "Name",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": true,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "description",
+                                "description": "Description",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=256",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "content_src",
+                                "description": "Content source",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "content",
+                                "description": "Content",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "base_template",
+                                "description": "Base template",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "rights_group",
+                                "description": "Rights group",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "prj_name",
+                                "description": "Project name",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "menu",
+                                "description": "Menu path",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "menu_position",
+                                "description": "Menu position",
+                                "type": "IntegerField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "menu_icon",
+                                "description": "Icon in menu",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=256",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "menu_icon_size",
+                                "description": "Icon size",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": "'1'",
+                                "help_text": null,
+                                "choices": "menu_icon_size_choices",
+                                "rel_to": null,
+                                "param": "max_length=1",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "operator",
+                                "description": "Operator",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "update_time",
+                                "description": "Update time",
+                                "type": "DateTimeField",
+                                "null": false,
+                                "blank": false,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "auto_now=True",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "published",
+                                "description": "Published",
+                                "type": "NullBooleanField",
+                                "null": false,
+                                "blank": false,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": true,
+                                "default": "False",
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "latest",
+                                "description": "Latest",
+                                "type": "NullBooleanField",
+                                "null": false,
+                                "blank": false,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": "True",
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChTable",
+                    "attributes": {
+                        "base_table": "JSONModel",
+                        "name": "WikiConf",
+                        "verbose_name": "Wiki config",
+                        "verbose_name_plural": "Wiki config",
+                        "metaclass_code": null,
+                        "table_code": "def get_css(self):\n    import sass\n    if self.scss:\n        buf = self.scss.replace('page_class', 'wiki_' + self.subject.lower())\n        style = sass.compile(string=buf, indented=True)\n        return style\n    return \"\"\n        \ndef save(self, *args, **kwargs):\n    self.css = self.get_css()\n    ret = super().save(*args, **kwargs)\n    return ret\n\n\ndef get_publish_fun_if_empty(self, request, template_name, ext, extra_context, target):\n    return PUBLISH_FUN\n",
+                        "ordering": "['id']",
+                        "doc": null,
+                        "generic": true,
+                        "url_params": null,
+                        "proxy_model": null
+                    },
+                    "children": [
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "subject",
+                                "description": "Wiki subject",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "group_of_rights_to_view",
+                                "description": "A group of rights to view wiki",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "group_of_rights_to_edit",
+                                "description": "A group of rights to edit wiki",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "backup_copies",
+                                "description": "Number of backup copies",
+                                "type": "IntegerField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "publish_fun",
+                                "description": "Function called after publishing",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "scss",
+                                "description": "Additional scss styles",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "css",
+                                "description": "Css styles",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "page_header",
+                                "description": "Page header",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "page_footer",
+                                "description": "Page footer",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "git_repository",
+                                "description": "Git repository",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=256",
+                                "url_params": null
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "view_page",
+                        "view_type": "u",
+                        "param": "app_or_subject, page_path",
+                        "url": "^(?P<app_or_subject>[^/]*)/(?P<page_path>[^/]*)/view/$",
+                        "view_code": "transfer_to_cache = False\nkey=\"\"\n\nif not request.user.has_perm('wiki.add_page'):\n    key = \"wiki_view_page_%s_%s\" % (app_or_subject, page_path)\n    data = cache.get(key)\n    if data:\n        return data\n    else:\n        transfer_to_cache = True\n\ndesc = request.GET.get('desc','')\npath, sep, page_name = page_path.rpartition('+')\nif page_name:\n    page_name = page_name[0].upper()+page_name[1:]\n    \nid = -1\nif path:\n    path_list = path.split('+')\n    if page_name in path_list:\n        path_list = path_list[:path_list.index(page_name)]\n    if len(path_list) > 10:\n        path_list = path_list[1:]    \n    path = '+'.join(path_list+[page_name,]) \nelse:\n    path_list = None\n    path = page_name\n\npath_list2 = []\nif path_list:\n    for pos in path_list:\n        try:\n            #p = Page.objects.get(name=pos, subject=app_or_subject)\n            p = Page.get_page(request, app_or_subject, name)\n            if p.description:\n                path_list2.append(p.description)\n            else:\n                path_list2.append(pos)\n        except:\n            path_list2.append(pos)\n\npage = Page.get_page(request, app_or_subject, page_name)\nif page:\n    id = page.id\n    content = page.content\n    try: \n        t = Template(template_simple + content)\n        c = RequestContext(request, {'object': page, 'wiki_path': path, })        \n        #c = Context({'object': page, 'wiki_path': path, 'request': request })    \n        content=t.render(c)\n    except:\n        content = page.content\nelse:\n    page = Page()\n    page.name = page_name\n    page.description=desc\n    page.subject = app_or_subject\n    page.update_time = timezone.now()\n    page.operator = request.user.username\n    page.save()\n    id = page.id\n    content = None\n\n\nconf = None\nif page:\n    conf_list = models.WikiConf.objects.filter(subject=page.subject)\n    if len(conf_list)>0:\n        conf = conf_list[0]\n    \n    if not page.rights_group:\n        if hasattr(request, \"set_vary\"):\n            request.set_vary = []\n    \nc = {'page_name': page_name, 'subject': app_or_subject, 'content': content, 'wiki_path': path, \n     'wiki_path_list': path_list, 'wiki_path_desc': path_list2, 'title': '?: ' + page_name, 'object': page,\n     'description': desc if desc else page_name, 'only_content': True, 'conf': conf,\n}\n\n\nif page and page.base_template:\n    base_template = page.base_template\nelse:\n    base_template = \"schwiki/wiki_view.html\"\n\nc['content'] = content\n\nret = render(request, base_template, context=c)\n\nif transfer_to_cache:\n    cache.set(key, ret, 60 * 60) \n\nreturn ret\n",
+                        "url_params": null,
+                        "ret_type": "U",
+                        "asynchronous": false,
+                        "extra_code": "@cache_page(settings.CACHE_MIDDLEWARE_SECONDS)\n@csrf_exempt\n",
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "edit_page",
+                        "view_type": "u",
+                        "param": "app_or_subject, page_name",
+                        "url": "^(?P<app_or_subject>\\w*)/(?P<page_name>\\w*)/edit/$",
+                        "view_code": "page = Page.get_page(request, subject=app_or_subject, name=page_name)    \nif not page:\n    page = Page(app=app, name=page_name, subject=app_or_subject)\n    page.save()\n\nredir = make_href(\"/schwiki/table/Page/%d/edit/?childwin=1\" % page.id)\n\nreturn HttpResponseRedirect(redir)\n",
+                        "url_params": null,
+                        "ret_type": "U",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "publish",
+                        "view_type": "r",
+                        "param": "pk",
+                        "url": "WikiConf",
+                        "view_code": "conf = models.WikiConf.objects.get(pk = pk)\nobject_list = []\n\npages1 = models.Page.objects.filter(subject=conf.subject, latest=True, published=False, operator=request.user.username)\npages2 = models.Page.objects.filter(subject=conf.subject, latest=True, published=False, operator__isnull=True)\npages = list(pages1)+list(pages2)\nif len(pages)>0:\n    for page in pages:\n        page.published = True\n        page.save()\n        \n        info = run_code_from_db_field(\n            f\"wikiconf__publish_fun_{conf.pk}.py\",\n            conf,\n            \"publish_fun\",\n            \"publish\",\n            page=page, \n            conf=conf\n        )\n\n        if info == None:\n            object_list.append([page, \"\"])\n        else:\n            object_list.append([page, info])\n\npages1 = models.Page.objects.filter(subject=conf.subject, latest=False, published=True, operator=request.user.username).update(published=False)\npages2 = models.Page.objects.filter(subject=conf.subject, latest=False, published=True, operator__isnull=True).update(published=False)\n\nreturn { \"OK\": True, 'object_list': object_list }\n",
+                        "url_params": null,
+                        "ret_type": "T",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "search",
+                        "view_type": "u",
+                        "param": "q",
+                        "url": "(?P<q>.*)/search/$",
+                        "view_code": "search_txt = bdecode(q)\nobject_list = Page.objects.filter(content__iregex=search_txt)\nreturn { \"object_list\": object_list, 'q': search_txt }",
+                        "url_params": "{}",
+                        "ret_type": "T",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "edit_page_object",
+                        "view_type": "u",
+                        "param": "**argv",
+                        "url": "edit_page_object/",
+                        "view_code": "if request.body:\n    data = json_loads(request.body)\n    status = data['status']\nelse:\n    return JsonResponse({'status': \"object_name not found!\",}) \nif data and status in (\"new_object\", \"edit_object\"):\n    if status == \"new_object\":\n        obj_name = data['object_name']\n        param = None\n    else:\n        line = data['line']\n        x = line.split('#', 1)\n        obj_name = x[0].strip()[1:].strip()\n        if obj_name.endswith(':'):\n            obj_name = obj_name[:-1]\n        if len(x)>1:\n            s = x[1].strip()\n            if s and s[0] == \"{\":\n                param = json_loads(s.replace(\"\\\\n\", \"\\n\"))\n            else:\n                return { 'param_line': s }\n        else:\n            param = None\n    obj_conf = get_obj_renderer(obj_name)\n    if obj_conf:\n        form_source = obj_conf.get_edit_form()\n        if form_source:\n            if type(form_source)==str:\n                form_class = form_from_str(form_source)\n            else:\n                form_class = form_source\n            form = obj_conf.form_from_dict(form_class, param)                \n            template_name = obj_conf.get_edit_template_name()\n            t = select_template([template_name,])\n            c = { 'form': form, 'object_name': obj_name }\n            return HttpResponse(t.render(c, request))\n        else:\n            line = '% ' + obj_name \n            return JsonResponse({'status': \"return_line\", \"line\": line })\nreturn JsonResponse({'status': \"object_name not found!\", \"status\": status }) \n ",
+                        "url_params": "{}",
+                        "ret_type": "U",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "edit_page_object_form",
+                        "view_type": "u",
+                        "param": "object_name",
+                        "url": "edit_page_object_form/<slug:object_name>/",
+                        "view_code": "obj_conf = get_obj_renderer(object_name)\nif obj_conf:\n    form_source = obj_conf.get_edit_form()\n    if form_source:\n        if type(form_source) == str:\n            form_class = form_from_str(form_source)\n        else:\n            form_class = form_source\n        form = form_class(request.POST, request.FILES)\n        if form.is_valid():\n            param = obj_conf.convert_form_to_dict(form)\n            line = json_dumps(param).replace(\"\\n\", \"\\\\n\")\n            return JsonResponse({'status': \"return_line\", \"line\": line, \"RETURN\": \"$$RETURN_JSON\"})\n        else:\n            t = select_template([template_name1,template_name2,])\n            c = { 'form': form, }\n            return HttpResponse(t.render(c, request))\nreturn JsonResponse({'status': \"object_name not found!\", \"object_name\": object_name }) \n",
+                        "url_params": "{}",
+                        "ret_type": "U",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "edit_object_on_page",
+                        "view_type": "u",
+                        "param": "page_id, line_number",
+                        "url": "edit_object_on_page/<int:page_id>/<int:line_number>/",
+                        "view_code": "page = Page.objects.get(pk = page_id)\ndata = page.content_src\nlines = data.split('\\n')\nline = lines[line_number-1]\n\nx = line.split('#', 1)\nobj_name = x[0].strip()[1:].strip()\nif obj_name.endswith(':'):\n    obj_name = obj_name[:-1]\nif len(x)>1:\n    s = x[1].strip()\n    param = json_loads(s.replace(\"\\\\n\", \"\\n\"))\nelse:\n    param = None\n\nobj_conf = get_obj_renderer(obj_name)\nif obj_conf:\n    form_source = obj_conf.get_edit_form()\n    if form_source:\n        if type(form_source)==str:\n            form_class = form_from_str(form_source)\n        else:\n            form_class = form_source\n        form = obj_conf.form_from_dict(form_class, param)                \n        template_name = obj_conf.get_edit_template_name()\n        t = select_template([template_name,])\n        c = { 'form': form, 'object_name': obj_name, 'on_page': True, 'page_id': page_id, 'line_number': line_number }\n        return HttpResponse(t.render(c, request))\n\nreturn HttpResponse(\"\")",
+                        "url_params": "{}",
+                        "ret_type": "U",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "edit_object_on_page_form",
+                        "view_type": "u",
+                        "param": "page_id, line_number, object_name",
+                        "url": "edit_object_on_page_form/<int:page_id>/<int:line_number>/<slug:object_name>/",
+                        "view_code": "param_indent = 120\n\nobj_conf = get_obj_renderer(object_name)\n\nif obj_conf:\n    form_source = obj_conf.get_edit_form()\n    if form_source:\n        if type(form_source) == str:\n            form_class = form_from_str(form_source)\n        else:\n            form_class = form_source\n        form = form_class(request.POST, request.FILES)\n        if form.is_valid():\n\n            def join_parameters(param, line):\n                x = line.split('#', 1)\n                if len(x)>1:\n                    try:\n                        param2 = param\n                        old_param = json_load(x[1])\n                        for key in old_param:\n                            if not key in param2 or param2[key]==None:\n                                param2[key] = old_param[key]\n                        return param2\n                    except:\n                        pass\n                return param\n\n            page = Page.objects.get(pk = page_id)\n            data = page.content_src\n            lines = data.split('\\n')\n            current_line = lines[line_number-1]\n            param = obj_conf.convert_form_to_dict(form)            \n            \n            if len(current_line) >= 64 * 1024:\n                x = current_line.split('#', 1)\n                if len(x)>1:\n                    old_param = json_loads(x[1])\n                    for key in old_param:\n                        if not key in param or param[key]==None:\n                            param[key] = old_param[key]\n            \n            x = current_line.lstrip()           \n            indent = len(current_line) - len(x)\n            line = (indent * ' ') + '% ' + object_name\n            c = obj_conf.get_info()\n            if \"inline_content\" in c and c['inline_content']:\n                line += \":\"\n            if param:\n                if len(line)<param_indent:\n                    line += (param_indent-len(line)) * ' '\n                line += \"#\"\n                line += json_dumps(param).replace('\\n', '\\\\n')\n            lines[line_number-1] = line\n            page.content_src = \"\\n\".join(lines)\n            page.save()\n            return actions.ok(request)\n        else:\n            t = select_template([template_name1,template_name2,])\n            c = { 'form': form, }\n            return HttpResponse(t.render(c, request))\n\nreturn actions.cancel(request)\n",
+                        "url_params": "{}",
+                        "ret_type": "U",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "Page",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n% load django_bootstrap5\n\n\n%% all\n    %with table_type='datatable' show_title_bar=0 title=_(\"Wiki pages\")\n        {{ block.super }}\n\n\n%% list_content_actions\n    % new_row _(\"New wiki page\")\n\n%% list_row_header\n    th...Subject\n    th...Name\n    th...Description\n    th...Menu\n    th...Operator\n    th...Modify time\n    th...Status\n    \n%% list_row\n    td...{{object.subject}}\n    td...{{object.name}}\n    td...{{object.description}}\n    td...{{object.menu}}\n    td...{{object.operator}}\n    td...{{object.update_time|isoformat}}\n    td\n        % if object.published:\n            span class=fa fa-users\n            % if object.latest:\n                span class=fa fa-check-square-o\n        % else:\n            % if object.latest :\n                span class=fa fa-calendar-plus-o            \n            % else:\n                span class=fa fa-low-vision            \n\n%% list_row_actions\n    % row_actions:\n        .edit\n        .delete\n\n%% table_header_edit\n  h2..._(Wiki pages)\n\n\n%% row_edit\n    % form:\n        .subject,name,description,base_template,rights_group,prj_name,menu,menu_position,menu_icon,menu_icon_size\n    input type=hidden,,,name=direct_save    \n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "wiki_view",
+                        "direct_to_template": null,
+                        "url": "",
+                        "url_parm": "",
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% all\n    %with form_info=False show_form=False form_width=470 form_height=665\n        {{ block.super }}\n\n%% jquery_ovr2\n    .var options = {\n    .    success: RefreshWin2\n    .}\n    .function RefreshWin2(responseText, statusText) {\n    .    location.href = \"{{base_path}}schwiki/{{subject}}/{{page_name}}/view/\"\n    .}\n\n%% pythoncode\n    script language=python\n\n        def init_form(self):\n            self.GetParent().register_signal(self, \"refresh_controls\")\n\n        def refresh_controls(self):\n            print(\"refresh_controls\")\n            self.GetParent().refresh_html()\n            print(\"refresh_controls_2\")\n\n    %if standard_web_browser:\n        link rel=Stylesheet,,,type=text/css,,,href=^auto/schwiki/css/wiki.css\n\n%% table_title\n\n%% scroll\n\n%% _nav\n\n%% form_rect\n    .width: 600, height: 890\n\n%% form_bar\n    % if not standard_web_browser\n        % if perms.schwiki.add_page:\n            table width=100%,,,class=form_bar\n                tr\n                    % if False\n                        td cellpadding=0,,,align=right,,,valign=top,,,width=36,,,height=36\n                            CTRLCLOSEBUTTON width=36,,,height=36,,,NAME=EXIT,,,SRC=client://emblems/emblem-unreadable.png\n                    % if content\n                        td cellpadding=0,,,align=right,,,valign=top,,,width=36,,,height=36\n                            CTRLNOBG_BUTTON width=36,,,height=36,,,href=/schwiki/{{subject}}/{{page_name}}/edit/,,,label=edytuj stron\u0119,,,SRC=client://apps/accessories-text-editor.png\n                    % else\n                        td cellpadding=0,,,align=right,,,valign=top,,,width=110,,,height=36\n                            CTRLNOBG_BUTTON width=36,,,height=36,,,href=/schwiki/{{subject}}/{{page_name}}/edit/,,,label=edytuj stron\u0119 jako wiki,,,SRC=client://apps/accessories-character-map.png\n                            CTRLNOBG_BUTTON width=36,,,height=36,,,href=/schwiki/{{subject}}/{{page_name}}/edit/,,,label=edytuj stron\u0119 jako ihtml,,,SRC=client://actions/format-indent-more.png\n                            CTRLNOBG_BUTTON width=36,,,height=36,,,href=/schwiki/{{subject}}/{{page_name}}/edit/,,,label=edytuj stron\u0119 jako html,,,SRC=client://apps/accessories-text-editor.png\n                    td width=5\n                    td align=center,,,border=0,,,border-color=#{{color_body_0_7}}\n                        span class=form_title\n                            %%form_title\n                                {{title|wiki_href|safe}}\n\n\n\n%% content_start\n    <div id=\"{{uuid}}\" class=\"flexible_size content ajax-region ajax-frame wiki-frame\" related-object='{{uuid}}'>\n        <div class=\"ajax-link\" href=\"{{ request.get_full_path|append_get_param:'only_content=1' }}\" data-region=\"page\">\n\n%% content_end\n        </div> \n    </div>\n    \n%% list_content_header\n    % if not standard_web_browser == 6:\n        % if standard_web_browser and perms.schwiki.add_page:\n            a data-bs-toggle=collapse,,,href=#{{uuid}}collapse,,,class=wiki_collapse_link,,,accesskey=o\n                span class=fa fa-arrows-v fa-fw\n            div id={{uuid}}collapse,,,class=panel-collapse collapse wiki_collapse\n                {{ block.super }}\n        % else:\n            {{ block.super }}\n\n%% list_content_title\n    % if not standard_web_browser == 6:\n        % if perms.schwiki.add_page:\n            h4 style=white-space:nowrap;...{{subject}}: {{description}}\n\n%% list_content_actions\n    % if not standard_web_browser == 6:\n        % if perms.schwiki.add_page:\n            table width=100%\n                tr\n                    td class=wiki_view_actions,,,style=position:absolute;top:0px;width:100%;border:0px;padding:0px;text-align:right;padding-right:2rem;\n                        % action \"edit\" _(\"Edit page\") url=\"{{base_path}}schwiki/\"|append_str:subject|append_str:\"/\"|append_str:page_name|append_str:\"/edit/\" tag_class=\"+btn-sm\"\n                        \n                        % with ap=\"wiki\" object_name=\"Page\" id=object.id format='txt': \n                            % action \"any_field_edit-inline/content_src\" _(\"Edit page source\") attrs=\"data-inline-position='^tr:after' accesskey=' '\" tag_class=\"+btn-sm\"\n\n%% form\n    % if perms.schwiki.add_page\n        {{ block.super }}\n    % else\n        % markdown2html content \"\" subject\n\n%% list_content_body\n    % if not standard_web_browser == 6 and wiki_path_desc:\n        % if standard_web_browser:\n            ol class=breadcrumb wiki-breadcrumb\n                % for wiki_elem in wiki_path_desc:\n                    % if wiki_elem|lower == description|lower:\n                        li class=breadcrumb-item active\n                            {{ wiki_elem }}\n                    % else:\n                        li class=breadcrumb-item\n                            % markdown2html '[['|append_str:wiki_elem|append_str:']]' wiki_path subject\n                            \n                % if wiki_path_desc and not description|lower in wiki_path_desc:\n                    li class=breadcrumb-item active\n                        {{ description }}\n        % else:\n            table width=100%\n                tr bgcolor=#{{color_background_0_9}}\n                    td\n                tr\n                    td bgcolor=#{{color_background_0_9}}\n                        % for wiki_elem in wiki_path_desc:                            \n                            % if wiki_elem|lower == description|lower:\n                                {{ wiki_elem }}\n                            % else:\n                                % markdown2html '[['|append_str:wiki_elem|append_str:']]' wiki_path subject\n                                /\n                tr:::td\n            br\n\n    div class=panel-body container-fluid wiki_container wiki_{{page_name|lower}} wiki_{{conf.subject|lower}}\n        % if content\n            % if wiki_path:\n                % markdown2html content wiki_path subject\n            % else:\n                % markdown2html content \"\" subject\n        % else\n            _(This page do not exists yet!)\n\n        % if conf:\n            % if conf.css:\n                style\n                    {{conf.css}}\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "edit_wiki_content",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% extends \"schsys/db_field_edt.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% content\n    % if standard_web_browser\n        % with title=page.name:\n            {{ block.super }}\n    % else\n        div class=container wiki_editor,,,style=width:calc( 100vw - 370px );\n            % get_table_row \"wikiobj_id\" \"wiki\" \"PageObjectsConf\" \"name__icontains\" label=\"Type of wiki object\" filter=\"1\" is_get_button=False\n            % action \"new_object\" _(\"Modify or create a wiki object\") url=\"{{app_path}}table/PageObjectsConf/[[wikiobj_id]]/action/insert_object_to_editor/?page_id={{object.id}}\" target=\"run_script\"\n        \n            % with title=page.name:\n                {{ block.super }}\n\n\n%% edit_area\n    move-attr target-tag=div.modal-dialog,,,class=+modal-max\n    move-attr target-tag=div,,,class=maximized\n    div class=refresh_after_close,,,style=width:calc( 100% - 20px );height:calc( 100vh - 7.8rem );position:relative;\n        ptig-codeeditor class=flexible2_size,,,value={{txt|bencode}},,,href={{base_path}}{{save_path}},,,title={{title}},,,width=100%,,,height=100%,,,offset=3.rem\n            div class=btn-toolbar,,,role=toolbar,,,style=background-color:var(--bs-primary);\n                div class=btn-group me-2,,,role=group\n                    button data-bind=disabled:!changed;onclick:on_save,,,class=btn btn-danger shadow-none border-1,,,type=button\n                        i class=fa fa-floppy-o\n                        .Save\n                insert-object app_path={{app_path}},,,page_id={{object.id}},,,href={{base_path}}schwiki/edit_page_object/,,,class=ajax-region ajax-link ajax-frame,,,data-region=json\n                    div class=btn-group me-2,,,role=group\n                        button data-bind=onclick:on_properties,,,class=btn text-white shadow-none border-0,,,type=button,,,name=properties,,,,,,title=Properties\n                            i class=fa fa-wpforms\n                            .Properties\n                    div class=btn-group,,,role=group                    \n                        % with \"Multimedia:img,svg,video,graphviz,plot;Block:row,col,div,block,ihtml,html,ajax-frame,super-block;Other:table,csv\" as segments:\n                            % for segment in segments|split\n                                % with segment|split:\":\" as part\n                                    div class=dropdown\n                                        button class=btn dropdown-toggle text-white shadow-none border-0,,,data-bs-toggle=dropdown,,,style=font-size:1rem;\n                                            % if part.0 == 'Multimedia':\n                                                i class=fa fa-camera\n                                            % if part.0 == 'Block':\n                                                i class=fa fa-angle-double-right \n                                            % if part.0 == 'Other':\n                                                i class=fa fa-ellipsis-v \n                                            {{ part.0 }}\n                                        ul class=dropdown-menu\n                                            % for item in object.get_wiki_objects:\n                                                % if item.name in part.1:\n                                                    li\n                                                        a class=dropdown-item,,,data-bind=onclick:on_insert,,,name={{item.name}},,,show_form={% if item.show_form %}1{% else %}0{% endif %},,,inline={% if item.inline_content %}1{% else %}0{% endif %},,,data-region=insert_object,,,title=Edit: {{item.name}}\n                                                            i class={{item.icon}}\n                                                            {{ item.name }}\n                                            % if part.0 == 'Other':\n                                                % for item in object.get_wiki_objects:\n                                                    % if not item.name in segments:\n                                                        li\n                                                            a class=dropdown-item,,,data-bind=onclick:on_insert,,,name={{item.name}},,,show_form={% if item.show_form %}1{% else %}0{% endif %},,,inline={% if item.inline_content %}1{% else %}0{% endif %},,,data-region=insert_object,,,title=Edit: {{item.name}}\n                                                                i class={{item.icon}}\n                                                                {{ item.name }}\n                                                \n                        % with object.get_user_blocks as actions:\n                            % if actions:  \n                                div class=dropdown\n                                    button class=btn dropdown-toggle text-white shadow-none border-0,,,data-bs-toggle=dropdown,,,style=font-size:1rem;\n                                        i class=fa fa-camera\n                                        _(User defined blocks)\n                                    ul class=dropdown-menu\n                                        % for item_name in actions:\n                                            li\n                                                a class=dropdown-item,,,data-bind=onclick:on_insert,,,name={{item_name}},,,show_form=0,,,inline=1,,,data-region=insert_object\n                                                    {{ item_name }}\n                                    \n\n%% dialog_type\n    .modal-lg\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "PageObjectsConf",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    %with table_type='datatable':\n        {{ block.super }}\n\n%% scroll\n\n%% list_content_actions\n    % new_row _(\"New wiki class\")\n\n%% list_row_header\n    th...Application\n    th...Name\n    th...Description\n    th...Inline editing\n\n\n%% list_row\n    td...{{object.app}}\n    td...{{object.name}}\n    td...{{object.description}}\n    td...{{object.inline_editing}}\n\n%% list_row_actions\n    % row_actions:\n        .edit\n        .field_edit/edit_form,Edit form\n        .field_edit/load_fun,Load function\n        .field_edit/save_fun,Save function\n        .field_edit/view_dict,View dict\n        .field_edit/doc,Documentaction\n        .delete\n\n%% row_edit\n    % form:\n\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "wikiobj_edit",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% scroll\n\n%% all\n    % with show_form=True form_edit=True:\n        {{ block.super }}\n\n%% form_action\n    {% if on_page %}{{base_path}}schwiki/edit_object_on_page_form/{{page_id}}/{{line_number}}/{{object_name}}/{% else %}{{base_path}}schwiki/edit_page_object_form/{{object_name}}/{% endif %}\n\n%% row_edit_form\n    % if form:\n        {{ block.super }}\n    % else:\n        .This object doesn't need additional parameters\n    \n%% row_edit\n    % form:\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "wikiobj_view",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{{content|safe}}",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "table_wikiobj_view",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "div\n    [% if perms.wiki.add_page %]\n    a class=wiki-object-edit,,,href=[{base_path}]schwiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1,,,target=popup_edit,,,title=Table properties\n        .table\n        span class=fa fa-cog fa-2\n    [% endif %]        \n    <table class=\"{{html_class}}\">\n        {% for row in tbl %}<tr>\n            {% for pos in row %}<{{pos.tag}} class=\"{{pos.html_class}}\">{{ pos.data }}</{{pos.tag}}>\n            {% endfor %}\n        </tr>    \n        {% endfor %}\n    </table>\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "WikiConf",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    % with table_type='datatable' table_subtype='table_with_details' table_details_height=\"33vh\":\n        {{ block.super }}\n\n\n%% scroll\n\n\n%% list_content_actions \n    % new_row \"New config\"\n\n%% list_row_header\n    th..._(Wiki subject)\n    th..._(Group of rigths to view)\n    th..._(Group of rigths to edit)\n    th..._(backup_copies)\n\n\n%% list_row\n    td...{{object.subject}}\n    td...{{group_of_rights_to_view}}\n    td...{{group_of_rights_to_edit}}\n    td...{{object.backup_copies}}\n\n\n%% list_row_actions\n    % row_actions:\n        .publish,Publish,[fa fa-users]\n    % row_actions:\n        .edit\n        .field_edit/publish_fun,Publish function\n        .field_edit/scss,SCSS\n        .field_edit/page_header,Page header\n        .field_edit/page_footer,Page footer\n        .delete\n\n\n%% list_page_footer\n    % row_details:\n        *Attachements:schattachements/table/Attachement//schwiki__WikiConf__[[table_row_pk]]__default/form__schwiki__/sublist/\n        .Attachements2:schattachements/table/Attachement//schwiki__WikiConf__[[table_row_pk]]__default/form__schwiki__/sublist/\n        \n        \n%% row_edit\n    % form:\n        .subject,group_of_rights_to_view,group_of_rights_to_edit,backup_copies,git_repository\n\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "v_publish",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    %with show_title_bar=1 title=_('Report from publication')\n        {{ block.super }}\n\n\n%% user_header\n    th...Published wiki\n\n%% user_row\n    tr\n        td... {{object}}\n\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "img_wikiobj_edit",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% extends \"schwiki/wikiobj_edit.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% all\n    %with title=\"Images\" \n        {{ block.super }}\n\n\n%% dialog_type\n    .modal-lg\n\n\n%% row_edit\n    style ===>\n        .img_form .img_form_images .group_booleanfield {\n            position: relative;\n        }\n        .img_form .img_form_images .group_imagefield {\n            margin-left: 80px;\n        }\n        .img_form .img_form_images .group_charfield {\n            position: relative;\n        }\n        .img_form .img_form_images .img_block_title {\n            position: relative;\n        }\n        .img_form .img_form_images .img_block_title {\n            font-size: 16px;\n            background: #888;\n            color: #fff;\n            padding: 0px 3px;\n        }\n        .img_form .img_form_layout label {\n            padding: 5px;\n        }\n        .img_form .img_form_layout label::after {\n            content: \"\";\n        }\n        .img_form .img_form_view_text {\n            padding: 0px 0.7rem\n        }\n\n    div class=img_form\n        div class=row\n            div class=container col-12 col-sm-6 img_form_images\n                span class=img_block_title...1.\n                % form \"/12\": \n                    .crop1;img1;desc1\n                % form \"/6\": \n                    .img1class;img1style\n            div class=container col-12 col-sm-6 img_form_images\n                span class=img_block_title...2.\n                % form \"/12\": \n                    .crop2;img2;desc2\n                % form \"/6\": \n                    .img2class;img2style\n            div class=container col-12 col-sm-6 img_form_images\n                span class=img_block_title...3.\n                % form \"/12\": \n                    .crop3;img3;desc3\n                % form \"/6\": \n                    .img3class;img3style\n            div class=container col-12 col-sm-6 img_form_images\n                span class=img_block_title...4.\n                % form \"/12\": \n                    .crop4;img4;desc4\n                % form \"/6\": \n                    .img4class;img4style\n\n        label...Component layout\n        div class=row img_form_layout\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"component_view_type\" value=\"1000\" {%if form.component_view_type.value == '1000' or not form.component_view_type.value %}checked{%endif%} />                \n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=80,,,width=80,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"component_view_type\" value=\"1200\" {%if form.component_view_type.value == '1200'%}checked{%endif%} />\n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=80,,,width=40,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff                    \n                                rect stroke=#000,,,height=80,,,width=40,,,y=1,,,x=41,,,stroke-width=1,,,fill=#007fff\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"component_view_type\" value=\"1230\" {%if form.component_view_type.value == '1230'%}checked{%endif%} />\n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=80,,,width=27,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff                    \n                                rect stroke=#000,,,height=80,,,width=27,,,y=1,,,x=28,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=80,,,width=27,,,y=1,,,x=57,,,stroke-width=1,,,fill=#007fff\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"component_view_type\" value=\"1234\" {%if form.component_view_type.value == '1234'%}checked{%endif%} />\n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=80,,,width=20,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff                    \n                                rect stroke=#000,,,height=80,,,width=20,,,y=1,,,x=21,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=80,,,width=20,,,y=1,,,x=43,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=80,,,width=20,,,y=1,,,x=63,,,stroke-width=1,,,fill=#007fff\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"component_view_type\" value=\"1213\" {%if form.component_view_type.value == '1213'%}checked{%endif%} />\n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=80,,,width=40,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=40,,,width=40,,,y=1,,,x=41,,,stroke-width=1,,,fill=#007fff                    \n                                rect stroke=#000,,,height=40,,,width=40,,,y=41,,,x=41,,,stroke-width=1,,,fill=#007fff\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"component_view_type\" value=\"1232\" {%if form.component_view_type.value == '1232'%}checked{%endif%} />\n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=40,,,width=40,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff                    \n                                rect stroke=#000,,,height=40,,,width=40,,,y=41,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=80,,,width=40,,,y=1,,,x=41,,,stroke-width=1,,,fill=#007fff\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"component_view_type\" value=\"4321\" {%if form.component_view_type.value == '4321'%}checked{%endif%} />\n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=40,,,width=40,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=40,,,width=40,,,y=1,,,x=41,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=40,,,width=40,,,y=41,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=40,,,width=40,,,y=41,,,x=41,,,stroke-width=1,,,fill=#007fff\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"component_view_type\" value=\"1423\" {%if form.component_view_type.value == '1423'%}checked{%endif%} />\n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=25,,,width=25,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=25,,,width=25,,,y=1,,,x=51,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=25,,,width=25,,,y=31,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=25,,,width=25,,,y=51,,,x=31,,,stroke-width=1,,,fill=#007fff\n\n\n        label...Image style\n        div class=row img_form_layout\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"img_view_type\" value=\"o1\" {%if form.img_view_type.value == 'o1' or not form.img_view_type.value %}checked{%endif%} />                \n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=80,,,width=80,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=10,,,width=60,,,y=65,,,x=11,,,stroke-width=1,,,fill=#7f0000\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"img_view_type\" value=\"o2\" {%if form.img_view_type.value == 'o2'%}checked{%endif%} />                \n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=80,,,width=80,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=10,,,width=60,,,y=35,,,x=11,,,stroke-width=1,,,fill=#7f0000\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"img_view_type\" value=\"o3\" {%if form.img_view_type.value == 'o3'%}checked{%endif%} />                \n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=80,,,width=80,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=10,,,width=60,,,y=6,,,x=11,,,stroke-width=1,,,fill=#7f0000\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"img_view_type\" value=\"o4\" {%if form.img_view_type.value == 'o4'%}checked{%endif%} />                \n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=80,,,width=80,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=10,,,width=80,,,y=85,,,x=1,,,stroke-width=1,,,fill=#ffefef\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"img_view_type\" value=\"o5\" {%if form.img_view_type.value == 'o5'%}checked{%endif%} />                \n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=80,,,width=80,,,y=15,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=10,,,width=80,,,y=1,,,x=1,,,stroke-width=1,,,fill=#ffefef\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"img_view_type\" value=\"o6\" {%if form.img_view_type.value == 'o6'%}checked{%endif%} />                \n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=80,,,width=80,,,y=1,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=10,,,width=80,,,y=85,,,x=1,,,stroke-width=1,,,fill=#000000\n                div class=col\n                    label\n                        <input type=\"radio\" name=\"img_view_type\" value=\"o7\" {%if form.img_view_type.value == 'o7'%}checked{%endif%} />                \n                        svg width=41,,,height=52,,,viewBox=0 0 82 103,,,xmlns=http://www.w3.org/2000/svg\n                            g\n                                rect stroke=#000,,,height=80,,,width=80,,,y=15,,,x=1,,,stroke-width=1,,,fill=#007fff\n                                rect stroke=#000,,,height=10,,,width=80,,,y=1,,,x=1,,,stroke-width=1,,,fill=#000000\n\n    \n    div class=row    \n        % form \"4/4\":\n            .quality;jpeg\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "img_wikiobj_view",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "style ===>\n    .img_form_view {\n        padding: 1px;\n        position: relative;\n    }\n    \n    .i4321 td.t1 div {\n        position: relative;\n        box-shadow: 5px 5px 10px;\n    }\n\n    .i4321 td.t2 div {\n        position: relative;\n        left: -40px;\n        top: 30px;\n        box-shadow: 5px 5px 10px;\n    }\n    \n    .i4321 td.t3 div {\n        position: relative;\n        top: -50px;\n        left: 20px;\n        transform: rotate(-20deg);\n        box-shadow: 5px 5px 10px;\n    }\n    \n    .i4321 td.t4 div {\n        position: relative;\n        box-shadow: 5px 5px 10px;\n    }\n    \n    .o1 {\n        position: absolute;\n        bottom: 3px;    \n        left: 5px;\n        right: 5px;\n        background: rgba(0,0,0,0.3);\n        color: #ccc;\n        padding: 0px 5px;\n    }\n    \n    .img_form_view:hover span {\n        color: #fff;\n    }\n\n    .img_form_view span a {\n        color: #ccc;\n    }\n\n    .img_form_view:hover span a {\n        color: #fff;\n    }\n    \ndiv class=row\n    [% if perms.wiki.add_page %]\n    a class=wiki-object-edit wiki-object-edit-right,,,href=[{base_path}]schwiki/edit_object_on_page/[{object.id}]/{{line_number}}/?name=[{name}]&only_content=1,,,target=popup_edit,,,title=Img properties\n        .img\n        span class=fa fa-cog fa-2\n    [% endif %]\n    % for element in elements:\n        % if element.type == 'img':\n            div class={{element.css_class}} img_form_view\n                % if param.jpeg:\n                    img src=data:image/jpeg;base64,{{ element.data.0 }},,,style=width:100%\n                % else:\n                    img src=data:image/png;base64,{{ element.data.0 }},,,style=width:100%\n                % if element.data.1:\n                    span class={{param.img_view_type}}...{{element.data.1}}\n        % else:\n            {{ element.data|safe }}\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "v_search",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/user_tab.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    %with show_title_bar=1 title='Found pages'\n        {{ block.super }}\n\n\n%% user_header\n    th...Subject\n    th...Description\n\n%% user_row\n    tr\n        td... {{object.subject}}\n        td\n            a href={{base_path}}schwiki/{{object.subject}}/{{object.name}}/view/?only_content=1&desc={{object.description}},,,target=_parent\n                % if object.description:\n                    {{object.description}}\n                % else: \n                    {{object.name}}\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "video_wikiobj_view",
+                        "direct_to_template": false,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "div class=row,,,style=position:relative;\n    [% if perms.wiki.add_page %]\n    a class=wiki-object-edit wiki-object-edit-right,,,href=[{base_path}]schwiki/edit_object_on_page/[{object.id}]/{{line_number}}/?name=[{name}]&only_content=1,,,target=popup_edit,,,title=Video properties\n        .Video\n        span class=fa fa-cog fa-2\n    [% endif %]\n\n    div class=div_float\n        <video {% if param.controls %}controls {% endif %}\n        . style=\"width:{% if param.videosize %}{{param.videosize}}{% else %}100%{% endif %};{% if param.textright %}float:left;{% else %}float:right;{% endif %}\" \n        . class=\"{% if param.videoclass %}{{param.videoclass}}{% else %}video_float {% if param.textright %}video_float_left{% else %}video_float_right{% endif %}{% endif %}\"\n        . {% if param.poster %}poster=\"[{base_path}]site_media/{{param.poster}}\"{% endif %} >\n        % for pos in sources:\n            source src=[{base_path}]site_media/{{pos.0}},,,type={{pos.1|safe}}\n        % for pos in tracks:\n            <track src=\"[{base_path}]site_media/{{pos.0}}\" label=\"{{pos.1}}\" srclang=\"{{pos.2}}\" kind=\"{{pos.4}}\"  {% if pos.3 %}default {% endif %}></track>\n        </video>\n        % if param.text:\n            <div {% if textclass %}class=\"{{param.textclass}}\" {% else %}class=\"text_float\" {% endif %}style=\"{{param.textstyle}}\">\n                {{param.text|safe}}\n            </div>\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "svg_wikiobj_view",
+                        "direct_to_template": false,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "div class=row,,,style=position:relative;\n    [% if perms.wiki.add_page %]\n    a class=wiki-object-edit wiki-object-edit-right,,,href=[{base_path}]schwiki/edit_object_on_page/[{object.id}]/{{line_number}}/?name=[{name}]&only_content=1,,,target=popup_edit,,,title=Svg properties\n        .SVG\n        span class=fa fa-cog fa-2\n    [% endif %]\n\n    div class=div_float\n        <div style=\"width:{% if param.svgsize %}{{param.svgsize}}{% else %}100%{% endif %};{% if param.textright %}float:left;{% else %}float:right;{% endif %}\"\n        . class=\"{% if param.svgclass %}{{param.svgclass}}{% else %}svg_float {% if param.textright %}svg_float_left{% else %}svg_float_right{% endif %}{% endif %}\"\n        >\n        {{param.src|safe}}\n        </div>        \n        % if param.text:\n            <div {% if textclass %}class=\"{{param.textclass}}\" {% else %}class=\"text_float\" {% endif %}style=\"{{param.textstyle}}\">\n                {{param.text|safe}}\n            </div>\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "plot_wikiobj_view",
+                        "direct_to_template": false,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "div class=row,,,style=position:relative;\n    [% if perms.wiki.add_page %]\n    a class=wiki-object-edit wiki-object-edit-right,,,href=[{base_path}]schwiki/edit_object_on_page/[{object.id}]/{{line_number}}/?name=[{name}]&only_content=1,,,target=popup_edit,,,title=Plot properties\n        .Plot\n        span class=fa fa-cog fa-2\n    [% endif %]\n\n    div class=div_float\n        <ptig-plotly {% if param.width %}width=\"{{param.width}}\"{% endif %} {% if param.height %}height=\"{{param.height}}\"{% endif %} plotly-name=\"{{param.name}}\" />\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "code_wikiobj_view",
+                        "direct_to_template": false,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "div class=row\n    [% if perms.wiki.add_page %]\n    a class=wiki-object-edit,,,href=[{base_path}]schwiki/table/PageObjectsConf/action/edit_page_object/?name={{name}}&page_id={{page.id}}&only_content=1,,,target=popup_edit,,,title=Code properties\n        .code\n        span class=fa fa-image-o fa-2\n    [% endif %]\n\n    <div class=\"div_float\" {% if param.style %}style=\"{{param.style}}\"{% endif %} >\n        {{param.col_code|safe}}\n    </div>\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "graphviz_wikiobj_view",
+                        "direct_to_template": false,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "div style=position:relative;\n    [% if perms.wiki.add_page %]\n    a class=wiki-object-edit wiki-object-edit-right,,,href=[{base_path}]schwiki/edit_object_on_page/[{object.id}]/{{line_number}}/?name=[{name}]&only_content=1,,,target=popup_edit,,,title=Graphviz properties\n        .Graphviz\n        span class=fa fa-cog fa-2\n    [% endif %]\n\n    {{param.svg_code|safe}}\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "Wiki",
+                        "url": "table/Page/-/form/list/",
+                        "url_type": "desktop",
+                        "perms": "wiki.change_page",
+                        "icon": null,
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "Publish options",
+                        "url": "table/WikiConf/-/form/list/",
+                        "url_type": "desktop",
+                        "perms": null,
+                        "icon": "png://categories/applications-system.png",
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                },
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "s",
+                        "name": "schema",
+                        "content": "from . import models\nfrom pytigon_lib.schdjangoext.graphql import add_graphql_to_class\n\ndef extend_query(query_class):\n    for model_name in dir(models):\n        model = getattr(models, model_name)\n        if hasattr(model, \"_meta\") and hasattr(model, \"filter_fields\"):\n            add_graphql_to_class(model, getattr(model, \"filter_fields\"), query_class)\n    return query_class\n\ndef extend_mutation(mutation_class):\n    return mutation_class\n    ",
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "l",
+                        "name": "markdown_obj_subblocks",
+                        "content": "from pytigon_lib.schindent.indent_markdown import BaseObjRenderer, IndentMarkdownProcessor, register_obj_renderer\nfrom pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html\nfrom pytigon_lib.schfs.vfstools import get_temp_filename\nfrom pytigon_lib.schtools.tools import bencode, bdecode\nfrom django.template import Template, Context\nimport os\nimport csv\n\nclass IHtmlProcessor(IndentMarkdownProcessor):\n    def render_wiki(self, ihtml_source):\n        return ihtml_to_html(None, ihtml_source)\n\n\nclass IHtmlObjRenderer(BaseObjRenderer):\n    \n    @staticmethod\n    def get_info():\n        return { \"name\": \"ihtml\", \"title\": \"IHtml\", \"icon\": \"fa fa-indent\", \"show_form\": False, 'inline_content': True }\n\n    def gen_context(self, param, lines, output_format, parent_processor):\n        if lines:\n            ihtml_processor = IHtmlProcessor(output_format=\"html\", parent_processor=parent_processor)\n            return { 'content': ihtml_processor.convert(\"\\n\".join(lines)), 'param': param }\n        return { 'content': \"\", 'param': param }\n\nregister_obj_renderer(\"ihtml\", IHtmlObjRenderer)\n\n\nclass HtmlObjRenderer(BaseObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"html\", \"title\": \"Html\", \"icon\": \"fa fa-code\", \"show_form\": False, 'inline_content': True }\n\n    def gen_context(self, param, lines, output_format, parent_processor):\n        if lines:\n            return { 'content': \"\\n\".join(lines) }\n        return { 'content': \"\" }\n\nregister_obj_renderer(\"html\", HtmlObjRenderer)\n\n\nclass BaseMarkdownObjRenderer(BaseObjRenderer):\n    def gen_context(self, param, lines, output_format, parent_processor):\n        if lines:\n            i_markdown_processor = IndentMarkdownProcessor(output_format=output_format, parent_processor=parent_processor)\n            return { 'content': i_markdown_processor.convert(\"\\n\".join(lines)), \"param\": param }\n        return { 'content': \"\", \"param\": param }\n\n\nclass DivObjRenderer(BaseMarkdownObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"div\", \"title\": \"Div\", \"icon\": \"fa fa-tag\", \"show_form\": True, 'inline_content': True }\n\n    def get_edit_form(self):\n        return \"attributes\"\n\n    def render(self, param, lines, output_format, parent_processor):\n        context = self.gen_context(param, lines, output_format, parent_processor)\n        out = \"<div style='position:relative;'>\" + self.edit_on_page_link(parent_processor) + \"</div><div \" + context['param']['attributes'] + \">\\n\" + context['content'] + \"</div>\\n\"\n        return out\n\nregister_obj_renderer(\"div\", DivObjRenderer)\n\n\nclass AjaxObjRenderer(BaseMarkdownObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"ajax-frame\", \"title\": \"Ajax frame\", \"icon\": \"fa fa-arrows-v\", \"show_form\": False, 'inline_content': True }\n\n    def render(self, param, lines, output_format, parent_processor):\n        context = self.gen_context(param, lines, output_format, parent_processor)\n        return \"<div class='ajax-region ajax-frame' data-region='wiki'>\\n\" + context['content'] + \"\\n</div>\\n\"\n\nregister_obj_renderer(\"ajax-frame\", AjaxObjRenderer)\n\n\nTABLE_OBJ_RENDERER_FORM = \"\"\"\ntablestyle::[\n-\nprimary\nsecondary\nsuccess\ndanger\nwarning\ninfo\nlight\ndark\n]\nborderstyle::[\n-\nborderless\nbordered\nbordered border-primary\nbordered secondary\nbordered success\nbordered danger\nbordered warning\nbordered info\nbordered light\nbordered dark\n]\nnarrow?\nstriped?\nhover?\nsmall?\nresponsive?\n\"\"\"\n\nclass TableObjRenderer(BaseMarkdownObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"table\", \"title\": \"Table\", \"icon\": \"fa fa-table\", \"show_form\": True, 'inline_content': True }\n\n    def get_edit_form(self):\n        return TABLE_OBJ_RENDERER_FORM\n\n    def render(self, param, lines, output_format, parent_processor):\n        context = self.gen_context(param, lines, output_format, parent_processor)\n\n        table_class = \"table\"\n        if context['param']['tablestyle'] and context['param']['tablestyle'] != '-':\n            table_class += ' table-' + context['param']['tablestyle']\n        if context['param']['borderstyle'] and context['param']['borderstyle'] != '-':\n            table_class += ' table-' + context['param']['borderstyle']\n        if context['param']['striped']:\n            table_class += ' table-striped'\n        if context['param']['hover']:\n            table_class += ' table-hover'\n        if context['param']['small']:\n            table_class += ' table-small'\n        if context['param']['narrow']:\n            out = context['content'].replace(\"<table>\", \"<table class='%s' style='width:auto'>\" % table_class)\n        else:\n            out = context['content'].replace(\"<table>\", \"<table class='%s'>\" % table_class)            \n        if context['param']['responsive']:\n            out = \"<div class='table-responsive' style='position:relative;'>\" + self.edit_on_page_link(parent_processor, right=True) + out + \"</div>\"\n        else:\n            out = \"<div style='position:relative;'>\" + self.edit_on_page_link(parent_processor, right=True) + out + \"</div>\"\n        return out\n\nregister_obj_renderer(\"table\", TableObjRenderer)\n\n\nclass CsvObjRenderer(TableObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"csv\", \"title\": \"CSV\", \"icon\": \"fa fa-columns\", \"show_form\": True, 'inline_content': True }\n\n    def gen_context(self, param, lines, output_format, parent_processor):\n        if lines:\n            out = \"<table>\"\n            csv_reader = csv.reader(lines)\n            for row in csv_reader:\n                out += \"<tr>\"\n                for item in row:\n                    out += \"<td>\"\n                    out += str(item)\n                    out += \"</td>\"\n                out += \"</tr>\"\n            out += \"</table>\"\n            return { 'content': out, \"param\": param }\n        return { 'content': \"\", \"param\": param }\n\nregister_obj_renderer(\"csv\", CsvObjRenderer)\n\n\nclass RowObjRenderer(BaseMarkdownObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"row\", \"title\": \"Row\", \"icon\": \"fa fa-arrows-h\", \"show_form\": False, 'inline_content': True }\n\n    def render(self, param, lines, output_format, parent_processor):\n        context = self.gen_context(param, lines, output_format, parent_processor)\n        return \"<div class='row'>\\n\" + context['content'] + \"\\n</div>\\n\"\n        return out\n\nregister_obj_renderer(\"row\", RowObjRenderer)\n\n\nCOL_OBJ_RENDERER_FORM = \"\"\"\nlg//width for large screen::[-,1,2,3,4,5,6,7,8,9,10,11,12]\nmd//widt for medium_screen::[-,1,2,3,4,5,6,7,8,9,10,11,12]\nsm//width small screen::[-,1,2,3,4,5,6,7,8,9,10,11,12]\n\"\"\"\n\nclass ColObjRenderer(BaseMarkdownObjRenderer):\n    @staticmethod\n    def get_info():\n        return {\n            \"name\": \"col\",\n            \"title\": \"Col\",\n            \"icon\": \"fa fa-angle-double-right\",\n            \"show_form\": True,\n            \"inline_content\": True,\n        }\n\n    def get_edit_form(self):\n        return COL_OBJ_RENDERER_FORM\n\n    def render(self, param, lines, output_format, parent_processor):\n        context = self.gen_context(param, lines, output_format, parent_processor)\n        c = \"\"\n        if context[\"param\"][\"lg\"] != \"-\":\n            c += \" col-lg-\" + str(context[\"param\"][\"lg\"])\n        if context[\"param\"][\"md\"] != \"-\":\n            c += \" col-md-\" + str(context[\"param\"][\"md\"])\n        if context[\"param\"][\"sm\"] != \"-\":\n            c += \" col-\" + str(context[\"param\"][\"sm\"])\n        return \"<div class='\" + c[1:] + \" position-relative'>\\n\" + self.edit_on_page_link(parent_processor) + context[\"content\"] + \"\\n</div>\\n\"\n\n\nregister_obj_renderer(\"col\", ColObjRenderer)\n\n\nclass HasPermObjRenderer(BaseMarkdownObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"has_perm\", \"title\": \"Permission\", \"icon\": \"fa fa-key\", \"show_form\": True, 'inline_content': True }\n\n    def get_edit_form(self):\n        return \"perm\"\n\n    def render(self, param, lines, output_format, parent_processor):\n        context = self.gen_context(param, lines, output_format, parent_processor)\n        out = \"{% if perms.\" + context['param']['perm'] + \"%}\\n\"\n        out += context['content'] + \"\\n{% endif %}\\n\"\n        return out\n\nregister_obj_renderer(\"has_perm\", HasPermObjRenderer)\n\n\nclass LangObjRenderer(BaseMarkdownObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"language\", \"title\": \"Language\", \"icon\": \"fa fa-language\", \"show_form\": True, 'inline_content': True }\n\n    def get_edit_form(self):\n        return \"language\"\n\n    def render(self, param, lines, output_format, parent_processor):\n        context = self.gen_context(param, lines, output_format, parent_processor)\n        lang = context['param']['language']\n        if lang.startswith(\"!\"):\n            out = \"{% if lang not in '\" + lang + \"' %}\\n\"\n        else:\n            out = \"{% if lang in '\" + lang + \"' %}\\n\"\n        out += context['content'] + \"\\n{% endif %}\\n\"\n        return out\n\nregister_obj_renderer(\"language\", LangObjRenderer)\n\n\nGRAPHVIZ_OBJ_RENDERER_FORM = \"\"\"\nsvg_attr_class//SVG class\nsvg_style//SVG style\n\"\"\"\n\nclass GraphvizObjRenderer(BaseObjRenderer):\n    \n    @staticmethod\n    def get_info():\n        return { \"name\": \"graphviz\", \"title\": \"Graphviz\", \"icon\": \"fa fa-sitemap\", \"show_form\": True, 'inline_content': True}\n    \n    def get_edit_form(self):\n        return GRAPHVIZ_OBJ_RENDERER_FORM\n\n    def gen_context(self, param, lines, output_format, parent_processor):\n        import graphviz\n        import lxml.etree as et\n        context = {\"param\": param}\n        if lines:\n            file_name = get_temp_filename()\n            src = graphviz.Source(\"\\n\".join(lines))\n            file_name2 = src.render(file_name, view=False, format=\"svg\")\n            x = \"\"\n            with open(file_name2, \"rt\") as f:\n                x = f.read()\n                tree = et.fromstring(x.encode(\"utf-8\"))\n                tree.attrib.pop(\"width\")\n                tree.attrib.pop(\"height\")\n                if \"svg_style\" in param:\n                    tree.attrib[\"style\"] = param[\"svg_style\"]\n                if \"svg_attr_class\" in param:\n                    tree.attrib[\"class\"] = param[\"svg_attr_class\"]\n\n                x2 = et.tostring(tree, pretty_print=True).decode(\"utf-8\")\n\n            context[\"param\"][\"svg_code\"] = x2\n\n            os.remove(file_name2)\n\n        return context\n\n    def get_renderer_template_name(self):\n        return \"schwiki/graphviz_wikiobj_view.html\"\n\n\nregister_obj_renderer(\"graphviz\", GraphvizObjRenderer)\n\n\nclass IncludeObjRenderer(BaseObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"include\", \"title\": \"Include\", \"icon\": \"fa fa-plus-circle\", \"show_form\": False,}\n    \n    def render(self, param, lines, output_format, parent_processor):\n        if lines:\n            with open(lines[0].strip(), \"rt\") as f:\n                l= f.readlines()\n                i = 0\n                for line in l: \n                    parent_processor.lines.insert(self.line_number+i, line)\n                    i += 1 \n        return \"\"\n\nregister_obj_renderer(\"include\", IncludeObjRenderer)\n\n\nBLOCK_OBJ_RENDERER_FORM = \"\"\"\nstart//Start of block\nend//End of block\n\"\"\"\n\nclass BlockObjRenderer(BaseMarkdownObjRenderer):\n    @staticmethod\n    def get_info():\n        return {\n            \"name\": \"block\",\n            \"title\": \"block\",\n            \"icon\": \"fa fa-exchange\",\n            \"show_form\": True,\n            \"inline_content\": True,\n        }\n\n    def get_edit_form(self):\n        return BLOCK_OBJ_RENDERER_FORM\n\n    def render(self, param, lines, output_format, parent_processor):\n        context = self.gen_context(param, lines, output_format, parent_processor)\n        return \"<div style='position:relative'>\" + self.edit_on_page_link(parent_processor, right=True) + context[\"param\"][\"start\"] + context[\"content\"] + context[\"param\"][\"end\"] + \"</div>\"\n\nregister_obj_renderer(\"block\", BlockObjRenderer)\n\n\nclass WikiFrameObjRenderer(BaseObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"wiki-frame\", \"title\": \"Wiki frame\", \"icon\": \"fa fa-list-alt\", \"show_form\": False, \"inline_content\": True}\n    \n    def render(self, param, lines, output_format, parent_processor):\n        if lines:\n            ret = \"\"\n            for pos in lines:\n                if pos.startswith('[['):\n                    pos2 = pos[2:].split(']]')[0]\n                    ret += \"{%% include_wiki '%s' object wiki_path %%}\" % pos2\n            return ret\n        return \"\"\n\nregister_obj_renderer(\"wiki-frame\", WikiFrameObjRenderer)\n\n\nclass SuperBlockObjRenderer(BaseMarkdownObjRenderer):\n    @staticmethod\n    def get_info():\n        return {\n            \"name\": \"super-block\",\n            \"title\": \"Super block\",\n            \"icon\": \"fa fa-superpowers\",\n            \"show_form\": True,\n            \"inline_content\": True,\n        }\n\n    def get_edit_form(self):\n        return \"template::_\"\n\n    def convert_form_to_dict(self, form, old_dict=None):\n        template = form.cleaned_data['template']\n        return { 'template': bencode(template) }\n\n    def form_from_dict(self, form_class, param):\n        if param:\n            template = param['template']\n            return form_class(initial={ 'template': bdecode(template)} )\n        else:\n            return form_class()\n\n\n    def render(self, param, lines, output_format, parent_processor):\n        if lines:\n            segments = []\n            for line in lines:\n                if not line:\n                    if segments:\n                        if segments[-1]:\n                            segments.append([])\n                else:\n                    if segments:\n                        segments[-1].append(line)\n                    else:\n                        segments.append([line,])\n            context = self.gen_context(param, lines, output_format, parent_processor)\n            context['lines'] = lines\n            context['segments'] = segments\n            context['line_number'] = self._get_line_number(parent_processor)\n            template = bdecode(context['param']['template'])\n            t = Template(template)\n            c = Context(context)\n            return t.render(c).replace('[%', '{%').replace('%]', '%}').replace('[{', '{{').replace('}]', '}}') \n        return \"\"\n\nregister_obj_renderer(\"super-block\", SuperBlockObjRenderer)\n",
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "l",
+                        "name": "makdown_obj_simple",
+                        "content": "import base64\nfrom PIL import Image\nimport io\nimport os\nimport collections\n\nfrom pytigon_lib.schindent.indent_markdown import (\n    BaseObjRenderer,\n    IndentMarkdownProcessor,\n    register_obj_renderer,\n)\nfrom pytigon_lib.schfs.vfstools import get_temp_filename\n\nfrom pytigon_lib.schdjangoext.widgets import ImgFileInput\nfrom django import forms\n\n\nclass ImgForm(forms.Form):\n    from pytigon_lib.schdjangoext.widgets import ImgFileInput\n\n    img1 = forms.ImageField(label=\"Image 1\", required=False, widget=ImgFileInput)\n    crop1 = forms.BooleanField(label=\"Crop\", required=False, initial=True)\n    desc1 = forms.CharField(label=\"Description\", required=False)\n    img1class = forms.CharField(label=\"CSS class\", required=False)\n    img1style = forms.CharField(label=\"Style\", required=False)\n    img2 = forms.ImageField(label=\"Image 2\", required=False, widget=ImgFileInput)\n    crop2 = forms.BooleanField(label=\"Crop\", required=False, initial=True)\n    desc2 = forms.CharField(label=\"Description\", required=False)\n    img2class = forms.CharField(label=\"CSS class\", required=False)\n    img2style = forms.CharField(label=\"Style\", required=False)\n    img3 = forms.ImageField(label=\"Image 3\", required=False, widget=ImgFileInput)\n    crop3 = forms.BooleanField(label=\"Crop\", required=False, initial=True)\n    desc3 = forms.CharField(label=\"Description\", required=False)\n    img3class = forms.CharField(label=\"CSS class\", required=False)\n    img3style = forms.CharField(label=\"Style\", required=False)\n    img4 = forms.ImageField(label=\"Image 4\", required=False, widget=ImgFileInput)\n    crop4 = forms.BooleanField(label=\"Crop:\", required=False, initial=True)\n    desc4 = forms.CharField(label=\"Description\", required=False)\n    img4class = forms.CharField(label=\"CSS class\", required=False)\n    img4style = forms.CharField(label=\"Style\", required=False)\n\n    component_view_type = forms.CharField(max_length=16)\n    img_view_type = forms.CharField(max_length=16)\n\n    jpeg = forms.BooleanField(label=\"Jpeg\", required=False, initial=False)\n    quality = forms.ChoiceField(\n        label=\"Quality\",\n        required=False,\n        initial=\"1\",\n        choices=((\"0\", \"standard\"), (\"1\", \"good\"), (\"2\", \"best\")),\n    )\n\n\nclass ImgObjRenderer(BaseObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"img\", \"title\": \"Image\", \"icon\": \"fa fa-picture-o\", \"show_form\": True,}\n\n    def get_edit_form(self):\n        return ImgForm\n\n    def convert_form_to_dict(self, form, old_dict=None):\n        def calc_sizes(component_view_type, no, vertical=True):\n            if component_view_type == \"1000\":\n                if vertical:\n                    return (100, 100 * 16 / 16)\n                else:\n                    return (100, 100 * 9 / 16)\n            elif component_view_type == \"1200\":\n                ret = calc_sizes(\"1000\", 1, vertical)\n                return (ret[0] / 2, ret[1] / 2)\n            elif component_view_type == \"1230\":\n                ret = calc_sizes(\"1000\", 1, vertical)\n                return (ret[0] / 3, ret[1] / 3)\n            elif component_view_type == \"1234\":\n                ret = calc_sizes(\"1000\", 1, vertical)\n                return (ret[0] / 4, ret[1] / 4)\n            elif component_view_type == \"1213\":\n                if no == 1:\n                    # return (39,69)\n                    return (39, 61.7)\n                else:\n                    return (61, 34)\n            elif component_view_type == \"1232\":\n                if no == 2:\n                    return (39, 69)\n                else:\n                    return (61, 34)\n            elif component_view_type == \"4321\":\n                if vertical:\n                    return (50, 50 * 16 / 9)\n                else:\n                    return (50, 50 * 9 / 16)\n            elif component_view_type == \"1423\":\n                if vertical:\n                    return (70, 70 * 16 / 9)\n                else:\n                    return (70, 70 * 9 / 16)\n\n        def _encode(bstr, crop, component_view_type, no, jpeg=False, quality=\"0\"):\n            img = Image.open(io.BytesIO(bstr))\n            if img.size[0] > img.size[1]:\n                vertical = False\n            else:\n                vertical = True\n\n            if quality == \"2\":\n                z = 40\n            elif quality == \"1\":\n                z = 20\n            else:\n                z = 10\n\n            ret = calc_sizes(component_view_type, no, vertical)\n            max_dx = _dx = int(ret[0] * z)\n            max_dy = _dy = int(ret[1] * z)\n\n            max_scale = max(img.size[0] / max_dx, img.size[1] / max_dy)\n            min_scale = min(img.size[0] / max_dx, img.size[1] / max_dy)\n            if crop:\n                scale = min_scale\n            else:\n                scale = max_scale\n\n            if scale > 1:\n                img = img.resize(\n                    (int(img.size[0] / scale), int(img.size[1] / scale)),\n                    Image.ANTIALIAS,\n                )\n                if crop:\n                    left = (img.size[0] - max_dx) / 2\n                    top = (img.size[1] - max_dy) / 2\n                    right = (img.size[0] + max_dx) / 2\n                    bottom = (img.size[1] + max_dy) / 2\n                    img = img.crop((left, top, right, bottom))\n\n            dx2 = int(max_dx * scale)\n            dy2 = int(max_dy * scale)\n\n            img2 = Image.new(\"RGB\", (dx2, dy2), (255, 255, 255))\n            offset = (int((dx2 - img.size[0]) / 2), int((dy2 - img.size[1]) / 2))\n            img2.paste(img, offset)\n            img = img2\n\n            img_out = io.BytesIO()\n            if jpeg:\n                img.save(img_out, format=\"JPEG\")\n            else:\n                img.save(img_out, format=\"PNG\")\n            return base64.b64encode(img_out.getbuffer()).decode(\"utf-8\")\n\n        ret = {}\n        component_view_type = form.cleaned_data[\"component_view_type\"]\n\n        jpeg = form.cleaned_data[\"jpeg\"]\n        quality = form.cleaned_data[\"quality\"]\n\n        for img, crop, no in [\n            (\"img1\", \"crop1\", 1),\n            (\"img2\", \"crop2\", 2),\n            (\"img3\", \"crop3\", 3),\n            (\"img4\", \"crop4\", 4),\n        ]:\n            if form.cleaned_data[img]:\n                ret[img] = _encode(\n                    form.cleaned_data[img].read(),\n                    form.cleaned_data[crop],\n                    component_view_type,\n                    no,\n                    jpeg,\n                    quality,\n                )\n            else:\n                if old_dict:\n                    if img in old_dict:\n                        ret[img] = old_dict[img]\n        for i in range(1, 5):\n            ret[\"desc%d\" % i] = form.cleaned_data[\"desc%d\" % i]\n            ret[\"crop%d\" % i] = form.cleaned_data[\"crop%d\" % i]\n            ret[\"img%dclass\" % i] = form.cleaned_data[\"img%dclass\" % i]\n            ret[\"img%dstyle\" % i] = form.cleaned_data[\"img%dstyle\" % i]\n\n        ret[\"component_view_type\"] = component_view_type\n        ret[\"img_view_type\"] = form.cleaned_data[\"img_view_type\"]\n \n        ret[\"jpeg\"] = jpeg\n        ret[\"quality\"] = quality\n        ret[\"json_update\"] = True\n\n        return ret\n\n    def gen_context(self, param, lines, output_format, parent_processor):\n        context = {\"param\": param}\n        cvt = param[\"component_view_type\"]\n        \n        Element = collections.namedtuple(\"Element\", \"type data css_class style\")\n        elements = []\n        img_css_class = \"\"\n\n        def img_process(no, css_class):\n            try:\n                css_class2 = (\n                    param[\"img%dclass\" % no] if param[\"img%dclass\" % no] else css_class\n                )\n                imgstyle = param[\"img%dstyle\" % no]\n                elm = Element(\n                    \"img\",\n                    [param[\"img%d\" % no], param[\"desc%d\" % no]],\n                    css_class2,\n                    imgstyle,\n                )\n                elements.append(elm)\n            except:\n                pass\n\n        if cvt == \"1000\":\n            if not img_css_class:\n                img_css_class = \"col col-12\"\n            img_process(1, img_css_class)\n        elif cvt == \"1200\":\n            img_css_class = \"col col-6\"\n            img_process(1, img_css_class)\n            img_process(2, img_css_class)\n        elif cvt == \"1230\":\n            img_css_class = \"col col-4\"\n            img_process(1, img_css_class)\n            img_process(2, img_css_class)\n            img_process(3, img_css_class)\n        elif cvt == \"1234\":\n            img_css_class = \"col col-3\"\n            img_process(1, img_css_class)\n            img_process(2, img_css_class)\n            img_process(3, img_css_class)\n            img_process(3, img_css_class)\n        elif cvt == \"1213\":\n            if not img_css_class:\n                img_css_class = \"col col-12\"\n            elements.append(Element(\"data\", \"<div class='%s'>\" % img_css_class, \"\", \"\"))\n            elements.append(\n                Element(\n                    \"data\",\n                    \"<table width='100%' class='i1213'><tr><td rowspan='2' width='42%' class='t1'>\",\n                    \"\",\n                    \"\",\n                )\n            )\n            img_process(1, \"\")\n            elements.append(Element(\"data\", \"</td><td class='t2'>\", \"\", \"\"))\n            img_process(2, \"\")\n            elements.append(Element(\"data\", \"</td></tr><tr><td class='t3'>\", \"\", \"\"))\n            img_process(3, \"\")\n            elements.append(Element(\"data\", \"</td></tr></table>\", \"\", \"\"))\n            elements.append(Element(\"data\", \"</div>\", \"\", \"\"))\n        elif cvt == \"1232\":\n            if not img_css_class:\n                img_css_class = \"col col-12\"\n            elements.append(Element(\"data\", \"<div class='%s'>\" % img_css_class, \"\", \"\"))\n            elements.append(\n                Element(\n                    \"data\",\n                    \"<table width='100%' class='i1232'><tr><td class='t1'>\",\n                    \"\",\n                    \"\",\n                )\n            )\n            img_process(1, \"\")\n            elements.append(\n                Element(\"data\", \"</td><td class='t2' rowspan='2' width='42%'>\", \"\", \"\")\n            )\n            img_process(2, \"\")\n            elements.append(Element(\"data\", \"</td></tr><tr><td class='t3'>\", \"\", \"\"))\n            img_process(3, \"\")\n            elements.append(Element(\"data\", \"</td></tr></table>\", \"\", \"\"))\n            elements.append(Element(\"data\", \"</div>\", \"\", \"\"))\n        elif cvt == \"4321\" or cvt == \"1423\":\n            if not img_css_class:\n                img_css_class = \"col col-12\"\n            elements.append(Element(\"data\", \"<div class='%s'>\" % img_css_class, \"\", \"\"))\n            elements.append(\n                Element(\n                    \"data\",\n                    \"<table width='100%%' class='i%s'><tr><td class='t1'>\" % cvt,\n                    \"\",\n                    \"\",\n                )\n            )\n            img_process(1, \"\")\n            elements.append(Element(\"data\", \"</td><td class='t2'>\", \"\", \"\"))\n            img_process(2, \"\")\n            elements.append(Element(\"data\", \"</td></tr><tr><td class='t3'>\", \"\", \"\"))\n            img_process(3, \"\")\n            elements.append(Element(\"data\", \"</td><td class='t4'>\", \"\", \"\"))\n            img_process(4, \"\")\n            elements.append(Element(\"data\", \"</td></tr></table>\", \"\", \"\"))\n            elements.append(Element(\"data\", \"</div>\", \"\", \"\"))\n        context[\"elements\"] = elements\n        return context\n\n    def get_renderer_template_name(self):\n        return \"schwiki/img_wikiobj_view.html\"\n\n    def get_edit_template_name(self):\n        return \"schwiki/img_wikiobj_edit.html\"\n\n\nregister_obj_renderer(\"img\", ImgObjRenderer)\n\n\nclass SvgForm(forms.Form):\n    src = forms.CharField(label=\"Text\", widget=forms.Textarea, required=False)\n    svgsize = forms.CharField(label=\"Svg size\", required=False)\n    svgclass = forms.CharField(label=\"Svg CSS class\", required=False)\n    svgstyle = forms.CharField(label=\"Svg style\", required=False)\n    text = forms.CharField(label=\"Text\", widget=forms.Textarea, required=False)\n    textright = forms.BooleanField(label=\"Text on the right\", required=False)\n    textclass = forms.CharField(label=\"CSS class\", required=False)\n    textstyle = forms.CharField(label=\"Style\", required=False)\n\n\nclass SvgObjRenderer(BaseObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"svg\", \"title\": \"Svg\", \"icon\": \"fa fa-puzzle-piece\", \"show_form\": True, }\n\n    def get_edit_form(self):\n        return SvgForm\n\n    def get_renderer_template_name(self):\n        return \"schwiki/svg_wikiobj_view.html\"\n\n\nregister_obj_renderer(\"svg\", SvgObjRenderer)\n\n\nclass VideoForm(forms.Form):\n    src = forms.CharField(label=\"Source video address\", required=True)\n    poster = forms.CharField(label=\"Poster file address\", required=False)\n    controls = forms.BooleanField(label=\"Controls?\", required=False, initial=True)\n    videosize = forms.CharField(label=\"Video size\", required=False)\n    videoclass = forms.CharField(label=\"Video CSS class\", required=False)\n    videostyle = forms.CharField(label=\"Video style\", required=False)\n    text = forms.CharField(label=\"Text\", widget=forms.Textarea, required=False)\n    textright = forms.BooleanField(label=\"Text on the right\", required=False)\n    textclass = forms.CharField(label=\"CSS class\", required=False)\n    textstyle = forms.CharField(label=\"Style\", required=False)\n\n\nclass VideoObjRenderer(BaseObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"video\", \"title\": \"Video\", \"icon\": \"fa fa-video-camera\", \"show_form\": True,}\n\n    def get_edit_form(self):\n        return VideoForm\n\n    def gen_context(self, param, lines, output_format, parent_processor):\n        context = {\"param\": param}\n        if \"src\" in param:\n            x = param[\"src\"].split(\";\")\n            sources = []\n            tracks = []\n            for pos in x:\n                if pos.lower().endswith(\".webm\"):\n                    sources.append((pos, \"video/webm;\"))\n                if pos.lower().endswith(\".mp4\"):\n                    sources.append((pos, \"video/mp4;\"))\n                if \".vtt\" in pos.lower():\n                    name = pos\n                    label = \"English subtitles\"\n                    srclang = \"en\"\n                    default = False\n                    kind = \"subtitles\"\n                    if \",\" in pos:\n                        p = pos.split(\",\")\n                        name = p[0]\n                        label = p[1]\n                        if len(p) > 2:\n                            srclang = p[2]\n                            if len(p) > 3:\n                                if p[3]:\n                                    default = 3\n                                if len(p) > 4:\n                                    kind = p[4]\n                    tracks.append((name, label, srclang, default, kind))\n            context.update({\"sources\": sources, \"tracks\": tracks})\n        return context\n\n    def get_renderer_template_name(self):\n        return \"schwiki/video_wikiobj_view.html\"\n\n\nregister_obj_renderer(\"video\", VideoObjRenderer)\n\n\nPLOT_OBJ_RENDERER_FORM = \"\"\"\nname//Plot name\nwidth\nheight\n\"\"\"\n\nclass PlotObjRenderer(BaseObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"plot\", \"title\": \"Plot\", \"icon\": \"fa fa-line-chart\", \"show_form\": True,}\n\n    def get_edit_form(self):\n        return PLOT_OBJ_RENDERER_FORM\n\n    def get_renderer_template_name(self):\n        return \"schwiki/plot_wikiobj_view.html\"\n\n\nregister_obj_renderer(\"plot\", PlotObjRenderer)\n\n\nclass ReadMoreObjRenderer(BaseObjRenderer):\n\n    @staticmethod\n    def get_info():\n        return { \"name\": \"read_more\", \"title\": \"Read more\", \"icon\": \"fa fa-eye-slash\", \"show_form\": False,}\n    \n    def render(self, param, lines, output_format, parent_processor):\n        return \"<div class='read_more'></div>\"\n\n\nregister_obj_renderer(\"read_more\", ReadMoreObjRenderer)\n\n\n",
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "m",
+                        "name": "wiki2git.py",
+                        "content": "from django.core.management.base import BaseCommand, CommandError\n\nimport sys\nimport io\nimport os\nimport getopt\n\nfrom django.conf import settings\nfrom schwiki.applib.wiki_git import WikiGit\nfrom schwiki.models import WikiConf\n\nclass Command(BaseCommand):\n    help =\"Push wiki articles to git repository\"\n\n    def add_arguments(self, parser):\n        parser.add_argument(\n            '--subjects', \n            default=None,\n            help='Subjects to push',\n        )\n\n    def handle(self, *args, **options):\n        if options['subjects']:\n            subjects_to_push = options['subjects'].replace(',',';').split(';')\n        else:\n            subjects_to_push = []\n        \n        for wikiconf in WikiConf.objects.all():    \n            if wikiconf.git_repository and ((not subjects_to_push) or wikiconf.subject in subjects_to_push):\n                print(\"Export subject: \", wikiconf.subject)\n                gitobj = WikiGit(wikiconf)\n                gitobj.wiki_push()\n",
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "m",
+                        "name": "git2wiki.py",
+                        "content": "from django.core.management.base import BaseCommand, CommandError\n\nimport sys\nimport io\nimport os\nimport getopt\n\nfrom django.conf import settings\nfrom schwiki.applib.wiki_git import WikiGit\nfrom schwiki.models import WikiConf\n\nclass Command(BaseCommand):\n    help =\"Pull wiki articles from git repository\"\n\n    def add_arguments(self, parser):\n        parser.add_argument(\n            '--subjects', \n            default=None,\n            help='Subjects to pull',\n        )\n        parser.add_argument(\n            '--erase-previous-data',\n            action=\"store_true\", \n            help='Erase previous data',\n        )\n\n        parser.add_argument(\n            '--main-menu',\n            action=\"store_true\", \n            help='Subfolders in main menu',\n        )\n\n    def handle(self, *args, **options):\n        if options['subjects']:\n            subjects_to_pull = options['subjects'].replace(',',';').split(';')\n        else:\n            subjects_to_pull = []\n            \n        for wikiconf in WikiConf.objects.all():\n            if wikiconf.git_repository and ((not subjects_to_pull) or wikiconf.subject in subjects_to_pull):            \n                print(\"Import subject: \", wikiconf.subject)\n                gitobj = WikiGit(wikiconf)\n                gitobj.wiki_pull(options['erase_previous_data'], options['main_menu'])\n",
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "l",
+                        "name": "wiki_git",
+                        "content": "import os\nimport json\nfrom django.conf import settings\n\nfrom dulwich import porcelain\nfrom dulwich.repo import Repo\nfrom dulwich import index\n\nfrom schwiki.models import WikiConf, Page\n\nfrom pytigon_lib.schtools.wiki import wiki_from_str\n\n\nclass WikiGit:\n    def __init__(self, wikiconf_item):\n        self.git_repository = wikiconf_item.git_repository\n        if self.git_repository and \"=>\" in self.git_repository:\n            x = self.git_repository.split(\"=>\")\n            self.git_repository = x[0]\n            self.module = x[1]\n        else:\n            self.module = \"main\"\n        self.wikiconf_item = wikiconf_item\n        git_base_path = os.path.join(\n            settings.DATA_PATH, settings.PRJ_NAME, \"git_repositories\"\n        )\n        if not os.path.exists(git_base_path):\n            os.makedirs(git_base_path)\n        self.git_subject_path = os.path.join(git_base_path, wikiconf_item.subject)\n        if not os.path.exists(self.git_subject_path):\n            os.makedirs(self.git_subject_path)\n        self.git_path = os.path.join(self.git_subject_path, \".git\")\n\n    def _pull(self):\n        if os.path.exists(self.git_path):\n            repo = Repo(self.git_subject_path)\n            try:\n                print(self.git_repository)\n                remote_refs = porcelain.fetch(repo, self.git_repository)\n                repo[b\"HEAD\"] = remote_refs.refs[b\"refs/heads/master\"]\n                index_file = repo.index_path()\n                tree = repo[b\"HEAD\"].tree\n                index.build_index_from_tree(\n                    repo.path, index_file, repo.object_store, tree\n                )\n            except Exception as e:\n                print(\"git pull error: \", str(e))\n        else:\n            try:\n                print(self.git_repository)\n                porcelain.clone(self.git_repository, self.git_subject_path)\n            except Exception as e:\n                print(\"git clone error: \", str(e))\n\n    def _push(self):\n        repo = Repo(self.git_subject_path)\n        paths = []\n        for root, dirs, files in os.walk(self.git_subject_path):\n            if not \".git\" in root.replace(\"\\\\\", \"/\").split(\"/\"):\n                for file in files:\n                    paths.append(os.path.join(root, file))\n        porcelain.add(repo, paths)\n        try:\n            porcelain.commit(repo, \"Automatic sychnronization with schportal\")\n            porcelain.push(repo, self.git_repository, b\"master\")\n        except Exception as e:\n            print(\"git push error: \", str(e))\n\n    def wiki_pull(self, erase_previous_data=False, subfolders_in_main_menu=False):\n        self._pull()\n\n        if erase_previous_data:\n            Page.objects.filter(subject=self.wikiconf_item.subject).delete()\n            print(\"Data from subject: %s deleted!\" % self.wikiconf_item.subject)\n        else:\n            Page.objects.filter(subject=self.wikiconf_item.subject).update(latest=True)\n\n        conf = {}\n        config_path = os.path.join(self.git_subject_path, \"conf.json\")\n        if os.path.exists(config_path):\n            with open(config_path, \"rt\") as f:\n                conf = json.loads(f.read())\n\n        l = len(self.git_subject_path)\n        for root, dirs, files in os.walk(self.git_subject_path):\n            if not \".git\" in root.replace(\"\\\\\", \"/\").split(\"/\"):\n                file_path = root[l + 1 :]\n                for file in files:\n                    if file == \"config.json\":\n                        continue\n\n                    if (\n                        file[2] == \".\"\n                        and file[0] >= \"0\"\n                        and file[0] <= \"9\"\n                        and file[1] >= \"0\"\n                        and file[1] <= \"9\"\n                    ):\n                        menu_position = int(file[:2])\n                        description = (\n                            file.split(\".\", 1)[1]\n                            .strip()\n                            .replace(\".imd\", \"\")\n                            .replace(\".md\", \"\")\n                        )\n                    else:\n                        menu_position = None\n                        description = file.replace(\".imd\", \"\").replace(\".md\", \"\")\n\n                    name = wiki_from_str(description)\n                    old_page = Page.objects.filter(\n                        subject=self.wikiconf_item.subject, published=True, name=name\n                    ).first()\n                    if old_page:\n                        old_page.published = False\n                        try:\n                            old_page.save()\n                        except Exception as e:\n                            print(\"old page save error: \", str(e))\n                        obj = old_page\n                        obj.pk = None\n                    else:\n                        obj = Page()\n                    obj.subject = self.wikiconf_item.subject\n                    obj.name = name\n                    obj.description = description\n                    n = 0\n                    if menu_position and file_path:\n                        if \".\" in file_path:\n                            x = file_path.split(\"/\")\n                            y = []\n                            base = 1000000\n                            for item in x:\n                                if len(item) > 3 and item[2] == \".\":\n                                    n += int(item[:2]) * base\n                                    y.append(item[3:].strip())\n                                else:\n                                    y.append(item)\n                                base /= 100\n                        else:\n                            y = file_path.split(\"/\")\n                        if subfolders_in_main_menu:\n                            if len(y)>1:\n                                obj.menu = y[0] + \"/\" + y[1]\n                            else:\n                                obj.menu = y[0]\n                        else:\n                            obj.menu = self.module + \"/\" + y[0]\n\n                    if menu_position:\n                        obj.menu_position = menu_position + n\n\n                    obj.prj_name = settings.PRJ_NAME\n\n                    with open(os.path.join(root, file), \"rt\") as f:\n                        obj.content_src = f.read()\n                    if file_path:\n                        obj.json_path = file_path + \"/\" + file\n                    else:\n                        obj.json_path = file\n\n                    obj.published = True\n                    obj.latest = True\n\n                    if name in conf:\n                        for key, value in conf[name].items():\n                            if key == \"json_data\":\n                                for key2, value2 in value.items():\n                                    setattr(obj, \"json_\" + key2, value2)\n                            else:\n                                setattr(obj, key, value)\n                    try:\n                        obj.save()\n                    except Exception as e:\n                        print(\"obj save error: \", str(e))\n\n    def wiki_push(self):\n        if not os.path.exists(self.git_path):\n            self._pull()\n        conf = {}\n        objects_list = Page.objects.filter(\n            subject=self.wikiconf_item.subject, published=True\n        )\n        for obj in objects_list:\n            if obj.content_src:\n                if obj.menu_position:\n                    name = \"%02d. \" % (obj.menu_position % 100)\n                else:\n                    name = \"\"\n                if obj.description:\n                    name += obj.description\n                else:\n                    name += obj.name\n                if obj.menu:\n                    menu_path = obj.menu.split(\"/\")\n                    if len(menu_path) > 1:\n                        menu_path = menu_path[1:]\n                else:\n                    menu_path = []\n\n                file_name = obj.json_path\n\n                if file_name:\n                    if \"/\" in file_name:\n                        file_path = os.path.join(\n                            self.git_subject_path, file_name.rsplit(\"/\", 1)[0]\n                        )\n                    else:\n                        file_path = self.git_subject_path\n                    file_name = os.path.join(self.git_subject_path, file_name)\n                else:\n                    if obj.menu_position > 1000000:\n                        menu_path[0] = \"%02d\" % (obj.menu_position // 1000000)\n                    file_path = os.path.join(self.git_subject_path, *menu_path)\n                    file_name = os.path.join(file_path, name)\n\n                if not os.path.exists(file_path):\n                    os.makedirs(file_path)\n\n                with open(file_name, \"wt\") as f:\n                    f.write(obj.content_src)\n\n                obj_conf = {}\n                obj_conf[\"base_template\"] = obj.base_template\n                obj_conf[\"rights_group\"] = obj.rights_group\n                obj_conf[\"menu_icon\"] = obj.menu_icon\n                obj_conf[\"menu_icon_size\"] = obj.menu_icon_size\n                obj_conf[\"operator\"] = obj.operator\n                if obj.json_data:\n                    obj_conf[\"json_data\"] = obj.json_data\n                else:\n                    obj_conf[\"json_data\"] = {}\n                obj_conf[\"json_data\"].pop(\"path\", None)\n                if obj.operator:\n                    obj_conf[\"json_data\"][\"operator\"] = obj.operator\n                conf[obj.name] = obj_conf\n        with open(os.path.join(self.git_subject_path, \"conf.json\"), \"wt\") as f:\n            f.write(json.dumps(conf))\n\n        self._push()\n",
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "I",
+                        "name": "wiki_editor",
+                        "content": ".wiki_editor \n    .form-group:nth-child(1)\n        position: absolute\n        left: 100px\n        width: 300px\n\n.wiki_container\n    padding: 0px\n    margin: 0px\n    \n    h1\n        font-size: 1.2rem\n        margin: 5px 0px\n\n    h2\n        font-size: 1rem\n        margin: 5px 0px\n    \n    .col > h1\n        border-bottom: 2px solid #ccc\n        font-size: 2.4rem;\n\n    .right-block\n        box-shadow: 2px 2px 6px\n        background: #2c3b41\n        padding: 5px\n        margin: 1rem 0px\n        border-radius: 3px\n        color: #fff\n\n        h1\n            font-size: 1.5rem\n            display: flex\n        a\n            color: #fff !important\n            \n        .article-header .article-header-title a\n            background: rgba(255, 255, 255, 0.05) !important\n\n    .article-header .article-header-title a\n        font-size: 1.5rem\n        background: rgba(0,0,0,0.05);\n        display: flex\n        padding: 0px 5px\n        margin: 0px -5px\n        color: #000\n\n    .wiki-object-edit\n        position: absolute\n        top: 2px\n        left: 2px\n        opacity: 0.2\n        z-index: 1000\n        background: aqua\n        width: auto\n\n    .wiki-object-edit-right\n        background: yellow !important\n        right: 2px !important\n        left: initial\n\n\n    .wiki-object-edit:hover\n        opacity: 1\n\n.wiki-frame\n    padding: 0px 0.7rem\n\n    .wiki-breadcrumb\n        background: #fbfbff\n        padding: 5px 10px\n\n    .col\n        padding: 0px\n        \n        .col\n            padding: 0px\n    \n    .row\n        padding: 0px\n        margin: 0px -0.7rem\n        \n        >.col\n            padding: 0px 0.7rem\n            \n            >.col\n                padding: 0px\n        \n        .div_float\n            padding: 0px 0.7rem\n        \n        .img_float\n            width: 66%\n            padding-bottom: 0.1rem\n\n        .img_float_left\n            float: left\n            padding-right: 0.7rem\n\n        .img_float_right\n            float: right\n            padding-left: 0.7rem\n\n        .video_float\n            padding-bottom: 0.1rem\n\n        .video_float_left\n            float: left\n            padding-right: 0.7rem\n        \n        .video_float_right\n            float: right\n            padding-left: 0.7rem\n\n        .svg_float\n            padding-bottom: 0.1rem\n\n        .svg_float_left\n            float: left\n            padding-right: 0.7rem\n        \n        .svg_float_right\n            float: right\n            padding-left: 0.7rem\n",
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "R",
+                        "name": "insert_object",
+                        "content": "TAG = 'insert-object'\n\nTEMPLATE = \"\"\" \n    div name=insert_element\n        slot\n\"\"\"\n\nPARAM_INDENT = 120\n\ndef trim_line(line):\n    x = line.split('#', 1)\n    if len(x)>1:\n        param = JSON.parse(x[1])\n        ret = {}\n        for key, value in param.items():\n            if not (jQuery.type(value)==\"string\" and len(value)>1024):\n                ret[key] = value\n        return x[0]+\"#\"+JSON.stringify(ret).replace('\\n', '\\\\n')\n    return line\n\ndef join_parameters(param, line):\n    x = line.split('#', 1)\n    if len(x)>1:\n        try:\n            param2 = JSON.parse(param)\n            old_param = JSON.parse(x[1])\n            for key in old_param:\n                if not key in param2 or param2[key]==None:\n                    param2[key] = old_param[key]\n            return JSON.stringify(param2).replace('\\n', '\\\\n')\n        except:\n            pass\n    return param\n\ndef get_editor_component(object):\n    return object.closest(\"ptig-codeeditor\") \n\ndef get_editor(object):\n    vc_component = get_editor_component(object) \n    return vc_component.editor\n\ndef is_special_line(line): \n    if line.strip()[:1] == '%':\n        return True\n    else:\n        return False\n\ndef get_current_line(editor):    \n    return editor.getModel().getLineContent(editor.getPosition().lineNumber)    \n\ndef set_current_line(editor, text, overwrite):\n    line_number = editor.getPosition().lineNumber\n    current_line = get_current_line(editor)\n    if overwrite:\n        range = monaco.Range(line_number, 1, line_number, len(current_line)+1) \n        text2 = text \n    else:\n        range = monaco.Range(line_number, 1, line_number, 1)\n        text2 = text + \"\\n\"  \n    id = { 'major': 1, 'minor': 1 }\n    op = { 'identifier': id, 'range': range, 'text': text2, 'forceMoveMarkers': True }\n    editor.executeEdits(\"pytigon\", [op,])\n    if text.endswith(\":\"):\n        editor.setPosition({'lineNumber': line_number, 'column': len(text)+1 })\n    else:\n        editor.setPosition({'lineNumber': line_number, 'column': 1 })\n    editor.focus()\n\ndef wiki_object_to_editor(editor, object_name, is_inline_content, param):\n    global PARAM_INDENT\n    current_line = get_current_line(editor)\n    if len(current_line) >= 64 * 1024:\n        param = join_parameters(param, current_line)\n    x = current_line.lstrip()\n    if len(x)==0 or is_special_line(current_line):\n        overwrite = True\n    else:\n        overwrite = False\n    indent = len(current_line) - len(x)\n    line = (indent * ' ') + '% ' + object_name\n    if is_inline_content:\n        line += \":\"\n    if param:\n        if len(line)<PARAM_INDENT:\n            line += (PARAM_INDENT-len(line)) * ' '\n        line += \"#\"\n        line += param\n    set_current_line(editor, line, overwrite)\n\n\nwith DefineWebComponent(TAG, True) as comp:\n    comp.options['template'] = TEMPLATE\n    \n    def init(component):        \n        href = component.getAttribute(\"href\")\n\n        def _init_OK():\n            nonlocal component\n            ed_component = get_editor_component(component)\n            save = ed_component.state['save']\n            change = ed_component.state['save']\n            \n            def on_ok(event):\n                nonlocal component, save, ed_component                \n                div = component.closest(\".modal-content\")\n                div.style.opacity = \"50%\"\n                def on_saved():\n                    nonlocal component, div\n                    refresh_ajax_frame(div, \"page\", None, None, None)\n                changed = ed_component.state['changed']\n                if changed:\n                    save(on_saved)\n                else:\n                    on_saved()\n            \n            modal_dialog = component.closest(\"div.modal-dialog\")\n            button_OK = modal_dialog.querySelector(\"div.modal-footer > button.btn-primary\")\n            button_OK.setAttribute(\"target\", \"none\")\n            button_OK.onclick = on_ok\n            \n        setTimeout(_init_OK, 1)\n        \n        def update_or_insert(event, insert):\n            nonlocal component, href\n            button = event.currentTarget\n            ed_component = get_editor_component(button)\n            ed = ed_component.editor\n            if insert:\n                object_name = button.getAttribute(\"name\")\n                show_form = False\n                if button.getAttribute(\"show_form\") == '1':\n                    show_form = True\n                inline = False\n                if button.getAttribute(\"inline\") == '1':\n                    inline = True\n                status = \"new_object\"\n                line = None\n            else:\n                line = get_current_line(ed)\n                spec = is_special_line(line)\n                if is_special_line(line) and '#' in line:\n                    object_name = line.split('#')[0].strip()[1:].strip()\n                    inline = False\n                    if object_name.endswith(\":\"):\n                        object_name = object_name[:-1]\n                        inline = True\n                    show_form = True\n                    status = \"edit_object\"\n                    if len(line) >= 64*1024:\n                        line = trim_line(line)\n                else:\n                    return\n                \n            if show_form == True:\n                def _complete(content):\n                    nonlocal object_name, inline, button\n                    def on_loadeddata(event):\n                        nonlocal object_name, inline\n                        print(\"on_loadeddata:\", event.data)\n                        x = JSON.parse(event.data)\n                        if 'line' in x:\n                            wiki_object_to_editor(ed, object_name, inline, x['line'])\n                    setattr(component, \"onloadeddata\", on_loadeddata)                \n                    window.on_popup_edit_new(button, window.get_elem_from_string(content), href)\n                     \n                data = JSON.stringify({'status': status, 'line': line, 'object_name': object_name})\n                ajax_post(href, data, _complete, None)\n            else:\n                wiki_object_to_editor(ed, object_name, inline, None)\n\n        def on_insert(event):\n            update_or_insert(event, True)\n \n        def on_properties(event):\n            update_or_insert(event, False)\n        \n        component.set_state({\"on_insert\": on_insert,  \"on_properties\": on_properties })\n    \n    comp.options['init'] = init\n",
+                        "doc": null
+                    }
+                }
+            ]
+        }
+    ]
+}

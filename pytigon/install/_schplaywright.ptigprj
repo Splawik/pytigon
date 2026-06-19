@@ -1,0 +1,78 @@
+{
+    "model": "SChProject",
+    "attributes": {
+        "jsondata": null,
+        "name": "_schplaywright",
+        "title": "Playwright integration",
+        "version": "latest",
+        "main_view": true,
+        "ext_apps": null,
+        "plugins": null,
+        "gui_type": "modern",
+        "gui_elements": null,
+        "login_required": false,
+        "public": false,
+        "main": false,
+        "start_page": null,
+        "user_app_template": null,
+        "app_main": null,
+        "doc": null,
+        "desktop_gui_type": "auto",
+        "smartfon_gui_type": "auto",
+        "tablet_gui_type": "auto",
+        "additional_settings": null,
+        "custom_tags": "",
+        "readme_file": null,
+        "license_file": null,
+        "install_file": "PIP=playwright",
+        "encoded_zip": null,
+        "icon": "None",
+        "icon_size": "1",
+        "icon_code": null,
+        "git_repository": null,
+        "autor_name": null,
+        "autor_email": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "template_desktop": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_schweb": null,
+        "template_theme": null
+    },
+    "children": [
+        {
+            "model": "SChApp",
+            "attributes": {
+                "jsondata": null,
+                "name": "playwright_integration",
+                "title": "Playwright integration",
+                "module_name": "playwright",
+                "module_title": "playwright",
+                "perms": false,
+                "index": null,
+                "model_code": null,
+                "view_code": null,
+                "urls_code": "import playwright_integration.applib.playwrightrendering\n",
+                "tasks_code": "",
+                "consumer_code": "",
+                "doc": null,
+                "user_param": "",
+                "icon": "None",
+                "icon_size": "1",
+                "icon_code": null
+            },
+            "children": [
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "l",
+                        "name": "playwrightrendering",
+                        "content": "from playwright.sync_api import sync_playwright\nimport pytigon_lib.schhtml.htmlviewer\nfrom playwright.sync_api import sync_playwright\nimport io\n\nclass PlayWrightRendering(pytigon_lib.schhtml.htmlviewer.BaseRenderingLib):\n    def render(\n        html,\n        output_stream=None,\n        css=None,\n        width=int(210 * 72 / 25.4),\n        height=int(297 * 72 / 25.4),\n        stream_type=\"pdf\",\n        base_url=None,\n        info=None\n    ):\n        with sync_playwright() as p:\n            browser_type = p.chromium\n            browser = browser_type.launch()\n            page = browser.new_page()\n            if type(html) == str:\n                html2 = html\n            else:\n                html2 = html.decode(\"utf-8\")\n\n            if html2.startswith(\"http\"):\n                page.goto(html2.split(\"\\n\")[0].strip())\n            else:\n                page.set_content(html2)\n            buf = page.pdf()\n            result = io.BytesIO(buf)\n            browser.close()\n            return result\n\n    def accept(html, stream_type=\"pdf\", base_url=None, info=None):\n        if stream_type == \"pdf\":\n            return True\n        return False\n\npytigon_lib.schhtml.htmlviewer.set_rendering_lib(PlayWrightRendering)\n",
+                        "doc": null
+                    }
+                }
+            ]
+        }
+    ]
+}

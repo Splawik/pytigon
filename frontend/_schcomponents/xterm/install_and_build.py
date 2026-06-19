@@ -42,7 +42,7 @@ def install_dependencies(dependencies):
 
 
 if __name__ == "__main__":
-    install_dependencies(["@xterm/xterm"])
+    install_dependencies(["@xterm/xterm", "@xterm/addon-fit"])
     run_esbuild(
         "xterm.mjs",
         "../../../pytigon/prj/_schcomponents/static/_schcomponents/xterm/xterm.js",

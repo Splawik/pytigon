@@ -1,0 +1,775 @@
+{
+    "model": "SChProject",
+    "attributes": {
+        "jsondata": null,
+        "name": "_schbi",
+        "title": "BI",
+        "version": "latest",
+        "main_view": true,
+        "ext_apps": null,
+        "plugins": null,
+        "gui_type": "modern",
+        "gui_elements": null,
+        "login_required": false,
+        "public": false,
+        "main": false,
+        "start_page": null,
+        "user_app_template": "###> schbi/__init__.py\n\nfrom django.utils.translation import gettext_lazy as _\n\ndef AdditionalUrls(prj_name, lang):\n    from .models import Project\n\n    ret = []\n    ret_buf = []\n    for object in Project.objects.all():\n        if object.menu:\n            if object.base_prj_name and object.base_prj_name != prj_name:\n                continue\n            menu_path = object.menu.split(\"/\")\n            module_title = \"\"\n            app_name = \"\"\n            app_name = menu_path[-1]\n            if len(menu_path) > 1:\n                module_title = menu_path[0]\n\n            if object.menu_icon:\n                icon = object.menu_icon\n            else:\n                icon = \"fa://arrow-circle-right.png\"\n                        \n            if object.menu_position:\n                lp = \"%02d\" % object.menu_position\n            else:\n                lp = \"00\"\n            ret_buf.append(\n                (\n                    lp,\n                    (\n                        \"schbi/project_view/\" + object.name + \"/\",\n                        object.description,\n                        object.rights_group,\n                        icon,\n                        module_title,\n                        _(module_title),\n                        app_name,\n                        _(app_name),\n                    ),\n                )\n            )\n    if ret_buf:\n        buf = sorted(ret_buf, key=lambda pos: pos[0])\n        for pos in buf:\n            ret.append(pos[1])\n        return ret\n    else:\n        return []\n",
+        "app_main": null,
+        "doc": null,
+        "desktop_gui_type": "tablet_modern",
+        "smartfon_gui_type": "smartfon_standard",
+        "tablet_gui_type": "tablet_modern",
+        "additional_settings": "",
+        "custom_tags": "_schcomponents/components/ptig-codeeditor.js\n_schcomponents/components/ptig-form.js\n_schcomponents/components/ptig-plotly.js",
+        "readme_file": null,
+        "license_file": null,
+        "install_file": "PIP=polars kaleido",
+        "encoded_zip": null,
+        "icon": "None",
+        "icon_size": "1",
+        "icon_code": null,
+        "git_repository": "https://git.pytigon.cloud/pytigon/_schbi.git",
+        "autor_name": "S\u0142awomir Cho\u0142aj",
+        "autor_email": "slawomir.cholaj@gmail.com",
+        "autor_www": "https://pytigon.cloud",
+        "components_initial_state": null,
+        "template_desktop": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_schweb": null,
+        "template_theme": "% extends 'theme_base.html'|translate:lang\n\n% load exsyntax\n\n%% ext_css_links\n    {% css_link 'vanillajs_plugins/plotly/plotly.css' %}\n    {{block.super}}\n\n\n%% x__botstrap_css\n    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}\n\n%% ext_js_scripts\n    {{ block.super }}\n    {% jscript_link 'vanillajs_plugins/d3/d3.v3.min.js' %}\n    {% jscript_link 'vanillajs_plugins/plotly/plotly.min.js' %}\n"
+    },
+    "children": [
+        {
+            "model": "SChApp",
+            "attributes": {
+                "jsondata": null,
+                "name": "schbi",
+                "title": "BI",
+                "module_name": "Config",
+                "module_title": "Config",
+                "perms": true,
+                "index": null,
+                "model_code": "from pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct\nfrom django.conf import settings\nimport datetime\nimport pyarrow\nimport pyarrow.parquet\nimport duckdb\nimport numpy\nimport os\nimport os.path as os_path\n\nPROJECTS_DATA = {}\nPROJECTS_DATA_VERSION = {}\n\nPRJ_REFRESH_DATA=\"\"\"\n#def refresh_data(module, prj, refresh_type):\n#    if refresh_type == 'begin':\n#        prj.load_data()\n\"\"\"\n\nPRJ_FORM=\"\"\"\nYear::[2020;2021;2022;2023;2024;2025;2026]\n\"\"\"\n\nPRJ_VIEW=\"\"\"\n#def view(request, module, prj):\n#    return {}\n\"\"\"\n\nPRJ_TEMPLATE=\"\"\"\n% extends \"schbi/base_project.html\"\n\"\"\"\n\nPAGE_FORM=\"\"\"\nYear from::[2020;2021;2022;2023;2024;2025;2026]\nYear to::[2020;2021;2022;2023;2024;2025;2026]\n\"\"\"\n\nPAGE_VIEW=\"\"\"\n#def view(request, module, page):\n#    return {}\n\"\"\"\n\nPAGE_TEMPLATE=\"\"\"\n% extends \"schbi/base_page.html\"\n\"\"\"\n\n\nCHART_FORM=\"\"\"\nYear from::[2020;2021;2022;2023;2024;2025;2026]\nYear to::[2020;2021;2022;2023;2024;2025;2026]\n\"\"\"\n\nCHART_VIEW=\"\"\"\n#def view(request, module, page):\n#    return {}\n\"\"\"\n\nCHART_TEMPLATE=\"\"\"\n% extends \"schbi/base_chart.html\"\n\"\"\"\n$$$def refresh_data(refresh_type):\n    \"\"\"\n        refresh_type:\n            begin - on the start\n            before - before every request\n            after - after every request\n\n            bi_sheduler_1 - defined by user, handled by django-q sheduler\n            ...\n            bi_sheduler_9 - defined by user, handled by django-q sheduler\n    \"\"\"\n    \n    try:\n        for prj in Project.objects.all():\n            run_code_from_db_field(\n                f\"bi_prj_{prj.name}_refresh_data.py\", \n                prj, \n                \"refresh_data\", \n                \"refresh_data\", \n                module=ModuleStruct(globals(),locals()), \n                prj=prj,\n                refresh_type=refresh_type\n            )\n    except:\n        pass\n",
+                "view_code": "import json\nfrom django.http import Http404\nfrom django.http import JsonResponse\nfrom pytigon_lib.schdjangoext.fastform import form_from_str\nfrom pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html\nfrom pytigon_lib.schdjangoext.import_from_db import run_code_from_db_field, ModuleStruct\nfrom django.conf import settings\n\nimport datetime\nimport pyarrow\nimport pyarrow.parquet\nimport duckdb\nimport numpy\nimport os\nimport os.path as os_path\nimport plotly\nimport plotly.graph_objects as go\n\nimport uuid\nfrom io import StringIO\n\nmodels.refresh_data(\"begin\")\n",
+                "urls_code": null,
+                "tasks_code": "",
+                "consumer_code": "",
+                "doc": null,
+                "user_param": "",
+                "icon": "None",
+                "icon_size": "1",
+                "icon_code": null
+            },
+            "children": [
+                {
+                    "model": "SChChoice",
+                    "attributes": {
+                        "name": "menu_icon_size_choice",
+                        "verbose_name": "Menu icon size choice"
+                    },
+                    "children": [
+                        {
+                            "model": "SChChoiceItem",
+                            "attributes": {
+                                "name": "0",
+                                "value": "small"
+                            }
+                        },
+                        {
+                            "model": "SChChoiceItem",
+                            "attributes": {
+                                "name": "1",
+                                "value": "medium"
+                            }
+                        },
+                        {
+                            "model": "SChChoiceItem",
+                            "attributes": {
+                                "name": "2",
+                                "value": "large"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChTable",
+                    "attributes": {
+                        "base_table": "JSONModel",
+                        "name": "Project",
+                        "verbose_name": "Project",
+                        "verbose_name_plural": "Projects",
+                        "metaclass_code": null,
+                        "table_code": "def load_data(self):\n    data_path = os_path.join(settings.DATA_PATH, settings.PRJ_NAME)\n\n    if not self.name in PROJECTS_DATA:\n        PROJECTS_DATA[self.name] = {} \n    pd = PROJECTS_DATA[self.name] \n    if not self.name in PROJECTS_DATA_VERSION:\n        PROJECTS_DATA_VERSION[self.name] = None \n    data_time = PROJECTS_DATA_VERSION[self.name]\n\n    if data_time and (datetime.datetime.now() - data_time).seconds < 60:\n        return\n    \n    modify = False\n    check_time = datetime.datetime.now()\n\n    files = self.parquet_files.replace(\",\",\";\").replace(\"\\n\", \";\").split(\";\")\n    cleaned_files = [ file_name.rsplit('.',1)[0].strip() for file_name in files ]\n    for data_name in cleaned_files:\n        t = datetime.datetime.fromtimestamp(os_path.getmtime(os_path.join(data_path, data_name + '.parquet')))       \n\n        if (not data_time) or data_time < t:\n            pd[data_name] = pyarrow.parquet.read_table(os_path.join(data_path, data_name + '.parquet'))\n            modify = True\n    \n    PROJECTS_DATA_VERSION[self.name] = check_time\n\ndef get_data(self):\n    return PROJECTS_DATA[self.name]\n\ndef get_refresh_data_if_empty(self, request, template_name, ext, extra_context, target):\n    return PRJ_REFRESH_DATA\n\ndef get_form_if_empty(self, request, template_name, ext, extra_context, target):\n    return PRJ_FORM\n\ndef get_view_if_empty(self, request, template_name, ext, extra_context, target):\n    return PRJ_VIEW\n\ndef get_template_if_empty(self, request, template_name, ext, extra_context, target):\n    return PRJ_TEMPLATE\n",
+                        "ordering": "['id']",
+                        "doc": null,
+                        "generic": true,
+                        "url_params": null,
+                        "proxy_model": null
+                    },
+                    "children": [
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "base_prj_name",
+                                "description": "Base project name",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "name",
+                                "description": "Name",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "description",
+                                "description": "Description",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=128",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "parquet_files",
+                                "description": "Parquet files",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=1024",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "refresh_data",
+                                "description": "Refresh data",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "form",
+                                "description": "Form",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "view",
+                                "description": "View",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "template",
+                                "description": "Template",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "rights_group",
+                                "description": "Rights group",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "menu",
+                                "description": "Manu path",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "menu_position",
+                                "description": "Menu position",
+                                "type": "IntegerField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": "0",
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "menu_icon",
+                                "description": "Menu icon",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=256",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "menu_icon_size",
+                                "description": "Menu icon size",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": "'1'",
+                                "help_text": null,
+                                "choices": "menu_icon_size_choice",
+                                "rel_to": null,
+                                "param": "max_length=1",
+                                "url_params": null
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChTable",
+                    "attributes": {
+                        "base_table": null,
+                        "name": "Page",
+                        "verbose_name": "Page",
+                        "verbose_name_plural": "Pages",
+                        "metaclass_code": null,
+                        "table_code": "def get_form_if_empty(self, request, template_name, ext, extra_context, target):\n    return PAGE_FORM\n\ndef get_view_if_empty(self, request, template_name, ext, extra_context, target):\n    return PAGE_VIEW\n\ndef get_template_if_empty(self, request, template_name, ext, extra_context, target):\n    return PAGE_TEMPLATE\n",
+                        "ordering": "['id']",
+                        "doc": null,
+                        "generic": true,
+                        "url_params": null,
+                        "proxy_model": null
+                    },
+                    "children": [
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "parent",
+                                "description": "Parent",
+                                "type": "PtigForeignKey",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": "Project",
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "name",
+                                "description": "Name",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "title",
+                                "description": "Title",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "form",
+                                "description": "Form",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "view",
+                                "description": "View",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "template",
+                                "description": "Template",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChTable",
+                    "attributes": {
+                        "base_table": null,
+                        "name": "Chart",
+                        "verbose_name": "Chart",
+                        "verbose_name_plural": "Charts",
+                        "metaclass_code": null,
+                        "table_code": "def get_prj(self):\n    return self.parent.parent\n\ndef get_form_if_empty(self, request, template_name, ext, extra_context, target):\n    return CHART_FORM\n\ndef get_view_if_empty(self, request, template_name, ext, extra_context, target):\n    return CHART_VIEW\n\ndef get_template_if_empty(self, request, template_name, ext, extra_context, target):\n    return CHART_TEMPLATE\n",
+                        "ordering": "['id']",
+                        "doc": null,
+                        "generic": true,
+                        "url_params": null,
+                        "proxy_model": null
+                    },
+                    "children": [
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "parent",
+                                "description": "Parent",
+                                "type": "PtigForeignKey",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": "Page",
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "name",
+                                "description": "Name",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "title",
+                                "description": "Title",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=64",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "form",
+                                "description": "Form",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "view",
+                                "description": "View",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "template",
+                                "description": "Template",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": false,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "project_view",
+                        "view_type": "u",
+                        "param": "prj_name",
+                        "url": "project_view/<str:prj_name>/",
+                        "view_code": "try:\n    prj = models.Project.objects.get(name=prj_name)\nexcept:\n    raise Http404\n\nmodels.refresh_data(\"before\")\n\nsession_key = \"bi_\" + prj_name\nif not session_key in request.session:\n    request.session[session_key] = {}\n\nif prj.form:\n    form_class = form_from_str(prj.form, init_data={ 'prj': prj, \"models\": models })\n    if request.method == \"POST\":\n        json_data = json.loads(request.body)\n        modified = False\n        for key, value in json_data.items():\n            if key in (\"name\",\"new_value\"):\n                continue\n            key2 = prj_name+\"/\"+key\n            if not (key2 in request.session[session_key] and request.session[session_key][key2] == value):\n                request.session[session_key][key2] = value\n                modified = True\n        request.session.modified = modified\n        return JsonResponse({'send_event': {'refresh_bi_project': prj.name }})\n    else:\n        data = {}\n        for key, value in request.session[session_key].items():\n            if key.startswith(prj_name+\"/\"):\n                key = key.split(\"/\")[-1]\n                data[key] = value        \n        form = form_class(initial=data)\nelse:\n    form = None\n    \nif prj.template:\n    t = Template(ihtml_to_html(None, prj.template))\nelse:\n    template = \"% extends \\\"schbi/base_project.html\\\"\\n\"\n    t = Template(ihtml_to_html(None, template))\n\ndata = {}\nif prj.view:\n    data = run_code_from_db_field(\n        f\"bi_prj_{prj.name}_view.py\", \n        prj, \n        \"view\", \n        \"view\", \n        request=request,\n        module=ModuleStruct(globals(),locals()),\n        prj = prj \n    )\n\nc = RequestContext(request, {\"form\": form, \"bi_prj\": prj, 'data': data | request.session[session_key] })\nreturn HttpResponse(t.render(c))\n",
+                        "url_params": "{}",
+                        "ret_type": "U",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "page_view",
+                        "view_type": "u",
+                        "param": "page_id",
+                        "url": "page_view/<int:page_id>/",
+                        "view_code": "try:\n    page = models.Page.objects.get(pk=page_id)\nexcept:\n    raise Http404\n\nmodels.refresh_data(\"before\")\n\nsession_key = \"bi_\" + page.parent.name\nif not session_key in request.session:\n    request.session[session_key] = {}\n\nif page.form:\n    form_class = form_from_str(page.form)\n\n    if request.method == \"POST\":\n        json_data = json.loads(request.body)\n        modified = False\n        for key, value in json_data.items():\n            if key in (\"name\",\"new_value\"):\n                continue\n            key2 = page.name+\"/\"+page.parent.name+\"/\"+key\n            if not (key2 in request.session[session_key] and request.session[session_key][key2] == value):\n                request.session[session_key][key2] = value\n                modified = True\n        request.session.modified = modified\n        return JsonResponse({'send_event': {'refresh_bi_page': page.name }})\n    else:\n        data = {}\n        for key, value in request.session[session_key].items():\n            if key.startswith(page.name+\"/\"+page.parent.name+\"/\"):\n                key = key.split(\"/\")[-1]\n                data[key] = value\n        form = form_class(initial=data)\nelse:\n    form = None\n    \nif page.template:\n    t = Template(ihtml_to_html(None, page.template))\nelse:\n    template = \"% extends \\\"schbi/base_page.html\\\"\\n\"\n    t = Template(ihtml_to_html(None, template))\n\ndata = {}\nif page.view:\n    data = run_code_from_db_field(\n        f\"bi_prj_{page.parent.name}_page_{page.name}_view.py\", \n        page, \n        \"view\", \n        \"view\", \n        request=request,\n        module=ModuleStruct(globals(),locals()),\n        page = page \n    )\n    \nc = RequestContext(request, {\"form\": form, \"page\": page, 'data': data | request.session[session_key]})\nreturn HttpResponse(t.render(c))\n",
+                        "url_params": "{}",
+                        "ret_type": "U",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "chart_view",
+                        "view_type": "u",
+                        "param": "chart_id",
+                        "url": "chart_view/<int:chart_id>/",
+                        "view_code": "try:\n    chart = models.Chart.objects.get(pk=chart_id)\nexcept:\n    raise Http404\n\nmodels.refresh_data(\"before\")\n\nsession_key = \"bi_\" + chart.parent.parent.name\nif not session_key in request.session:\n    request.session[session_key] = {}\n\nif chart.form:\n    form_class = form_from_str(chart.form)\n\n    if request.method == \"POST\":\n        json_data = json.loads(request.body)\n        modified = False\n        for key, value in json_data.items():\n            if key in (\"name\",\"new_value\"):\n                continue\n            key2 = chart.name+\"/\"+chart.parent.name+\"/\"+chart.parent.parent.name+\"/\"+key\n            if not (key2 in request.session[session_key] and request.session[session_key][key2] == value):\n                request.session[session_key][key2] = value\n                modified = True\n        request.session.modified = modified\n        return JsonResponse({'send_event': {'refresh_bi_chart': chart.name }})\n    else:\n        data = {}\n        for key, value in request.session[session_key].items():\n            if key.startswith(chart.name+\"/\"+chart.parent.name+\"/\"+chart.parent.parent.name+\"/\"):\n                key = key.split(\"/\")[-1]\n                data[key] = value        \n        form = form_class(initial=data)\nelse:\n    form = None\n    \nif chart.template:\n    t = Template(ihtml_to_html(None, chart.template))\nelse:\n    template = \"% extends \\\"schbi/base_chart.html\\\"\\n\"\n    t = Template(ihtml_to_html(None, template))\n\ndata = {}\nif chart.view:\n    data = run_code_from_db_field(\n        f\"bi_prj_{chart.parent.parent.name}_chart_{chart.name}_view.py\", \n        chart, \n        \"view\", \n        \"view\", \n        request=request,\n        module = ModuleStruct(globals(),locals()), \n        chart = chart\n    )\nc = RequestContext(request, {\"form\": form, \"chart\": chart, 'data': data | request.session[session_key]})\nreturn HttpResponse(t.render(c))\n",
+                        "url_params": "{}",
+                        "ret_type": "U",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "base_project",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n% load static\n\n%% content\n    div class=bi_{{bi_prj.name}} d-flex flex-column,,,style=height:100%;width:calc(100% - 10px)\n        refresh-bi-charts\n        div class=row mb-1\n            div class=col\n                % if form:\n                    ptig-form src={{base_path}}schbi/project_view/{{bi_prj.name}}/\n                        %% bi_prj_form\n                            % inline_form:\n        div class=row flex-grow-1\n            div class=col auto-refresh d-flex flex-column\n                nav\n                    div class=nav nav-tabs,,,id=nav-tab,,,role=tablist\n                        % for page in bi_prj.page_set.all:\n                            button class=nav-link {% if forloop.first %}active{% endif %},,,id=nav-{{bi_prj.name}}-{{page.id}},,,data-bs-toggle=tab,,,data-bs-target=#nav-{{bi_prj.name}}-{{page.id}}-content,,,type=button,,,role=tab...{{page.name}}\n                 \n                div class=tab-content auto-refresh flex-grow-1,,,id=nav-tabContent,,,style=overflow-x:hidden\n                    % for page in bi_prj.page_set.all:\n                        div href={{base_path}}schbi/page_view/{{page.id}}/,,,class=auto-frame ajax-frame ajax-link ajax-region tab-pane {% if forloop.first %}show active{% endif %},,, id=nav-{{bi_prj.name}}-{{page.id}}-content,,,role=tabpanel,,,tabindex=0,,,auto-refresh-target=.bi_chart\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "base_page",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n% load static\n\n%% content\n    div class=container-fluid mt-1\n        div class=row\n            % if form:\n                div class={% block page_form_col %}col-2{% endblock %}\n                    ptig-form src={{base_path}}schbi/page_view/{{page.id}}/\n                        %% bi_page_form\n                            % inline_form:\n            %% bi_page_content\n                div class={% block page_chart_col %}{% if form %}col-9{% else %}col-10{% endif %}{% endblock %}\n                    % for chart in page.chart_set.all:\n                        div class={% block bi_page_item_class %}col{% endblock %}\n                            div class=bi_prj_{{chart.parent.parent.name}} bi_page_{{chart.parent.name}} bi_chart bi_chart_{{chart.name}} auto-frame ajax-region ajax-frame ajax-link,,,href={{base_path}}schbi/chart_view/{{chart.id}}/,,,target=refresh_frame\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "base_chart",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n% load static\n\n%% content\n    div class=ajax-region ajax-link,,,href={{base_path}}schbi/chart_view/{{chart.id}}/\n        div class=row m-1\n            div class=card p-1\n                % if form:\n                    div class=col\n                        ptig-form src={{base_path}}schbi/chart_view/{{chart.id}}/\n                            %% bi_chart_form\n                                % inline_form:\n                div class=col\n                    %% chart\n                        {{chart.name}}\n\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "Project",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    % with table_type='datatable':\n        {{ block.super }}\n\n%% scroll\n\n%% list_content_actions\n    % new_row \"New project\"\n\n%% id_extra\n    % row_actions:\n        .field_list/page_set,Pages,target=_parent,icon_name=fa fa-lg fa-level-up,url=+?fragment=page\n\n%% list_row_header\n    th..._(Name)\n    th..._(Refresh data)\n    th..._(Form)\n    th..._(View)\n    th..._(Template)\n\n%% list_row\n    td...{{ object.name }}\n    td\n        % if  object.refresh_data:\n            i class=fa fa-check\n    td\n        % if object.form:\n            i class=fa fa-check\n    td\n        % if object.view:\n            i class=fa fa-check\n    td\n        % if object.template:\n            i class=fa fa-check\n    \n%% list_row_actions\n    % row_actions:\n        .show_prj,Show prj,url={{base_path}}schbi/project_view/{{object.name}}/,target=_parent\n    % row_actions:\n        .edit\n        .field_edit/refresh_data,refresh data\n        .field_edit/form,form\n        .field_edit/view,view\n        .field_edit/template,template\n        .delete\n\n%% row_edit\n    % form:\n        .base_prj_name,name,description,parquet_files,rights_group,menu,menu_position,menu_icon,menu_icon_size\n        \n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "Page",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% all\n    % comment:\n        % with table_type='datatable' table_subtype='table_with_details' table_details_height=\"50vh\":\n            {{ block.super }}\n    % with table_type='datatable':\n        {{ block.super }}\n\n%% scroll\n\n%% list_content_actions\n    % new_row \"New page\"\n\n%% id_extra\n    % row_actions:\n        .field_list/chart_set,Charts\n\n%% list_row_header\n    th..._(Parent)\n    th..._(Name)\n    th..._(Title)\n    th..._(Form)\n    th..._(View)\n    th..._(Template)\n    \n%% list_row\n    td...{{ object.parent.name }}\n    td...{{ object.name }}\n    td...{{ object.title }}\n    td\n        % if object.form:\n            i class=fa fa-check\n    td\n        % if object.view:\n            i class=fa fa-check\n    td\n        % if object.template:\n            i class=fa fa-check\n\n%% list_row_actions\n    % row_actions:\n        .edit\n        .field_edit/form,form\n        .field_edit/view,view\n        .field_edit/template,template\n        .delete\n\n\n%% list_page_footer2\n    % row_details:\n        *Charts:schbi/table/Page/[[table_row_pk]]/chart_set/-/form/sublist/?x1=chart_set\n\n\n%% row_edit\n    % form:\n        .parent:!,name,title\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "Chart",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n%% all\n    % with table_type='datatable':\n        {{ block.super }}\n\n%% scroll\n\n%% list_content_actions\n    % new_row \"New chart\"\n\n%% list_row_header\n    th..._(Parent)\n    th..._(Name)\n    th..._(Title)\n    th..._(Form)\n    th..._(View)\n    th..._(Template)\n    \n\n%% list_row\n    td...{{ object.parent.name }}\n    td...{{ object.name }}\n    td...{{ object.title }}\n    td\n        % if object.form:\n            i class=fa fa-check\n    td\n        % if object.view:\n            i class=fa fa-check\n    td\n        % if object.template:\n            i class=fa fa-check\n    \n%% list_row_actions\n    % row_actions:\n        .edit\n        .field_edit/form,form\n        .field_edit/view,view\n        .field_edit/template,template\n        .delete\n\n%% row_edit\n    % form:\n        .parent:!,name,title\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "Projects",
+                        "url": "table/Project/-/form/list/",
+                        "url_type": "-",
+                        "perms": null,
+                        "icon": "png://mimetypes/x-office-drawing-template.png",
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                },
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "m",
+                        "name": "make_test_data.py",
+                        "content": "from django.core.management.base import BaseCommand, CommandError\n\nimport os\n\nimport datetime\n\nfrom django.conf import settings\n\nimport numpy as np\nimport pandas as pl\nimport duckdb\n\n\nclass Command(BaseCommand):\n    help = \"Prepare test data\"\n\n    def handle(self, *args, **options):\n        n = 1000000\n        data_path = os.path.join(settings.DATA_PATH, settings.PRJ_NAME)\n\n        start_time = datetime.datetime(1900, 1, 1)\n\n        df = pl.DataFrame(\n            {\n                \"date\": [start_time + datetime.timedelta(j) for j in range(0, n)],\n                \"y1\": np.random.rand(n),\n                \"y2\": np.random.rand(n),\n                \"y3\": 1.0 * np.random.rand(n),\n            }\n        )\n        duckdb.sql(\n            \"COPY (SELECT * FROM df) TO '%s' (FORMAT PARQUET);\"\n            % os.path.join(data_path, \"date_sample.parquet\")\n        )\n\n        df = pl.DataFrame(\n            {\n                \"year\": [1900 + j for j in range(0, 150)],\n                \"y1\": 100 * np.random.rand(150),\n                \"y2\": 100 * np.random.rand(150),\n            }\n        )\n        duckdb.sql(\n            \"COPY (SELECT * FROM df) TO '%s' (FORMAT PARQUET);\"\n            % os.path.join(data_path, \"year_sample.parquet\")\n        )\n\n        df = pl.DataFrame(\n            {\n                \"x\": 100 * np.random.rand(100000),\n                \"y\": 100 * np.random.rand(100000),\n            }\n        )\n        duckdb.sql(\n            \"COPY (SELECT * FROM df) TO '%s' (FORMAT PARQUET);\"\n            % os.path.join(data_path, \"int_sample.parquet\")\n        )\n",
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "R",
+                        "name": "refresh_bi_charts",
+                        "content": "with DefineWebComponent('refresh-bi-charts', True) as comp:    \n    def init(component):\n        pass\n\n    def refresh_bi_project(component, data):\n        prj_name = data\n        chart_list = Array.prototype.slice.call(\n            document.querySelectorAll(\"div.bi_\" + prj_name + \" div.active .bi_prj_\"+prj_name)\n        )\n        for item in chart_list:\n            window.refresh_ajax_frame(item)\n            console.log(\"REFRESH_BI_PROJECT\", item)\n\n    def refresh_bi_page(component, data):\n        page_name = data\n        chart_list = Array.prototype.slice.call(\n            document.querySelectorAll(\".bi_page_\"+page_name)\n        )\n        for item in chart_list:\n            window.refresh_ajax_frame(item)\n            console.log(\"REFRESH_BI_PAGE\", item)\n    \n    def refresh_bi_chart(component, data):\n        chart_name = data\n        chart_list = Array.prototype.slice.call(\n            document.querySelectorAll(\".bi_chart_\"+chart_name)\n        )\n        for item in chart_list:\n            window.refresh_ajax_frame(item)\n            console.log(\"REFRESH_BI_CHART\", item)\n    \n    event_handler = { 'refresh_bi_project': refresh_bi_project, 'refresh_bi_page': refresh_bi_page, 'refresh_bi_chart': refresh_bi_chart }\n                \n    comp.options[\"init\"] = init\n    comp.options[\"event_handler\"] = event_handler\n",
+                        "doc": null
+                    }
+                }
+            ]
+        }
+    ]
+}
