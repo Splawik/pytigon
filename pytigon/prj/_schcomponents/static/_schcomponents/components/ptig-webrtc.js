@@ -271,7 +271,7 @@ init_webrtc = function flx_init_webrtc (url, host, room, local, remote, tracebac
     return null;
 };
 
-stub1_context = (new DefineWebComponent(TAG, true, [BASE_PATH + "/adapter-latest.js"]));
+stub1_context = (new DefineWebComponent(TAG, true, []));
 comp = stub1_context.__enter__();
 try {
     comp.options["template"] = TEMPLATE;

@@ -119,5 +119,6 @@ Urls = (
         None,
         """png://apps/preferences-system-network-proxy.png""",
     ),
+    ("tree", _("Tree"), None, """png://places/folder-remote.png"""),
 )
 UserParam = {}

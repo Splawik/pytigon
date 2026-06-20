@@ -95,7 +95,7 @@ FILER_DEBUG = True
 EXPLORER_CONNECTIONS = {"Default": "default"}
 EXPLORER_DEFAULT_CONNECTION = "default"
 
-ACCOUNT_SIGNUP_FIELDS = ["username*", "email*", "password1*", "password2*"]
+ACCOUNT_EMAIL_REQUIRED = True
 
 # GRAPHENE["MIDDLEWARE"] = [
 #       "schserw.schmiddleware.schjwt.JWTUserMiddleware",
@@ -220,7 +220,7 @@ try:
 except:
     pass
 
-GEN_TIME = "2026-06-17 14:25:38"
+GEN_TIME = "2026-06-20 12:19:35"
 
 
 for key, value in os.environ.items():

@@ -53,4 +53,5 @@ om-perfect-scrollbar/css/perfect-scrollbar.css
 ./not_node_modules/select2-material.css
 ./not_node_modules/bootstrap5-editable/css/bootstrap-editable.css
 ./not_node_modules/fab/fab.css
+./not_node_modules/tree/tree.css
 select2-bootstrap-5-theme/dist/select2-bootstrap-5-theme.css

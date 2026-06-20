@@ -73,14 +73,12 @@ urlpatterns = [
         {},
     ),
     path(
-        "test_inline_content",
-        TemplateView.as_view(template_name="schcomponents_demo/testinlinecontent.html"),
-        {},
-    ),
-    path(
         "maplibre",
         TemplateView.as_view(template_name="schcomponents_demo/maplibre.html"),
         {},
+    ),
+    path(
+        "tree", TemplateView.as_view(template_name="schcomponents_demo/tree.html"), {}
     ),
 ]
 

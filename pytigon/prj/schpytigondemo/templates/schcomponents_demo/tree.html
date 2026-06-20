@@ -1,0 +1,35 @@
+{% extends "forms/form.html" %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block content %}
+        <ptig-tree width="50%">
+                <details open>
+                        <summary>
+                        📁 Główny folder 1
+                        </summary>
+                        <details>
+                                <summary>📁 Podfolder 1.1</summary>
+                                <div class="leaf">📄 Plik 1.1.1</div>
+                                <div class="leaf">
+                                📄 Plik 1.1.2
+                                </div>
+                        </details>
+                        <details open>
+                                <summary>📁 Podfolder 1.2</summary>
+                                <div class="leaf">📄 Plik 1.2.1</div>
+                                <div class="leaf">
+                                📄 Plik 1.2.2
+                                </div>
+                        </details>
+                        <div class="leaf">
+                        📄 Plik luzem w folderze 1
+                        </div>
+                </details>
+                <details>
+                        <summary>📁 Główny folder 2</summary>
+                        <div class="leaf">📄 Plik 2.1</div>
+                        <div class="leaf">📄 Plik 2.2</div>
+                </details>
+        </ptig-tree>
+{% endblock %}
+
