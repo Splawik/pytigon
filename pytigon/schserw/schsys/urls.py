@@ -1,5 +1,6 @@
 from base64 import b64decode
 from django.utils.translation import gettext_lazy as _
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from django.urls import path
 from django.contrib.auth import authenticate, login, logout
@@ -39,6 +40,11 @@ def sch_login(request, *argi, **argv):
     if not path:
         path = make_href("/")
 
+    # if "://" in path and not url_has_allowed_host_and_scheme(
+    #    path, allowed_hosts=["http://127.0.0.2"]
+    # ):
+    #    path = make_href("/")
+
     if is_in_dicts("username", (request.POST, request.GET)):
         username = get_from_dicts("username", (request.POST, request.GET))
         if is_in_dicts("password", (request.POST, request.GET)):
@@ -56,10 +62,7 @@ def sch_login(request, *argi, **argv):
             else:
                 user = None
 
-            if (
-                user is None
-                and login_methods == {"username", "email"}
-            ):
+            if user is None and login_methods == {"username", "email"}:
                 obj = get_user_model().objects.filter(email=username).first()
                 if obj:
                     username = obj.get_username()

@@ -4,9 +4,9 @@ Provides secure subprocess execution with input validation and sanitization.
 """
 
 import os
+import shutil
 import sys
 import subprocess
-import shlex
 from typing import List, Optional, Tuple, Union
 from pathlib import Path
 
@@ -15,117 +15,84 @@ class SafeSubprocess:
     """
     Secure subprocess execution with input validation.
 
-    Prevents command injection and ensures safe execution of external commands.
+    Validates that arguments contain no shell injection characters.
+    Executables are allowed if they resolve to a real file within:
+    - System PATH directories
+    - The Python virtual environment
+    - The PYTIGON_DATA/prg directory (user-compiled programs)
+    - The Python interpreter itself
     """
 
-    # Allowed executables (can be extended via configuration)
-    if False:
-        ALLOWED_EXECUTABLES = {
-            "python",
-            "python3",
-            "pip",
-            "pip3",
-            "manage.py",
-            "daphne",
-            "waitress",
-            "nim",
-            "nimble",
-            "zig",
-        }
-
-    # Dangerous shell metacharacters
     DANGEROUS_CHARS = set(";&|`$(){}[]<>!#~")
 
-    def __init__(self, allowed_executables: Optional[set] = None):
-        """
-        Initialize SafeSubprocess.
-
-        Args:
-            allowed_executables: Set of allowed executable names.
-        """
-        self.allowed_executables = allowed_executables
+    def __init__(self):
+        pass
 
     def validate_command(self, command: List[str]) -> List[str]:
-        """
-        Validate and sanitize command arguments.
-
-        Args:
-            command: List of command arguments
-
-        Returns:
-            Validated and sanitized command list
-
-        Raises:
-            SecurityError: If command contains dangerous characters or invalid executable
-        """
         from ..errors import SecurityError
 
         if not command:
             raise SecurityError("Empty command", code=20)
 
-        # Validate executable
         executable = command[0]
         if not self._is_executable_allowed(executable):
             raise SecurityError(f"Executable not allowed: {executable}", code=21)
 
-        # Validate each argument
         sanitized = []
         for i, arg in enumerate(command):
             if not isinstance(arg, str):
                 raise SecurityError(
                     f"Argument {i} must be a string, got {type(arg).__name__}", code=22
                 )
-
-            # Check for dangerous characters
             if self._contains_dangerous_chars(arg):
                 raise SecurityError(f"Argument {i} contains dangerous characters: {arg}", code=23)
-
             sanitized.append(arg)
 
         return sanitized
 
+    def _safe_directories(self):
+        dirs = set()
+
+        for path in os.environ.get("PATH", "").split(os.pathsep):
+            real = os.path.realpath(path) if os.path.exists(path) else None
+            if real:
+                dirs.add(real)
+
+        try:
+            from pytigon_lib.schtools.main_paths import get_main_paths
+            paths = get_main_paths()
+            prg = os.path.join(paths["DATA_PATH"], "prg")
+            if os.path.isdir(prg):
+                dirs.add(os.path.realpath(prg))
+        except Exception:
+            pass
+
+        venv = os.environ.get("VIRTUAL_ENV")
+        if venv and os.path.isdir(venv):
+            venv_bin = os.path.join(venv, "bin" if os.name != "nt" else "Scripts")
+            if os.path.isdir(venv_bin):
+                dirs.add(os.path.realpath(venv_bin))
+
+        return dirs
+
     def _is_executable_allowed(self, executable: str) -> bool:
-        """
-        Check if an executable is allowed.
-
-        Args:
-            executable: Executable name or path
-
-        Returns:
-            True if executable is allowed, False otherwise
-        """
-        # Extract just the executable name if it's a path
-        exe_name = Path(executable).name
-
-        # Check against allowed list
-        if self.allowed_executables is None or exe_name in self.allowed_executables:
-            return True
-
-        # Allow Python interpreter
         if executable in (sys.executable, "python", "python3"):
             return True
 
-        # Allow get_executable() result
-        try:
-            from pytigon_lib.schtools.tools import get_executable
+        if os.sep in executable or "/" in executable or "\\" in executable:
+            exe_path = os.path.realpath(executable)
+            if not os.path.isfile(exe_path):
+                return False
+        else:
+            exe_path = shutil.which(executable) if shutil else None
+            if not exe_path:
+                return False
+            exe_path = os.path.realpath(exe_path)
 
-            if executable == get_executable():
-                return True
-        except ImportError:
-            pass
-
-        return False
+        exe_dir = os.path.dirname(exe_path)
+        return exe_dir in self._safe_directories()
 
     def _contains_dangerous_chars(self, arg: str) -> bool:
-        """
-        Check if an argument contains dangerous shell characters.
-
-        Args:
-            arg: Argument to check
-
-        Returns:
-            True if argument contains dangerous characters, False otherwise
-        """
         return bool(self.DANGEROUS_CHARS & set(arg))
 
     def run(

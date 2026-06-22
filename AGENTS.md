@@ -77,7 +77,7 @@ The Django settings are split into modules:
 
 ## Code Style
 
-- Python 3.10+ compatible
+- Python 3.12+ compatible
 - Line length: 100 characters
 - Use ruff for linting and formatting
 - Docstrings in Google-style format

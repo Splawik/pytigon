@@ -42,7 +42,10 @@ class UserMutation(graphene.Mutation):
     def mutate(self, info, username, email, id="0"):
         idd = int(id)
         if idd > 0:
-            _user = get_user_model().objects.get(pk=idd)
+            try:
+                _user = get_user_model().objects.get(pk=idd)
+            except get_user_model().DoesNotExist:
+                _user = get_user_model()()
         else:
             _user = get_user_model()()
         _user.username = username
@@ -95,7 +98,6 @@ for app in settings.INSTALLED_APPS:
         if hasattr(m, "extend_mutation"):
             _Mutation = m.extend_mutation(_Mutation)
     except ModuleNotFoundError:
-        # print(f"Module {module_name} - problem with graphene")
         pass
 
 

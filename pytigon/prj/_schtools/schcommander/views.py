@@ -42,7 +42,6 @@ from pytigon_lib.schtable.vfstable import (
 from schtools.models import Parameter
 import django.contrib.auth
 
-
 PFORM = form_with_perms("schcommander")
 
 

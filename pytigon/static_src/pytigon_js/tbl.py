@@ -515,12 +515,12 @@ def table_loadeddata(event):
                                     datatable.bootstrapTable(
                                         "refresh", {"silent": True}
                                     )
-                        except:
+                        except Exception:
                             datatable.bootstrapTable("refresh", {"silent": True})
 
                     ajax_get(url, _update)
                     return
-            except:
+            except Exception:
                 pass
 
             jQuery(event.target).find("table[name=tabsort].datatable").bootstrapTable(

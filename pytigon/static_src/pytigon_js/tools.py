@@ -284,7 +284,7 @@ def ajax_get(url, complete, callback_on_error=None, process_req=None):
     try:
         req.responseType = "blob"
         process_blob = True
-    except:
+    except Exception:
         pass
 
     def _onload():
@@ -420,7 +420,7 @@ def _req_post(
     try:
         req.responseType = "blob"
         process_blob = True
-    except:
+    except Exception:
         pass
 
     def _onload(event):
@@ -523,7 +523,7 @@ def ajax_json(url, data, complete, callback_on_error, process_req=None):
     def _complete(data_in):
         try:
             _data = JSON.parse(data_in)
-        except:
+        except Exception:
             _data = data_in
         complete(_data)
 

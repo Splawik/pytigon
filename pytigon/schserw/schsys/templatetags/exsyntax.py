@@ -1244,7 +1244,7 @@ def module_link(context, href):
                     .replace("<script", "<_script_")
                     .replace("</script>", "</_script_>")
                 )
-        except:
+        except Exception:
             print("file: ", href, "does'nt exists")
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
@@ -1275,7 +1275,7 @@ def jscript_link(context, href):
                     .replace("<script", "<_script_")
                     .replace("</script>", "</_script_>")
                 )
-        except:
+        except Exception:
             print("file: ", href, "does'nt exists")
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
@@ -1306,7 +1306,7 @@ def css_link(context, href):
                     .replace("<script", "<_script_")
                     .replace("</script>", "</_script_>")
                 )
-        except:
+        except Exception:
             print("file: ", href, "does'nt exists")
         return standard_dict(context, {"href": href, "content": mark_safe(content)})
     else:
@@ -1382,7 +1382,7 @@ def component(context, href):
                     .replace("<script", "<_script_")
                     .replace("</script>", "</_script_>")
                 )
-        except:
+        except Exception:
             print("file: ", href, "does'nt exists")
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
@@ -1440,8 +1440,11 @@ def include_wiki(context, wiki_str, from_wiki_page, path=None, only_header=True)
     ret = ""
     if "request" in context:
         username = context["request"].user.get_username()
-    subpage = from_wiki_page.get_page_for_wiki(wiki_str, username)
-    if subpage and subpage.content:
+        subpage = from_wiki_page.get_page_for_wiki(wiki_str, username)
+    else:
+        subpage = None
+        username = None
+    if username and subpage and subpage.content:
         if only_header:
             content = subpage.content.split("<div class='read_more'")[0]
         else:
@@ -1455,7 +1458,11 @@ def include_wiki(context, wiki_str, from_wiki_page, path=None, only_header=True)
             + "</div>\n"
         )
     else:
-        ret = wikify("[[" + wiki_str + "]]", path, from_wiki_page.subject)
+        ret = wikify(
+            "[[" + wiki_str + "]]",
+            path,
+            from_wiki_page.subject if from_wiki_page else None,
+        )
     return mark_safe(ret)
 
 
@@ -1811,13 +1818,13 @@ class HtmlWidgetNode(template.Node):
             def_param = def_param + "width='%s' " % context["width"]
             try:
                 context["width"] = int(context["width"]) - 10
-            except:
+            except Exception:
                 pass
         if "height" in context:
             def_param = def_param + "height='%s' " % context["height"]
             try:
                 context["height"] = int(context["height"]) - 10
-            except:
+            except Exception:
                 pass
         context["def_param"] = def_param
 
@@ -1902,7 +1909,7 @@ def _to_b64(href):
         with open(content_path, "rb") as f:
             content = f.read()
             bcontent = b64encode(content).decode("utf-8")
-    except:
+    except Exception:
         print("file: ", content_path, "does'nt exists")
     return bcontent
 

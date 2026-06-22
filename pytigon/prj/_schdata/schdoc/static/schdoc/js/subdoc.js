@@ -52,3 +52,4 @@ subdoc_ondragover = function flx_subdoc_ondragover (ev) {
 };
 
 window.subdoc_ondragover = subdoc_ondragover;
+export {subdoc_dragstart, subdoc_drop, subdoc_ondragenter, subdoc_ondragleave, subdoc_ondragover};

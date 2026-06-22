@@ -59,7 +59,7 @@ TEMPLATES = [
                 "pytigon_lib.schdjangoext.python_style_template_loader.FSLoader",
             ],
             "builtins": ["pytigon.schserw.schsys.templatetags.defexfiltry"],
-            "debug": DEBUG,
+            "debug": DEBUG and not PRODUCTION_VERSION,
         },
     }
 ]
@@ -170,9 +170,7 @@ if ALLAUTH:
     INSTALLED_APPS.append("allauth")
     INSTALLED_APPS.append("allauth.account")
     INSTALLED_APPS.append("allauth.socialaccount")
-    AUTHENTICATION_BACKENDS.append(
-        "allauth.account.auth_backends.AuthenticationBackend"
-    )
+    AUTHENTICATION_BACKENDS.append("allauth.account.auth_backends.AuthenticationBackend")
     MIDDLEWARE.append("allauth.account.middleware.AccountMiddleware")
 
     import allauth
@@ -198,13 +196,39 @@ else:
 if PWA:
     INSTALLED_APPS.append("pwa_webpush")
     if DEBUG:
+        pub_key = ENV("VAPID_PUBLIC_KEY", default="")
+        prv_key = ENV("VAPID_PRIVATE_KEY", default="")
+        v_email = ENV("VAPID_ADMIN_EMAIL", default="")
+        if not pub_key or not prv_key:
+            try:
+                import base64
+                from cryptography.hazmat.primitives.asymmetric import ec
+
+                private_key = ec.generate_private_key(ec.SECP256R1())
+                public_key = private_key.public_key()
+                pub_numbers = public_key.public_numbers()
+                prv_numbers = private_key.private_numbers()
+                raw_pub = (
+                    b"\x04"
+                    + pub_numbers.x.to_bytes(32, "big")
+                    + pub_numbers.y.to_bytes(32, "big")
+                )
+                pub_key = base64.urlsafe_b64encode(raw_pub).rstrip(b"=").decode()
+                prv_key = base64.urlsafe_b64encode(
+                    prv_numbers.private_value.to_bytes(32, "big")
+                ).rstrip(b"=").decode()
+            except ImportError:
+                import warnings
+
+                warnings.warn(
+                    "PWA is enabled but VAPID_PUBLIC_KEY and VAPID_PRIVATE_KEY "
+                    "are not set. Web Push will not work. Install cryptography "
+                    "or set the environment variables."
+                )
         WEBPUSH_SETTINGS = {
-            "VAPID_PUBLIC_KEY": (
-                "BC50NYho7GMYXtR2tmVyMZyWWRsQRkyX0cuNU-eLcJ8Bmkijj4rbSbw8Q-oH0-"
-                "fxuggofrcdxTyehu08IX4x8CM"
-            ),
-            "VAPID_PRIVATE_KEY": "ZapnVc3zzzhrM3TPFa_RKFrJ_YymFybgS8F_ZlxAf2I",
-            "VAPID_ADMIN_EMAIL": "auto@pytigon.eu",
+            "VAPID_PUBLIC_KEY": pub_key,
+            "VAPID_PRIVATE_KEY": prv_key,
+            "VAPID_ADMIN_EMAIL": v_email or "auto@pytigon.eu",
         }
 
 if PLATFORM_TYPE != "webserver":

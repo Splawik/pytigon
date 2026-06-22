@@ -39,7 +39,6 @@ from pytigon_lib.schfs.vfstools import get_temp_filename
 import openpyxl
 import csv
 
-
 PFORM = form_with_perms("schtools")
 
 

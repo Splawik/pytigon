@@ -189,8 +189,11 @@ def filter_split(obj, sep=";"):
 def _eval(value):
     """Evaluates the value as a Python expression."""
     try:
-        return eval(value)
-    except (SyntaxError, NameError):
+        import ast
+        return ast.literal_eval(value)
+    except (SyntaxError, ValueError):
+        return value
+    except Exception:
         return ""
 
 
@@ -473,7 +476,7 @@ def isoformat(value):
                 return iso[:10]
             else:
                 return iso
-        except:
+        except Exception:
             return value
     else:
         return ""
@@ -497,7 +500,7 @@ def sysisoformat(value):
                 value2 = value
                 iso = value2.isoformat()[:19].replace(" ", "T")
             return iso
-        except:
+        except Exception:
             return value.replace(" ", "T")
     else:
         return ""
@@ -1029,7 +1032,7 @@ def user_can_change_password(user):
     """Checks if the user can change their password."""
     try:
         from allauth.account.models import EmailAddress
-    except:
+    except Exception:
         return True
 
     object_list = EmailAddress.objects.filter(user=user)

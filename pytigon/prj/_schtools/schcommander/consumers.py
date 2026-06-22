@@ -40,7 +40,7 @@ def read_and_forward_pty_output(consumer):
         time.sleep(0.01)
         if consumer.fd:
             timeout_sec = 1
-            (data_ready, _, _) = select.select(
+            data_ready, _, _ = select.select(
                 [
                     consumer.fd,
                 ],
@@ -87,7 +87,7 @@ class ShellConsumer(WebsocketConsumer):
         self.fd = None
         self.child_pid = None
         self.accept()
-        (child_pid, fd) = pty.fork()
+        child_pid, fd = pty.fork()
         if child_pid == 0:
             env2 = os.environ.copy()
             env2["TERM"] = "xterm"

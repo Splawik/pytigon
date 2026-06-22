@@ -10,7 +10,6 @@ from pytigon.commands.handlers import (
     RunCommandHandler,
     RunServerCommandHandler,
     PythonCommandHandler,
-    PipCommandHandler,
     InitCommandHandler,
     ToolCommandHandler,
     DefaultCommandHandler,
@@ -148,12 +147,11 @@ class TestCommandDispatcher:
         """Test that default handlers are registered on creation."""
         dispatcher = CommandDispatcher()
         handlers = dispatcher.registry.get_all_handlers()
-        assert len(handlers) >= 8
+        assert len(handlers) >= 7
         assert "manage" in dispatcher.registry.get_command_names()
         assert "run" in dispatcher.registry.get_command_names()
         assert "runserver" in dispatcher.registry.get_command_names()
         assert "python" in dispatcher.registry.get_command_names()
-        assert "pip" in dispatcher.registry.get_command_names()
         assert "init" in dispatcher.registry.get_command_names()
         assert "tool" in dispatcher.registry.get_command_names()
         assert "default" in dispatcher.registry.get_command_names()
@@ -263,17 +261,6 @@ class TestPythonCommandHandler:
 
     def test_rejects_non_python_commands(self):
         handler = PythonCommandHandler()
-        assert not handler.can_handle(["pytigon", "manage_test"])
-
-
-class TestPipCommandHandler:
-    def test_can_handle_pip_commands(self):
-        handler = PipCommandHandler()
-        assert handler.can_handle(["pytigon", "pip_install"])
-        assert handler.can_handle(["pytigon", "pip_myapp"])
-
-    def test_rejects_non_pip_commands(self):
-        handler = PipCommandHandler()
         assert not handler.can_handle(["pytigon", "manage_test"])
 
 

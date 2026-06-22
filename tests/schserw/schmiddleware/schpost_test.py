@@ -1,7 +1,6 @@
 from pytigon.schserw.schmiddleware.schpost import (
     ViewRequests,
     ViewPost,
-    BeautyHtml,
     view_post,
 )
 
@@ -75,35 +74,6 @@ def test_view_post_class_get():
     view = ViewPost(lambda req: HttpResponse("OK"))
     response = view(request)
     assert response.status_code == 200
-
-
-def test_beauty_html_minifies_response():
-    """Test BeautyHtml minifies HTML by removing blank lines."""
-    request = HttpRequest()
-    response = HttpResponse("<html>\n\n<body>\n\n<p>Hello</p>\n\n</body>\n\n</html>")
-
-    beauty = BeautyHtml(lambda req: response)
-    result = beauty.process_response(request, response)
-
-    assert result is response
-    assert isinstance(result.content, bytes)
-    # Blank lines should be removed
-    content = result.content.decode("utf-8")
-    assert "\n\n" not in content
-    assert "<html>" in content
-
-
-def test_beauty_html_streaming_response():
-    """Test BeautyHtml passes through streaming responses unchanged."""
-    request = HttpRequest()
-    response = HttpResponse("content")
-    response.streaming = True
-
-    beauty = BeautyHtml(lambda req: response)
-    result = beauty.process_response(request, response)
-
-    assert result is response
-    assert result.streaming is True
 
 
 if __name__ == "__main__":

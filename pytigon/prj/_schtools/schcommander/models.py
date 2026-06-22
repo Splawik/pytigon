@@ -15,7 +15,6 @@ import os, os.path
 import sys
 from pytigon_lib.schhtml.htmltools import superstrip
 
-
 file_manager_sort_choices = [
     ("N", "Name"),
     ("S", "Size"),

@@ -297,7 +297,7 @@ def sync_and_run(tbl, fun):
 
             try:
                 request.timeout = 2000
-            except:
+            except Exception:
                 pass
             request.ontimeout = _on_timeout
 

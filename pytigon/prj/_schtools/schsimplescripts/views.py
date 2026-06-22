@@ -47,16 +47,11 @@ SCRIPT_TEMPLATE = """
 
 """
 
-SCRIPT_TEMPLATE1 = (
-    SCRIPT_TEMPLATE
-    + """
+SCRIPT_TEMPLATE1 = SCRIPT_TEMPLATE + """
 %s
 """
-)
 
-SCRIPT_TEMPLATE2 = (
-    SCRIPT_TEMPLATE
-    + """
+SCRIPT_TEMPLATE2 = SCRIPT_TEMPLATE + """
 {%% block content %%}
 <div class="ajax-frame"></div>
 <div class="ajax-region">
@@ -66,7 +61,6 @@ SCRIPT_TEMPLATE2 = (
 
 {%% endblock %%}
 """
-)
 
 
 def run(request, pk):

@@ -1,12 +1,12 @@
+import logging
 import os
 import sys
 
 from django.conf import settings
 
-try:
-    from django.utils.csp import CSP
-except ImportError:
-    CSP = None
+logger = logging.getLogger(__name__)
+
+from .csp import SECURE_CSP
 
 from .base import (
     ENV,
@@ -170,7 +170,7 @@ ATOMIC_REQUESTS = True
 
 INTERNAL_IPS = ("127.0.0.1", "127.0.0.2", "127.0.0.3", "localhost")
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["*"] if DEBUG else ENV("ALLOWED_HOSTS", default="").split(",")
 
 PYTHON_INTERPRETER = sys.executable
 PYTHON_CONSOLE = sys.executable
@@ -245,7 +245,7 @@ def DEFAULT_FILE_STORAGE_FS():
         _m.mount("site_media", OSFS_EXT(settings.MEDIA_ROOT))
         _m.mount("site_media_protected", OSFS_EXT(settings.MEDIA_ROOT_PROTECTED))
     except Exception:
-        print("mount error: site_media paths not available")
+        logger.exception("mount error: site_media paths not available")
 
     try:
         _m.mount("doc", OSFS_EXT(settings.DOC_PATH))
@@ -269,7 +269,7 @@ def DEFAULT_FILE_STORAGE_FS():
             OSFS_EXT(os.path.join(settings.UPLOAD_PATH, "filer_private_thumbnails")),
         )
     except Exception:
-        print("mount error: doc/upload paths not available")
+        logger.exception("mount error: doc/upload paths not available")
 
     if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")):
         if platform_name() == "Windows":
@@ -388,100 +388,3 @@ PROMETHEUS_ENABLED = False
 if ENV("PROMETHEUS_ENABLED"):
     PROMETHEUS_ENABLED = True
     INSTALLED_APPS.append("django_prometheus")
-
-if False:
-    if CSP is not None:
-        SECURE_CSP = {
-            "default-src": [CSP.SELF],
-            "script-src": [
-                CSP.SELF,
-                CSP.NONCE,
-                "blob:",
-                "https://*.jsdelivr.net",
-                "http://*.jsdelivr.net",
-                "https://*.googleapis.com",
-                "http://*.googleapis.com",
-            ],
-            "style-src": [
-                CSP.SELF,
-                CSP.UNSAFE_INLINE,
-                "https://fonts.googleapis.com",
-            ],
-            "font-src": [CSP.SELF, "https://fonts.gstatic.com", "data:"],
-            "img-src": [
-                CSP.SELF,
-                "data:",
-                "http://*.tile.osm.org/",
-                "https://*.tile.osm.org/",
-                "http://*.bossanova.uk/",
-                "https://*.bossanova.uk/",
-                "http://*.tile.openstreetmap.org",
-                "https://*.tile.openstreetmap.org",
-            ],
-            "worker-src": [CSP.SELF, "blob:"],
-            "connect-src": [
-                CSP.SELF,
-                "https://*.tile.openstreetmap.org",
-                "http://*.tile.openstreetmap.org",
-            ],
-        }
-    else:
-        SECURE_CSP = {}
-
-if CSP is not None:
-    SECURE_CSP = {
-        "default-src": [CSP.SELF],
-        "script-src": [
-            CSP.SELF,
-            CSP.NONCE,
-            "blob:",
-            "https://*.jsdelivr.net",
-            "http://*.jsdelivr.net",
-            "https://*.googleapis.com",
-            "http://*.googleapis.com",
-            "'sha256-HHh/PGb5Jp8ck+QB/v7zeWzuHf3vYssM0CBPvYgEHR4='",
-        ],
-        "style-src": [
-            CSP.SELF,
-            CSP.UNSAFE_INLINE,
-            "https://*.jsdelivr.net",
-            "http://*.jsdelivr.net",
-            "http://googleapis.com",
-            "http://*.googleapis.com",
-            "https://googleapis.com",
-            "https://*.googleapis.com",
-        ],
-        "font-src": [
-            CSP.SELF,
-            "http://gstatic.com",
-            "http://*.gstatic.com",
-            "https://gstatic.com",
-            "https://*.gstatic.com",
-            "data:",  # Przekazane jako zwykły ciąg znaków
-        ],
-        "img-src": [
-            CSP.SELF,
-            "data:",  # Przekazane jako zwykły ciąg znaków
-            "blob:",  # Przekazane jako zwykły ciąg znaków (wymagane przez MapLibre)
-            "http://*.tile.osm.org",
-            "https://*.tile.osm.org",
-            "http://*.bossanova.uk",
-            "https://*.bossanova.uk",
-            "http://*.tile.openstreetmap.org",
-            "https://*.tile.openstreetmap.org",
-        ],
-        "worker-src": [
-            CSP.SELF,
-            "blob:",  # Przekazane jako zwykły ciąg znaków
-        ],
-        "connect-src": [
-            CSP.SELF,
-            "https://cdn.jsdelivr.net/",
-            "https://tile.openstreetmap.org",
-            "http://tile.openstreetmap.org",
-            "https://*.tile.openstreetmap.org",
-            "http://*.tile.openstreetmap.org",
-        ],
-    }
-else:
-    SECURE_CSP = {}

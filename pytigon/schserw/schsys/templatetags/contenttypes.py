@@ -4,7 +4,7 @@ from django import template
 
 try:
     from django.contrib.contenttypes.models import ContentType
-except:
+except Exception:
     ContentType = None
 from django.core.exceptions import ObjectDoesNotExist
 

@@ -74,8 +74,8 @@ DATABASES = {}
 ADMINS = []
 MANAGERS = ADMINS
 
-TIME_ZONE = "Europe/Warsaw"
-LANGUAGE_CODE = "pl"
+TIME_ZONE = ENV("TIME_ZONE", default="Europe/Warsaw")
+LANGUAGE_CODE = ENV("LANGUAGE_CODE", default="pl")
 USE_I18N = True
 SITE_ID = 1
 LANGUAGES = [
@@ -88,9 +88,7 @@ TEST_RUNNER = "django.test.runner.DiscoverRunner"
 if DEBUG:
     EXECUTE_DB_CODE = "import"
 else:
-    EXECUTE_DB_CODE = (
-        "exec_and_cache"
-    )
+    EXECUTE_DB_CODE = "exec_and_cache"
 EXECUTE_DB_CODE_CACHE_TIMEOUT = 900
 
 BASE_URL = "http://127.0.0.1:81"

@@ -100,13 +100,17 @@ if settings.GRAPHQL:
         [
             path(
                 "graphql/",
-                csrf_exempt(OAuth2ProtectedGraph.as_view(graphiql=True, schema=schema)),
+                                csrf_exempt(
+                    OAuth2ProtectedGraph.as_view(
+                        graphiql=settings.DEBUG, schema=schema
+                    )
+                ),
             ),
             path(
                 "graphql_public/",
                 csrf_exempt(
                     PytigonGraphQLViewPublic.as_view(
-                        graphiql=True, schema=public_schema
+                        graphiql=settings.DEBUG, schema=public_schema
                     )
                 ),
             ),
@@ -222,8 +226,9 @@ def _serve_media(request, path, document_root):
         Http404: If path is invalid, a directory, or the file does not exist.
     """
     path = posixpath.normpath(path).lstrip("/")
-    fullpath = os.path.normpath(os.path.join(document_root, path))
-    if not fullpath.startswith(os.path.normpath(document_root)):
+    root = os.path.realpath(document_root) if os.path.exists(document_root) else os.path.normpath(document_root)
+    fullpath = os.path.normpath(os.path.join(root, path))
+    if not fullpath.startswith(root):
         raise Http404("Path traversal detected")
     if os.path.isdir(fullpath):
         raise Http404("Directory indexes are not allowed here.")

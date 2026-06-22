@@ -282,7 +282,7 @@ try {
         traceback = component.root.querySelector(".webrtc_traceback");
         streaming = component.root.querySelector("webrtc_streaming");
         url = window.location;
-        src = ((url.protocol + "//") + url.host) + component.getAttribute("src");
+        src = component.getAttribute("src");
         init_webrtc(src, component.getAttribute("host"), component.getAttribute("roomId"), local, remote, traceback, streaming);
         return null;
     };

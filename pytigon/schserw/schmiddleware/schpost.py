@@ -2,7 +2,6 @@
 
 Provides middleware classes for:
 - Logging POST request data (ViewPost)
-- Minifying HTML responses (BeautyHtml)
 """
 
 import logging
@@ -66,36 +65,3 @@ class ViewPost(MiddlewareMixin):
                 logger.debug("===============================================")
         except Exception:
             logger.warning("Failed to log POST data", exc_info=True)
-
-
-class BeautyHtml(MiddlewareMixin):
-    """Middleware that minifies HTML responses by removing blank lines."""
-
-    def process_response(self, request, response):
-        """Remove blank lines from non-streaming responses.
-
-        Args:
-            request: The HTTP request object.
-            response: The HTTP response object.
-
-        Returns:
-            HttpResponse: The modified response with blank lines removed.
-        """
-        if response.streaming:
-            return response
-
-        try:
-            if isinstance(response.content, str):
-                response.content = "\n".join(
-                    line for line in response.content.split("\n") if line.strip()
-                )
-            elif isinstance(response.content, bytes):
-                response.content = "\n".join(
-                    line
-                    for line in response.content.decode("utf-8").split("\n")
-                    if line.strip()
-                )
-        except Exception:
-            logger.warning("Failed to minify HTML response", exc_info=True)
-
-        return response

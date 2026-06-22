@@ -1,5 +1,6 @@
 """Module contains standard context processors"""
 
+import functools
 import uuid
 import time
 from urllib.parse import urlparse
@@ -14,7 +15,7 @@ from django.urls import get_script_prefix
 try:
     from django.contrib.auth.models import Permission
     from django.contrib.auth.context_processors import PermWrapper
-except:
+except Exception:
     Permission = None
     PermWrapper = None
 
@@ -271,6 +272,7 @@ class AppManager:
                 return app[0]
         return ""
 
+    @functools.lru_cache(maxsize=32)
     def _get_apps(self, prj=None):
         ret = []
 
@@ -314,7 +316,7 @@ class AppManager:
                     module_title = module2.ModuleTitle
                     try:
                         module_name = module2.ModuleName
-                    except:
+                    except Exception:
                         module_name = module_title
                     title = module2.Title
                     perms = module2.Perms
@@ -334,7 +336,7 @@ class AppManager:
                     app_info.sys_module_name = elementy[0]
                     app_info.user_param = user_param
                     ret.append(app_info)
-            except:
+            except Exception:
                 pass
         return ret
 
@@ -496,7 +498,7 @@ class AppManager:
                 try:
                     adapter.get_provider(None, key)
                     ret.append((key, value.name, value))
-                except:
+                except Exception:
                     print(sys.exc_info()[0])
                     print(traceback.print_exc())
         return ret
@@ -811,7 +813,6 @@ def sch_standard(request):
     if hasattr(request, "session") and "client_param" in request.session:
         ret.update(request.session["client_param"])
 
-    ret["app_manager"] = AppManager(request)
     ret["settings"] = settings
 
     if settings.DEBUG:

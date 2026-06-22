@@ -1,0 +1,5 @@
+Cannot load image from: /site_media/app.png
+19:32:44: Debug: ScreenToClient cannot work when toplevel window is not shown
+19:32:44: Debug: ScreenToClient cannot work when toplevel window is not shown
+
+(ptig:116102): Gtk-CRITICAL **: 19:32:48.593: gtk_widget_set_size_request: assertion 'height >= -1' failed

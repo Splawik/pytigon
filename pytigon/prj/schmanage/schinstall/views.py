@@ -38,7 +38,6 @@ from pytigon_lib.schtools.install import Ptig
 import pytigon.schserw.settings
 from pytigon_lib.schtools.process import py_run
 
-
 PFORM = form_with_perms("schinstall")
 
 

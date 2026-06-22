@@ -269,7 +269,10 @@ def treedialog(request, app, tab, id, action):
         obj = None
         parent_pk = -1
         if int(id) >= 0:
-            obj = model.objects.get(id=id)
+            try:
+                obj = model.objects.get(id=id)
+            except model.DoesNotExist:
+                obj = None
             if obj and obj.parent:
                 id2 = obj.parent.id
                 if id2 and id2 > 0:
@@ -321,7 +324,10 @@ def tabdialog(request, app, tab, id, action):
         model = import_model(app, tab)
         obj = None
         if int(id) >= 0:
-            obj = model.objects.get(id=id)
+            try:
+                obj = model.objects.get(id=id)
+            except model.DoesNotExist:
+                obj = None
         c = {
             "value": value,
             "app": app,
@@ -352,13 +358,17 @@ def plugin_template(request, template_name):
     """
     global APP
     if not APP:
-        import wx
+        try:
+            import wx
 
-        APP = wx.GetApp()
+            APP = wx.GetApp()
+        except ModuleNotFoundError:
+            APP = None
 
-    c = {"app": APP}
+    c = {"app": APP} if APP else {}
     for key, value in request.POST.items():
-        c[key] = value
+        if key not in ("settings", "request", "user", "csrf_token", "app"):
+            c[key] = value
     return render_to_response(template_name, context=c, request=request)
 
 

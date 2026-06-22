@@ -103,7 +103,7 @@ class Command(BaseCommand):
 
             try:
                 buf = r.str()
-            except:
+            except Exception:
                 return
 
             d = pq(buf)
@@ -140,7 +140,7 @@ class Command(BaseCommand):
             for url in urls:
                 try:
                     parse_url(base_url, url)
-                except:
+                except Exception:
                     pass
 
         parse_url(BASE_URL, "/")
@@ -170,7 +170,7 @@ class Command(BaseCommand):
                                     if line.strip().startswith("BASE_PATH"):
                                         try:
                                             bp = line.split('"')[1]
-                                        except:
+                                        except Exception:
                                             pass
                                     else:
                                         try:
@@ -180,13 +180,13 @@ class Command(BaseCommand):
                                                 if x[i] != "|":
                                                     to_scan.append("/" + bp + x[i])
                                                 i += 2
-                                        except:
+                                        except Exception:
                                             pass
 
         for s in to_scan:
             try:
                 parse_url(BASE_URL, s)
-            except:
+            except Exception:
                 pass
 
         with open(os.path.join(output_path, "index.html"), "rt") as f:

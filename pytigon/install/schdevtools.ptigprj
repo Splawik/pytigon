@@ -5628,6 +5628,15 @@
                     }
                 },
                 {
+                    "model": "SChFile",
+                    "attributes": {
+                        "type": "m",
+                        "name": "after_install.py",
+                        "content": "import sys\nimport os.path\nfrom pathlib import Path\nimport shutil\n\n\nfrom django.core.management.base import BaseCommand\nfrom pytigon_lib.schtools.main_paths import get_main_paths\nfrom pytigon_lib.schfs.download import download_and_process_file\n\nFILES_AUBE = [\n    { \n        \"os\": \"Linux\",\n        \"url\": \"https://github.com/jdx/aube/releases/download/v1.22.0/aube-v1.22.0-x86_64-unknown-linux-musl.tar.gz\",\n        \"path\": \"\",\n        \"unpack\": \"tgz\"\n    },\n    { \n        \"os\": \"Windows\",\n        \"url\": \"https://github.com/jdx/aube/releases/download/v1.22.0/aube-v1.22.0-x86_64-pc-windows-msvc.zip\",\n        \"path\": \"\",\n        \"unpack\": \"zip\"\n    }        \n]\n\nFILES_ESBUILD = [\n    { \n        \"os\": \"Linux\",\n        \"url\": \"https://registry.npmjs.org/@esbuild/linux-x64/-/linux-x64-0.28.1.tgz\",\n        \"path\": \"\",\n        \"unpack\": \"tgz\",\n    },\n    { \n        \"os\": \"Windows\",\n        \"url\": \"https://registry.npmjs.org/@esbuild/win32-x64/-/win32-x64-0.28.1.tgz\",\n        \"path\": \"\",\n        \"unpack\": \"tgz\",\n    }        \n]\n\n\nclass Command(BaseCommand):\n    help = \"Install additional tools\"\n\n    def handle(self, *args, **options):\n        paths = get_main_paths(\"schdevtools\")\n        data_path = paths[\"DATA_PATH\"]\n        prg_path = os.path.join(data_path, \"prg\")\n        FILES_AUBE[0][\"path\"] = prg_path\n        FILES_AUBE[1][\"path\"] = prg_path\n        FILES_ESBUILD[0][\"path\"] = prg_path\n        FILES_ESBUILD[1][\"path\"] = prg_path\n        download_and_process_file(FILES_AUBE)\n        download_and_process_file(FILES_ESBUILD)\n        source = Path(os.path.join(prg_path, \"package\", \"bin\"))\n        dest = Path(prg_path)\n        for f in source.glob(\"*\"):\n            shutil.move(f, dest)\n        shutil.rmtree(os.path.join(prg_path, \"package\"))\n",
+                        "doc": null
+                    }
+                },
+                {
                     "model": "SChChannelConsumer",
                     "attributes": {
                         "name": "Clock",

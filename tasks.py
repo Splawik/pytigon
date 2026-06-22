@@ -14,6 +14,7 @@ Usage:
 
 import os
 import sys
+from contextlib import chdir
 from pathlib import Path
 from shutil import copyfile
 
@@ -58,29 +59,28 @@ def build_js(ctx):
         "pytigon.py",
     ]
 
-    os.chdir(JS_SRC)
+    with chdir(JS_SRC):
+        with open("py_runtime.js", "wt") as fout:
+            fout.write(pscript.get_full_std_lib(indent=0))
 
-    with open("py_runtime.js", "wt") as fout:
-        fout.write(pscript.get_full_std_lib(indent=0))
+        with open("py_runtime.min.js", "wt") as fout:
+            fout.write(jsmin(pscript.get_full_std_lib(indent=0)))
 
-    with open("py_runtime.min.js", "wt") as fout:
-        fout.write(jsmin(pscript.get_full_std_lib(indent=0)))
+        with open("pytigon.js", "wt") as fout:
+            for file in files:
+                with open(file, "rt") as fin:
+                    error, js = compile(prepare_python_code(fin.read()))
+                    if error:
+                        print(f"  ERROR in {file}: {js}")
+                    else:
+                        fout.write(js)
+                        fout.write("\n\n")
 
-    with open("pytigon.js", "wt") as fout:
-        for file in files:
-            with open(file, "rt") as fin:
-                error, js = compile(prepare_python_code(fin.read()))
-                if error:
-                    print(f"  ERROR in {file}: {js}")
-                else:
-                    fout.write(js)
-                    fout.write("\n\n")
+        _remove_duplicate_exports(Path("pytigon.js"))
 
-    _remove_duplicate_exports(Path("pytigon.js"))
-
-    with open("pytigon.js", "rt") as fin:
-        with open("pytigon.min.js", "wt") as fout:
-            fout.write(jsmin(fin.read()))
+        with open("pytigon.js", "rt") as fin:
+            with open("pytigon.min.js", "wt") as fout:
+                fout.write(jsmin(fin.read()))
 
     compiled = ["pytigon.js", "py_runtime.js", "pytigon.min.js", "py_runtime.min.js"]
     dst_dir = STATIC / "pytigon_js"
@@ -91,7 +91,6 @@ def build_js(ctx):
         copyfile(src, dst)
         print(f"  {src.relative_to(ROOT)} => {dst.relative_to(ROOT)}")
 
-    os.chdir(ROOT)
     print("JS build complete.")
 
 

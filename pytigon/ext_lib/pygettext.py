@@ -242,8 +242,9 @@ def is_literal_string(s):
 
 
 def safe_eval(s):
-    # unwrap quotes, safely
-    return eval(s, {"__builtins__": {}}, {})
+    # unwrap quotes, safely using ast.literal_eval
+    import ast
+    return ast.literal_eval(s)
 
 
 def normalize(s, encoding):
