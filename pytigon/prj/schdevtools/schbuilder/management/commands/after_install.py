@@ -52,8 +52,12 @@ class Command(BaseCommand):
         FILES_ESBUILD[1]["path"] = prg_path
         download_and_process_file(FILES_AUBE)
         download_and_process_file(FILES_ESBUILD)
-        source = Path(os.path.join(prg_path, "package", "bin"))
         dest = Path(prg_path)
+        source = Path(os.path.join(prg_path, "package", "bin"))
         for f in source.glob("*"):
             shutil.move(f, dest)
+        source = Path(os.path.join(prg_path, "package"))
+        for f in source.glob("*"):
+            shutil.move(f, dest)
+
         shutil.rmtree(os.path.join(prg_path, "package"))

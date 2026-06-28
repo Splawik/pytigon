@@ -19,7 +19,6 @@ class ToolCommandHandler(CommandHandler):
     Handles commands like:
     - pytigon nim [args]
     - pytigon nimble [args]
-    - pytigon zig [args]
     - pytigon @<tool> [args]
     """
 
@@ -66,9 +65,7 @@ class ToolCommandHandler(CommandHandler):
                 raise CommandError(f"Unknown tool command: {argv[1]}", code=30)
 
         except Exception as e:
-            return self.handle_error(
-                e, {"command": argv[1] if len(argv) > 1 else "tool"}
-            )
+            return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "tool"})
 
     def _handle_nim(self, argv: List[str], paths: Dict[str, str]) -> int:
         """
@@ -115,6 +112,9 @@ class ToolCommandHandler(CommandHandler):
         Returns:
             Exit code
         """
+
+        if argv[1] == "@zig":
+            argv[1] = "@ziglang"
 
         if importlib.util.find_spec(argv[1][1:]) is not None:
             # Run Python interpreter

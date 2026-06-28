@@ -224,22 +224,22 @@
                             li...TEXT 22
                     li...TEXT 3
             td
-               table class=tree
-                tr class=treegrid-1
-                    td...TEXT
-                    td...Additional info
-                tr class=treegrid-2
-                    td...TEXT 2
-                    td...Additional info
-                tr class=treegrid-3 treegrid-parent-2
-                    td...TEXT 11
-                    td...Additional info
-                tr class=treegrid-4 treegrid-parent-2
-                    td...TEXT 12
-                    td...Additional info
-                tr class=treegrid-5
-                    td...TEXT 3
-                    td...Additional info
+                ptig-tree 
+                    details open
+                        summary...TEXT
+                        div class=leaf...Additional info
+                    details
+                        summary...TEXT 2
+                        summary...Additional info
+                    details
+                        summary...TEXT 11
+                        summary...Additional info
+                    details
+                        div class=leaf...TEXT 12
+                        div class=leaf...Additional info
+                    details
+                        div class=leaf...TEXT 3
+                        div class=leaf...Additional info
         tr
             td...File browser button
             % if client_type == 'schweb':
@@ -252,7 +252,7 @@
                 td
                     ctrl-calendar
             td height=300px
-                ptig-calendar
+                ptig-event-calendar
         tr
             td...Date picker
             % if client_type == 'schweb':
@@ -301,7 +301,20 @@
             % if client_type == 'schweb':
                 td:::ctrl-styledtext
             td height=300
-                ptig-wysiwygedit width=100%,,,height=600px
+                ptig-wysiwygedit width=100%,,,height=600px,,,namespace={{uuid}}_c3
+                    div class=toolbar,,,slot=toolbar,,,style=display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+                        ptig-action-btn event-name=save_click,,,label=Save,,,namespace={{uuid}}_c3
+                        ptig-log-handler event-name=save,,,namespace={{uuid}}_c3
+                        
+                        button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=undo...<i class="fa fa-undo"></i>
+                        button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=redo...<i class="fa fa-repeat"></i>
+
+                        div class=divider
+
+                        button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleBold,,,style=font-weight: bold;...<i class="fa fa-bold"></i>
+                        button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleItalic,,,style=font-style: italic;...<i class="fa fa-italic"></i>
+                        button type=button,,,class=my-btn btn btn-outline-secondary,,,data-command=toggleStrike,,,style=text-decoration: line-through;...<i class="fa fa-strikethrough"></i>
+
         tr
             td...Ticker
             % if client_type == 'schweb':

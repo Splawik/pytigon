@@ -1,0 +1,551 @@
+{
+    "model": "SChProject",
+    "attributes": {
+        "jsondata": null,
+        "name": "schbook",
+        "title": "Library - Book Management",
+        "version": "latest",
+        "main_view": true,
+        "ext_apps": "_schdata.schelements",
+        "plugins": null,
+        "gui_type": "modern",
+        "gui_elements": null,
+        "login_required": true,
+        "public": true,
+        "main": false,
+        "start_page": null,
+        "user_app_template": "",
+        "app_main": null,
+        "doc": null,
+        "desktop_gui_type": "auto",
+        "smartfon_gui_type": "auto",
+        "tablet_gui_type": "auto",
+        "additional_settings": "",
+        "custom_tags": null,
+        "readme_file": null,
+        "license_file": null,
+        "install_file": null,
+        "encoded_zip": null,
+        "icon": "fa://book.png",
+        "icon_size": "1",
+        "icon_code": null,
+        "git_repository": null,
+        "autor_name": null,
+        "autor_email": null,
+        "autor_www": null,
+        "components_initial_state": null,
+        "template_desktop": null,
+        "template_smartfon": null,
+        "template_tablet": null,
+        "template_schweb": null,
+        "template_theme": null
+    },
+    "children": [
+        {
+            "model": "SChApp",
+            "attributes": {
+                "jsondata": null,
+                "name": "schbook",
+                "title": "Library",
+                "module_name": "Library",
+                "module_title": "Library",
+                "perms": true,
+                "index": null,
+                "model_code": "from django.utils import timezone\n",
+                "view_code": null,
+                "urls_code": null,
+                "tasks_code": "",
+                "consumer_code": "",
+                "doc": null,
+                "user_param": "",
+                "icon": "None",
+                "icon_size": "1",
+                "icon_code": null
+            },
+            "children": [
+                {
+                    "model": "SChChoice",
+                    "attributes": {
+                        "name": "book_status_choices",
+                        "verbose_name": "book_status_choices"
+                    },
+                    "children": [
+                        {
+                            "model": "SChChoiceItem",
+                            "attributes": {
+                                "name": "available",
+                                "value": "Available"
+                            }
+                        },
+                        {
+                            "model": "SChChoiceItem",
+                            "attributes": {
+                                "name": "borrowed",
+                                "value": "Borrowed"
+                            }
+                        },
+                        {
+                            "model": "SChChoiceItem",
+                            "attributes": {
+                                "name": "withdrawn",
+                                "value": "Withdrawn"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChTable",
+                    "attributes": {
+                        "base_table": "schelements.Element",
+                        "name": "Book",
+                        "verbose_name": "Book",
+                        "verbose_name_plural": "Books",
+                        "metaclass_code": null,
+                        "table_code": "def init_new(self, request, view, param=None):\n    super().init_new(request, view, param)\n    self.type = 'E-BOOK'\n    self.name = 'new'\n    self.status = 'available'\n    self.acquisition_date = timezone.now().date()\n\ndef save(self, *args, **kwargs):\n    if not self.id and not self.inventory_number:\n        from .models import Book\n        last = Book.objects.order_by('-id').first()\n        if last and last.inventory_number:\n            try:\n                num = int(last.inventory_number) + 1\n                self.inventory_number = str(num).zfill(6)\n            except ValueError:\n                self.inventory_number = None\n    if not self.name or self.name == 'new':\n        self.name = self.title[:30] if self.title else 'untitled'\n    super().save(*args, **kwargs)\n",
+                        "ordering": "['id']",
+                        "doc": null,
+                        "generic": true,
+                        "url_params": null,
+                        "proxy_model": null
+                    },
+                    "children": [
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "inventory_number",
+                                "description": "Inventory number",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": true,
+                                "db_index": true,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=32",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "title",
+                                "description": "Title",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": true,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=256",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "author",
+                                "description": "Author",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": true,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=256",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "isbn",
+                                "description": "ISBN",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": true,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=20",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "publisher",
+                                "description": "Publisher",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=256",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "publication_year",
+                                "description": "Publication year",
+                                "type": "IntegerField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "category",
+                                "description": "Category",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=128",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "status",
+                                "description": "Status",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": true,
+                                "default": "'available'",
+                                "help_text": null,
+                                "choices": "book_status_choices",
+                                "rel_to": null,
+                                "param": "max_length=16",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "acquisition_date",
+                                "description": "Acquisition date",
+                                "type": "DateField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChTable",
+                    "attributes": {
+                        "base_table": "JSONModel",
+                        "name": "Borrow",
+                        "verbose_name": "Borrow",
+                        "verbose_name_plural": "Borrows",
+                        "metaclass_code": null,
+                        "table_code": "def save(self, *args, **kwargs):\n    from .models import Book\n    if self.return_date and not self._state.adding:\n        old = Borrow.objects.filter(pk=self.pk).first()\n        if old and not old.return_date:\n            try:\n                book = Book.objects.get(pk=self.book_id)\n                book.status = 'available'\n                book.save()\n            except Book.DoesNotExist:\n                pass\n    super().save(*args, **kwargs)\n",
+                        "ordering": "['-borrow_date']",
+                        "doc": null,
+                        "generic": true,
+                        "url_params": null,
+                        "proxy_model": null
+                    },
+                    "children": [
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "book",
+                                "description": "Book",
+                                "type": "PtigForeignKey",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": true,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": "Book",
+                                "param": "related_name='borrows'",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "reader_name",
+                                "description": "Reader name",
+                                "type": "CharField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": true,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=256",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "reader_email",
+                                "description": "Reader email",
+                                "type": "EmailField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=256",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "reader_phone",
+                                "description": "Reader phone",
+                                "type": "CharField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": "max_length=32",
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "borrow_date",
+                                "description": "Borrow date",
+                                "type": "DateField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": true,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "planned_return_date",
+                                "description": "Planned return date",
+                                "type": "DateField",
+                                "null": false,
+                                "blank": false,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "return_date",
+                                "description": "Return date",
+                                "type": "DateField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": true,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        },
+                        {
+                            "model": "SChField",
+                            "attributes": {
+                                "name": "notes",
+                                "description": "Notes",
+                                "type": "TextField",
+                                "null": true,
+                                "blank": true,
+                                "editable": true,
+                                "unique": false,
+                                "db_index": false,
+                                "default": null,
+                                "help_text": null,
+                                "choices": null,
+                                "rel_to": null,
+                                "param": null,
+                                "url_params": null
+                            }
+                        }
+                    ]
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "borrow_book",
+                        "view_type": "r",
+                        "param": "pk",
+                        "url": "Book",
+                        "view_code": "from .models import Book\nfrom django.utils import timezone\n\nbook = Book.objects.get(pk=pk)\nif book.status != 'available':\n    return { 'OK': False, 'msg': 'Book is not available' }\n\nbook.status = 'borrowed'\nbook.save()\n\nborrow = models.Borrow(\n    book=book,\n    reader_name=request.user.get_full_name() or request.user.username,\n    reader_email=request.user.email,\n    borrow_date=timezone.now().date(),\n    planned_return_date=timezone.now().date() + timezone.timedelta(days=30)\n)\nborrow.save()\n\nreturn { 'OK': True, 'msg': 'Book borrowed successfully' }\n",
+                        "url_params": null,
+                        "ret_type": "T",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "return_book",
+                        "view_type": "r",
+                        "param": "pk",
+                        "url": "Borrow",
+                        "view_code": "from django.utils import timezone\n\nborrow = models.Borrow.objects.get(pk=pk)\nif borrow.return_date:\n    return { 'OK': False, 'msg': 'Book already returned' }\n\nborrow.return_date = timezone.now().date()\nborrow.save()\n\nreturn { 'OK': True, 'msg': 'Book returned successfully' }\n",
+                        "url_params": null,
+                        "ret_type": "T",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChView",
+                    "attributes": {
+                        "name": "withdraw_book",
+                        "view_type": "r",
+                        "param": "pk",
+                        "url": "Book",
+                        "view_code": "from .models import Book\n\nbook = Book.objects.get(pk=pk)\nif book.status == 'borrowed':\n    return { 'OK': False, 'msg': 'Cannot withdraw a borrowed book. Wait for return first.' }\n\nbook.status = 'withdrawn'\nbook.save()\n\nreturn { 'OK': True, 'msg': 'Book withdrawn from library' }\n",
+                        "url_params": null,
+                        "ret_type": "T",
+                        "asynchronous": false,
+                        "extra_code": null,
+                        "doc": null
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "Book",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    %with table_type='datatable' table_subtype='table_with_details' table_details_height=\"40vh\" show_title_bar=1 title=_(\"Books catalog\")\n        {{ block.super }}\n\n\n%% list_content_actions\n    % new_row _(\"Add new book\")\n\n%% list_row_header\n    th...Inv. No.\n    th...Title\n    th...Author\n    th...ISBN\n    th...Category\n    th...Status\n    th...Acquired\n\n\n%% list_row\n    td...{{object.inventory_number}}\n    td...{{object.title}}\n    td...{{object.author}}\n    td...{{object.isbn}}\n    td...{{object.category}}\n    td\n        % if object.status == 'available':\n            span class=badge bg-success...{{object.get_status_display}}\n        % else:\n            % if object.status == 'borrowed':\n                span class=badge bg-warning...{{object.get_status_display}}\n            % else:\n                span class=badge bg-secondary...{{object.get_status_display}}\n    td...{{object.acquisition_date|isoformat}}\n\n%% list_row_actions\n    % if object.status == 'available':\n        % row_actions:\n            .borrow_book,Borrow book,[fa fa-sign-out]\n    % else:\n        % if object.status == 'borrowed':\n            % row_actions:\n        % else:\n            % row_actions:\n    % row_actions:\n        .edit\n        % if object.status != 'borrowed':\n            .withdraw_book,Withdraw,[fa fa-trash]\n        % if object.status != 'borrowed':\n            .delete\n\n%% list_page_footer\n    % row_details:\n        *Borrow history:schbook/table/Borrow//book__[[table_row_pk]]/form/schbook/sublist/\n\n\n%% row_edit\n    % form:\n        .inventory_number,title,author,isbn,publisher,publication_year,category,status,acquisition_date\n\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChTemplate",
+                    "attributes": {
+                        "name": "Borrow",
+                        "direct_to_template": null,
+                        "url": null,
+                        "url_parm": null,
+                        "template_code": "{# -*- coding: utf-8 -*- #}\n% extends \"forms/form.html\"\n\n% load exfiltry\n% load exsyntax\n\n\n%% all\n    %with table_type='datatable' show_title_bar=1 title=_(\"Borrow register\")\n        {{ block.super }}\n\n\n%% list_content_actions\n    % new_row _(\"New borrow entry\")\n\n%% list_row_header\n    th...Book\n    th...Reader\n    th...Email\n    th...Borrow date\n    th...Planned return\n    th...Return date\n\n\n%% list_row\n    td...{{object.book}}\n    td...{{object.reader_name}}\n    td...{{object.reader_email}}\n    td...{{object.borrow_date|isoformat}}\n    td...{{object.planned_return_date|isoformat}}\n    td\n        % if object.return_date:\n            {{object.return_date|isoformat}}\n        % else:\n            span class=badge bg-warning...Not returned\n\n%% list_row_actions\n    % if not object.return_date:\n        % row_actions:\n            .return_book,Return book,[fa fa-sign-in]\n    % row_actions:\n        .edit\n        .delete\n\n\n%% row_edit\n    % form:\n        .book,reader_name,reader_email,reader_phone,borrow_date,planned_return_date,return_date,notes\n\n",
+                        "tags_mount": null,
+                        "asynchronous": false
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "Books catalog",
+                        "url": "table/Book/-/form/list/",
+                        "url_type": "desktop",
+                        "perms": "schbook.change_book",
+                        "icon": "fa://book.png",
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                },
+                {
+                    "model": "SChAppMenu",
+                    "attributes": {
+                        "name": "Borrow register",
+                        "url": "table/Borrow/-/form/list/",
+                        "url_type": "desktop",
+                        "perms": "schbook.change_borrow",
+                        "icon": "fa://exchange.png",
+                        "icon_size": "1",
+                        "icon_code": null
+                    }
+                }
+            ]
+        }
+    ]
+}

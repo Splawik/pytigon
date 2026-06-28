@@ -69,9 +69,7 @@ class PythonCommandHandler(CommandHandler):
                 return self._handle_python_simple(argv)
 
         except Exception as e:
-            return self.handle_error(
-                e, {"command": argv[1] if len(argv) > 1 else "python"}
-            )
+            return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "python"})
 
     def _handle_python_app(self, argv: List[str]) -> int:
         """
@@ -93,6 +91,14 @@ class PythonCommandHandler(CommandHandler):
         ret = self._init_prj_path(paths, app)
         if ret:
             argv[1] = ret[0]
+
+        data_path = paths.get("DATA_PATH", "")
+        prjlib = os.path.join(data_path, app, "prjlib")
+
+        if "PYTHONPATH" in os.environ:
+            os.environ["PYTHONPATH"] += ":" + prjlib
+        else:
+            os.environ["PYTHONPATH"] = prjlib
 
         # Run Python interpreter
         executable = self.get_executable()

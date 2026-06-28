@@ -1,6 +1,6 @@
 var BASE_PATH, TAG, TEMPLATE, comp, css_tab, height, init, js_tab, stub1_context, stub2_err, width;
 TAG = "ptig-event-calendar";
-TEMPLATE = '        <div class=\"ajax-frame ajax-link ajax-region\" data-region=\"table\" data-bind=\"onloadeddata:on_loaded_data\" style=\"position:absolute;top:5px;bottom:5px;left:5px;right:5px;\">\n' +
+TEMPLATE = '        <div class=\"ajax-frame ajax-link ajax-region\" data-region=\"table\" data-bind=\"onloadeddata:on_loaded_data\">\n' +
     '                <div name=\"calendar\"></div>\n' +
     '        </div>\n' +
     '\n' +

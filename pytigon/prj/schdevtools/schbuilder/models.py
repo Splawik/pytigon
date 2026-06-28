@@ -1227,9 +1227,6 @@ class SChField(models.Model):
         else:
             return None
 
-    def save(self, force_insert=False, force_update=False):
-        super(SChField, self).save(force_insert, force_update)
-
     def __str__(self):
         return self.name
 

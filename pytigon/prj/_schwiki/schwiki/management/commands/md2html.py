@@ -1,5 +1,6 @@
 import sys
 import os
+from contextlib import chdir
 
 from pytigon_lib.schindent.indent_markdown import (
     IndentMarkdownProcessor,
@@ -37,25 +38,27 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        if "input" in options and options["input"]:
-            with open(options["input"], "rt") as f:
-                buf = f.read()
-        else:
-            buf = sys.stdin.read()
-
-        buf2 = md2html("{% load exfiltry %}{% load exsyntax %}" + buf)
-        try:
-            buf3 = render_string_template(buf2, {})
-        except Exception:
-            print("ERROR!", options["input"])
-            return
-
-        if "output" in options and options["output"]:
-            if options["output"] == ".":
-                file_name = options["input"].replace(".md", "") + ".html"
+        with chdir(os.environ["START_PATH"]):
+            print(os.getcwd())
+            if "input" in options and options["input"]:
+                with open(options["input"], "rt") as f:
+                    buf = f.read()
             else:
-                file_name = options["output"]
-            with open(file_name, "wt") as f:
-                f.write(buf3)
-        else:
-            print(buf3)
+                buf = sys.stdin.read()
+
+            buf2 = md2html("{% load exfiltry %}{% load exsyntax %}" + buf)
+            try:
+                buf3 = render_string_template(buf2, {})
+            except Exception:
+                print("ERROR!", options["input"])
+                return
+
+            if "output" in options and options["output"]:
+                if options["output"] == ".":
+                    file_name = options["input"].replace(".md", "") + ".html"
+                else:
+                    file_name = options["output"]
+                with open(file_name, "wt") as f:
+                    f.write(buf3)
+            else:
+                print(buf3)
