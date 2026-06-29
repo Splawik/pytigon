@@ -128,10 +128,7 @@ def init_plugin_web_view(
                             msg["url"], msg.get("params"), user_agent="webviewembeded"
                         )
                     content = base64.b64encode(ret.ptr()).decode("utf-8")
-                    script = "window.callback_from_python(%d, '%s')" % (
-                        msg["callback_id"],
-                        content,
-                    )
+                    script = f"window.callback_from_python({msg['callback_id']}, '{content}')"
                     self.RunScriptAsync(script)
                 except Exception:
                     pass
@@ -142,7 +139,7 @@ def init_plugin_web_view(
             Args:
                 event: The error event.
             """
-            message = "%s\n%s" % (event.GetURL(), event.GetString())
+            message = f"{event.GetURL()}\n{event.GetString()}"
             self.show_error("WebView error", message)
             event.Skip()
 
@@ -196,10 +193,7 @@ def init_plugin_web_view(
             """
             if max_progress == 0:
                 max_progress = 100
-            if progress >= 0:
-                progress2 = int((progress * 100) / max_progress)
-            else:
-                progress2 = 100
+            progress2 = int(progress * 100 / max_progress) if progress >= 0 else 100
             return self.progress_changed(progress2)
 
         def load_url(self, url, cookies=None):
@@ -221,7 +215,7 @@ def init_plugin_web_view(
             self.LoadURL("about:blank")
             if wx.Platform == "__WXMSW__":
                 path = os.path.join(settings.TEMP_PATH, "index.html")
-                with open(path, "wt", encoding="utf-8") as f:
+                with open(path, "w", encoding="utf-8") as f:
                     f.write(data)
                 url = "file:///" + path.replace("\\", "/")
                 self.LoadURL(url)

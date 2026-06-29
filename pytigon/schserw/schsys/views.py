@@ -397,10 +397,10 @@ def plugins(request, app, plugin_name):
             with open(candidate, "rb") as f:
                 s = f.read()
             return HttpResponse(s, content_type="application/zip")
-        except (IOError, OSError):
+        except OSError:
             continue
 
-    raise Http404("Plugin '%s' not found for app '%s'" % (plugin_name, app))
+    raise Http404(f"Plugin '{plugin_name}' not found for app '{app}'")
 
 
 @cache_page(60 * 60 * 24 * 30)
@@ -428,10 +428,7 @@ def sw(request):
     Returns:
         HttpResponse: Service worker JavaScript content.
     """
-    if settings.STATIC_ROOT:
-        _static_root = settings.STATIC_ROOT
-    else:
-        _static_root = settings.STATICFILES_DIRS[0]
+    _static_root = settings.STATIC_ROOT or settings.STATICFILES_DIRS[0]
 
     static_root1 = os.path.join(_static_root, settings.PRJ_NAME)
     static_root2 = os.path.join(
@@ -442,14 +439,14 @@ def sw(request):
     for static_root in (static_root1, static_root2):
         sw_path = os.path.join(static_root, "sw.js")
         if os.path.exists(sw_path):
-            with open(sw_path, "rt") as sw_file:
+            with open(sw_path) as sw_file:
                 buf = sw_file.read()
             break
 
     standard_sw_path = os.path.join(_static_root, "pytigon_js", "sw.js")
     buf2 = ""
     if os.path.exists(standard_sw_path):
-        with open(standard_sw_path, "rt") as sw_file:
+        with open(standard_sw_path) as sw_file:
             buf2 = sw_file.read()
             buf2 = buf2.replace("//++//", buf)
 
@@ -473,14 +470,7 @@ def app_time_stamp(request, **argv):
         return {"TIME": settings.GEN_TIME}
 
     gmt = datetime.time.gmtime()
-    gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (
-        gmt[0],
-        gmt[1],
-        gmt[2],
-        gmt[3],
-        gmt[4],
-        gmt[5],
-    )
+    gmt_str = f"{gmt[0]:04d}.{gmt[1]:02d}.{gmt[2]:02d} {gmt[3]:02d}:{gmt[4]:02d}:{gmt[5]:02d}"
     return {"TIME": gmt_str}
 
 
@@ -551,10 +541,10 @@ def site_media_protected(request, *argi, **argv):
                         if request.user.is_authenticated:
                             return redirect_site_media_protected(request)
                     elif row[1] == "username":
-                        if ("{%s}" % request.username) in path:
+                        if (f"{{{request.username}}}") in path:
                             return redirect_site_media_protected(request)
                     elif row[1] == "email":
-                        if ("{%s}" % request.email) in path:
+                        if (f"{{{request.email}}}") in path:
                             return redirect_site_media_protected(request)
                     else:
                         if request.user.has_perm(row[1]):

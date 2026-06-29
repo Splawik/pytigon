@@ -1,11 +1,9 @@
-"""
-Pytest tests for pytigon.ext_lib.django_storage module.
+"""Pytest tests for pytigon.ext_lib.django_storage module.
 
 Tests focus on class structure, validation logic, and name generation
 that don't require a fully configured Django filesystem backend.
 """
 
-import os
 import pytest
 
 # Skip tests if pyfilesystem is not available
@@ -17,7 +15,6 @@ from pytigon.ext_lib.django_storage import (
     FSStorage,
     ThumbnailFileSystemStorage,
 )
-
 
 # ---------------------------------------------------------------------------
 # FSStorage validation tests (no filesystem needed)

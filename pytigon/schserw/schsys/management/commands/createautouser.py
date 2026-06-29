@@ -19,7 +19,7 @@ class Command(createsuperuser.Command):
             if self.UserModel.USERNAME_FIELD != "email":
                 dd["email"] = "none@none.none"
 
-            super(Command, self).handle(**dd)
+            super().handle(**dd)
         user = self.UserModel.objects.filter(**d).first()
         user.set_password("anawa")
         user.save()

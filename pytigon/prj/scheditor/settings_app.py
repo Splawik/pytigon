@@ -32,7 +32,7 @@ from apps import APPS, APPS_EXT, PUBLIC
 
 try:
     from global_db_settings import setup_databases
-except:
+except ImportError:
     setup_databases = None
 
 LOCAL_ROOT_PATH = os.path.abspath(os.path.join(_lp, ".."))
@@ -92,18 +92,18 @@ PACKS = []
 for app in APPS:
     if "." in app:
         pack = app.split(".")[0]
-        if not pack in PACKS:
+        if pack not in PACKS:
             PACKS.append(pack)
             p1 = os.path.join(LOCAL_ROOT_PATH, pack)
-            if not p1 in sys.path:
+            if p1 not in sys.path:
                 sys.path.append(p1)
             p2 = os.path.join(PRJ_PATH_ALT, pack)
-            if not p2 in sys.path:
+            if p2 not in sys.path:
                 sys.path.append(p2)
 
-    if not app in [x if type(x) == str else x.label for x in INSTALLED_APPS]:
+    if app not in [x if isinstance(x, str) else x.label for x in INSTALLED_APPS]:
         a = get_app_config(app)
-        if not app in INSTALLED_APPS:
+        if app not in INSTALLED_APPS:
             INSTALLED_APPS.append(get_app_config(app))
         aa = app.split(".")
         for root_path in [PRJ_PATH, PRJ_PATH_ALT]:
@@ -111,7 +111,7 @@ for app in APPS:
             if os.path.exists(base_path):
                 TEMPLATES[0]["DIRS"].append(os.path.join(base_path, "templates"))
                 if len(aa) == 2:
-                    if not base_path in sys.path:
+                    if base_path not in sys.path:
                         sys.path.append(base_path)
                     locale_path = os.path.join(base_path, "locale")
                     if locale_path not in LOCALE_PATHS:
@@ -119,7 +119,7 @@ for app in APPS:
                             LOCALE_PATHS.append(os.path.join(base_path, "locale"))
 
 for app in APPS_EXT:
-    if not app in INSTALLED_APPS:
+    if app not in INSTALLED_APPS:
         INSTALLED_APPS.append(app)
 
 if os.path.exists(PRJ_PATH + "/_schdata/static"):
@@ -138,7 +138,7 @@ TEMPLATES[0]["DIRS"].insert(
 LOCALE_PATHS.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "locale"))
 
 _NAME = os.path.join(
-    DATA_PATH, "%s/%s.db" % (URL_ROOT_FOLDER if URL_ROOT_FOLDER else PRJ_NAME, PRJ_NAME)
+    DATA_PATH, f"{URL_ROOT_FOLDER if URL_ROOT_FOLDER else PRJ_NAME}/{PRJ_NAME}.db"
 )
 
 DATABASES["default"] = {
@@ -186,10 +186,10 @@ CHANNELS_URL_TAB += [
 
 try:
     from settings_app_local import *
-except:
+except ImportError:
     pass
 
-GEN_TIME = "2026-06-22 18:50:42"
+GEN_TIME = "2026-06-29 17:54:41"
 
 
 for key, value in os.environ.items():
@@ -205,8 +205,8 @@ for key, value in os.environ.items():
                     .replace("[|]", "!")
                     .replace('["]', '\\"')
                 )
-            except:
-                print("invalid json syntax for environment variable: %s", key)
+            except json.JSONDecodeError:
+                print(f"invalid json syntax for environment variable: {key}")
         else:
             globals()[key2] = value
 

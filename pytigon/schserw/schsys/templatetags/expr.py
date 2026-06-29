@@ -240,10 +240,7 @@ class ExprNode(template.Node):
                     print("------------------------------")
                     val = None
                 if val is not None:
-                    if self.safe:
-                        ret = mark_safe2(str(val))
-                    else:
-                        ret = str(val)
+                    ret = mark_safe2(str(val)) if self.safe else str(val)
                     if self.escape:
                         return html.escape(ret)
                     else:
@@ -263,7 +260,7 @@ def do_expr(parser, token):
         (tag_name, arg) = token.contents.split(None, 1)
     except ValueError:
         raise template.TemplateSyntaxError(
-            "%r tag requires arguments" % token.contents[0]
+            f"{token.contents[0]!r} tag requires arguments"
         )
     m = r_expr.search(arg)
     if m:
@@ -271,7 +268,7 @@ def do_expr(parser, token):
     else:
         if not arg:
             raise template.TemplateSyntaxError(
-                "%r tag at least require one argument" % tag_name
+                f"{tag_name!r} tag at least require one argument"
             )
         (expr_string, var_name) = (arg, None)
     return ExprNode(expr_string, var_name, False)
@@ -285,7 +282,7 @@ def do_expr_safe(parser, token):
         (tag_name, arg) = token.contents.split(None, 1)
     except ValueError:
         raise template.TemplateSyntaxError(
-            "%r tag requires arguments" % token.contents[0]
+            f"{token.contents[0]!r} tag requires arguments"
         )
     m = r_expr.search(arg)
     if m:
@@ -293,7 +290,7 @@ def do_expr_safe(parser, token):
     else:
         if not arg:
             raise template.TemplateSyntaxError(
-                "%r tag at least require one argument" % tag_name
+                f"{tag_name!r} tag at least require one argument"
             )
         (expr_string, var_name) = (arg, None)
     return ExprNode(expr_string, var_name, True)
@@ -307,7 +304,7 @@ def do_expr_escape(parser, token):
         (tag_name, arg) = token.contents.split(None, 1)
     except ValueError:
         raise template.TemplateSyntaxError(
-            "%r tag requires arguments" % token.contents[0]
+            f"{token.contents[0]!r} tag requires arguments"
         )
     m = r_expr.search(arg)
     if m:
@@ -315,7 +312,7 @@ def do_expr_escape(parser, token):
     else:
         if not arg:
             raise template.TemplateSyntaxError(
-                "%r tag at least require one argument" % tag_name
+                f"{tag_name!r} tag at least require one argument"
             )
         (expr_string, var_name) = (arg, None)
     return ExprNode(expr_string, var_name, True, True)

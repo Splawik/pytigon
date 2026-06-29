@@ -84,10 +84,7 @@ def set_state(component, state):
                             if mod_fun == "!":
                                 value2 = not value
                             elif mod_fun == "?":
-                                if value:
-                                    value2 = True
-                                else:
-                                    value2 = False
+                                value2 = True if value else False
                             elif mod_fun == "*":
                                 value2 = str(value)
                             elif mod_fun == "+":

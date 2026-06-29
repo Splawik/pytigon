@@ -1,8 +1,8 @@
-"""
-Pytest tests for pytigon.schserw.schsys.remotebackend module.
+"""Pytest tests for pytigon.schserw.schsys.remotebackend module.
 """
 
 import pytest
+
 from pytigon.schserw.schsys.remotebackend import RemoteUserBackendMod
 
 

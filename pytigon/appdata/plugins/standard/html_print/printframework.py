@@ -12,7 +12,7 @@ from pytigon_lib.schhtml.wxdc import DcDc
 from pytigon_lib.schfs.vfstools import convert_file
 
 
-class HtmlCanvas(object):
+class HtmlCanvas:
     """Canvas for rendering HTML content via SPDF format.
 
     Loads a pre-rendered SPDF document and provides drawing

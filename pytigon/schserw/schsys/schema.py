@@ -90,7 +90,7 @@ for app in settings.INSTALLED_APPS:
             or pos.startswith("django_bootstrap5")
         ):
             continue
-    module_name = "%s.schema" % str(pos)
+    module_name = f"{str(pos)}.schema"
     try:
         m = importlib.import_module(module_name)
         if hasattr(m, "extend_query"):

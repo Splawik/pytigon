@@ -88,8 +88,8 @@ def init_plugin_cef(
             return (
                 (
                     "<!DOCTYPE html><html><head>"
-                    '<base href="%s" target="_blank">'
-                    "</head><body bgcolor='%s'>" % (self._static_prefix(), color)
+                    f'<base href="{self._static_prefix()}" target="_blank">'
+                    f"</head><body bgcolor='{color}'>"
                 )
                 + str_body
                 + "</body></html>"
@@ -124,7 +124,7 @@ def init_plugin_cef(
                 if base:
                     self.browser.GetMainFrame().LoadUrl(
                         "data:text/html, "
-                        + data.replace("<head>", '<head><base href="%s/">' % base)
+                        + data.replace("<head>", f'<head><base href="{base}/">')
                     )
                 else:
                     self.browser.GetMainFrame().LoadUrl("data:text/html, " + data)

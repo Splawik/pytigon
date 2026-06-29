@@ -1,6 +1,5 @@
-import sys
 import os
-import pytest
+import sys
 
 
 # Ensure sys.argv has -v 1 to avoid IndexError in pytigon.schserw.settings
@@ -22,7 +21,7 @@ def pytest_configure(config):
                     "default": {
                         "ENGINE": "django.db.backends.sqlite3",
                         "NAME": ":memory:",
-                    }
+                    },
                 },
                 INSTALLED_APPS=[
                     "django.contrib.contenttypes",
@@ -44,14 +43,14 @@ def pytest_configure(config):
                 CACHES={
                     "default": {
                         "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-                    }
+                    },
                 },
                 TEMPLATES=[
                     {
                         "BACKEND": "django.template.backends.django.DjangoTemplates",
                         "DIRS": [],
                         "APP_DIRS": True,
-                    }
+                    },
                 ],
             )
         django.setup()

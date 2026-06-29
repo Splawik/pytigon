@@ -107,44 +107,43 @@ class CodeEditor(stc.StyledTextCtrl):
         self.Bind(stc.EVT_STC_MARGINCLICK, self.on_margin_click)
         self.Bind(wx.EVT_KEY_DOWN, self.on_key_pressed)
 
-        self.StyleSetSpec(stc.STC_STYLE_DEFAULT, "face:%(helv)s,size:%(size)d" % faces)
+        self.StyleSetSpec(stc.STC_STYLE_DEFAULT, f"face:{faces['helv']},size:{faces['size']}")
         self.StyleClearAll()
-        self.StyleSetSpec(stc.STC_STYLE_DEFAULT, "face:%(helv)s,size:%(size)d" % faces)
+        self.StyleSetSpec(stc.STC_STYLE_DEFAULT, f"face:{faces['helv']},size:{faces['size']}")
         col = wx.SystemSettings.GetColour(wx.SYS_COLOUR_GRAYTEXT)
         colstr = col.GetAsString(wx.C2S_HTML_SYNTAX)
-        self.StyleSetSpec(stc.STC_STYLE_LINENUMBER, "fore:#000000,back:%s" % colstr)
-        self.StyleSetSpec(stc.STC_STYLE_CONTROLCHAR, "face:%(other)s" % faces)
+        self.StyleSetSpec(stc.STC_STYLE_LINENUMBER, f"fore:#000000,back:{colstr}")
+        self.StyleSetSpec(stc.STC_STYLE_CONTROLCHAR, f"face:{faces['other']}")
         self.StyleSetSpec(stc.STC_STYLE_BRACELIGHT, "fore:#000000,back:#DDDDFF,bold")
         self.StyleSetSpec(stc.STC_STYLE_BRACEBAD, "fore:#000000,back:#FFCCCC,bold")
         self.StyleSetSpec(
-            stc.STC_P_DEFAULT, "fore:#000000,face:%(helv)s,size:%(size)d" % faces
+            stc.STC_P_DEFAULT, f"fore:#000000,face:{faces['helv']},size:{faces['size']}"
         )
         self.StyleSetSpec(
-            stc.STC_P_COMMENTLINE, "fore:#007F00,face:%(other)s,size:%(size)d" % faces
+            stc.STC_P_COMMENTLINE, f"fore:#007F00,face:{faces['other']},size:{faces['size']}"
         )
-        self.StyleSetSpec(stc.STC_P_NUMBER, "fore:#007F7F,size:%(size)d" % faces)
+        self.StyleSetSpec(stc.STC_P_NUMBER, f"fore:#007F7F,size:{faces['size']}")
         self.StyleSetSpec(
-            stc.STC_P_STRING, "fore:#7F007F,face:%(helv)s,size:%(size)d" % faces
+            stc.STC_P_STRING, f"fore:#7F007F,face:{faces['helv']},size:{faces['size']}"
         )
         self.StyleSetSpec(
-            stc.STC_P_CHARACTER, "fore:#7F007F,face:%(helv)s,size:%(size)d" % faces
+            stc.STC_P_CHARACTER, f"fore:#7F007F,face:{faces['helv']},size:{faces['size']}"
         )
-        self.StyleSetSpec(stc.STC_P_WORD, "fore:#00007F,bold,size:%(size)d" % faces)
-        self.StyleSetSpec(stc.STC_P_TRIPLE, "fore:#7F0000,size:%(size)d" % faces)
-        self.StyleSetSpec(stc.STC_P_TRIPLEDOUBLE, "fore:#7F0000,size:%(size)d" % faces)
+        self.StyleSetSpec(stc.STC_P_WORD, f"fore:#00007F,bold,size:{faces['size']}")
+        self.StyleSetSpec(stc.STC_P_TRIPLE, f"fore:#7F0000,size:{faces['size']}")
+        self.StyleSetSpec(stc.STC_P_TRIPLEDOUBLE, f"fore:#7F0000,size:{faces['size']}")
         self.StyleSetSpec(
-            stc.STC_P_CLASSNAME, "fore:#0000FF,bold,underline,size:%(size)d" % faces
+            stc.STC_P_CLASSNAME, f"fore:#0000FF,bold,underline,size:{faces['size']}"
         )
-        self.StyleSetSpec(stc.STC_P_DEFNAME, "fore:#007F7F,bold,size:%(size)d" % faces)
-        self.StyleSetSpec(stc.STC_P_OPERATOR, "bold,size:%(size)d" % faces)
+        self.StyleSetSpec(stc.STC_P_DEFNAME, f"fore:#007F7F,bold,size:{faces['size']}")
+        self.StyleSetSpec(stc.STC_P_OPERATOR, f"bold,size:{faces['size']}")
         self.StyleSetSpec(
-            stc.STC_P_IDENTIFIER, "fore:#000000,face:%(helv)s,size:%(size)d" % faces
+            stc.STC_P_IDENTIFIER, f"fore:#000000,face:{faces['helv']},size:{faces['size']}"
         )
-        self.StyleSetSpec(stc.STC_P_COMMENTBLOCK, "fore:#7F7F7F,size:%(size)d" % faces)
+        self.StyleSetSpec(stc.STC_P_COMMENTBLOCK, f"fore:#7F7F7F,size:{faces['size']}")
         self.StyleSetSpec(
             stc.STC_P_STRINGEOL,
-            "GetCurrentPosfore:#000000,face:%(mono)s,back:#E0C0E0,eol,size:%(size)d"
-            % faces,
+            f"GetCurrentPosfore:#000000,face:{faces['mono']},back:#E0C0E0,eol,size:{faces['size']}"
         )
         self.SetCaretForeground("#D00000")
         self.SetCaretWidth(2)
@@ -457,7 +456,7 @@ class CodeEditor(stc.StyledTextCtrl):
         return 16
 
 
-class PYTHON_EditorObject(object):
+class PYTHON_EditorObject:
     """Editor configuration for Python files.
 
     Sets up Python lexer with keyword highlighting, line numbers,
@@ -542,7 +541,7 @@ class HTML_LIKE_PYTHON_EditorObject(PYTHON_EditorObject):
         editor.SetUseTabs(False)
 
 
-class HTML_EditorObject(object):
+class HTML_EditorObject:
     """Editor configuration for HTML files."""
 
     def set_up_editor(self, editor):
@@ -560,7 +559,7 @@ class HTML_EditorObject(object):
         editor.SetUseTabs(False)
 
 
-class WIKI_EditorObject(object):
+class WIKI_EditorObject:
     """Editor configuration for Wiki/Markdown files."""
 
     def set_up_editor(self, editor):

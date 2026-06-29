@@ -151,7 +151,7 @@ if settings.REST:
     def rest_hello(request):
         """Health-check endpoint for the REST API."""
         if request.method == "GET":
-            return Response({"message": "Hello %s, %s" % (request.user, request.auth)})
+            return Response({"message": f"Hello {request.user}, {request.auth}"})
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     _urlpatterns.append(path("rest_hello", rest_hello))
@@ -171,16 +171,16 @@ if settings.REST:
                 or pos.startswith("django_bootstrap5")
             ):
                 continue
-        module_name = "%s.rest_api" % str(pos)
+        module_name = f"{str(pos)}.rest_api"
         try:
             m = importlib.import_module(module_name)
             if hasattr(m, "urlpatterns"):
                 _urlpatterns.extend(
                     [
                         path(
-                            "api/%s/" % pos,
-                            include("%s.rest_api" % pos),
-                            name="api_%s" % pos,
+                            f"api/{pos}/",
+                            include(f"{pos}.rest_api"),
+                            name=f"api_{pos}",
                         ),
                     ]
                 )
@@ -233,7 +233,7 @@ def _serve_media(request, path, document_root):
     if os.path.isdir(fullpath):
         raise Http404("Directory indexes are not allowed here.")
     if not os.path.exists(fullpath):
-        raise Http404('"%s" does not exist' % path)
+        raise Http404(f'"{path}" does not exist')
     return FileResponse(open(fullpath, "rb"), as_attachment=False)
 
 
@@ -267,13 +267,13 @@ def app_description(prj):
     """
     file_name = os.path.join(os.path.join(settings.PRJ_PATH, prj), "settings_app.py")
     try:
-        with open(file_name, "rt") as f:
+        with open(file_name) as f:
             txt = f.read()
             for pos in txt.split("\n"):
                 if pos.startswith("PRJ_TITLE"):
                     return pos.split("=")[1].split('"')[1]
         return prj
-    except (IOError, IndexError, OSError):
+    except (IndexError, OSError):
         return prj
 
 
@@ -301,10 +301,10 @@ for app in settings.INSTALLED_APPS:
     try:
         test = importlib.import_module(pos)
         if hasattr(test, "ModuleName"):
-            module_name = "%s.urls" % str(pos)
+            module_name = f"{str(pos)}.urls"
             m = importlib.import_module(module_name)
             if hasattr(m, "gen"):
-                _urlpatterns.append(path("%s/" % str(elementy[-1]), include(m)))
+                _urlpatterns.append(path(f"{str(elementy[-1])}/", include(m)))
             if hasattr(m, "process_main_urls"):
                 ret = m.process_main_urls(_urlpatterns)
                 if ret:

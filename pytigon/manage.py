@@ -24,9 +24,7 @@ sys.path.insert(
     0,
     os.path.join(
         base_path,
-        "python/lib/python{}.{}/site-packages".format(
-            sys.version_info[0], sys.version_info[1]
-        ),
+        f"python/lib/python{sys.version_info[0]}.{sys.version_info[1]}/site-packages",
     ),
 )
 sys.path.insert(0, base_path)

@@ -77,7 +77,7 @@ def compile_messages():
     for dirpath, _dirnames, filenames in os.walk(basedir):
         for fname in filenames:
             if fname.endswith(".po"):
-                sys.stderr.write("Processing file %s in %s\n" % (fname, dirpath))
+                sys.stderr.write(f"Processing file {fname} in {dirpath}\n")
                 pf = os.path.splitext(os.path.join(dirpath, fname))[0]
                 try:
                     result = subprocess.run(
@@ -87,11 +87,11 @@ def compile_messages():
                     )
                     if result.returncode != 0:
                         sys.stderr.write(
-                            "Error processing %s:\n%s\n" % (fname, result.stderr)
+                            f"Error processing {fname}:\n{result.stderr}\n"
                         )
                         errors_occurred = True
                 except OSError as e:
-                    sys.stderr.write("OS error processing %s: %s\n" % (fname, e))
+                    sys.stderr.write(f"OS error processing {fname}: {e}\n")
                     errors_occurred = True
 
     if errors_occurred:

@@ -449,10 +449,7 @@ def table_loadeddata(event):
                 event.data,
             )
         elif dt == "$$RETURN_HTML_ERROR":
-            if isinstance(event.data, str):
-                txt = event.data
-            else:
-                txt = event.data.innerHTML
+            txt = event.data if isinstance(event.data, str) else event.data.innerHTML
             options = {
                 "title": "Error!",
                 "html": txt,
@@ -466,10 +463,7 @@ def table_loadeddata(event):
             Swal.fire(options)
         elif dt in ("$$RETURN_UPDATE_ROW_OK", "$$RETURN_NEW_ROW_OK"):
             try:
-                if isinstance(event.data, str):
-                    _data = event.data
-                else:
-                    _data = event.data.innerHTML
+                _data = event.data if isinstance(event.data, str) else event.data.innerHTML
                 pk = int(_data.split("id:")[1].strip())
                 table = event.srcElement if event.srcElement else event.data_source
                 datatable = jQuery(table).find("table[name=tabsort].datatable")
@@ -627,10 +621,7 @@ def on_check_toggle_visibility():
                 html = "<button name='menu' class='btn btn-info dropdown-toggle' type='button' data-bs-toggle='dropdown' data-toggle='dropdown'><i class='fa fa-bars'></i></button>"
                 html += "<div class='dropdown-menu'>"
                 for s in actions:
-                    if "/" in s:
-                        x = s.split("/")
-                    else:
-                        x = (s, s)
+                    x = s.split("/") if "/" in s else (s, s)
                     html += (
                         "<button class='dropdown-item' type='button' onclick=\"datatable_action(this, '"
                         + x[0].strip()

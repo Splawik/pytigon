@@ -158,7 +158,7 @@ def standard_error_handler(req):
                 Swal.fire(
                     {
                         "icon": "error",
-                        "title": "Error: %d" % req.status,
+                        "title": f"Error: {req.status}",
                         "text": reader.result,
                     }
                 )
@@ -827,14 +827,8 @@ def history_push_state(title, url, data=None):
         url: URL for the history entry.
         data: Optional data tuple [html_content, element_id] for state restoration.
     """
-    if not url or url == "/":
-        url2 = url
-    else:
-        url2 = "?subpage=" + URL(url, "http://127.0.0.1").pathname
-    if data:
-        data2 = [LZString.compress(data[0]), data[1]]
-    else:
-        data2 = title
+    url2 = url if not url or url == "/" else "?subpage=" + URL(url, "http://127.0.0.1").pathname
+    data2 = [LZString.compress(data[0]), data[1]] if data else title
     window.history.pushState(data2, title, url2)
 
 
@@ -1125,10 +1119,7 @@ def super_insert(base_element, insert_selector, inserted_element):
     """
     if insert_selector and ":" in insert_selector:
         x = insert_selector.split(":")
-        if x[0]:
-            element = super_query_selector(base_element, x[0])
-        else:
-            element = base_element
+        element = super_query_selector(base_element, x[0]) if x[0] else base_element
         selector2 = x[1]
     else:
         if insert_selector:

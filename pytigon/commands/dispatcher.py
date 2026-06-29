@@ -1,30 +1,28 @@
-"""
-Command Dispatcher
+"""Command Dispatcher
 Routes commands to appropriate handlers.
 """
 
-import sys
-from typing import List, Optional, Dict, Any
+from typing import Any
 
-from .registry import CommandRegistry
 from .errors import CommandError, ErrorHandler
 from .handlers import CommandHandler
+from .registry import CommandRegistry
 
 
 class CommandDispatcher:
-    """
-    Command dispatcher that routes commands to appropriate handlers.
+
+    """Command dispatcher that routes commands to appropriate handlers.
 
     Uses the CommandRegistry to find the appropriate handler for each command.
     Provides centralized error handling and logging.
     """
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
-        """
-        Initialize CommandDispatcher.
+    def __init__(self, config: dict[str, Any] | None = None):
+        """Initialize CommandDispatcher.
 
         Args:
             config: Configuration dictionary
+
         """
         self.config = config or {}
         self.registry = CommandRegistry()
@@ -36,14 +34,14 @@ class CommandDispatcher:
     def _register_default_handlers(self) -> None:
         """Register default command handlers."""
         from .handlers import (
+            DefaultCommandHandler,
+            InitCommandHandler,
             ManageCommandHandler,
+            PipCommandHandler,
+            PythonCommandHandler,
             RunCommandHandler,
             RunServerCommandHandler,
-            PythonCommandHandler,
-            InitCommandHandler,
-            PipCommandHandler,
             ToolCommandHandler,
-            DefaultCommandHandler,
         )
 
         # Register handlers in priority order
@@ -56,9 +54,8 @@ class CommandDispatcher:
         self.registry.register(ToolCommandHandler(self.config))
         self.registry.register(DefaultCommandHandler(self.config))
 
-    def dispatch(self, argv: List[str], **kwargs) -> int:
-        """
-        Dispatch a command to the appropriate handler.
+    def dispatch(self, argv: list[str], **kwargs) -> int:
+        """Dispatch a command to the appropriate handler.
 
         Args:
             argv: Command arguments
@@ -66,14 +63,16 @@ class CommandDispatcher:
 
         Returns:
             Exit code (0 for success, non-zero for failure)
+
         """
         try:
             # Find appropriate handler
             handler = self.registry.find_handler(argv)
 
             if handler is None:
+                msg = f"No handler found for command: {argv[1] if len(argv) > 1 else 'unknown'}"
                 raise CommandError(
-                    f"No handler found for command: {argv[1] if len(argv) > 1 else 'unknown'}",
+                    msg,
                     code=30,
                 )
 
@@ -88,10 +87,9 @@ class CommandDispatcher:
             return self.error_handler.handle(e, {"argv": argv})
 
     def dispatch_with_context(
-        self, argv: List[str], context: Optional[Dict[str, Any]] = None
+        self, argv: list[str], context: dict[str, Any] | None = None,
     ) -> int:
-        """
-        Dispatch a command with error context.
+        """Dispatch a command with error context.
 
         Args:
             argv: Command arguments
@@ -99,27 +97,28 @@ class CommandDispatcher:
 
         Returns:
             Exit code
+
         """
         with self.error_handler.error_context(context or {"argv": argv}):
             return self.dispatch(argv)
 
-    def get_available_commands(self) -> List[str]:
-        """
-        Get list of available commands.
+    def get_available_commands(self) -> list[str]:
+        """Get list of available commands.
 
         Returns:
             List of command names
+
         """
         return self.registry.get_command_names()
 
-    def get_handler_for_command(self, command: str) -> Optional[CommandHandler]:
-        """
-        Get handler for a specific command.
+    def get_handler_for_command(self, command: str) -> CommandHandler | None:
+        """Get handler for a specific command.
 
         Args:
             command: Command name
 
         Returns:
             CommandHandler instance or None
+
         """
         return self.registry.get_handler(command)

@@ -73,13 +73,7 @@ BaseForm.as_p = as_p
 
 def widget_attrs(self, widget):
     """Set widget attributes for CharField based on max_length."""
-    if self.max_length == None:
-        max2 = 80
-    else:
-        if self.max_length > 80:
-            max2 = 80
-        else:
-            max2 = self.max_length
+    max2 = 80 if self.max_length == None else 80 if self.max_length > 80 else self.max_length
     if self.max_length is not None and isinstance(widget, (TextInput, PasswordInput)):
         return {"max_length": str(self.max_length), "size": str(max2)}
 

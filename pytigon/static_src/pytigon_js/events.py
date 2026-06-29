@@ -85,18 +85,12 @@ def _get_title(element, data_element, url):
     title = element.getAttribute("title")
     if data_element:
         title_element = data_element.querySelector("title")
-        if title_element:
-            title_alt = title_element.innerHTML.strip()
-        else:
-            title_alt = ""
+        title_alt = title_element.innerHTML.strip() if title_element else ""
     else:
         title_alt = ""
     if not title and not title_alt:
         url2 = url.split("?")[0]
-        if len(url2) > 16:
-            title = "..." + url2[-13:]
-        else:
-            title = url2
+        title = "..." + url2[-13:] if len(url2) > 16 else url2
     else:
         if not title:
             title = title_alt
@@ -363,10 +357,7 @@ def on_click_default_action(event, target_element):
                 new_target_elem = data_element
             else:
                 new_target_elem = data_element.querySelector("meta[name='target']")
-            if new_target_elem:
-                new_target = new_target_elem.getAttribute("content")
-            else:
-                new_target = None
+            new_target = new_target_elem.getAttribute("content") if new_target_elem else None
             if new_target and new_target != target:
                 new_url, new_callback = _get_click_event_from_tab(target_element, new_target, url)
                 element = new_callback(target_element, data_element, new_url, param, event)
@@ -588,10 +579,7 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
         bottom = top + viewportOffset.height
         height = window.innerHeight
         if bottom > height:
-            if height > viewportOffset.height:
-                top2 = (height - viewportOffset.height) / 2
-            else:
-                top2 = 0
+            top2 = (height - viewportOffset.height) / 2 if height > viewportOffset.height else 0
             dy = top - top2
 
             scroll_frame = plug.firstElementChild
@@ -860,10 +848,7 @@ def on_replace_app(target_element, data_element, new_url, param, event):
     re-activates the menu. Preserves subpage navigation if present.
     """
     subpages = (URLSearchParams(window.location.search)).getAll("subpage")
-    if subpages:
-        subpage = subpages[0]
-    else:
-        subpage = None
+    subpage = subpages[0] if subpages else None
 
     if window.PUSH_STATE:
         history_push_state("", window.BASE_PATH)
@@ -1030,15 +1015,9 @@ def close_frame(target_element, data_element, new_url, param, event, data_region
         data_region: Optional region name override.
     """
     f = target_element.getAttribute("data-link")
-    if f:
-        data_element2 = super_query_selector(data_element, f)
-    else:
-        data_element2 = data_element
+    data_element2 = super_query_selector(data_element, f) if f else data_element
 
-    if data_region:
-        data_region2 = data_region
-    else:
-        data_region2 = target_element.getAttribute("data-region")
+    data_region2 = data_region or target_element.getAttribute("data-region")
 
     region = get_ajax_region(get_ajax_region(target_element, "page").parentElement, data_region2)
 
@@ -1081,15 +1060,9 @@ def refresh_frame(target_element, data_element, new_url, param, event, data_regi
         data_region: Optional region name for the frame to refresh.
     """
     f = target_element.getAttribute("data-link")
-    if f:
-        data_element2 = super_query_selector(data_element, f)
-    else:
-        data_element2 = data_element
+    data_element2 = super_query_selector(data_element, f) if f else data_element
 
-    if data_region:
-        data_region2 = data_region
-    else:
-        data_region2 = target_element.getAttribute("data-region")
+    data_region2 = data_region or target_element.getAttribute("data-region")
 
     return refresh_ajax_frame(target_element, data_region2, data_element2)
 

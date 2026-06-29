@@ -41,7 +41,7 @@ class Command(BaseCommand):
         with chdir(os.environ["START_PATH"]):
             print(os.getcwd())
             if "input" in options and options["input"]:
-                with open(options["input"], "rt") as f:
+                with open(options["input"]) as f:
                     buf = f.read()
             else:
                 buf = sys.stdin.read()
@@ -58,7 +58,7 @@ class Command(BaseCommand):
                     file_name = options["input"].replace(".md", "") + ".html"
                 else:
                     file_name = options["output"]
-                with open(file_name, "wt") as f:
+                with open(file_name, "w") as f:
                     f.write(buf3)
             else:
                 print(buf3)

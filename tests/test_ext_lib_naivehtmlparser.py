@@ -1,9 +1,6 @@
-"""
-Pytest tests for pytigon.ext_lib.naivehtmlparser module.
+"""Pytest tests for pytigon.ext_lib.naivehtmlparser module.
 """
 
-import pytest
-from xml.etree import ElementTree
 from pytigon.ext_lib.naivehtmlparser import NaiveHTMLParser
 
 

@@ -901,10 +901,7 @@ def refresh_ajax_frame(
             ):
                 # After successful action, refresh the parent frame
                 plug = region.closest(".plug")
-                if plug:
-                    elem = region.closest(".plug").parentElement
-                else:
-                    elem = element
+                elem = region.closest(".plug").parentElement if plug else element
                 if callback:
                     callback()
                 return refresh_ajax_frame(elem, "", None, None, callback_on_error, data)
@@ -925,10 +922,7 @@ def refresh_ajax_frame(
             elif dt == "$$RETURN_REFRESH_AUTO_FRAME":
                 auto_frame_init(frame)
             elif dt == "$$RETURN_HTML_ERROR":
-                if isinstance(data, str):
-                    txt = data
-                else:
-                    txt = data.innerHTML
+                txt = data if isinstance(data, str) else data.innerHTML
                 options = {
                     "title": "Error!",
                     "html": txt,

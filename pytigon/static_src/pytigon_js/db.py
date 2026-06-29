@@ -12,6 +12,7 @@ Provides:
 # Database initialization
 # =============================================================================
 
+import contextlib
 INIT_DB_STRUCT = None
 
 
@@ -89,10 +90,7 @@ def get_table(table_name, on_open, read_only=True):
 
     def _on_open(db):
         nonlocal on_open
-        if read_only == True:
-            mode = "readonly"
-        else:
-            mode = "readwrite"
+        mode = "readonly" if read_only == True else "readwrite"
         tabTrans = db.transaction(table_name, mode)
         tabObjectStore = tabTrans.objectStore(table_name)
         on_open(tabTrans, tabObjectStore)
@@ -295,10 +293,8 @@ def sync_and_run(tbl, fun):
                 nonlocal fun
                 fun("timeout")
 
-            try:
+            with contextlib.suppress(Exception):
                 request.timeout = 2000
-            except Exception:
-                pass
             request.ontimeout = _on_timeout
 
         ajax_get(rec[1], complete, _on_request_init)

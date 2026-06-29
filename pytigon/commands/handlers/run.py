@@ -1,42 +1,38 @@
-"""
-Run Command Handler
+"""Run Command Handler
 Handles running Python scripts in Pytigon environment.
 """
 
 import os
 import sys
-from typing import List, Optional, Dict, Any
 
 from .base import CommandHandler
-from ..errors import CommandError
 
 
 class RunCommandHandler(CommandHandler):
-    """
-    Handler for running Python scripts.
+
+    """Handler for running Python scripts.
 
     Handles commands like:
     - pytigon run_<app>.<script>
     - pytigon run_<app> <file.py>
     """
 
-    def can_handle(self, argv: List[str]) -> bool:
-        """
-        Check if this handler can handle the given command.
+    def can_handle(self, argv: list[str]) -> bool:
+        """Check if this handler can handle the given command.
 
         Args:
             argv: Command arguments
 
         Returns:
             True if command starts with 'run_', False otherwise
+
         """
         if len(argv) > 1:
             return argv[1].startswith("run_")
         return False
 
-    def execute(self, argv: List[str], **kwargs) -> int:
-        """
-        Execute the run command.
+    def execute(self, argv: list[str], **kwargs) -> int:
+        """Execute the run command.
 
         Args:
             argv: Command arguments
@@ -44,6 +40,7 @@ class RunCommandHandler(CommandHandler):
 
         Returns:
             Exit code
+
         """
         try:
             # Parse command to extract app and script
@@ -64,7 +61,7 @@ class RunCommandHandler(CommandHandler):
                     # Make path absolute if relative
                     if not (file_name.startswith("/") or ":" in file_name[:2]):
                         file_name = os.path.join(
-                            os.environ.get("START_PATH", os.getcwd()), file_name
+                            os.environ.get("START_PATH", os.getcwd()), file_name,
                         )
                     script = file_name.replace("\\", "/").split("/")[-1].split(".")[0]
                 else:
@@ -112,11 +109,9 @@ class RunCommandHandler(CommandHandler):
                 import django
 
                 django.setup()
-                return getattr(module, "main")(argv[2:])
+                return module.main(argv[2:])
 
             return 0
 
         except Exception as e:
-            return self.handle_error(
-                e, {"command": argv[1] if len(argv) > 1 else "run"}
-            )
+            return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "run"})

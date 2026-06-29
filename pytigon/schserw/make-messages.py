@@ -133,8 +133,7 @@ def run_xgettext(filepath, domain, potfile_exists, xgettext_cmd):
         result = subprocess.run(cmd, capture_output=True)
         if result.stderr:
             sys.stderr.write(
-                "Errors while running xgettext on %s:\n%s\n"
-                % (
+                "Errors while running xgettext on {}:\n{}\n".format(
                     os.path.basename(filepath),
                     result.stderr.decode("utf-8", errors="replace"),
                 )
@@ -142,7 +141,7 @@ def run_xgettext(filepath, domain, potfile_exists, xgettext_cmd):
         return result.stdout
     except OSError as e:
         sys.stderr.write(
-            "OS error running xgettext on %s: %s\n" % (os.path.basename(filepath), e)
+            f"OS error running xgettext on {os.path.basename(filepath)}: {e}\n"
         )
         return b""
 
@@ -221,13 +220,13 @@ def make_messages():
 
     with tempfile.TemporaryDirectory() as tmpdir:
         for lang in languages:
-            print("Processing language: %s" % lang)
+            print(f"Processing language: {lang}")
             basedir = os.path.join(localedir, lang, "LC_MESSAGES")
             if not os.path.isdir(basedir):
                 os.makedirs(basedir)
 
-            pofile = os.path.join(basedir, "%s.po" % domain)
-            potfile = os.path.join(basedir, "%s.pot" % domain)
+            pofile = os.path.join(basedir, f"{domain}.po")
+            potfile = os.path.join(basedir, f"{domain}.pot")
 
             # Remove old pot file
             if os.path.exists(potfile):
@@ -240,7 +239,7 @@ def make_messages():
                     if domain == DOMAIN_DJANGOJS and file.endswith(".js"):
                         if verbose:
                             sys.stdout.write(
-                                "Processing file %s in %s\n" % (file, dirpath)
+                                f"Processing file {file} in {dirpath}\n"
                             )
                         src_path = os.path.join(dirpath, file)
                         with open(src_path, "rb") as fh:
@@ -292,7 +291,7 @@ def make_messages():
 
                         if verbose:
                             sys.stdout.write(
-                                "Processing file %s in %s\n" % (file, dirpath)
+                                f"Processing file {file} in {dirpath}\n"
                             )
 
                         msgs = run_xgettext(
@@ -324,8 +323,7 @@ def make_messages():
                     )
                     if result.stderr:
                         sys.stderr.write(
-                            "Errors while running msguniq:\n%s\n"
-                            % result.stderr.decode("utf-8", errors="replace")
+                            "Errors while running msguniq:\n{}\n".format(result.stderr.decode("utf-8", errors="replace"))
                         )
 
                     msgs = result.stdout
@@ -333,7 +331,7 @@ def make_messages():
                     with open(potfile, "wb") as fh:
                         fh.write(msgs)
                 except OSError as e:
-                    sys.stderr.write("OS error running msguniq: %s\n" % e)
+                    sys.stderr.write(f"OS error running msguniq: {e}\n")
 
                 # Merge with existing po file
                 if os.path.exists(pofile) and msgmerge_cmd:
@@ -344,15 +342,14 @@ def make_messages():
                         )
                         if result.stderr:
                             sys.stderr.write(
-                                "Errors while running msgmerge:\n%s\n"
-                                % result.stderr.decode("utf-8", errors="replace")
+                                "Errors while running msgmerge:\n{}\n".format(result.stderr.decode("utf-8", errors="replace"))
                             )
 
                         if result.stdout:
                             with open(pofile, "wb") as fh:
                                 fh.write(result.stdout)
                     except OSError as e:
-                        sys.stderr.write("OS error running msgmerge: %s\n" % e)
+                        sys.stderr.write(f"OS error running msgmerge: {e}\n")
                 elif os.path.exists(potfile):
                     # No existing po file, copy pot content
                     with open(potfile, "rb") as fh:

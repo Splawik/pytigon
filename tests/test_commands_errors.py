@@ -1,21 +1,21 @@
+"""Pytest tests for pytigon.commands.errors module (exceptions and error handler).
 """
-Pytest tests for pytigon.commands.errors module (exceptions and error handler).
-"""
+
+import logging
 
 import pytest
-import logging
+
 from pytigon.commands.errors.exceptions import (
-    PytigonError,
-    ConfigurationError,
-    SecurityError,
     CommandError,
-    SubprocessError,
+    ConfigurationError,
     PathError,
-    ValidationError,
+    PytigonError,
     ResourceError,
+    SecurityError,
+    SubprocessError,
+    ValidationError,
 )
 from pytigon.commands.errors.handler import ErrorHandler
-
 
 # ---------------------------------------------------------------------------
 # PytigonError base class tests

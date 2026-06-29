@@ -1,13 +1,14 @@
-from pytigon.schserw.schsys.cache_message_storage import CacheStorage
-
 # Pytest tests
+import contextlib
+
 import pytest
-from unittest.mock import MagicMock
-from django.contrib.messages.storage.base import Message
 from django.test import RequestFactory
+
+from pytigon.schserw.schsys.cache_message_storage import CacheStorage
 
 
 class MockSession(dict):
+
     """A mock session that behaves like a Django session with session_key."""
 
     def __init__(self, session_key="test_session_key"):
@@ -52,11 +53,8 @@ def test_cache_storage_get_no_messages(cache_storage):
 
 def test_cache_storage_store_no_messages(cache_storage):
     """Test _store with empty messages list deletes cache key."""
-    try:
+    with contextlib.suppress(Exception):
         cache_storage._store([], None)
-    except Exception:
-        # May fail if cache is not properly configured
-        pass
     # After storing empty messages, the method should complete without error
     assert True
 

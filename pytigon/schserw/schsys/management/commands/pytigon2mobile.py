@@ -5,6 +5,7 @@ from pyquery import PyQuery as pq
 
 from django.core.management.base import BaseCommand
 from pytigon_lib.schhttptools import httpclient
+import contextlib
 
 httpclient.init_embeded_django()
 
@@ -75,10 +76,8 @@ class Command(BaseCommand):
 
                 path3 = os.path.join(output_path, *(path2.split("/")))
                 path4 = os.path.join(output_path, *(path2.split("/")[:-1]))
-                try:
+                with contextlib.suppress(OSError):
                     os.makedirs(path4, exist_ok=True)
-                except OSError:
-                    pass
 
                 try:
                     with open(
@@ -95,7 +94,7 @@ class Command(BaseCommand):
                             )
                         else:
                             o.write(r.ptr())
-                except (IOError, OSError):
+                except OSError:
                     pass
 
             if not txt_file:
@@ -138,10 +137,8 @@ class Command(BaseCommand):
                                         urls.append(u + "?fragment=page")
 
             for url in urls:
-                try:
+                with contextlib.suppress(Exception):
                     parse_url(base_url, url)
-                except Exception:
-                    pass
 
         parse_url(BASE_URL, "/")
         parse_url(
@@ -164,14 +161,12 @@ class Command(BaseCommand):
                 if dirpath.endswith("/components"):
                     if fname.endswith(".js"):
                         p = os.path.join(dirpath, fname)
-                        with open(p, "rt") as f:
+                        with open(p) as f:
                             for line in f.readlines():
                                 if "BASE_PATH" in line:
                                     if line.strip().startswith("BASE_PATH"):
-                                        try:
+                                        with contextlib.suppress(Exception):
                                             bp = line.split('"')[1]
-                                        except Exception:
-                                            pass
                                     else:
                                         try:
                                             x = line.split('"')
@@ -184,14 +179,12 @@ class Command(BaseCommand):
                                             pass
 
         for s in to_scan:
-            try:
+            with contextlib.suppress(Exception):
                 parse_url(BASE_URL, s)
-            except Exception:
-                pass
 
-        with open(os.path.join(output_path, "index.html"), "rt") as f:
+        with open(os.path.join(output_path, "index.html")) as f:
             buf = f.read()
-        with open(os.path.join(output_path, "index.html"), "wt") as f:
+        with open(os.path.join(output_path, "index.html"), "w") as f:
             f.write(
                 buf.replace(
                     '<script src="schsys/jsi18n.js"></script>',

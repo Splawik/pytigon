@@ -10,25 +10,25 @@ def build(**argv):
     nim_path = install_if_not_exists(settings.DATA_PATH)
 
     if os.name == "nt":
-        os.environ["PATH"] = os.environ["PATH"] + (";%s\\bin\\" % nim_path)
+        os.environ["PATH"] = os.environ["PATH"] + (f";{nim_path}\\bin\\")
         exe = "nim.exe"
         out_path = os.path.join(
             settings.DATA_PATH,
             "prg",
-            settings.PRJ_NAME + "_" + base_name + ".exe",
+            f"{settings.PRJ_NAME}_{base_name}.exe",
         )
     else:
-        os.environ["PATH"] = os.environ["PATH"] + (":%s/bin/" % nim_path)
+        os.environ["PATH"] = os.environ["PATH"] + (f":{nim_path}/bin/")
         exe = "nim"
         out_path = os.path.join(
             settings.DATA_PATH,
             "prg",
-            settings.PRJ_NAME + "_" + base_name,
+            f"{settings.PRJ_NAME}_{base_name}",
         )
 
     packages = ""
     if packages:
-        packages_list = packages.replace(",",";").split(";")
+        packages_list = packages.replace(",", ";").split(";")
         for package in packages_list:
             subprocess.run(
                 [   

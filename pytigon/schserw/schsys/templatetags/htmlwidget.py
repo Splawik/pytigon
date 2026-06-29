@@ -10,6 +10,7 @@ from django.template.base import token_kwargs, TemplateSyntaxError
 from django.template import Template
 from django.template.loader import get_template
 from django.utils.safestring import mark_safe
+import contextlib
 
 register = template.Library()
 
@@ -45,9 +46,9 @@ class HtmlWidgetNode(template.Node):
         Returns:
             str: Rendered HTML widget.
         """
-        values = dict(
-            (key, val.resolve(context)) for key, val in self.extra_context.items()
-        )
+        values = {
+            key: val.resolve(context) for key, val in self.extra_context.items()
+        }
 
         context.update(values)
 
@@ -70,17 +71,13 @@ class HtmlWidgetNode(template.Node):
         # Build default parameters
         def_param = ""
         if "width" in context:
-            def_param += "width='%s' " % context["width"]
-            try:
+            def_param += "width='{}' ".format(context["width"])
+            with contextlib.suppress(ValueError, TypeError):
                 context["width"] = int(context["width"]) - 10
-            except (ValueError, TypeError):
-                pass
         if "height" in context:
-            def_param += "height='%s' " % context["height"]
-            try:
+            def_param += "height='{}' ".format(context["height"])
+            with contextlib.suppress(ValueError, TypeError):
                 context["height"] = int(context["height"]) - 10
-            except (ValueError, TypeError):
-                pass
         context["def_param"] = def_param
 
         # Render the inner template content
@@ -125,15 +122,15 @@ def do_widget(parser, token):
 
     if not extra_context:
         raise TemplateSyntaxError(
-            "%r tag expected at least one variable assignment" % bits[0]
+            f"{bits[0]!r} tag expected at least one variable assignment"
         )
     if "id" not in extra_context or "class" not in extra_context:
         raise TemplateSyntaxError(
-            "%r tag requires 'id' and 'class' parameters" % bits[0]
+            f"{bits[0]!r} tag requires 'id' and 'class' parameters"
         )
     if remaining_bits:
         raise TemplateSyntaxError(
-            "%r tag received an invalid token: %r" % (bits[0], remaining_bits[0])
+            f"{bits[0]!r} tag received an invalid token: {remaining_bits[0]!r}"
         )
 
     nodelist = parser.parse(("endwidget",))

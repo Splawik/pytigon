@@ -443,7 +443,7 @@ def amount(text):
     def split_len(seq, length):
         return [seq[i : i + length] for i in range(0, len(seq), length)]
 
-    s = "%.02f" % f
+    s = f"{f:.2f}"
     t = s.split(".")
     return " ".join(split_len(t[0][::-1], 3))[::-1] + "." + t[1]
 
@@ -466,10 +466,7 @@ def parse_locale_date(formatted_date):
 def isoformat(value):
     """Formats the value as an ISO date string."""
     if value:
-        if isinstance(value, str):
-            value2 = parse_locale_date(value)
-        else:
-            value2 = value
+        value2 = parse_locale_date(value) if isinstance(value, str) else value
         try:
             iso = value2.isoformat()[:19].replace("T", " ")
             if isinstance(value, str) and len(value) <= 10:
@@ -685,7 +682,7 @@ def get_model_ooxml_row(obj):
 @register.filter(name="get_all_model_fields")
 def get_all_model_fields(value):
     """Returns all fields of the model, including many-to-many fields."""
-    return [f for f in value._meta.fields + value._meta.many_to_many]
+    return list(value._meta.fields + value._meta.many_to_many)
 
 
 @register.filter(name="get_all_model_parents")
@@ -727,7 +724,7 @@ def get_model_fields_verbose_names(obj):
                     ret.append(field.name)
     else:
         for i in range(0, len(obj)):
-            ret.append("x%d" % i)
+            ret.append(f"x{i}")
     return ret
 
 
@@ -959,20 +956,20 @@ def append_class_to_attrs(obj, arg):
         for pos in [x.split("=") for x in obj.split(" ")]:
             if pos[0] == "class":
                 test = True
-                ret += "%s='%s' " % (
+                ret += "{}='{}' ".format(
                     "class",
                     pos[1].replace('"', "").replace("'", "") + " " + arg + " ",
                 )
             else:
                 if len(pos) == 2:
-                    ret += "%s=%s " % (pos[0], pos[1])
+                    ret += f"{pos[0]}={pos[1]} "
                 else:
                     ret += pos[0] + " "
         if not test:
-            ret += "%s='%s' " % ("class", arg + " ")
+            ret += "{}='{}' ".format("class", arg + " ")
         return ret[:-1]
     else:
-        return "class='%s'" % arg
+        return f"class='{arg}'"
 
 
 @register.filter(name="is_menu_checked")

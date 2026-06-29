@@ -77,6 +77,7 @@ from django import forms
 from django_select2 import forms as s2forms
 
 from pyquery import PyQuery as pq
+import contextlib
 
 
 register = template.Library()
@@ -248,13 +249,13 @@ def view_row(
         href = url
     else:
         if "version" in context and context["version"]:
-            href = "{tp}%s/%s/view/?version=%s" % (
+            href = "{{tp}}{}/{}/view/?version={}".format(
                 context["object"].id,
                 context["target"] if context["target"] != "json" else "_",
                 context["version"],
             )
         else:
-            href = "{tp}%s/%s/view/" % (
+            href = "{{tp}}{}/{}/view/".format(
                 context["object"].id,
                 context["target"] if context["target"] != "json" else "_",
             )
@@ -271,7 +272,7 @@ def view_row(
     if hasattr(object, "str"):
         ret["title2"] = str(object)
     else:
-        ret["title2"] = ("%s(id=" % type(object).__name__) + str(title) + ")"
+        ret["title2"] = (f"{type(object).__name__}(id=") + str(title) + ")"
     return ret
 
 
@@ -341,7 +342,7 @@ def new_row_base(
         url2 = url
     else:
         if "vtype" in context and context["vtype"] == "tree":
-            url2 = "{tp}%s/this/{x1}/add/" % context["parent_pk"]
+            url2 = "{{tp}}{}/this/{{x1}}/add/".format(context["parent_pk"])
         else:
             url2 = "{tp}{x1}/add/"
 
@@ -503,21 +504,13 @@ def row_related_list(
             version = "__" + version
         if filter != "!":
             if filter.startswith("+") or not filter:
-                f = "%s__%s__%d" % (
-                    context["app_name"],
-                    context["table_name"],
-                    context["object"].id,
-                )
+                f = f"{context['app_name']}__{context['table_name']}__{context['object'].id}"
                 if filter:
                     filter = f + "__" + filter[1:]
                 else:
                     obj = context["object"]
                     if hasattr(obj, "application") and hasattr(obj, "table"):
-                        filter = "%s__%s_%s" % (
-                            f,
-                            obj.application,
-                            obj.table,
-                        )
+                        filter = f"{f}__{obj.application}_{obj.table}"
                     else:
                         filter = f + "__default"
 
@@ -579,7 +572,7 @@ def list_action(
             target,
             attrs,
             tag_class,
-            url if url else "{tp}action/%s/" % action,
+            url if url else f"{{tp}}action/{action}/",
         )
     elif active:
         ret = action_fun(
@@ -590,7 +583,7 @@ def list_action(
             target,
             "data-role='button'",
             "btn btn-light shadow-none no_close no_cancel",
-            url if url else "{tp}action/%s/" % action,
+            url if url else f"{{tp}}action/{action}/",
         )
     else:
         ret = action_fun(
@@ -601,7 +594,7 @@ def list_action(
             target,
             "data-role='button'",
             "btn btn-light shadow-none no_ok no_cancel",
-            url if url else "{tp}action/%s/" % action,
+            url if url else f"{{tp}}action/{action}/",
         )
     return ret
 
@@ -641,7 +634,7 @@ def wiki_button(
     :rtype: str
     """
     wiki_name = wiki_from_str(wiki_description)
-    wiki_url = "/schwiki/%s/%s/view/" % (subject, wiki_name)
+    wiki_url = f"/schwiki/{subject}/{wiki_name}/view/"
     return action_fun(
         context,
         "wiki",
@@ -701,19 +694,13 @@ def field(context, form_field, fieldformat=None, inline=False):
     :rtype: dict
     """
 
-    if type(form_field) in (
-        SafeText,
-        str,
-    ):
-        field = context["form"][form_field]
-    else:
-        field = form_field
+    field = context["form"][form_field] if type(form_field) in (SafeText, str) else form_field
 
     label_class = "control-label float-left"
     offset = ""
-    form_group_class = "form-group group_%s" % type(field.field).__name__.lower()
+    form_group_class = f"form-group group_{type(field.field).__name__.lower()}"
     form_group_size_class = " col-sm-12 col-md-12"
-    field_class = "controls float-left %s" % type(field.field).__name__.lower()
+    field_class = f"controls float-left {type(field.field).__name__.lower()}"
     placeholder = ""
     show_label = True
 
@@ -754,21 +741,13 @@ def field(context, form_field, fieldformat=None, inline=False):
         else:
             y = [int(pos) for pos in x[0].split(":")]
             if len(y) == 3:
-                label_class += " col-sm-%d col-md-%d col-lg-%d" % (y[0], y[1], y[2])
-                field_class += " col-sm-%d col-md-%d col-lg-%d" % (
-                    (11 - y[0]) % 12 + 1,
-                    (11 - y[1]) % 12 + 1,
-                    (11 - y[2]) % 12 + 1,
-                )
-                offset = " offset-sm-%d offset-md-%d offset-lg-%d" % (
-                    y[0] % 12,
-                    y[1] % 12,
-                    y[2] % 12,
-                )
+                label_class += f" col-sm-{y[0]} col-md-{y[1]} col-lg-{y[2]}"
+                field_class += f" col-sm-{(11 - y[0]) % 12 + 1} col-md-{(11 - y[1]) % 12 + 1} col-lg-{(11 - y[2]) % 12 + 1}"
+                offset = f" offset-sm-{y[0] % 12} offset-md-{y[1] % 12} offset-lg-{y[2] % 12}"
             else:
-                label_class += " col-sm-12 col-md-%d" % y[0]
-                field_class += " col-sm-12 col-md-%d" % ((11 - y[0]) % 12 + 1)
-                offset = "offset-sm-0 offset-md-%d" % (y[0] % 12)
+                label_class += f" col-sm-12 col-md-{y[0]}"
+                field_class += f" col-sm-12 col-md-{(11 - y[0]) % 12 + 1}"
+                offset = f"offset-sm-0 offset-md-{y[0] % 12}"
 
         if not inline:
             form_group_class += " mb-2"
@@ -776,13 +755,9 @@ def field(context, form_field, fieldformat=None, inline=False):
         if x[1]:
             y = x[1].split(":")
             if len(y) == 3:
-                form_group_size_class = "col-sm-%s col-md-%s col-lg-%s" % (
-                    y[0],
-                    y[1],
-                    y[2],
-                )
+                form_group_size_class = f"col-sm-{y[0]} col-md-{y[1]} col-lg-{y[2]}"
             else:
-                form_group_size_class = " col-sm-12 col-md-%s" % y[0]
+                form_group_size_class = f" col-sm-12 col-md-{y[0]}"
             form_group_class += " " + form_group_size_class
 
         if len(x) > 2:
@@ -887,10 +862,7 @@ class Form(Node):
                         fields.append([name, p])
         else:
             for field in form:
-                if len(self.param) > 1:
-                    p = self.param[1].resolve(context)
-                else:
-                    p = self.def_param
+                p = self.param[1].resolve(context) if len(self.param) > 1 else self.def_param
                 fields.append([field.name, p])
         if self.def_param == "^/":
             template_str = "{% load exsyntax %}<div class='d-inline-flex flex-wrap'>"
@@ -900,11 +872,7 @@ class Form(Node):
             if type(field) == str:
                 template_str += field
             else:
-                template_str += "{%% field '%s' '%s' %d %%}" % (
-                    field[0],
-                    field[1],
-                    self.inline,
-                )
+                template_str += f"{{% field '{field[0]}' '{field[1]}' {self.inline} %}}"
         template_str += "</div>"
         t = Template(template_str)
         return t.render(context)
@@ -920,7 +888,7 @@ def form(parser, token):
         {% endform %}
     """
     parm = token.split_contents()
-    nodelist = parser.parse(("endform"))
+    nodelist = parser.parse("endform")
     parser.delete_first_token()
     return Form(nodelist, "12:3:3/12:12:12", parm)
 
@@ -990,30 +958,18 @@ class FormItemNode(Node):
             content = str(context["form"][self.field_name])
 
         if self.tag:
-            elem0 = """ <%s class="%s form-control" name="%s" id="id_%s"> """ % (
-                self.tag,
-                self.field_name,
-                self.field_name,
-                self.field_name,
-            )
-            elem1 = "</%s>" % self.tag
+            elem0 = f""" <{self.tag} class="{self.field_name} form-control" name="{self.field_name}" id="id_{self.field_name}"> """
+            elem1 = f"</{self.tag}>"
         else:
             elem0 = ""
             elem1 = ""
 
-        ret = """
-            <div id="div_id_%s" class="form-group">
-                <label for="id_%s" class="control-label">%s</label>
-                <div class="controls">%s%s%s</div>
+        ret = f"""
+            <div id="div_id_{self.field_name}" class="form-group">
+                <label for="id_{self.field_name}" class="control-label">{title}</label>
+                <div class="controls">{elem0}{content}{elem1}</div>
             </div>
-        """ % (
-            self.field_name,
-            self.field_name,
-            title,
-            elem0,
-            content,
-            elem1,
-        )
+        """
 
         return ret
 
@@ -1114,26 +1070,23 @@ def get_table_row(
             else:
                 _search_fields = "name__icontains"
 
-    if "formformat" in context:
-        formformat = context["formformat"]
-    else:
-        formformat = "12:3:3/12:12:12"
+    formformat = context["formformat"] if "formformat" in context else "12:3:3/12:12:12"
 
     if TreeModel in model.__bases__:
         if filter:
             href1 = make_href(
-                "/%s/table/%s/%s/0/form/gettree/" % (_app_name, _table_name, filter)
+                f"/{_app_name}/table/{_table_name}/{filter}/0/form/gettree/"
             )
-            href2 = make_href("/%s/table/%s/-/add/" % (_app_name, _table_name))
+            href2 = make_href(f"/{_app_name}/table/{_table_name}/-/add/")
         else:
-            href1 = make_href("/%s/table/%s/0/form/gettree/" % (_app_name, _table_name))
-            href2 = make_href("/%s/table/%s/-/add/" % (_app_name, _table_name))
+            href1 = make_href(f"/{_app_name}/table/{_table_name}/0/form/gettree/")
+            href2 = make_href(f"/{_app_name}/table/{_table_name}/-/add/")
     else:
         _filter = filter if filter else "-"
         href1 = make_href(
-            "/%s/table/%s/%s/form/get/" % (_app_name, _table_name, _filter)
+            f"/{_app_name}/table/{_table_name}/{_filter}/form/get/"
         )
-        href2 = make_href("/%s/table/%s/%s/add/" % (_app_name, _table_name, _filter))
+        href2 = make_href(f"/{_app_name}/table/{_table_name}/{_filter}/add/")
 
     class _Form(forms.Form):
         def __init__(self, *args, **kwargs):
@@ -1238,7 +1191,7 @@ def module_link(context, href):
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
         try:
-            with open(content_path, "rt", encoding="utf-8") as f:
+            with open(content_path, encoding="utf-8") as f:
                 content = (
                     f.read()
                     .replace("<script", "<_script_")
@@ -1269,7 +1222,7 @@ def jscript_link(context, href):
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
         try:
-            with open(content_path, "rt", encoding="utf-8") as f:
+            with open(content_path, encoding="utf-8") as f:
                 content = (
                     f.read()
                     .replace("<script", "<_script_")
@@ -1300,7 +1253,7 @@ def css_link(context, href):
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
         try:
-            with open(content_path, "rt", encoding="utf-8") as f:
+            with open(content_path, encoding="utf-8") as f:
                 content = (
                     f.read()
                     .replace("<script", "<_script_")
@@ -1353,7 +1306,7 @@ def jscript(context, href):
     """
     content_path = os.path.join(settings.STATIC_ROOT, href)
     content = ""
-    with open(content_path, "rt", encoding="utf-8") as f:
+    with open(content_path, encoding="utf-8") as f:
         content = f.read()
     return {"content": mark_safe(content)}
 
@@ -1376,7 +1329,7 @@ def component(context, href):
         content_path = os.path.join(settings.STATIC_ROOT, href)
         content = ""
         try:
-            with open(content_path, "rt", encoding="utf-8") as f:
+            with open(content_path, encoding="utf-8") as f:
                 content = (
                     f.read()
                     .replace("<script", "<_script_")
@@ -1517,10 +1470,7 @@ def editable_base(context, name, title, url):
     if "date" in t:
         t = "combodate"
         date_str = """ data-format="YYYY-MM-DD" data-viewformat="YYYY-MM-DD" data-template="YYYY-MM-DD" """
-    if title:
-        t2 = title
-    else:
-        t2 = ""
+    t2 = title or ""
     oid = getattr(context["object"], "id")
     value = getattr(context["object"], field_name)
     return f"<a class='editable autoopen' data-name='{field_name}' data-type='{t}' data-pk='{oid}' data-url='{url.format(**locals())}' data-title='{t2}' href='#' {date_str}> {value} </a>"
@@ -1584,9 +1534,9 @@ def td_editable(context, name, title=""):
 
     if context["standard_web_browser"]:
         url = context["table_path"] + "{oid}/{field_name}/editable/editor/"
-        return mark_safe("<td>%s</td>" % editable_base(context, name, title, url))
+        return mark_safe(f"<td>{editable_base(context, name, title, url)}</td>")
     else:
-        ret = "<td>%s</td>" % getattr(context["object"], name)
+        ret = "<td>{}</td>".format(getattr(context["object"], name))
         return mark_safe(ret)
 
 
@@ -1721,39 +1671,27 @@ class ComboSelect(Node):
             name = field_or_field_name.name
             label = field_or_field_name.label
 
-        values = dict([(key, val.resolve(context)) for key, val in self.param.items()])
+        values = {key: val.resolve(context) for key, val in self.param.items()}
         if "label" in values:
             label = values["label"]
         else:
             if not label:
                 label = name
-        if "data_rel_name" in values:
-            data_rel_name = values["data_rel_name"]
-        else:
-            data_rel_name = ""
-        if "src" in values:
-            src = values["src"]
-        else:
-            src = ""
+        data_rel_name = values["data_rel_name"] if "data_rel_name" in values else ""
+        src = values["src"] if "src" in values else ""
 
-        template_str = """
-            {%% load exsyntax %%}
+        template_str = f"""
+            {{% load exsyntax %}}
             <div class="form-group group_choicefield form-floating">
-                <select class="select_combo form-select" name="%s" data-rel-name="%s" src="%s">
+                <select class="select_combo form-select" name="{name}" data-rel-name="{data_rel_name}" src="{src}">
                         <option disabled selected value />
-                        %s 
+                        {output} 
                 </select>
                 <label class="form-label control-label float-left">
-                    %s
+                    {label}
                 </label>
             </div>
-        """ % (
-            name,
-            data_rel_name,
-            src,
-            output,
-            label,
-        )
+        """
         t = Template(template_str)
         return t.render(context)
 
@@ -1778,7 +1716,7 @@ def comboselect(parser, token):
     remaining_bits = bits[2:]
     extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
     parm = token.split_contents()
-    nodelist = parser.parse(("endcomboselect"))
+    nodelist = parser.parse("endcomboselect")
     parser.delete_first_token()
     return ComboSelect(nodelist, bits[1], extra_context)
 
@@ -1795,9 +1733,9 @@ class HtmlWidgetNode(template.Node):
         return "<HtmlWidgetNode>"
 
     def render(self, context):
-        values = dict(
-            [(key, val.resolve(context)) for key, val in self.extra_context.items()]
-        )
+        values = {
+            key: val.resolve(context) for key, val in self.extra_context.items()
+        }
 
         context.update(values)
 
@@ -1815,17 +1753,13 @@ class HtmlWidgetNode(template.Node):
         context["template_name"] = "widgets/html_widgets/" + class_name + ".html"
         def_param = ""
         if "width" in context:
-            def_param = def_param + "width='%s' " % context["width"]
-            try:
+            def_param = def_param + "width='{}' ".format(context["width"])
+            with contextlib.suppress(Exception):
                 context["width"] = int(context["width"]) - 10
-            except Exception:
-                pass
         if "height" in context:
-            def_param = def_param + "height='%s' " % context["height"]
-            try:
+            def_param = def_param + "height='{}' ".format(context["height"])
+            with contextlib.suppress(Exception):
                 context["height"] = int(context["height"]) - 10
-            except Exception:
-                pass
         context["def_param"] = def_param
 
         t = Template(data)
@@ -1868,13 +1802,13 @@ def do_html_widget(parser, token):
     extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
     if not extra_context:
         raise TemplateSyntaxError(
-            "%r expected at least one variable assignment" % bits[0]
+            f"{bits[0]!r} expected at least one variable assignment"
         )
     if not "id" in extra_context or not "class" in extra_context:
         raise TemplateSyntaxError("id and class parameters are required")
     if remaining_bits:
         raise TemplateSyntaxError(
-            "%r received an invalid token: %r" % (bits[0], remaining_bits[0])
+            f"{bits[0]!r} received an invalid token: {remaining_bits[0]!r}"
         )
     nodelist = parser.parse(("endwidget",))
     parser.delete_first_token()
@@ -1889,7 +1823,7 @@ ICON_CACHE = {}
 def _read_icon_file(path):
     tmp = None
     path_tab = path.split("/")
-    with open(os.path.join(settings.STATIC_ROOT, *path_tab), "rt") as f:
+    with open(os.path.join(settings.STATIC_ROOT, *path_tab)) as f:
         tmp = f.read()
     return tmp
 
@@ -1897,7 +1831,7 @@ def _read_icon_file(path):
 def _read_user_icon_file(path):
     tmp = None
     path_tab = path.split("/")
-    with open(os.path.join(settings.MEDIA_ROOT, *path_tab), "rt") as f:
+    with open(os.path.join(settings.MEDIA_ROOT, *path_tab)) as f:
         tmp = f.read()
     return tmp
 
@@ -1951,10 +1885,10 @@ def icon(context, class_str, width=None, height=None):
 
     if class_str.startswith("fa://"):
         return mark_safe(
-            "<i class='fa fa-%s'></i>" % (class_str[5:].replace(".png", ""))
+            "<i class='fa fa-{}'></i>".format(class_str[5:].replace(".png", ""))
         )
     elif class_str.startswith("fa-"):
-        return mark_safe("<i class='fa %s'></i>" % class_str)
+        return mark_safe(f"<i class='fa {class_str}'></i>")
     elif class_str.startswith("bi-"):
         x = re.findall("bi-" + r"[\w-]+", class_str)
         if x:
@@ -1971,10 +1905,10 @@ def icon(context, class_str, width=None, height=None):
                     return mark_safe("<i></i>")
             icon = ICON_CACHE[icon_name]
             if width:
-                icon = icon.replace('width="16"', ('width="%d"' % width)).replace(
-                    'height="16"', 'height="%d"' % (height if height else width)
+                icon = icon.replace('width="16"', f'width="{width}"').replace(
+                    'height="16"', f'height="{height if height else width}"'
                 )
-            return mark_safe("<i>%s</i>" % icon)
+            return mark_safe(f"<i>{icon}</i>")
     elif class_str.startswith("icon-"):
         x = re.findall("icon-" + r"[\w-]+", class_str)
         if x:
@@ -1988,7 +1922,7 @@ def icon(context, class_str, width=None, height=None):
                 else:
                     return mark_safe("<i></i>")
             icon = ICON_CACHE[icon_name]
-            return mark_safe("<i>%s</i>" % icon)
+            return mark_safe(f"<i>{icon}</i>")
     elif class_str.startswith("svg-"):
         x = re.findall("svg-" + r"[\w-]+", class_str)
         if x:
@@ -2002,55 +1936,53 @@ def icon(context, class_str, width=None, height=None):
                 else:
                     return mark_safe("<i></i>")
             icon = ICON_CACHE[icon_name]
-            return mark_safe("<i>%s</i>" % icon)
+            return mark_safe(f"<i>{icon}</i>")
     elif class_str.startswith("png://"):
         x = class_str[6:]
         x2 = x.split(" ", 1)
-        src = mhref("/static/icons/22x22/%s" % x2[0])
+        src = mhref(f"/static/icons/22x22/{x2[0]}")
         if "user_agent" in context and context["user_agent"] == "webviewembeded":
             bcontent = _to_b64(src[8:])
             if len(x2) > 1:
                 return mark_safe(
-                    "<img src='data:image/png;base64, %s' class='%s'></img>"
-                    % (bcontent, x2[1])
+                    f"<img src='data:image/png;base64, {bcontent}' class='{x2[1]}'></img>"
                 )
             else:
                 return mark_safe(
-                    "<img src='data:image/png;base64, %s'></img>" % bcontent
+                    f"<img src='data:image/png;base64, {bcontent}'></img>"
                 )
         else:
             if len(x2) > 1:
-                return mark_safe("<img src='%s' class='%s'></img>" % (src, x2[1]))
+                return mark_safe(f"<img src='{src}' class='{x2[1]}'></img>")
             else:
-                return mark_safe("<img src='%s'></img>" % src)
+                return mark_safe(f"<img src='{src}'></img>")
     elif class_str.startswith("client://"):
         x = class_str[9:]
         x2 = x.split(" ", 1)
-        src = mhref("/static/icons/22x22/%s" % x2[0])
+        src = mhref(f"/static/icons/22x22/{x2[0]}")
         if "user_agent" in context and context["user_agent"] == "webviewembeded":
             ext = src[8:].split(".")[-1]
             bcontent = _to_b64(src[8:])
             if len(x2) > 1:
                 return mark_safe(
-                    "<img src='data:image/%s;base64, %s' class='%s'></img>"
-                    % (ext, bcontent, x2[1])
+                    f"<img src='data:image/{ext};base64, {bcontent}' class='{x2[1]}'></img>"
                 )
             else:
                 return mark_safe(
-                    "<img src='data:image/%s;base64, %s'></img>" % (ext, bcontent)
+                    f"<img src='data:image/{ext};base64, {bcontent}'></img>"
                 )
         else:
             if len(x2) > 1:
-                return mark_safe("<img src='%s' class='%s'></img>" % (src, x2[1]))
+                return mark_safe(f"<img src='{src}' class='{x2[1]}'></img>")
             else:
-                return mark_safe("<img src='%s'></img>" % src)
+                return mark_safe(f"<img src='{src}'></img>")
 
     elif class_str.startswith("data:image/svg+xml"):
         x = class_str.split(",", 1)
         svg_code = x[1]
         return mark_safe(svg_code)
     elif "fa-" in class_str:
-        return mark_safe("<i class='fa %s'></i>" % class_str)
+        return mark_safe(f"<i class='fa {class_str}'></i>")
     else:
         return mark_safe("<i class='fa fa-arrow-circle-right fa-lg'></i>")
 
@@ -2087,13 +2019,10 @@ class TreeNode(Node):
         self.tree = param
 
     def __repr__(self):
-        return "<%s>" % self.__class__.__name__
+        return f"<{self.__class__.__name__}>"
 
     def render(self, context):
-        if "tree_template" in context:
-            nodelist = context["tree_template"]
-        else:
-            nodelist = self.nodelist
+        nodelist = context["tree_template"] if "tree_template" in context else self.nodelist
 
         tree = self.tree.resolve(context)
 
@@ -2142,7 +2071,7 @@ def do_tree(parser, token):
     :rtype: TreeNode
     """
     parm = token.split_contents()
-    nodelist = parser.parse(("endtree"))
+    nodelist = parser.parse("endtree")
     parser.delete_first_token()
     return TreeNode(nodelist, parser.compile_filter(parm[1]))
 
@@ -2309,11 +2238,11 @@ def modify(parser, token):
     arg = token_kwargs(remaining_bits, parser, support_legacy=True)
     if not arg:
         raise TemplateSyntaxError(
-            "%r expected at least one variable assignment" % bits[0]
+            f"{bits[0]!r} expected at least one variable assignment"
         )
     if remaining_bits:
         raise TemplateSyntaxError(
-            "%r received an invalid token: %r" % (bits[0], remaining_bits[0])
+            f"{bits[0]!r} received an invalid token: {remaining_bits[0]!r}"
         )
     nodelist = parser.parse(("endmodify",))
     parser.delete_first_token()

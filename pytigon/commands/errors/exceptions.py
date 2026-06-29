@@ -1,27 +1,27 @@
-"""
-Structured Exception Hierarchy
+"""Structured Exception Hierarchy
 Provides specific exception types for different error scenarios.
 """
 
 
 class PytigonError(Exception):
-    """
-    Base exception for all Pytigon errors.
+
+    """Base exception for all Pytigon errors.
 
     Attributes:
         message: Error message
         code: Numeric error code for programmatic handling
         details: Additional error details
+
     """
 
     def __init__(self, message: str, code: int = 0, **details):
-        """
-        Initialize PytigonError.
+        """Initialize PytigonError.
 
         Args:
             message: Error message
             code: Numeric error code
             **details: Additional error details
+
         """
         super().__init__(message)
         self.message = message
@@ -45,8 +45,8 @@ class PytigonError(Exception):
 
 
 class ConfigurationError(PytigonError):
-    """
-    Configuration-related errors.
+
+    """Configuration-related errors.
 
     Error codes:
         10: Missing configuration
@@ -55,12 +55,11 @@ class ConfigurationError(PytigonError):
         13: Configuration parse error
     """
 
-    pass
 
 
 class SecurityError(PytigonError):
-    """
-    Security-related errors.
+
+    """Security-related errors.
 
     Error codes:
         20: Command injection attempt
@@ -71,12 +70,11 @@ class SecurityError(PytigonError):
         25: Access denied
     """
 
-    pass
 
 
 class CommandError(PytigonError):
-    """
-    Command execution errors.
+
+    """Command execution errors.
 
     Error codes:
         30: Unknown command
@@ -85,12 +83,11 @@ class CommandError(PytigonError):
         33: Command timeout
     """
 
-    pass
 
 
 class SubprocessError(PytigonError):
-    """
-    Subprocess execution errors.
+
+    """Subprocess execution errors.
 
     Error codes:
         40: Subprocess failed (non-zero exit)
@@ -100,14 +97,14 @@ class SubprocessError(PytigonError):
     """
 
     def __init__(self, message: str, code: int = 40, returncode: int = 0, **details):
-        """
-        Initialize SubprocessError.
+        """Initialize SubprocessError.
 
         Args:
             message: Error message
             code: Numeric error code
             returncode: Subprocess return code
             **details: Additional error details
+
         """
         super().__init__(message, code, **details)
         self.returncode = returncode
@@ -120,8 +117,8 @@ class SubprocessError(PytigonError):
 
 
 class PathError(PytigonError):
-    """
-    Path-related errors.
+
+    """Path-related errors.
 
     Error codes:
         50: Path access denied
@@ -131,12 +128,11 @@ class PathError(PytigonError):
         54: Invalid path join
     """
 
-    pass
 
 
 class ValidationError(PytigonError):
-    """
-    Input validation errors.
+
+    """Input validation errors.
 
     Error codes:
         60: Missing required argument
@@ -145,12 +141,11 @@ class ValidationError(PytigonError):
         63: Argument out of range
     """
 
-    pass
 
 
 class ResourceError(PytigonError):
-    """
-    Resource-related errors.
+
+    """Resource-related errors.
 
     Error codes:
         70: Resource not found
@@ -159,4 +154,3 @@ class ResourceError(PytigonError):
         73: Resource exhausted
     """
 
-    pass

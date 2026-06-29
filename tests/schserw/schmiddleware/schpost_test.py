@@ -1,12 +1,12 @@
-from pytigon.schserw.schmiddleware.schpost import (
-    ViewRequests,
-    ViewPost,
-    view_post,
-)
-
 # Pytest tests
 import pytest
 from django.http import HttpRequest, HttpResponse
+
+from pytigon.schserw.schmiddleware.schpost import (
+    ViewPost,
+    ViewRequests,
+    view_post,
+)
 
 
 def test_view_requests():

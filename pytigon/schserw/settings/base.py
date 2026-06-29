@@ -41,10 +41,7 @@ else:
 if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")):
     PRODUCTION_VERSION = False
 
-if ENV("PUBLIC"):
-    PUBLIC = True
-else:
-    PUBLIC = False
+PUBLIC = True if ENV("PUBLIC") else False
 
 SHOW_LOGIN_WIN = True
 
@@ -85,10 +82,7 @@ LANGUAGES = [
 LOGIN_REDIRECT_URL = "/"
 TEST_RUNNER = "django.test.runner.DiscoverRunner"
 
-if DEBUG:
-    EXECUTE_DB_CODE = "import"
-else:
-    EXECUTE_DB_CODE = "exec_and_cache"
+EXECUTE_DB_CODE = "import" if DEBUG else "exec_and_cache"
 EXECUTE_DB_CODE_CACHE_TIMEOUT = 900
 
 BASE_URL = "http://127.0.0.1:81"
@@ -127,37 +121,16 @@ if not SECRET_KEY:
             "Set the SECRET_KEY environment variable."
         )
 
-if ENV("GRAPHQL"):
-    GRAPHQL = True
-else:
-    GRAPHQL = False
+GRAPHQL = True if ENV("GRAPHQL") else False
 
-if ENV("REST"):
-    REST = True
-else:
-    REST = False
+REST = True if ENV("REST") else False
 
-if ENV("RULES_ENABLED"):
-    RULES_ENABLED = True
-else:
-    RULES_ENABLED = False
+RULES_ENABLED = True if ENV("RULES_ENABLED") else False
 
-if ENV("MAILER"):
-    MAILER = True
-else:
-    MAILER = False
+MAILER = True if ENV("MAILER") else False
 
-if ENV("ALLAUTH"):
-    ALLAUTH = True
-else:
-    ALLAUTH = False
+ALLAUTH = True if ENV("ALLAUTH") else False
 
-if ENV("COMPRESS_ENABLED"):
-    COMPRESS_ENABLED = True
-else:
-    COMPRESS_ENABLED = False
+COMPRESS_ENABLED = True if ENV("COMPRESS_ENABLED") else False
 
-if ENV("PWA"):
-    PWA = True
-else:
-    PWA = False
+PWA = True if ENV("PWA") else False

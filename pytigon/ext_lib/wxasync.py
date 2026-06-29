@@ -19,7 +19,7 @@ class WxAsyncApp(wx.App):
         self.ui_idle = True
         self.sleep_duration = sleep_duration
         self.warn_on_cancel_callback = warn_on_cancel_callback
-        super(WxAsyncApp, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.SetExitOnFrameDelete(True)
 
     async def MainLoop(self):

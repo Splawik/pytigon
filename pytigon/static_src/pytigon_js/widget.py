@@ -19,10 +19,7 @@ def humanFileSize(bytes, si):
             - formatted_size_string: e.g. "1.5 MB"
             - unit_level: 0-based index into the unit array (0 = B, 1 = kB/KiB, ...)
     """
-    if si:
-        thresh = 1000
-    else:
-        thresh = 1024
+    thresh = 1000 if si else 1024
 
     # If smaller than threshold, just return bytes
     if Math.abs(bytes) < thresh:

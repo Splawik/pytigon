@@ -1,9 +1,8 @@
-"""
-Tests for pytigon.schserw.urls module.
+"""Tests for pytigon.schserw.urls module.
 """
 import pytest
 from django.conf import settings
-from django.urls import reverse, resolve, URLResolver
+from django.urls import reverse
 
 
 class TestUrlConfiguration:

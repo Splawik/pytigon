@@ -58,11 +58,11 @@ def collapse(parser, token):
         extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
         if not extra_context:
             raise TemplateSyntaxError(
-                "%r expected at least one variable assignment" % bits[0]
+                f"{bits[0]!r} expected at least one variable assignment"
             )
         if remaining_bits:
             raise TemplateSyntaxError(
-                "%r received an invalid token: %r" % (bits[0], remaining_bits[0])
+                f"{bits[0]!r} received an invalid token: {remaining_bits[0]!r}"
             )
         nodelist = parser.parse(("endcollapse",))
         parser.delete_first_token()

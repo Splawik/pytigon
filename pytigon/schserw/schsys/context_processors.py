@@ -124,10 +124,7 @@ def client_type(request):
 
 
 def browser_type(request):
-    if hasattr(settings, "THEMES"):
-        themes = settings.THEMES
-    else:
-        themes = ["auto", "auto", "auto"]
+    themes = settings.THEMES if hasattr(settings, "THEMES") else ["auto", "auto", "auto"]
 
     if standard_web_browser(request):
         if test_mobile(request):
@@ -151,11 +148,11 @@ def browser_type(request):
 
 
 def default_template(b_type):
-    return "%s.html" % b_type
+    return f"{b_type}.html"
 
 
 def default_template2(b_type):
-    return "theme/%s.html" % b_type
+    return f"theme/{b_type}.html"
 
 
 def has_user_perm(user, perm):
@@ -308,10 +305,7 @@ class AppManager:
                 elementy = app.split(".")
                 appname = elementy[-1]
                 module = __import__(elementy[0])
-                if len(elementy) > 1:
-                    module2 = getattr(module, elementy[-1])
-                else:
-                    module2 = module
+                module2 = getattr(module, elementy[-1]) if len(elementy) > 1 else module
                 if module2:
                     module_title = module2.ModuleTitle
                     try:
@@ -321,10 +315,7 @@ class AppManager:
                     title = module2.Title
                     perms = module2.Perms
                     index = module2.Index
-                    if hasattr(module2, "UserParam"):
-                        user_param = module2.UserParam
-                    else:
-                        user_param = {}
+                    user_param = module2.UserParam if hasattr(module2, "UserParam") else {}
 
                     app_info = AppInfo()
                     app_info.app_title = title
@@ -607,68 +598,29 @@ def sch_standard(request):
 
     r = urlparse(request.path)
     rr = r.path.split("/")
-    if len(rr) > 0:
-        if rr[-1]:
-            last_fragment = rr[-1]
-        else:
-            if len(rr) > 1:
-                last_fragment = rr[-2]
-            else:
-                last_fragment = ""
-    else:
-        last_fragment = r.path
+    last_fragment = (rr[-1] if rr[-1] else rr[-2] if len(rr) > 1 else "") if len(rr) > 0 else r.path
 
-    if last_fragment == "edit" or last_fragment == "add":
-        form_edit = True
-    else:
-        form_edit = False
-    if last_fragment == "add":
-        form_add = True
-    else:
-        form_add = False
-    if last_fragment == "delete":
-        form_delete = True
-    else:
-        form_delete = False
+    form_edit = True if last_fragment == "edit" or last_fragment == "add" else False
+    form_add = True if last_fragment == "add" else False
+    form_delete = True if last_fragment == "delete" else False
 
-    if request.path.endswith("/view/"):
-        form_info = True
-    else:
-        form_info = False
+    form_info = True if request.path.endswith("/view/") else False
 
-    if form_edit or form_delete or form_info:
-        show_form = True
-    else:
-        show_form = False
-    if "/grid" in request.path:
-        form_grid = True
-    else:
-        form_grid = False
-    if "_ext" in request.path:
-        form_ext = True
-    else:
-        form_ext = False
+    show_form = True if form_edit or form_delete or form_info else False
+    form_grid = True if "/grid" in request.path else False
+    form_ext = True if "_ext" in request.path else False
     if "/_" in request.path:
         readonly = True
         ro = "_"
     else:
         readonly = False
         ro = ""
-    if "form/list" in request.path:
-        list_view = True
-    else:
-        list_view = False
+    list_view = True if "form/list" in request.path else False
     if "_set" in request.path or "/sublist" in request.path or "/get" in request.path:
         show_title_bar = True
     else:
         show_title_bar = False
-    if "/get" in request.path:
-        if "/gettree" in request.path:
-            get = "gettree"
-        else:
-            get = "get"
-    else:
-        get = ""
+    get = ("gettree" if "/gettree" in request.path else "get") if "/get" in request.path else ""
     if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
         url_base = "/" + settings.URL_ROOT_FOLDER
     else:
@@ -694,20 +646,14 @@ def sch_standard(request):
     if not prj:
         prj = settings.PRJ_NAME
 
-    if hasattr(request, "LANGUAGE_CODE"):
-        lng = request.LANGUAGE_CODE[:2].lower()
-    else:
-        lng = "en"
+    lng = request.LANGUAGE_CODE[:2].lower() if hasattr(request, "LANGUAGE_CODE") else "en"
 
     b_type = browser_type(request)
     c_type = client_type(request)
 
     x = b_type.split("_")
     b_type = x[0]
-    if len(x) > 1:
-        b_type2 = x[1]
-    else:
-        b_type2 = "standard"
+    b_type2 = x[1] if len(x) > 1 else "standard"
 
     if standard == 2:
         # d_template = default_template("hybrid")
@@ -733,14 +679,7 @@ def sch_standard(request):
         gmt_str = settings.GEN_TIME
     else:
         gmt = time.gmtime()
-        gmt_str = "%04d.%02d.%02d %02d:%02d:%02d" % (
-            gmt[0],
-            gmt[1],
-            gmt[2],
-            gmt[3],
-            gmt[4],
-            gmt[5],
-        )
+        gmt_str = f"{gmt[0]:04d}.{gmt[1]:02d}.{gmt[2]:02d} {gmt[3]:02d}:{gmt[4]:02d}:{gmt[5]:02d}"
 
     if "HTTP_USER_AGENT" in request.META and request.META["HTTP_USER_AGENT"]:
         user_agent = request.META["HTTP_USER_AGENT"]
@@ -759,10 +698,7 @@ def sch_standard(request):
     else:
         theme = ""
 
-    if "extra_param" in request.GET:
-        extra_param = request.GET.get("extra_param")
-    else:
-        extra_param = ""
+    extra_param = request.GET.get("extra_param") if "extra_param" in request.GET else ""
 
     ret = {
         "standard_web_browser": standard,

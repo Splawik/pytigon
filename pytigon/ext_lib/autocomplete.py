@@ -136,10 +136,7 @@ class TextCtrlAutoComplete(wx.TextCtrl, listmix.ColumnSorterMixin):
         )
 
         # initialize the parent
-        if multiChoices:
-            ln = len(multiChoices)
-        else:
-            ln = 1
+        ln = len(multiChoices) if multiChoices else 1
         # else: ln = len(choices)
         listmix.ColumnSorterMixin.__init__(self, ln)
 
@@ -354,10 +351,7 @@ class TextCtrlAutoComplete(wx.TextCtrl, listmix.ColumnSorterMixin):
             raise ValueError("You have to pass me a multi-dimension list")
 
         for numCol, rowValues in enumerate(choices[0]):
-            if self._colNames:
-                colName = self._colNames[numCol]
-            else:
-                colName = "Select %i" % numCol
+            colName = self._colNames[numCol] if self._colNames else "Select %i" % numCol
 
             self.dropdownlistbox.InsertColumn(numCol, colName)
 
@@ -432,10 +426,7 @@ class TextCtrlAutoComplete(wx.TextCtrl, listmix.ColumnSorterMixin):
         """
         sel = self.dropdownlistbox.GetFirstSelected()
         if sel > -1:
-            if self._colFetch != -1:
-                col = self._colFetch
-            else:
-                col = self._colSearch
+            col = self._colFetch if self._colFetch != -1 else self._colSearch
 
             itemtext = self.dropdownlistbox.GetItem(sel, col).GetText()
             if self._selectCallback:
@@ -495,10 +486,7 @@ class TextCtrlAutoComplete(wx.TextCtrl, listmix.ColumnSorterMixin):
         self.SetColumnCount(numVal)
 
     def _setListSize(self):
-        if self._multiChoices:
-            choices = self._multiChoices
-        else:
-            choices = self._choices
+        choices = self._multiChoices or self._choices
 
         longest = 0
         for choice in choices:

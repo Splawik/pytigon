@@ -1,40 +1,37 @@
-"""
-Default Command Handler
+"""Default Command Handler
 Handles default case (GUI mode or help).
 """
 
 import os
 import sys
-from typing import List, Optional, Dict, Any
+from typing import Any
 
 from .base import CommandHandler
-from ..errors import CommandError
 
 
 class DefaultCommandHandler(CommandHandler):
-    """
-    Handler for default case (GUI mode or help).
+
+    """Handler for default case (GUI mode or help).
 
     Handles commands like:
     - pytigon <app> [options]
     - pytigon --help
     """
 
-    def can_handle(self, argv: List[str]) -> bool:
-        """
-        Check if this handler can handle the given command.
+    def can_handle(self, argv: list[str]) -> bool:
+        """Check if this handler can handle the given command.
 
         Args:
             argv: Command arguments
 
         Returns:
             True (this is the default handler)
+
         """
         return True
 
-    def execute(self, argv: List[str], **kwargs) -> int:
-        """
-        Execute the default command.
+    def execute(self, argv: list[str], **kwargs) -> int:
+        """Execute the default command.
 
         Args:
             argv: Command arguments
@@ -42,6 +39,7 @@ class DefaultCommandHandler(CommandHandler):
 
         Returns:
             Exit code
+
         """
         try:
             # Check if help is requested
@@ -66,18 +64,17 @@ class DefaultCommandHandler(CommandHandler):
             # Check if running with pywebview
             if "--pywebview" in sys.argv:
                 return self._run_pywebview(argv, paths, app)
-            else:
-                return self._run_gui(argv, paths, app)
+            return self._run_gui(argv, paths, app)
 
         except Exception as e:
             return self.handle_error(e, {"command": "default"})
 
     def _show_help(self) -> int:
-        """
-        Show help information.
+        """Show help information.
 
         Returns:
             Exit code (0 for success)
+
         """
         print("First form:")
         print("===========")
@@ -97,17 +94,14 @@ class DefaultCommandHandler(CommandHandler):
         print("The fourth option:")
         print("==================")
         print(
-            "Run python script in project directory: pytigon run_{{project_name}}/{{script_name}}.py"
+            "Run python script in project directory: pytigon run_{{project_name}}/{{script_name}}.py",
         )
         print("    run python script in pytigon environment")
         print("")
         return 0
 
-    def _run_pywebview(
-        self, argv: List[str], paths: Dict[str, str], app: Optional[str]
-    ) -> int:
-        """
-        Run with pywebview.
+    def _run_pywebview(self, argv: list[str], paths: dict[str, str], app: str | None) -> int:
+        """Run with pywebview.
 
         Args:
             argv: Command arguments
@@ -116,22 +110,22 @@ class DefaultCommandHandler(CommandHandler):
 
         Returns:
             Exit code
+
         """
         try:
             import webview
+
             from pytigon.pytigon_request import init, request
 
             # Get app configuration
             conf = self._get_app_conf(os.path.join(paths.get("PRJ_PATH", ""), argv[1]))
 
             # Load index.html
-            index_path = os.path.join(
-                paths.get("STATIC_PATH", ""), "pywebview", "index.html"
-            )
+            index_path = os.path.join(paths.get("STATIC_PATH", ""), "pywebview", "index.html")
             try:
-                with open(index_path, "rt") as f:
+                with open(index_path) as f:
                     index_str = f.read()
-            except (FileNotFoundError, PermissionError, IOError) as e:
+            except (OSError, FileNotFoundError, PermissionError) as e:
                 import logging
 
                 logging.debug(f"Failed to load index.html from {index_path}: {e}")
@@ -187,11 +181,8 @@ class DefaultCommandHandler(CommandHandler):
             print("Error: pywebview not available", file=sys.stderr)
             return 1
 
-    def _run_gui(
-        self, argv: List[str], paths: Dict[str, str], app: Optional[str]
-    ) -> int:
-        """
-        Run GUI mode.
+    def _run_gui(self, argv: list[str], paths: dict[str, str], app: str | None) -> int:
+        """Run GUI mode.
 
         Args:
             argv: Command arguments
@@ -200,6 +191,7 @@ class DefaultCommandHandler(CommandHandler):
 
         Returns:
             Exit code
+
         """
         try:
             from pytigon_gui.pytigon import main
@@ -210,15 +202,15 @@ class DefaultCommandHandler(CommandHandler):
             print("Error: pytigon_gui not available", file=sys.stderr)
             return 1
 
-    def _get_app_conf(self, path: str) -> Optional[Dict[str, Any]]:
-        """
-        Get application configuration.
+    def _get_app_conf(self, path: str) -> dict[str, Any] | None:
+        """Get application configuration.
 
         Args:
             path: Path to application directory
 
         Returns:
             Configuration dictionary or None
+
         """
         import configparser
 

@@ -1,17 +1,15 @@
-"""
-Pytest tests for pytigon.commands.utils module (PathResolver and SafeSubprocess).
+"""Pytest tests for pytigon.commands.utils module (PathResolver and SafeSubprocess).
 """
 
 import os
 import sys
-import tempfile
-import pytest
 from pathlib import Path
 
+import pytest
+
+from pytigon.commands.errors.exceptions import PathError, SecurityError
 from pytigon.commands.utils.paths import PathResolver
 from pytigon.commands.utils.subprocess import SafeSubprocess
-from pytigon.commands.errors.exceptions import PathError, SecurityError
-
 
 # ---------------------------------------------------------------------------
 # PathResolver tests

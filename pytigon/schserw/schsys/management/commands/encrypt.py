@@ -45,10 +45,7 @@ class Command(BaseCommand):
         else:
             password = getpass.getpass()
 
-        if "base64" in options and options["base64"]:
-            b64 = True
-        else:
-            b64 = False
+        b64 = True if "base64" in options and options["base64"] else False
 
         if "decrypt" in options and options["decrypt"]:
             output_buf = encrypt.decrypt(buf, password, b64)

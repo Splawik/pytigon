@@ -15,10 +15,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        if "file" in options:
-            file_name = options["file"]
-        else:
-            file_name = None
+        file_name = options["file"] if "file" in options else None
         compiled = []
         if settings.PRJ_NAME == "_schall":
             template_paths = [

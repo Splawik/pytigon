@@ -23,7 +23,7 @@ JAVASCRIPT_CODE = (
 )
 
 
-class BaseWebBrowser(object):
+class BaseWebBrowser:
     """Base mixin class for embedded web browsers.
 
     Provides shared navigation, status tracking, local request handling,
@@ -184,7 +184,7 @@ class BaseWebBrowser(object):
             (
                 "<!DOCTYPE html><html><head>"
                 '<base href="static://" target="_blank">'
-                "</head><body bgcolor='%s'>" % color
+                f"</head><body bgcolor='{color}'>"
             )
             + str_body
             + "</body></html>"
@@ -290,7 +290,7 @@ class BaseWebBrowser(object):
         self.progress = progress
         if progress < 100:
             self.status["progress"] = progress
-            self.status["txt"] = "Loading: %d%%" % progress
+            self.status["txt"] = f"Loading: {progress}%%"
         else:
             self.status["progress"] = -1
 
@@ -357,10 +357,7 @@ class BaseWebBrowser(object):
         Args:
             title: Title string (truncated to 30 chars if longer).
         """
-        if title:
-            title2 = title if len(title) < 32 else title[:30] + "..."
-        else:
-            title2 = "Empty page"
+        title2 = (title if len(title) < 32 else title[:30] + "...") if title else "Empty page"
         if hasattr(self.get_parent_form(), "any_parent_command"):
             self.get_parent_form().any_parent_command(
                 "change_notebook_page_title", title2
@@ -459,7 +456,7 @@ class BaseWebBrowser(object):
                     cmd = JAVASCRIPT_CODE % buf
                     self.execute_javascript(cmd)
                 else:
-                    cmd = 'PDFView.open("%s", 0);' % self.pdf
+                    cmd = f'PDFView.open("{self.pdf}", 0);'
                     self.execute_javascript(cmd)
             except Exception:
                 pass
@@ -582,7 +579,7 @@ class BaseWebBrowser(object):
         if isinstance(s, bytes):
             s = s.decode("utf-8")
         buf = urllib.parse.quote(s, safe="~@#$&()*!+=:;,.?/'")
-        cmd = '$("%s").html(decodeURI("%s"));' % (selector, buf)
+        cmd = f'$("{selector}").html(decodeURI("{buf}"));'
         self.execute_javascript(cmd)
 
     def value_to_var(self, var, s):
@@ -595,7 +592,7 @@ class BaseWebBrowser(object):
         if isinstance(s, bytes):
             s = s.decode("utf-8")
         buf = urllib.parse.quote(s, safe="~@#$&()*!+=:;,.?/'")
-        cmd = '%s = decodeURI("%s");' % (var, buf)
+        cmd = f'{var} = decodeURI("{buf}");'
         self.execute_javascript(cmd)
 
     def run_command_from_js(self, cmd):
@@ -634,7 +631,7 @@ class BaseWebBrowser(object):
             if l[1].startswith("static:/"):
                 x = os.path.join(l[1].replace("static:/", wx.GetApp().root_path))
                 try:
-                    with open(x, "rt") as f:
+                    with open(x) as f:
                         txt = b64encode(f.read().encode("utf-8")).decode("utf-8")
                 except Exception:
                     txt = ""
@@ -643,10 +640,7 @@ class BaseWebBrowser(object):
             fun_id = l[1].split("?")[0]
             if "//127.0.0.2" in fun_id:
                 fun_id = fun_id.split("//127.0.0.2")[1]
-            cmd = """window.ajax_get_response_fun['%s'](window.atob("%s"));""" % (
-                fun_id,
-                txt,
-            )
+            cmd = f"""window.ajax_get_response_fun['{fun_id}'](window.atob("{txt}"));"""
             self.execute_javascript(cmd)
         elif l[0] == "ajax_post":
             x = split2(l[1], "??")
@@ -657,8 +651,8 @@ class BaseWebBrowser(object):
             if "//127.0.0.2" in fun_id:
                 fun_id = fun_id.split("//127.0.0.2")[1]
             cmd = (
-                """window.ajax_get_response_fun['%s']("""
-                """decodeURIComponent(escape(window.atob("%s"))));""" % (fun_id, txt)
+                f"""window.ajax_get_response_fun['{fun_id}']("""
+                f"""decodeURIComponent(escape(window.atob("{txt}"))));"""
             )
             self.execute_javascript(cmd)
 

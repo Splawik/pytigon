@@ -1,20 +1,19 @@
-"""
-Centralized Error Handler
+"""Centralized Error Handler
 Provides consistent error handling and logging across all commands.
 """
 
-import sys
 import logging
+import sys
 import traceback
-from typing import Optional, Dict, Any
 from contextlib import contextmanager
+from typing import Any
 
 from .exceptions import PytigonError
 
 
 class ErrorHandler:
-    """
-    Centralized error handler for Pytigon commands.
+
+    """Centralized error handler for Pytigon commands.
 
     Provides consistent error logging, user-friendly messages,
     and proper exit code determination.
@@ -33,20 +32,19 @@ class ErrorHandler:
         "SystemExit": 0,
     }
 
-    def __init__(self, logger: Optional[logging.Logger] = None, debug: bool = False):
-        """
-        Initialize ErrorHandler.
+    def __init__(self, logger: logging.Logger | None = None, debug: bool = False):
+        """Initialize ErrorHandler.
 
         Args:
             logger: Logger instance for error logging. Defaults to root logger.
             debug: Whether to enable debug mode (shows full tracebacks)
+
         """
         self.logger = logger or logging.getLogger("pytigon")
         self.debug = debug
 
-    def handle(self, error: Exception, context: Optional[Dict[str, Any]] = None) -> int:
-        """
-        Handle an exception and return appropriate exit code.
+    def handle(self, error: Exception, context: dict[str, Any] | None = None) -> int:
+        """Handle an exception and return appropriate exit code.
 
         Args:
             error: Exception to handle
@@ -54,6 +52,7 @@ class ErrorHandler:
 
         Returns:
             Exit code for the error
+
         """
         # Get error type name
         error_type = type(error).__name__
@@ -70,8 +69,7 @@ class ErrorHandler:
         return exit_code
 
     def _get_exit_code(self, error: Exception, error_type: str) -> int:
-        """
-        Determine exit code for an error.
+        """Determine exit code for an error.
 
         Args:
             error: Exception instance
@@ -79,6 +77,7 @@ class ErrorHandler:
 
         Returns:
             Exit code
+
         """
         # Check if it's a PytigonError with a code
         if isinstance(error, PytigonError) and error.code:
@@ -95,15 +94,15 @@ class ErrorHandler:
         self,
         error: Exception,
         error_type: str,
-        context: Optional[Dict[str, Any]] = None,
+        context: dict[str, Any] | None = None,
     ):
-        """
-        Log error with appropriate level.
+        """Log error with appropriate level.
 
         Args:
             error: Exception instance
             error_type: Error type name
             context: Additional context information
+
         """
         # Build log message
         log_parts = [f"{error_type}: {error}"]
@@ -127,20 +126,15 @@ class ErrorHandler:
             self.logger.debug(traceback.format_exc())
 
     def _print_user_message(self, error: Exception, error_type: str):
-        """
-        Print user-friendly error message.
+        """Print user-friendly error message.
 
         Args:
             error: Exception instance
             error_type: Error type name
+
         """
         # Format user-friendly message
-        if isinstance(error, PytigonError):
-            # Use the error's message directly
-            message = str(error)
-        else:
-            # Generic message for unexpected errors
-            message = f"An error occurred: {error}"
+        message = str(error) if isinstance(error, PytigonError) else f"An error occurred: {error}"
 
         # Print to stderr
         print(f"Error: {message}", file=sys.stderr)
@@ -160,9 +154,8 @@ class ErrorHandler:
             )
 
     @contextmanager
-    def error_context(self, context: Optional[Dict[str, Any]] = None):
-        """
-        Context manager for error handling.
+    def error_context(self, context: dict[str, Any] | None = None):
+        """Context manager for error handling.
 
         Args:
             context: Additional context information
@@ -174,6 +167,7 @@ class ErrorHandler:
             with error_handler.error_context({'command': 'manage'}):
                 # Code that might raise exceptions
                 pass
+
         """
         try:
             yield
@@ -182,14 +176,14 @@ class ErrorHandler:
             sys.exit(exit_code)
 
     def format_error(self, error: Exception) -> str:
-        """
-        Format error for display.
+        """Format error for display.
 
         Args:
             error: Exception instance
 
         Returns:
             Formatted error string
+
         """
         if isinstance(error, PytigonError):
             return str(error)
@@ -197,15 +191,15 @@ class ErrorHandler:
         error_type = type(error).__name__
         return f"{error_type}: {error}"
 
-    def get_error_details(self, error: Exception) -> Dict[str, Any]:
-        """
-        Get detailed error information.
+    def get_error_details(self, error: Exception) -> dict[str, Any]:
+        """Get detailed error information.
 
         Args:
             error: Exception instance
 
         Returns:
             Dictionary with error details
+
         """
         details = {
             "type": type(error).__name__,

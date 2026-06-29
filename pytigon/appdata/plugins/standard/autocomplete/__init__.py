@@ -13,7 +13,7 @@ from pytigon_gui.guictrl.ctrl import SchBaseCtrl
 import pytigon_gui.guictrl.ctrl
 
 
-class DbDict(object):
+class DbDict:
     """Dictionary-like object that fetches autocomplete choices from server.
 
     Acts as a dynamic data source for the autocomplete control.
@@ -51,8 +51,7 @@ class DbDict(object):
 
     def __iter__(self):
         """Iterate over all choices."""
-        for x in self.tab:
-            yield x
+        yield from self.tab
 
     def __getitem__(self, idx):
         """Get a choice by index.
@@ -120,7 +119,7 @@ class Autocomplete(TextCtrlAutoComplete, SchBaseCtrl):
         if event.GetKeyCode() in (wx.WXK_LEFT, wx.WXK_RIGHT):
             event.Skip()
         else:
-            super(Autocomplete, self).onKeyDown(event)
+            super().onKeyDown(event)
 
     def match(self, text, choice):
         """Check if a choice matches the typed text.
@@ -169,10 +168,7 @@ class Autocomplete(TextCtrlAutoComplete, SchBaseCtrl):
         """Alternative method to set value from selected dropdown item."""
         sel = self.dropdownlistbox.GetFirstSelected()
         if sel > -1:
-            if self._colFetch != -1:
-                col = self._colFetch
-            else:
-                col = self._colSearch
+            col = self._colFetch if self._colFetch != -1 else self._colSearch
             itemtext = self.dropdownlistbox.GetItem(sel, col).GetText()
             self.SetValue(itemtext)
 

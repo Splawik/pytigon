@@ -280,10 +280,7 @@ class TabMenu:
                 self.activate(title)
             else:
                 self.register_title(title)
-                if url:
-                    href = url
-                else:
-                    href = jQuery(elem).attr("href")
+                href = url or jQuery(elem).attr("href")
                 href2 = correct_href(href)
 
                 jQuery("#body_desktop").hide()

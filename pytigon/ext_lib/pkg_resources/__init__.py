@@ -89,6 +89,7 @@ import packaging.utils
 import packaging.version
 from jaraco.text import drop_comment, join_continuation, yield_lines
 from platformdirs import user_cache_dir as _user_cache_dir
+import contextlib
 
 if TYPE_CHECKING:
     from _typeshed import BytesPath, StrOrBytesPath, StrPath
@@ -2860,10 +2861,7 @@ class EntryPoint:
     ) -> dict[str, dict[str, Self]]:
         """Parse a map of entry point groups"""
         _data: Iterable[tuple[str | None, str | Iterable[str]]]
-        if isinstance(data, dict):
-            _data = data.items()
-        else:
-            _data = split_sections(data)
+        _data = data.items() if isinstance(data, dict) else split_sections(data)
         maps: dict[str, dict[str, Self]] = {}
         for group, lines in _data:
             if group is None:
@@ -3539,10 +3537,8 @@ def _bypass_ensure_directory(path) -> None:
     dirname, filename = split(path)
     if dirname and filename and not isdir(dirname):
         _bypass_ensure_directory(dirname)
-        try:
+        with contextlib.suppress(FileExistsError):
             mkdir(dirname, 0o755)
-        except FileExistsError:
-            pass
 
 
 def split_sections(s: _NestedStr) -> Iterator[tuple[str | None, list[str]]]:
@@ -3606,7 +3602,7 @@ _LOCALE_ENCODING = "locale" if sys.version_info >= (3, 10) else None
 def _read_utf8_with_fallback(file: str, fallback_encoding=_LOCALE_ENCODING) -> str:
     """See setuptools.unicode_utils._read_utf8_with_fallback"""
     try:
-        with open(file, "r", encoding="utf-8") as f:
+        with open(file, encoding="utf-8") as f:
             return f.read()
     except UnicodeDecodeError:  # pragma: no cover
         msg = f"""\
@@ -3627,7 +3623,7 @@ def _read_utf8_with_fallback(file: str, fallback_encoding=_LOCALE_ENCODING) -> s
         # TODO: Add a deadline?
         #       See comment in setuptools.unicode_utils._Utf8EncodingNeeded
         warnings.warn(msg, PkgResourcesDeprecationWarning, stacklevel=2)
-        with open(file, "r", encoding=fallback_encoding) as f:
+        with open(file, encoding=fallback_encoding) as f:
             return f.read()
 
 

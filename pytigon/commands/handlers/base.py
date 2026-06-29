@@ -1,32 +1,31 @@
-"""
-Base Command Handler
+"""Base Command Handler
 Abstract base class for all command handlers.
 """
 
 import os
 import sys
 from abc import ABC, abstractmethod
-from typing import List, Optional, Dict, Any
+from typing import Any
 
-from ..errors import CommandError, ErrorHandler
+from ..errors import ErrorHandler
 from ..utils import PathResolver, SafeSubprocess
 
 
 class CommandHandler(ABC):
-    """
-    Abstract base class for command handlers.
+
+    """Abstract base class for command handlers.
 
     All command handlers must implement the execute method.
     Provides common functionality for path resolution, subprocess execution,
     and error handling.
     """
 
-    def __init__(self, config: Optional[Dict[str, Any]] = None):
-        """
-        Initialize CommandHandler.
+    def __init__(self, config: dict[str, Any] | None = None):
+        """Initialize CommandHandler.
 
         Args:
             config: Configuration dictionary for the handler
+
         """
         self.config = config or {}
         self.path_resolver = PathResolver()
@@ -34,9 +33,8 @@ class CommandHandler(ABC):
         self.error_handler = ErrorHandler(debug=self.config.get("debug", False))
 
     @abstractmethod
-    def execute(self, argv: List[str], **kwargs) -> int:
-        """
-        Execute the command.
+    def execute(self, argv: list[str], **kwargs) -> int:
+        """Execute the command.
 
         Args:
             argv: Command arguments
@@ -44,60 +42,59 @@ class CommandHandler(ABC):
 
         Returns:
             Exit code (0 for success, non-zero for failure)
+
         """
-        pass
 
     @abstractmethod
-    def can_handle(self, argv: List[str]) -> bool:
-        """
-        Check if this handler can handle the given command.
+    def can_handle(self, argv: list[str]) -> bool:
+        """Check if this handler can handle the given command.
 
         Args:
             argv: Command arguments
 
         Returns:
             True if this handler can handle the command, False otherwise
-        """
-        pass
 
-    def get_command_name(self, argv: List[str]) -> Optional[str]:
         """
-        Extract command name from arguments.
+
+    def get_command_name(self, argv: list[str]) -> str | None:
+        """Extract command name from arguments.
 
         Args:
             argv: Command arguments
 
         Returns:
             Command name or None if not found
+
         """
         if len(argv) > 1:
             return argv[1]
         return None
 
-    def get_app_name(self, argv: List[str]) -> Optional[str]:
-        """
-        Extract application name from command arguments.
+    def get_app_name(self, argv: list[str]) -> str | None:
+        """Extract application name from command arguments.
 
         Args:
             argv: Command arguments
 
         Returns:
             Application name or None if not found
+
         """
         command = self.get_command_name(argv)
         if command and "_" in command:
             return command.split("_", 1)[1]
         return None
 
-    def setup_paths(self, app: Optional[str] = None) -> Dict[str, str]:
-        """
-        Setup paths for the application.
+    def setup_paths(self, app: str | None = None) -> dict[str, str]:
+        """Setup paths for the application.
 
         Args:
             app: Application name
 
         Returns:
             Dictionary of paths
+
         """
         try:
             from pytigon_lib.schtools.main_paths import get_main_paths
@@ -114,11 +111,8 @@ class CommandHandler(ABC):
                 "UPLOAD_PATH": os.path.join(os.getcwd(), "uploads"),
             }
 
-    def _init_prj_path(
-        self, paths: Dict[str, str], app: Optional[str]
-    ) -> Optional[tuple]:
-        """
-        Initialize project path.
+    def _init_prj_path(self, paths: dict[str, str], app: str | None) -> tuple | None:
+        """Initialize project path.
 
         Args:
             paths: Dictionary of paths
@@ -126,6 +120,7 @@ class CommandHandler(ABC):
 
         Returns:
             Tuple of (app_name, prj_path) or None
+
         """
         try:
             from pytigon_lib import init_paths
@@ -143,7 +138,7 @@ class CommandHandler(ABC):
                 path2 = p1[: len(parts[0])]
                 sys.path.append(path2)
                 return (mod_app, path2)
-            elif app:
+            if app:
                 os.environ["PRJ_NAME"] = app
         except ImportError:
             # pytigon_lib not available, skip initialization
@@ -151,13 +146,13 @@ class CommandHandler(ABC):
 
         return None
 
-    def init_project(self, app: str, paths: Dict[str, str]) -> None:
-        """
-        Initialize project directories if they don't exist.
+    def init_project(self, app: str, paths: dict[str, str]) -> None:
+        """Initialize project directories if they don't exist.
 
         Args:
             app: Application name
             paths: Dictionary of paths
+
         """
         PRJ_PATH = paths.get("PRJ_PATH", "")
         DATA_PATH = paths.get("DATA_PATH", "")
@@ -180,11 +175,11 @@ class CommandHandler(ABC):
                 os.makedirs(DATA_PATH, exist_ok=True)
 
     def get_executable(self) -> str:
-        """
-        Get the Python executable path.
+        """Get the Python executable path.
 
         Returns:
             Path to Python executable
+
         """
         try:
             from pytigon_lib.schtools.tools import get_executable
@@ -193,9 +188,8 @@ class CommandHandler(ABC):
         except ImportError:
             return sys.executable
 
-    def run_subprocess(self, command: List[str], cwd: Optional[str] = None) -> int:
-        """
-        Run a subprocess command safely.
+    def run_subprocess(self, command: list[str], cwd: str | None = None) -> int:
+        """Run a subprocess command safely.
 
         Args:
             command: Command to execute
@@ -203,14 +197,12 @@ class CommandHandler(ABC):
 
         Returns:
             Exit code
+
         """
         return self.subprocess.run_simple(command, cwd=cwd)
 
-    def handle_error(
-        self, error: Exception, context: Optional[Dict[str, Any]] = None
-    ) -> int:
-        """
-        Handle an error using the error handler.
+    def handle_error(self, error: Exception, context: dict[str, Any] | None = None) -> int:
+        """Handle an error using the error handler.
 
         Args:
             error: Exception to handle
@@ -218,5 +210,6 @@ class CommandHandler(ABC):
 
         Returns:
             Exit code
+
         """
         return self.error_handler.handle(error, context)

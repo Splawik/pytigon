@@ -1,20 +1,19 @@
-"""
-Tool Command Handler
+"""Tool Command Handler
 Handles external tool commands (nim, zig, @tools).
 """
 
+import importlib.util
 import os
 import sys
-from typing import List, Optional, Dict, Any
-import importlib.util
+
+from ..errors import CommandError
 
 from .base import CommandHandler
-from ..errors import CommandError
 
 
 class ToolCommandHandler(CommandHandler):
-    """
-    Handler for external tool commands.
+
+    """Handler for external tool commands.
 
     Handles commands like:
     - pytigon nim [args]
@@ -22,23 +21,22 @@ class ToolCommandHandler(CommandHandler):
     - pytigon @<tool> [args]
     """
 
-    def can_handle(self, argv: List[str]) -> bool:
-        """
-        Check if this handler can handle the given command.
+    def can_handle(self, argv: list[str]) -> bool:
+        """Check if this handler can handle the given command.
 
         Args:
             argv: Command arguments
 
         Returns:
             True if command is a tool command, False otherwise
+
         """
         if len(argv) > 1:
             return argv[1] in ("nim", "nimble", "-y") or argv[1].startswith("@")
         return False
 
-    def execute(self, argv: List[str], **kwargs) -> int:
-        """
-        Execute the tool command.
+    def execute(self, argv: list[str], **kwargs) -> int:
+        """Execute the tool command.
 
         Args:
             argv: Command arguments
@@ -46,6 +44,7 @@ class ToolCommandHandler(CommandHandler):
 
         Returns:
             Exit code
+
         """
         try:
             # Get paths for default app
@@ -59,17 +58,16 @@ class ToolCommandHandler(CommandHandler):
             # Handle different tool types
             if argv[1] in ("nim", "nimble", "-y"):
                 return self._handle_nim(argv, paths)
-            elif argv[1].startswith("@"):
+            if argv[1].startswith("@"):
                 return self._handle_at_tool(argv, paths)
-            else:
-                raise CommandError(f"Unknown tool command: {argv[1]}", code=30)
+            msg = f"Unknown tool command: {argv[1]}"
+            raise CommandError(msg, code=30)
 
         except Exception as e:
             return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "tool"})
 
-    def _handle_nim(self, argv: List[str], paths: Dict[str, str]) -> int:
-        """
-        Handle nim/nimble commands.
+    def _handle_nim(self, argv: list[str], paths: dict[str, str]) -> int:
+        """Handle nim/nimble commands.
 
         Args:
             argv: Command arguments
@@ -77,6 +75,7 @@ class ToolCommandHandler(CommandHandler):
 
         Returns:
             Exit code
+
         """
         try:
             from pytigon_lib.schtools.nim_integration import get_nim_path
@@ -94,16 +93,14 @@ class ToolCommandHandler(CommandHandler):
                 command = [os.path.join(nim_path, exe_name)] + argv[2:]
 
                 return self.run_subprocess(command)
-            else:
-                print("Error: Nim not found", file=sys.stderr)
-                return 1
+            print("Error: Nim not found", file=sys.stderr)
+            return 1
         except ImportError:
             print("Error: Nim integration not available", file=sys.stderr)
             return 1
 
-    def _handle_at_tool(self, argv: List[str], paths: Dict[str, str]) -> int:
-        """
-        Handle @tool commands.
+    def _handle_at_tool(self, argv: list[str], paths: dict[str, str]) -> int:
+        """Handle @tool commands.
 
         Args:
             argv: Command arguments
@@ -111,6 +108,7 @@ class ToolCommandHandler(CommandHandler):
 
         Returns:
             Exit code
+
         """
 
         if argv[1] == "@zig":
@@ -121,13 +119,12 @@ class ToolCommandHandler(CommandHandler):
             executable = self.get_executable()
             command = [executable, "-m", argv[1][1:]] + argv[2:]
             return self.run_subprocess(command)
-        else:
-            # Build tool path
-            prg_path = os.path.join(paths.get("DATA_PATH", ""), "prg")
-            tool_name = argv[1][1:]  # Remove @ prefix
+        # Build tool path
+        prg_path = os.path.join(paths.get("DATA_PATH", ""), "prg")
+        tool_name = argv[1][1:]  # Remove @ prefix
 
-            # Build command
-            exe_name = tool_name + ".exe" if os.name == "nt" else tool_name
+        # Build command
+        exe_name = tool_name + ".exe" if os.name == "nt" else tool_name
 
-            command = [os.path.join(prg_path, exe_name)] + argv[2:]
-            return self.run_subprocess(command)
+        command = [os.path.join(prg_path, exe_name)] + argv[2:]
+        return self.run_subprocess(command)

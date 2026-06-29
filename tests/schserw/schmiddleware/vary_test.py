@@ -1,8 +1,8 @@
-from pytigon.schserw.schmiddleware.vary import *
-
 # Pytest tests for VaryMiddleware
 import pytest
 from django.http import HttpRequest, HttpResponse
+
+from pytigon.schserw.schmiddleware.vary import *
 
 
 @pytest.fixture

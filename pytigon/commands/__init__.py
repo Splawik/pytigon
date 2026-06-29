@@ -4,4 +4,4 @@
 from .dispatcher import CommandDispatcher
 from .registry import CommandRegistry
 
-__all__ = ['CommandDispatcher', 'CommandRegistry']
+__all__ = ["CommandDispatcher", "CommandRegistry"]

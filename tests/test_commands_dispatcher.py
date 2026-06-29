@@ -1,20 +1,19 @@
-"""
-Pytest tests for CommandDispatcher and related command infrastructure.
+"""Pytest tests for CommandDispatcher and related command infrastructure.
 """
 
 import pytest
+
 from pytigon.commands.dispatcher import CommandDispatcher
-from pytigon.commands.registry import CommandRegistry
 from pytigon.commands.handlers import (
+    DefaultCommandHandler,
+    InitCommandHandler,
     ManageCommandHandler,
+    PythonCommandHandler,
     RunCommandHandler,
     RunServerCommandHandler,
-    PythonCommandHandler,
-    InitCommandHandler,
     ToolCommandHandler,
-    DefaultCommandHandler,
 )
-
+from pytigon.commands.registry import CommandRegistry
 
 # ---------------------------------------------------------------------------
 # CommandRegistry tests
@@ -197,7 +196,7 @@ class TestCommandDispatcher:
         """Test dispatch_with_context works correctly."""
         dispatcher = CommandDispatcher()
         exit_code = dispatcher.dispatch_with_context(
-            ["pytigon", "--help"], context={"source": "test"}
+            ["pytigon", "--help"], context={"source": "test"},
         )
         assert exit_code == 0
 

@@ -258,7 +258,7 @@ class ClientHandler:
         else:
             print(
                 "_ReleaseStrongReference() FAILED: resource handler "
-                "not found, id = %s" % (resHandler._resourceHandlerId)
+                f"not found, id = {resHandler._resourceHandlerId}"
             )
 
     def OnAddressChange(self, browser, frame, url):
@@ -342,7 +342,7 @@ class ClientHandler:
                 self.htmlwin.SetSize(*self.htmlwin.size[0], **self.htmlwin.size[1])
 
 
-class KeyboardHandler(object):
+class KeyboardHandler:
     def __init__(self, parent):
         self.parent = parent
 
@@ -360,7 +360,7 @@ class KeyboardHandler(object):
         return False
 
 
-class FocusHandler(object):
+class FocusHandler:
     def __init__(self, parent):
         self.parent = parent
 

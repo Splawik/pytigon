@@ -1,11 +1,11 @@
+"""Tests for pytigon.schserw.schsys.views module.
 """
-Tests for pytigon.schserw.schsys.views module.
-"""
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
-from django.test import RequestFactory, Client
 from django.contrib.auth.models import User
+from django.http import HttpResponse, HttpResponseRedirect
+from django.test import RequestFactory
 
 
 class TestChangePassword:

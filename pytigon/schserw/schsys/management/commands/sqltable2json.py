@@ -24,15 +24,15 @@ def get_table(table_name):
     # Validate table name - only allow alphanumeric and underscore
     if not table_name.replace("_", "").isalnum():
         raise CommandError(
-            "Invalid table name: '%s'. "
-            "Only alphanumeric characters and underscores are allowed." % table_name
+            f"Invalid table name: '{table_name}'. "
+            "Only alphanumeric characters and underscores are allowed."
         )
 
     # Use the connection's ops to properly quote the table name
     quoted_name = connection.ops.quote_name(table_name)
 
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM %s" % quoted_name)
+        cursor.execute(f"SELECT * FROM {quoted_name}")
         columns = [col[0] for col in cursor.description]
         return [dict(zip(columns, row)) for row in cursor.fetchall()]
 
@@ -79,8 +79,8 @@ class Command(BaseCommand):
         json_output = json.dumps(data, indent=2, default=str)
 
         if output_file:
-            with open(output_file, "wt") as f:
+            with open(output_file, "w") as f:
                 f.write(json_output)
-            self.stdout.write("Exported %d rows to %s" % (len(data), output_file))
+            self.stdout.write(f"Exported {len(data)} rows to {output_file}")
         else:
             self.stdout.write(json_output)

@@ -1,9 +1,10 @@
 import asyncio
-
-from pytigon.schserw.routing import LifespanApp, application
+import contextlib
 
 # Pytest tests
 import pytest
+
+from pytigon.schserw.routing import LifespanApp, application
 
 
 def test_lifespan_app_startup():
@@ -23,10 +24,8 @@ def test_lifespan_app_startup():
             if message["type"] == "lifespan.shutdown.complete":
                 raise StopAsyncIteration()
 
-        try:
+        with contextlib.suppress(StopAsyncIteration):
             await app(receive, send)
-        except StopAsyncIteration:
-            pass
 
         return received_messages
 
@@ -56,10 +55,8 @@ def test_lifespan_app_scoped():
             if message["type"] == "lifespan.shutdown.complete":
                 raise StopAsyncIteration()
 
-        try:
+        with contextlib.suppress(StopAsyncIteration):
             await app(receive, send)
-        except StopAsyncIteration:
-            pass
 
         return received_messages
 

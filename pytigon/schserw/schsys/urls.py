@@ -53,14 +53,8 @@ def sch_login(request, *argi, **argv):
             login_methods = settings.ACCOUNT_LOGIN_METHODS
             if login_methods == {"email"}:
                 obj = get_user_model().objects.filter(email=username).first()
-                if obj:
-                    username = obj.get_username()
-                else:
-                    username = None
-            if username:
-                user = authenticate(request, username=username, password=password)
-            else:
-                user = None
+                username = obj.get_username() if obj else None
+            user = authenticate(request, username=username, password=password) if username else None
 
             if user is None and login_methods == {"username", "email"}:
                 obj = get_user_model().objects.filter(email=username).first()
@@ -89,8 +83,7 @@ def sch_login(request, *argi, **argv):
                     title = _("Login error!")
                     txt = _("Incorrect login name or password")
                     return HttpResponse(
-                        '<html><head><meta name="target" content="message" data-title="%s" data-text="%s" data-icon="error"/></head></html>'
-                        % (title, txt)
+                        f'<html><head><meta name="target" content="message" data-title="{title}" data-text="{txt}" data-icon="error"/></head></html>'
                     )
 
     if "from_pytigon" in request.GET:

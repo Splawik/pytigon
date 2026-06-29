@@ -12,6 +12,7 @@ from fs.path import abspath, dirname
 from fs.errors import ResourceNotFound as ResourceNotFoundError
 from fs.error_tools import unwrap_errors
 from fs.osfs import OSFS
+import contextlib
 
 
 class OSFS_EXT(OSFS):
@@ -123,10 +124,8 @@ class FSStorage(Storage):
 
     def delete(self, name):
         with unwrap_errors(name):
-            try:
+            with contextlib.suppress(ResourceNotFoundError):
                 self.fs.remove(name)
-            except ResourceNotFoundError:
-                pass
 
     def get_accessed_time(self, name):
         info = self.fs.getinfo(name, namespaces=["details"])

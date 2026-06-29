@@ -1,41 +1,37 @@
-"""
-RunServer Command Handler
+"""RunServer Command Handler
 Handles running web servers (WSGI/ASGI).
 """
 
 import os
 import sys
-from typing import List, Optional, Dict, Any
 
 from .base import CommandHandler
-from ..errors import CommandError
 
 
 class RunServerCommandHandler(CommandHandler):
-    """
-    Handler for running web servers.
+
+    """Handler for running web servers.
 
     Handles commands like:
     - pytigon runserver_<app> [options]
     """
 
-    def can_handle(self, argv: List[str]) -> bool:
-        """
-        Check if this handler can handle the given command.
+    def can_handle(self, argv: list[str]) -> bool:
+        """Check if this handler can handle the given command.
 
         Args:
             argv: Command arguments
 
         Returns:
             True if command starts with 'runserver_', False otherwise
+
         """
         if len(argv) > 1:
             return argv[1].startswith("runserver_")
         return False
 
-    def execute(self, argv: List[str], **kwargs) -> int:
-        """
-        Execute the runserver command.
+    def execute(self, argv: list[str], **kwargs) -> int:
+        """Execute the runserver command.
 
         Args:
             argv: Command arguments
@@ -43,6 +39,7 @@ class RunServerCommandHandler(CommandHandler):
 
         Returns:
             Exit code
+
         """
         try:
             # Save current working directory
@@ -98,28 +95,24 @@ class RunServerCommandHandler(CommandHandler):
                 # Check if running with GUI
                 if "--with-gui" in argv:
                     return self._run_with_gui(argv, app, wsgi, address, port)
-                else:
-                    return self._run_server(argv, options, wsgi)
+                return self._run_server(argv, options, wsgi)
 
             finally:
                 # Restore original working directory
                 os.chdir(base_path)
 
         except Exception as e:
-            return self.handle_error(
-                e, {"command": argv[1] if len(argv) > 1 else "runserver"}
-            )
+            return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "runserver"})
 
     def _build_server_options(
         self,
-        argv: List[str],
+        argv: list[str],
         wsgi: bool,
-        listen: Optional[str],
+        listen: str | None,
         address: str,
         port: str,
-    ) -> List[str]:
-        """
-        Build server options based on arguments.
+    ) -> list[str]:
+        """Build server options based on arguments.
 
         Args:
             argv: Command arguments
@@ -130,6 +123,7 @@ class RunServerCommandHandler(CommandHandler):
 
         Returns:
             List of server options
+
         """
         options = []
 
@@ -141,15 +135,14 @@ class RunServerCommandHandler(CommandHandler):
                     options += ["-p", port]
                 if "-b" not in argv and "--bind" not in argv:
                     options += ["-b", address]
+        elif wsgi:
+            if "--port" not in argv and "--host" not in argv:
+                options += ["--listen", "0.0.0.0:8000"]
         else:
-            if wsgi:
-                if "--port" not in argv and "--host" not in argv:
-                    options += ["--listen", "0.0.0.0:8000"]
-            else:
-                if "-p" not in argv and "--port" not in argv:
-                    options += ["-p", port]
-                if "-b" not in argv and "--bind" not in argv:
-                    options += ["-b", "0.0.0.0"]
+            if "-p" not in argv and "--port" not in argv:
+                options += ["-p", port]
+            if "-b" not in argv and "--bind" not in argv:
+                options += ["-b", "0.0.0.0"]
 
         # Add application entry point
         if wsgi:
@@ -159,11 +152,8 @@ class RunServerCommandHandler(CommandHandler):
 
         return options
 
-    def _run_with_gui(
-        self, argv: List[str], app: str, wsgi: bool, address: str, port: str
-    ) -> int:
-        """
-        Run server with GUI.
+    def _run_with_gui(self, argv: list[str], app: str, wsgi: bool, address: str, port: str) -> int:
+        """Run server with GUI.
 
         Args:
             argv: Command arguments
@@ -174,6 +164,7 @@ class RunServerCommandHandler(CommandHandler):
 
         Returns:
             Exit code
+
         """
         # Remove --with-gui from argv
         argv.remove("--with-gui")
@@ -197,9 +188,8 @@ class RunServerCommandHandler(CommandHandler):
             print("Error: pytigon_gui not available", file=sys.stderr)
             return 1
 
-    def _run_server(self, argv: List[str], options: List[str], wsgi: bool) -> int:
-        """
-        Run server without GUI.
+    def _run_server(self, argv: list[str], options: list[str], wsgi: bool) -> int:
+        """Run server without GUI.
 
         Args:
             argv: Command arguments
@@ -208,6 +198,7 @@ class RunServerCommandHandler(CommandHandler):
 
         Returns:
             Exit code
+
         """
         # Save original sys.argv
         tmp = sys.argv

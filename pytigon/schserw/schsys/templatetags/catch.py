@@ -38,12 +38,12 @@ def do_catch(parser, token):
         (tag_name, arg) = token.contents.split(None, 1)
     except ValueError:
         raise template.TemplateSyntaxError(
-            "%r tag requires arguments" % token.contents[0]
+            f"{token.contents[0]!r} tag requires arguments"
         )
     m = re.search(r"as (\w+)", arg)
     if not m:
         raise template.TemplateSyntaxError(
-            '%r tag should define as "%r as var_name"' % (tag_name, tag_name)
+            f'{tag_name!r} tag should define as "{tag_name!r} as var_name"'
         )
     var_name = m.groups()[0]
     nodelist = parser.parse(("endcatch",))

@@ -18,10 +18,7 @@ def init_control(ctrl_param):
     @extend_fun_to(ctrl_param)
     def __ext_init__(self):
         """Initialize key bindings - called during control initialization."""
-        if ctrl_param.tag == "ctrltable":
-            ctrl = ctrl_param.grid
-        else:
-            ctrl = ctrl_param
+        ctrl = ctrl_param.grid if ctrl_param.tag == "ctrltable" else ctrl_param
 
         @extend_fun_to(ctrl)
         def __ext_init__(self):

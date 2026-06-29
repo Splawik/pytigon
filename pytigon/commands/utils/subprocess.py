@@ -1,19 +1,16 @@
-"""
-Safe Subprocess Execution
+"""Safe Subprocess Execution
 Provides secure subprocess execution with input validation and sanitization.
 """
 
 import os
 import shutil
-import sys
 import subprocess
-from typing import List, Optional, Tuple, Union
-from pathlib import Path
+import sys
 
 
 class SafeSubprocess:
-    """
-    Secure subprocess execution with input validation.
+
+    """Secure subprocess execution with input validation.
 
     Validates that arguments contain no shell injection characters.
     Executables are allowed if they resolve to a real file within:
@@ -28,7 +25,7 @@ class SafeSubprocess:
     def __init__(self):
         pass
 
-    def validate_command(self, command: List[str]) -> List[str]:
+    def validate_command(self, command: list[str]) -> list[str]:
         from ..errors import SecurityError
 
         if not command:
@@ -36,16 +33,19 @@ class SafeSubprocess:
 
         executable = command[0]
         if not self._is_executable_allowed(executable):
-            raise SecurityError(f"Executable not allowed: {executable}", code=21)
+            msg = f"Executable not allowed: {executable}"
+            raise SecurityError(msg, code=21)
 
         sanitized = []
         for i, arg in enumerate(command):
             if not isinstance(arg, str):
+                msg = f"Argument {i} must be a string, got {type(arg).__name__}"
                 raise SecurityError(
-                    f"Argument {i} must be a string, got {type(arg).__name__}", code=22
+                    msg, code=22,
                 )
             if self._contains_dangerous_chars(arg):
-                raise SecurityError(f"Argument {i} contains dangerous characters: {arg}", code=23)
+                msg = f"Argument {i} contains dangerous characters: {arg}"
+                raise SecurityError(msg, code=23)
             sanitized.append(arg)
 
         return sanitized
@@ -60,6 +60,7 @@ class SafeSubprocess:
 
         try:
             from pytigon_lib.schtools.main_paths import get_main_paths
+
             paths = get_main_paths()
             prg = os.path.join(paths["DATA_PATH"], "prg")
             if os.path.isdir(prg):
@@ -97,15 +98,14 @@ class SafeSubprocess:
 
     def run(
         self,
-        command: List[str],
-        cwd: Optional[str] = None,
-        env: Optional[dict] = None,
+        command: list[str],
+        cwd: str | None = None,
+        env: dict | None = None,
         capture_output: bool = False,
-        timeout: Optional[int] = None,
+        timeout: int | None = None,
         check: bool = True,
     ) -> subprocess.CompletedProcess:
-        """
-        Safely execute a subprocess command.
+        """Safely execute a subprocess command.
 
         Args:
             command: List of command arguments
@@ -121,8 +121,9 @@ class SafeSubprocess:
         Raises:
             SecurityError: If command validation fails
             SubprocessError: If subprocess execution fails
+
         """
-        from ..errors import SecurityError, SubprocessError
+        from ..errors import SubprocessError
 
         # Validate command
         validated_command = self.validate_command(command)
@@ -154,30 +155,32 @@ class SafeSubprocess:
 
             # Check return code if requested
             if check and result.returncode != 0:
+                msg = f"Command failed with exit code {result.returncode}: {' '.join(validated_command)}"
                 raise SubprocessError(
-                    f"Command failed with exit code {result.returncode}: {' '.join(validated_command)}",
+                    msg,
                     code=40,
                     returncode=result.returncode,
                 )
 
             return result
 
-        except subprocess.TimeoutExpired as e:
+        except subprocess.TimeoutExpired:
+            msg = f"Command timed out after {timeout} seconds: {' '.join(validated_command)}"
             raise SubprocessError(
-                f"Command timed out after {timeout} seconds: {' '.join(validated_command)}",
+                msg,
                 code=41,
             )
         except OSError as e:
+            msg = f"Failed to execute command: {e}"
             raise SubprocessError(
-                f"Failed to execute command: {e}",
+                msg,
                 code=42,
             )
 
     def run_simple(
-        self, command: List[str], cwd: Optional[str] = None, capture_output=False
+        self, command: list[str], cwd: str | None = None, capture_output=False,
     ) -> int:
-        """
-        Simple subprocess execution that returns exit code.
+        """Simple subprocess execution that returns exit code.
 
         Args:
             command: List of command arguments
@@ -185,6 +188,7 @@ class SafeSubprocess:
 
         Returns:
             Exit code of the subprocess
+
         """
         try:
             result = self.run(command, cwd=cwd, check=True, capture_output=capture_output)

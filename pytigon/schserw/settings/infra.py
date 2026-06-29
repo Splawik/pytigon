@@ -32,6 +32,7 @@ from .base import (
 from .features import MIDDLEWARE, INSTALLED_APPS, ALLAUTH, PWA
 from pytigon.ext_lib.django_storage import OSFS_EXT
 from pytigon_lib.schtools.platform_info import platform_name
+import contextlib
 
 # Logging verbosity level
 if "-v" in sys.argv:
@@ -237,10 +238,8 @@ def DEFAULT_FILE_STORAGE_FS():
     _m.mount("static", STATIC_FS)
     _m.mount("app", OSFS_EXT(settings.LOCAL_ROOT_PATH))
     _m.mount("data", OSFS_EXT(settings.DATA_PATH))
-    try:
+    with contextlib.suppress(Exception):
         _m.mount("temp", OSFS_EXT(settings.TEMP_PATH))
-    except Exception:
-        pass
     try:
         _m.mount("site_media", OSFS_EXT(settings.MEDIA_ROOT))
         _m.mount("site_media_protected", OSFS_EXT(settings.MEDIA_ROOT_PROTECTED))

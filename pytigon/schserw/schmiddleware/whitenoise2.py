@@ -42,7 +42,7 @@ class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
                 pos = maps[key]
                 self.add_files(pos[0], prefix=pos[1])
                 if fs:
-                    if os.path.exists((pos[0])):
+                    if os.path.exists(pos[0]):
                         fs.add_fs(key, OSFS(pos[0]))
 
     def __call__(self, request):

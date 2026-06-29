@@ -1,41 +1,37 @@
-"""
-Init Command Handler
+"""Init Command Handler
 Handles project initialization.
 """
 
 import os
 import sys
-from typing import List, Optional, Dict, Any
 
 from .base import CommandHandler
-from ..errors import CommandError
 
 
 class InitCommandHandler(CommandHandler):
-    """
-    Handler for project initialization.
+
+    """Handler for project initialization.
 
     Handles commands like:
     - pytigon init_<app>
     """
 
-    def can_handle(self, argv: List[str]) -> bool:
-        """
-        Check if this handler can handle the given command.
+    def can_handle(self, argv: list[str]) -> bool:
+        """Check if this handler can handle the given command.
 
         Args:
             argv: Command arguments
 
         Returns:
             True if command starts with 'init_', False otherwise
+
         """
         if len(argv) > 1:
             return argv[1].startswith("init_")
         return False
 
-    def execute(self, argv: List[str], **kwargs) -> int:
-        """
-        Execute the init command.
+    def execute(self, argv: list[str], **kwargs) -> int:
+        """Execute the init command.
 
         Args:
             argv: Command arguments
@@ -43,6 +39,7 @@ class InitCommandHandler(CommandHandler):
 
         Returns:
             Exit code
+
         """
         try:
             # Extract app name from command
@@ -84,6 +81,4 @@ class InitCommandHandler(CommandHandler):
             return 0
 
         except Exception as e:
-            return self.handle_error(
-                e, {"command": argv[1] if len(argv) > 1 else "init"}
-            )
+            return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "init"})

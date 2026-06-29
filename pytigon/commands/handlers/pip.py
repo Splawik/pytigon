@@ -1,5 +1,4 @@
-"""
-Pip Command Handler
+"""Pip Command Handler
 Handles running pip in prj environment.
 """
 
@@ -9,30 +8,29 @@ from .base import CommandHandler
 
 
 class PipCommandHandler(CommandHandler):
-    """
-    Handler for running Python scripts.
+
+    """Handler for running Python scripts.
 
     Handles commands like:
     - pytigon pip_<app> args
     """
 
-    def can_handle(self, argv: List[str]) -> bool:
-        """
-        Check if this handler can handle the given command.
+    def can_handle(self, argv: list[str]) -> bool:
+        """Check if this handler can handle the given command.
 
         Args:
             argv: Command arguments
 
         Returns:
             True if command starts with 'pip_', False otherwise
+
         """
         if len(argv) > 1:
             return argv[1].startswith("pip_")
         return False
 
-    def execute(self, argv: List[str], **kwargs) -> int:
-        """
-        Execute the run command.
+    def execute(self, argv: list[str], **kwargs) -> int:
+        """Execute the run command.
 
         Args:
             argv: Command arguments
@@ -40,6 +38,7 @@ class PipCommandHandler(CommandHandler):
 
         Returns:
             Exit code
+
         """
         try:
             # Parse command to extract app and script
@@ -66,10 +65,7 @@ class PipCommandHandler(CommandHandler):
 
             command += argv[3:]
 
-            if "PYTHONPATH" in os.environ:
-                python_path = os.environ["PYTHONPATH"]
-            else:
-                python_path = None
+            python_path = os.environ["PYTHONPATH"] if "PYTHONPATH" in os.environ else None
             os.environ["PYTHONPATH"] = prjlib
             ret = self.run_subprocess(command)
             if python_path:

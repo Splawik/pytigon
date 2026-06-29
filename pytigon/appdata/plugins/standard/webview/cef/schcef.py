@@ -60,9 +60,7 @@ def check_versions():
     print("[pytigon] Chromium {ver}".format(ver=ver["chrome_version"]))
     print("[pytigon] CEF {ver}".format(ver=ver["cef_version"]))
     print(
-        "[pytigon] Python {ver} {arch}".format(
-            ver=platform.python_version(), arch=platform.architecture()[0]
-        )
+        f"[pytigon] Python {platform.python_version()} {platform.architecture()[0]}"
     )
     assert cef.__version__ >= "57.0", "CEF Python v57.0+ required to run this"
 
@@ -130,7 +128,7 @@ class ClientHandler:
         else:
             print(
                 "_ReleaseStrongReference() FAILED: resource handler "
-                "not found, id = %s" % (resHandler._resourceHandlerId)
+                f"not found, id = {resHandler._resourceHandlerId}"
             )
 
 
@@ -280,12 +278,12 @@ async def run_async(
         url2 = url.replace("file://" + cef.GetModuleDirectory(), "http://127.0.0.2")
         ret = pytigon_request(url2 + "/", params)
         ret = (
-            '<base href="file://%s/" target="_blank">' % cef.GetModuleDirectory()
+            f'<base href="file://{cef.GetModuleDirectory()}/" target="_blank">'
             + ret.str()
         )
         ret = ret.replace(
             "window.BASE_PATH = '/'",
-            "window.BASE_PATH = 'file://%s/'" % cef.GetModuleDirectory(),
+            f"window.BASE_PATH = 'file://{cef.GetModuleDirectory()}/'",
         )
         js_callback.Call(ret, py_callback)
 

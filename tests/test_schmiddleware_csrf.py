@@ -1,9 +1,8 @@
-"""
-Pytest tests for pytigon.schserw.schmiddleware.csrf module.
+"""Pytest tests for pytigon.schserw.schmiddleware.csrf module.
 """
 
-import pytest
 from django.http import HttpRequest, HttpResponse
+
 from pytigon.schserw.schmiddleware.csrf import DisableCSRF
 
 
