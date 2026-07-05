@@ -1272,13 +1272,7 @@ class DocHead(JSONModel):
         ]
 
     parents = models.ManyToManyField(
-        "self",
-        null=False,
-        blank=False,
-        editable=False,
-        verbose_name="Parents",
-        db_index=True,
-        symmetrical=False,
+        "self", editable=False, verbose_name="Parents", db_index=True, symmetrical=False
     )
     doc_type_parent = ext_models.PtigHiddenForeignKey(
         DocType,

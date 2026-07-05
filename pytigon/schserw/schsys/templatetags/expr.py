@@ -48,9 +48,9 @@ _SAFE_BUILTINS = {
     "str": str,
     "sum": sum,
     "tuple": tuple,
-    "type": type,
     "zip": zip,
 }
+
 _SAFE_OPS = {
     ast.Add: operator.add,
     ast.Sub: operator.sub,
@@ -75,12 +75,72 @@ _SAFE_OPS = {
     ast.NotIn: lambda a, b: a not in b,
 }
 
+# Atrybuty dozwolone dla typów wbudowanych
+_SAFE_ATTRIBUTES = {
+    str: {
+        "capitalize", "casefold", "center", "count", "encode", "endswith",
+        "expandtabs", "find", "format", "format_map", "index", "isalnum",
+        "isalpha", "isascii", "isdecimal", "isdigit", "isidentifier",
+        "islower", "isnumeric", "isprintable", "isspace", "istitle",
+        "isupper", "join", "ljust", "lower", "lstrip", "maketrans",
+        "partition", "removeprefix", "removesuffix", "replace", "rfind",
+        "rindex", "rjust", "rpartition", "rsplit", "rstrip", "split",
+        "splitlines", "startswith", "strip", "swapcase", "title",
+        "translate", "upper", "zfill",
+    },
+    list: {
+        "append", "clear", "copy", "count", "extend", "index",
+        "insert", "pop", "remove", "reverse", "sort",
+    },
+    dict: {
+        "clear", "copy", "fromkeys", "get", "items", "keys",
+        "pop", "popitem", "setdefault", "update", "values",
+    },
+    tuple: {"count", "index"},
+    set: {
+        "add", "clear", "copy", "difference", "difference_update",
+        "discard", "intersection", "intersection_update", "isdisjoint",
+        "issubset", "issuperset", "pop", "remove", "symmetric_difference",
+        "symmetric_difference_update", "union", "update",
+    },
+    frozenset: {
+        "copy", "difference", "intersection", "isdisjoint",
+        "issubset", "issuperset", "symmetric_difference", "union",
+    },
+}
+
+
+def _is_safe_attribute(value, attr):
+    """Sprawdza czy dostęp do atrybutu jest dozwolony."""
+    # Blokuj bezwzględnie wszystkie atrybuty zaczynające się od '_'
+    if attr.startswith("_"):
+        raise ValueError(f"Access to private/dunder attribute '{attr}' is forbidden")
+
+    # Sprawdź białą listę dla typów wbudowanych
+    for safe_type, safe_attrs in _SAFE_ATTRIBUTES.items():
+        if isinstance(value, safe_type):
+            if attr not in safe_attrs:
+                raise ValueError(
+                    f"Attribute '{attr}' is not allowed on {safe_type.__name__}"
+                )
+            return True
+
+    # Dla pozostałych typów (np. modele Django) — blokuj dostęp
+    raise ValueError(
+        f"Attribute access on type '{type(value).__name__}' is not permitted"
+    )
+
 
 class _SafeEval(ast.NodeVisitor):
     def __init__(self, context):
         self.context = context
 
+    def visit_Expression(self, node):
+        """Korzeń drzewa przy ast.parse(..., mode='eval')"""
+        return self.visit(node.body)
+
     def visit_Module(self, node):
+        """Korzeń drzewa przy ast.parse(..., mode='exec') — fallback"""
         if len(node.body) != 1:
             raise ValueError("Only single expressions allowed")
         return self.visit(node.body[0])
@@ -161,6 +221,7 @@ class _SafeEval(ast.NodeVisitor):
 
     def visit_Attribute(self, node):
         value = self.visit(node.value)
+        _is_safe_attribute(value, node.attr)
         return getattr(value, node.attr)
 
     def visit_Call(self, node):
@@ -195,6 +256,31 @@ def mark_safe2(x):
         return mark_safe(x.replace("<", "[").replace(">", "]"))
     else:
         return x
+
+
+# Regex zakotwiczony na początku i końcu, używany z re.fullmatch
+r_expr = re.compile(r"^(.*?)\s+as\s+(\w+)$", re.DOTALL)
+
+
+def _parse_expr_arg(tag_name, arg):
+    """
+    Parsuje argument tagu expr.
+    Używa fullmatch zamiast search, aby uniknąć cichego ignorowania
+    fragmentów wyrażenia zawierających słowo kluczowe 'as'.
+    """
+    if not arg:
+        raise template.TemplateSyntaxError(
+            f"{tag_name!r} tag requires at least one argument"
+        )
+    m = r_expr.fullmatch(arg.strip())
+    if m:
+        expr_string, var_name = m.groups()
+        if not expr_string.strip():
+            raise template.TemplateSyntaxError(
+                f"{tag_name!r} tag: expression before 'as' cannot be empty"
+            )
+        return expr_string.strip(), var_name
+    return arg.strip(), None
 
 
 class ExprNode(template.Node):
@@ -252,26 +338,15 @@ class ExprNode(template.Node):
             raise
 
 
-r_expr = re.compile(r"(.*?)\s+as\s+(\w+)", re.DOTALL)
-
-
 def do_expr(parser, token):
     try:
-        (tag_name, arg) = token.contents.split(None, 1)
+        tag_name, arg = token.contents.split(None, 1)
     except ValueError:
         raise template.TemplateSyntaxError(
-            f"{token.contents[0]!r} tag requires arguments"
+            f"{token.contents.split()[0]!r} tag requires arguments"
         )
-    m = r_expr.search(arg)
-    if m:
-        (expr_string, var_name) = m.groups()
-    else:
-        if not arg:
-            raise template.TemplateSyntaxError(
-                f"{tag_name!r} tag at least require one argument"
-            )
-        (expr_string, var_name) = (arg, None)
-    return ExprNode(expr_string, var_name, False)
+    expr_string, var_name = _parse_expr_arg(tag_name, arg)
+    return ExprNode(expr_string, var_name, safe=False)
 
 
 do_expr = register.tag("expr", do_expr)
@@ -279,21 +354,13 @@ do_expr = register.tag("expr", do_expr)
 
 def do_expr_safe(parser, token):
     try:
-        (tag_name, arg) = token.contents.split(None, 1)
+        tag_name, arg = token.contents.split(None, 1)
     except ValueError:
         raise template.TemplateSyntaxError(
-            f"{token.contents[0]!r} tag requires arguments"
+            f"{token.contents.split()[0]!r} tag requires arguments"
         )
-    m = r_expr.search(arg)
-    if m:
-        (expr_string, var_name) = m.groups()
-    else:
-        if not arg:
-            raise template.TemplateSyntaxError(
-                f"{tag_name!r} tag at least require one argument"
-            )
-        (expr_string, var_name) = (arg, None)
-    return ExprNode(expr_string, var_name, True)
+    expr_string, var_name = _parse_expr_arg(tag_name, arg)
+    return ExprNode(expr_string, var_name, safe=True)
 
 
 do_expr_safe = register.tag("expr_safe", do_expr_safe)
@@ -301,21 +368,13 @@ do_expr_safe = register.tag("expr_safe", do_expr_safe)
 
 def do_expr_escape(parser, token):
     try:
-        (tag_name, arg) = token.contents.split(None, 1)
+        tag_name, arg = token.contents.split(None, 1)
     except ValueError:
         raise template.TemplateSyntaxError(
-            f"{token.contents[0]!r} tag requires arguments"
+            f"{token.contents.split()[0]!r} tag requires arguments"
         )
-    m = r_expr.search(arg)
-    if m:
-        (expr_string, var_name) = m.groups()
-    else:
-        if not arg:
-            raise template.TemplateSyntaxError(
-                f"{tag_name!r} tag at least require one argument"
-            )
-        (expr_string, var_name) = (arg, None)
-    return ExprNode(expr_string, var_name, True, True)
+    expr_string, var_name = _parse_expr_arg(tag_name, arg)
+    return ExprNode(expr_string, var_name, safe=True, escape=True)
 
 
 do_expr_escape = register.tag("expr_escape", do_expr_escape)
@@ -325,7 +384,7 @@ def build_eval(parser, token):
     bits = token.contents.split()
     if len(bits) != 2:
         raise template.TemplateSyntaxError("eval takes one argument")
-    (tag, val_expr) = bits
+    tag, val_expr = bits
     return EvalObject(val_expr)
 
 

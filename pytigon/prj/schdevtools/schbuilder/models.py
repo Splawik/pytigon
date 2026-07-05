@@ -1250,10 +1250,6 @@ class SChField(models.Model):
         return self.parent.get_models()
 
     def as_declaration(self):
-        # if 'TreeForeignKey' in self.type:
-        #    if not self.parent.base_table in ("", "models.Model"):
-        #        return ""
-
         if self.type == "NullBooleanField":
             self.type = "BooleanField"
             self.null = True
@@ -1266,20 +1262,11 @@ class SChField(models.Model):
         else:
             module = "models."
         if self.is_rel():
-            # rel_model =self.rel_to.split('.')[-1]
             x = self.rel_to.split(".")
             if len(x) > 1:
                 rel_model = x[-2] + ".models." + x[-1]
             else:
                 rel_model = self.rel_to
-            # if self.type.startswith('Ptig'):
-            #    if 'ForeignKey' in self.type:
-            #        ret = "%s = %s%s(%s, on_delete=models.CASCADE, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
-            #            (self.name, module, self.type[1:], rel_model, self.null, self.blank, self.editable, self.description)
-            #    else:
-            #        ret = "%s = %s%s(%s, null=%s, blank=%s, editable=%s, verbose_name='%s', " % \
-            #            (self.name, module, self.type[1:], rel_model, self.null, self.blank, self.editable, self.description)
-            # else:
             if "ForeignKey" in self.type or "OneToOne" in self.type:
                 ret = (
                     "%s = %s%s(%s, on_delete=models.CASCADE, null=%s, blank=%s, editable=%s, verbose_name='%s', "
@@ -1293,6 +1280,15 @@ class SChField(models.Model):
                         self.editable,
                         self.description,
                     )
+                )
+            elif "ManyToMany" in self.type:
+                ret = "%s = %s%s(%s, editable=%s, verbose_name='%s', " % (
+                    self.name,
+                    module,
+                    self.type,
+                    rel_model,
+                    self.editable,
+                    self.description,
                 )
             else:
                 ret = (
@@ -1330,7 +1326,6 @@ class SChField(models.Model):
             ret += "db_index=True,"
         if self.param and len(self.param) > 0:
             ret += self.param
-            # .replace(':','=')
         ret += ")"
         return ret
 
@@ -1655,8 +1650,6 @@ class SChTemplate(models.Model):
     )
     static_files = models.ManyToManyField(
         SChStatic,
-        null=True,
-        blank=True,
         editable=True,
         verbose_name="Static files",
     )
