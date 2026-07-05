@@ -73,8 +73,8 @@ include-package-data = true
 
 [tool.ruff]
 line-length = 100
+force-exclude = true
 exclude = ["pytigon/static_src", "pytigon/static", "pytigon/prj", "pytigon/ext_lib", "pytigon/schserw/translate.py"]
-# Ruff automatycznie odczyta minimalną wersję z project.requires-python
 
 [tool.ruff.lint]
 select = [
