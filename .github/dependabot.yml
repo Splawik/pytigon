@@ -6,6 +6,8 @@ updates:
       interval: "weekly"
     allow:
       - dependency-type: "direct"
+    exclude-paths:
+      - "frontend/**"
     ignore:
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
