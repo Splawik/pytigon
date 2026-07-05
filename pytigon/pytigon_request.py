@@ -5,13 +5,14 @@ with pytigon's embedded Django HTTP client. Used by GUI and script modes
 to communicate with the internal Django server.
 """
 
+import logging
 import os
 import sys
-import logging
 
-from pytigon_lib.schtools.main_paths import get_main_paths
-from pytigon_lib.schhttptools import httpclient
 from django.conf import settings
+
+from pytigon_lib.schhttptools import httpclient
+from pytigon_lib.schtools.main_paths import get_main_paths
 
 HTTP = None
 _logger = logging.getLogger("pytigon_request")
@@ -41,8 +42,9 @@ def init(
     global HTTP
 
     if ptig_installer:
-        from pytigon_lib.schtools.install import Ptig
         import io
+
+        from pytigon_lib.schtools.install import Ptig
 
         if isinstance(ptig_installer, bytes):
             ptig_file = io.BytesIO(ptig_installer)

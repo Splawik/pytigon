@@ -5,12 +5,11 @@ completion suggestions from the server in real-time as the user types.
 """
 
 import wx
-from autocomplete import TextCtrlAutoComplete
 
-from pytigon_lib.schtools import schjson
-
-from pytigon_gui.guictrl.ctrl import SchBaseCtrl
 import pytigon_gui.guictrl.ctrl
+from autocomplete import TextCtrlAutoComplete
+from pytigon_gui.guictrl.ctrl import SchBaseCtrl
+from pytigon_lib.schtools import schjson
 
 
 class DbDict:

@@ -5,12 +5,13 @@ a Bootstrap-styled widget container, with support for width/height
 parameters and Django template syntax within the widget body.
 """
 
+import contextlib
+
 from django import template
-from django.template.base import token_kwargs, TemplateSyntaxError
 from django.template import Template
+from django.template.base import TemplateSyntaxError, token_kwargs
 from django.template.loader import get_template
 from django.utils.safestring import mark_safe
-import contextlib
 
 register = template.Library()
 

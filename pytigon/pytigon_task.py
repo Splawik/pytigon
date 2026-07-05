@@ -18,10 +18,10 @@ Usage:
     pytigon_task.py -a argument1=value1 -a argument2=value2 -u user -p password appset[:view]
 """
 
-import os
-import sys
 import getopt
 import logging
+import os
+import sys
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -56,9 +56,9 @@ def _login(http, username, password):
 
 
 if __name__ == "__main__":
-    from pytigon_lib.schtools.main_paths import get_main_paths
-    from pytigon_lib.schtasks import schschedule
     from pytigon_lib.schhttptools import httpclient
+    from pytigon_lib.schtasks import schschedule
+    from pytigon_lib.schtools.main_paths import get_main_paths
 
     paths = get_main_paths()
 
@@ -126,9 +126,10 @@ if __name__ == "__main__":
             ret, newaddr = http.get(None, view)
     else:
         from apps import APPS
-        from pytigon_lib.schtools import sch_import
-        from pytigon_lib.schdjangoext.django_manage import cmd
         from django.conf import settings
+
+        from pytigon_lib.schdjangoext.django_manage import cmd
+        from pytigon_lib.schtools import sch_import
 
         # Build mail configuration from Django settings if available
         mail_conf = None

@@ -9,22 +9,20 @@ Defines all URL patterns including:
 """
 
 import importlib
+import logging
 import os
 import posixpath
-import logging
 
-from django.urls import include, path, re_path
-from django.conf import settings
-from django.http import Http404, FileResponse
-from django.views.generic import TemplateView
-
+import django.contrib.staticfiles
 import django.views.i18n
 import django_select2.urls
-import django.contrib.staticfiles
-
-from django.views.decorators.csrf import csrf_exempt
+from django.conf import settings
+from django.http import FileResponse, Http404
+from django.urls import include, path, re_path
 from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.vary import vary_on_headers
+from django.views.generic import TemplateView
 
 if settings.GRAPHQL:
     from django.contrib.auth.mixins import LoginRequiredMixin
@@ -39,8 +37,9 @@ logger = logging.getLogger(__name__)
 
 if settings.GRAPHQL:
     from graphene_django.views import GraphQLView
+
+    from pytigon.schserw.schsys.schema import public_schema, schema
     from pytigon_lib.schdjangoext.oauth_for_graphql import OAuth2ProtectedGraph
-    from pytigon.schserw.schsys.schema import schema, public_schema
 
     PytigonGraphQLViewPublic = GraphQLView
 
@@ -120,10 +119,9 @@ if settings.GRAPHQL:
 if settings.REST:
     from drf_yasg import openapi
     from drf_yasg.views import get_schema_view
-    from rest_framework import permissions
+    from rest_framework import permissions, status
     from rest_framework.decorators import api_view
     from rest_framework.response import Response
-    from rest_framework import status
 
     schema_view = get_schema_view(
         openapi.Info(

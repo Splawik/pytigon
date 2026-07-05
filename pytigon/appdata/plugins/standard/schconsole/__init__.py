@@ -20,8 +20,8 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         toolbar: Tool bar.
         accel: Accelerator table.
     """
-    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
     import pytigon_gui.guictrl.ctrl
+    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
 
     class Console(wx.Panel):
         """Simple console panel with HTML display and text input."""

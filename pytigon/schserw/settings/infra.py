@@ -6,33 +6,27 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-from .csp import SECURE_CSP
+
+import contextlib
+
+from pytigon.ext_lib.django_storage import OSFS_EXT
+from pytigon_lib.schtools.platform_info import platform_name
 
 from .base import (
-    ENV,
+    BASE_PRJ_NAME,
     DEBUG,
-    PRODUCTION_VERSION,
-    DATA_PATH,
+    ENV,
     LOG_PATH,
     MEDIA_ROOT,
     MEDIA_ROOT_PROTECTED,
     MEDIA_URL,
     MEDIA_URL_PROTECTED,
-    TEMP_PATH,
-    PRJ_PATH,
-    BASE_PRJ_NAME,
-    ROOT_PATH,
-    SCRIPT_MODE,
     PLATFORM_TYPE,
-    UPLOAD_PATH,
-    DOC_PATH,
-    DOC_PATH_PROTECTED,
-    UPLOAD_PATH_PROTECTED,
+    PRJ_PATH,
+    PRODUCTION_VERSION,
+    SCRIPT_MODE,
 )
-from .features import MIDDLEWARE, INSTALLED_APPS, ALLAUTH, PWA
-from pytigon.ext_lib.django_storage import OSFS_EXT
-from pytigon_lib.schtools.platform_info import platform_name
-import contextlib
+from .features import INSTALLED_APPS
 
 # Logging verbosity level
 if "-v" in sys.argv:

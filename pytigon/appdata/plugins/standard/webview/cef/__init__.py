@@ -5,6 +5,7 @@ This is an alternative to the wx.html2 WebView backend.
 """
 
 import wx
+
 from pytigon_gui.guilib.tools import get_colour
 
 CEF_INITIATED = False
@@ -36,9 +37,9 @@ def init_plugin_cef(
     Returns:
         The cef_shutdown function for cleanup on application exit.
     """
-    from pytigon_lib.schindent.indent_tools import norm_html
-    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
     import pytigon_gui.guictrl.ctrl
+    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
+    from pytigon_lib.schindent.indent_tools import norm_html
 
     from .cefcontrol import CEFControl, cef_shutdown
 

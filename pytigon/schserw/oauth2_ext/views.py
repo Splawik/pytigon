@@ -8,9 +8,9 @@ import json
 import logging
 
 from django.http import HttpResponse
-from oauth2_provider.views.base import TokenView
-from oauth2_provider.signals import app_authorized
 from oauth2_provider.models import get_access_token_model
+from oauth2_provider.signals import app_authorized
+from oauth2_provider.views.base import TokenView
 
 logger = logging.getLogger(__name__)
 

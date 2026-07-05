@@ -4,8 +4,9 @@ Demonstrates calling C functions from Python via CFFI.
 Registers test functions in the application's external data.
 """
 
-from . import schtest
 import wx
+
+from . import schtest
 
 
 def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):

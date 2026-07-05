@@ -53,32 +53,26 @@ Template Tags:
     - show_context(context): Simple tag to show the context of the current template.
 """
 
-from base64 import b64encode
-import re
+import contextlib
 import os
+import re
+from base64 import b64encode
 
-from django import template
-from django.template.loader import get_template
-from django.template import Template
+from django import forms, template
 from django.conf import settings
-from django.utils.safestring import mark_safe
-from django.template.base import token_kwargs, TemplateSyntaxError, Node
-
-from pytigon_lib.schtools.href_action import standard_dict, actions_dict, action_fun
-from pytigon_lib.schdjangoext.tools import import_model, make_href
+from django.forms import CheckboxInput, CheckboxSelectMultiple, FileInput, RadioSelect
+from django.template import Template
+from django.template.base import Node, TemplateSyntaxError, token_kwargs
+from django.template.loader import get_template
+from django.utils.safestring import SafeString, SafeText, mark_safe
+from django_select2 import forms as s2forms
+from pyquery import PyQuery as pq
 
 from pytigon_lib.schdjangoext.models import TreeModel
-from pytigon_lib.schtools.wiki import wiki_from_str, wikify
+from pytigon_lib.schdjangoext.tools import import_model, make_href
 from pytigon_lib.schdjangoext.tools import make_href as mhref
-
-from django.forms import FileInput, CheckboxInput, RadioSelect, CheckboxSelectMultiple
-from django.utils.safestring import SafeText, SafeString
-from django import forms
-from django_select2 import forms as s2forms
-
-from pyquery import PyQuery as pq
-import contextlib
-
+from pytigon_lib.schtools.href_action import action_fun, actions_dict, standard_dict
+from pytigon_lib.schtools.wiki import wiki_from_str, wikify
 
 register = template.Library()
 
@@ -1471,7 +1465,7 @@ def editable_base(context, name, title, url):
         t = "combodate"
         date_str = """ data-format="YYYY-MM-DD" data-viewformat="YYYY-MM-DD" data-template="YYYY-MM-DD" """
     t2 = title or ""
-    oid = getattr(context["object"], "id")
+    oid = context["object"].id
     value = getattr(context["object"], field_name)
     return f"<a class='editable autoopen' data-name='{field_name}' data-type='{t}' data-pk='{oid}' data-url='{url.format(**locals())}' data-title='{t2}' href='#' {date_str}> {value} </a>"
 
@@ -1804,7 +1798,7 @@ def do_html_widget(parser, token):
         raise TemplateSyntaxError(
             f"{bits[0]!r} expected at least one variable assignment"
         )
-    if not "id" in extra_context or not "class" in extra_context:
+    if "id" not in extra_context or "class" not in extra_context:
         raise TemplateSyntaxError("id and class parameters are required")
     if remaining_bits:
         raise TemplateSyntaxError(
@@ -1893,7 +1887,7 @@ def icon(context, class_str, width=None, height=None):
         x = re.findall("bi-" + r"[\w-]+", class_str)
         if x:
             icon_name = x[0].replace("bi-", "")
-            if not icon_name in ICON_CACHE:
+            if icon_name not in ICON_CACHE:
                 tmp = _read_icon_file(
                     "icons/bootstrap-icons/icons/"
                     + icon_name.replace("--", "/")
@@ -1913,7 +1907,7 @@ def icon(context, class_str, width=None, height=None):
         x = re.findall("icon-" + r"[\w-]+", class_str)
         if x:
             icon_name = x[0].replace("icon-", "")
-            if not icon_name in ICON_CACHE:
+            if icon_name not in ICON_CACHE:
                 tmp = _read_user_icon_file(
                     "icons/" + icon_name.replace("--", "/") + ".svg"
                 )
@@ -1927,7 +1921,7 @@ def icon(context, class_str, width=None, height=None):
         x = re.findall("svg-" + r"[\w-]+", class_str)
         if x:
             icon_name = x[0].replace("svg-", "")
-            if not icon_name in ICON_CACHE:
+            if icon_name not in ICON_CACHE:
                 tmp = _read_icon_file(
                     "icons/scalable/" + icon_name.replace("--", "/") + ".svg"
                 )

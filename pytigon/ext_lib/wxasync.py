@@ -1,12 +1,13 @@
 import asyncio
-import wx
+import inspect  # nowy import
+import platform
 import warnings
 from asyncio import CancelledError
-from collections import defaultdict
-import platform
 from asyncio.locks import Event
+from collections import defaultdict
+
+import wx
 from wx._html import HtmlHelpDialog
-import inspect  # nowy import
 
 IS_MAC = platform.system() == "Darwin"
 

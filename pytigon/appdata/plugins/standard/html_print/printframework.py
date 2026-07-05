@@ -8,8 +8,8 @@ import os
 
 import wx
 
-from pytigon_lib.schhtml.wxdc import DcDc
 from pytigon_lib.schfs.vfstools import convert_file
+from pytigon_lib.schhtml.wxdc import DcDc
 
 
 class HtmlCanvas:

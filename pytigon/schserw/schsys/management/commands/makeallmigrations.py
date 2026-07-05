@@ -1,5 +1,5 @@
-from django.core.management.commands import makemigrations
 from django.conf import settings
+from django.core.management.commands import makemigrations
 
 
 class Command(makemigrations.Command):

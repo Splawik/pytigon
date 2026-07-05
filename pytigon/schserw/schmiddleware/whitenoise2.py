@@ -1,10 +1,12 @@
 import os
+
 from django.conf import settings
-from whitenoise.middleware import WhiteNoiseMiddleware
-from pytigon_lib.schdjangoext.django_init import AppConfigMod
 from django.core.files.storage import default_storage
-from fs.osfs import OSFS
 from django.http import HttpResponseNotFound
+from fs.osfs import OSFS
+from whitenoise.middleware import WhiteNoiseMiddleware
+
+from pytigon_lib.schdjangoext.django_init import AppConfigMod
 
 
 class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):

@@ -7,12 +7,11 @@ WebSocket routes are loaded dynamically from settings.CHANNELS_URL_TAB.
 import importlib
 import logging
 
-from django.urls import path, re_path
-from django.core.asgi import get_asgi_application
-from django.conf import settings
-
-from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.auth import AuthMiddlewareStack
+from channels.routing import ProtocolTypeRouter, URLRouter
+from django.conf import settings
+from django.core.asgi import get_asgi_application
+from django.urls import path, re_path
 
 logger = logging.getLogger(__name__)
 

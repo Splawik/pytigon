@@ -5,6 +5,7 @@ and editing operations.
 """
 
 import wx
+
 from pytigon_lib.schtools.tools import extend_fun_to
 
 

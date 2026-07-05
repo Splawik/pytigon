@@ -1,11 +1,10 @@
+import contextlib
 import os
-import logging
-
-from pyquery import PyQuery as pq
 
 from django.core.management.base import BaseCommand
+from pyquery import PyQuery as pq
+
 from pytigon_lib.schhttptools import httpclient
-import contextlib
 
 httpclient.init_embeded_django()
 
@@ -126,7 +125,7 @@ class Command(BaseCommand):
                                 # not "?" in u
                                 u not in ("#", "/", "")
                                 and not u.startswith("#")
-                                and not "://" in u
+                                and "://" not in u
                             ):
                                 if "fragment=page" in u or "static" in u:
                                     urls.append(u)

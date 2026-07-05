@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 """
 
@@ -11,12 +10,13 @@ Contributed to the wxPython project under the wxPython project's license.
 
 """
 
-import locale, wx, sys
+import locale
+import sys
 from io import BytesIO
 
+import wx
 import wx.lib.mixins.listctrl as listmix
-
-from wx import ImageFromStream, BitmapFromImage
+from wx import BitmapFromImage, ImageFromStream
 
 
 # ----------------------------------------------------------------------

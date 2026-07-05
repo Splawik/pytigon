@@ -4,11 +4,13 @@ Provides the IMAGEVIEWER control - a scrollable image viewer
 supporting PNG, JPEG, and SVG formats with auto-resize to fit.
 """
 
-import wx
 from io import BytesIO
+
+import wx
 from PIL import Image
-from pytigon_gui.guilib.image import pil_to_image
+
 from pytigon_gui.guictrl.basectrl import SchBaseCtrl
+from pytigon_gui.guilib.image import pil_to_image
 from pytigon_lib.schtools.images import svg_to_png
 
 

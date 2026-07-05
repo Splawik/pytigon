@@ -5,6 +5,7 @@ embedded web browsing. Uses the wx.html2 WebView backend by default.
 """
 
 import wx
+
 from .basebrowser import BaseWebBrowser
 
 
@@ -23,8 +24,9 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         toolbar: Tool bar.
         accel: Accelerator table.
     """
-    import pytigon_gui.guictrl.ctrl
     from base64 import b64encode
+
+    import pytigon_gui.guictrl.ctrl
 
     def Component(parent, **kwds):
         """Create a web component control.

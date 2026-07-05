@@ -1,9 +1,11 @@
-from graphene_django import DjangoObjectType
-from django.contrib.auth import get_user_model
-from django.conf import settings
+import importlib
+
 import graphene
 import graphql_jwt
-import importlib
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from graphene_django import DjangoObjectType
+
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
 
 """

@@ -4,9 +4,10 @@ Provides the HEXVIEWER control - a hexadecimal file viewer
 based on the styled text editor.
 """
 
-import wx
-import string
 import binascii
+import string
+
+import wx
 
 
 def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):

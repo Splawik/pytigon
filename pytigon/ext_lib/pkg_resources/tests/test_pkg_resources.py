@@ -12,13 +12,11 @@ import tempfile
 import zipfile
 from unittest import mock
 
-import pytest
-
-import pkg_resources
-from pkg_resources import DistInfoDistribution, Distribution, EggInfoDistribution
-
 import distutils.command.install_egg_info
 import distutils.dist
+import pkg_resources
+import pytest
+from pkg_resources import DistInfoDistribution, Distribution, EggInfoDistribution
 
 
 class EggRemover(str):

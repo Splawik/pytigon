@@ -158,14 +158,14 @@ If `inputfile' is -, standard input is read.
 """
 )
 
-import os
+import ast
+import getopt
+import glob
 import importlib.machinery
 import importlib.util
+import os
 import sys
-import glob
 import time
-import getopt
-import ast
 import token
 import tokenize
 
@@ -480,7 +480,7 @@ class TokenEater:
     def __addentry(self, msg, lineno=None, isdocstring=0):
         if lineno is None:
             lineno = self.__lineno
-        if not msg in self.__options.toexclude:
+        if msg not in self.__options.toexclude:
             entry = (self.__curfile, lineno)
             self.__messages.setdefault(msg, {})[entry] = isdocstring
 

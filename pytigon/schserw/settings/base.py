@@ -1,15 +1,8 @@
 import os
 import sys
-from fs.mountfs import MountFS
-from fs.multifs import MultiFS
 
-from django.conf import settings
-
-from pytigon.ext_lib.django_storage import OSFS_EXT
-
-from pytigon_lib.schtools.main_paths import get_main_paths, get_prj_name
-from pytigon_lib.schtools.platform_info import platform_name
 from pytigon_lib.schtools.env import get_environ
+from pytigon_lib.schtools.main_paths import get_main_paths, get_prj_name
 
 ENV = get_environ()
 BASE_PRJ_NAME = get_prj_name()

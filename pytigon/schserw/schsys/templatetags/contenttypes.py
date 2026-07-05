@@ -26,6 +26,6 @@ def table_exists(table_name):
         return True
     except ObjectDoesNotExist:
         return False
-    except Exception as e:
+    except Exception:
         # Log the exception if needed
         return False

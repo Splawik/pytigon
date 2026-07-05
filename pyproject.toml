@@ -73,7 +73,7 @@ include-package-data = true
 
 [tool.ruff]
 line-length = 100
-exclude = ["pytigon/static_src", "pytigon/static", "pytigon/prj"]
+exclude = ["pytigon/static_src", "pytigon/static", "pytigon/prj", "pytigon/ext_lib", "pytigon/schserw/translate.py"]
 # Ruff automatycznie odczyta minimalną wersję z project.requires-python
 
 [tool.ruff.lint]
@@ -89,6 +89,24 @@ select = [
 ignore = [
     "E501",  # line too long (handled by formatter)
 ]
+
+[tool.ruff.lint.per-file-ignores]
+"pytigon/schserw/settings/__init__.py" = ["F403", "F405"]
+"pytigon/schserw/settings/infra.py" = ["E402"]
+"pytigon/schserw/settings/features.py" = ["B028"]
+"pytigon/manage.py" = ["E402"]
+"pytigon/schserw/make-messages.py" = ["E402", "F841"]
+"pytigon/schserw/schsys/initdjango.py" = ["F821", "E711", "B007"]
+"pytigon/schserw/schsys/context_processors.py" = ["E711", "E721", "F841", "B019"]
+"pytigon/schserw/schsys/cache_message_storage.py" = ["B904"]
+"pytigon/schserw/translate.py" = ["F821"]
+"pytigon/schserw/schsys/schema.py" = ["W291"]
+"pytigon/schserw/schsys/templatetags/*.py" = ["B904", "E711", "E712", "E721", "E741", "F821", "F841", "W291", "B905"]
+"pytigon/schserw/schsys/management/commands/*.py" = ["E721", "E741", "B007", "F841", "B905"]
+"pytigon/appdata/plugins/standard/**/*.py" = ["E721", "E741", "F401", "F403", "F405", "F841", "B007", "B026", "B905", "W291"]
+"pytigon/commands/**/*.py" = ["F841", "B904"]
+"tests/schserw/schmiddleware/vary_test.py" = ["F403", "F405"]
+"tests/test_ext_lib_django_storage.py" = ["F841"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["pytigon", "pytigon_lib", "pytigon_gui"]

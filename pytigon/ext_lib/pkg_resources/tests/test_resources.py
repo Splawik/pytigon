@@ -4,10 +4,9 @@ import platform
 import string
 import sys
 
+import pkg_resources
 import pytest
 from packaging.specifiers import SpecifierSet
-
-import pkg_resources
 from pkg_resources import (
     Distribution,
     EntryPoint,

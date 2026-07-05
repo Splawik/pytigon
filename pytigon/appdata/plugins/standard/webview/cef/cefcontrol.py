@@ -5,12 +5,10 @@ and handles resource interception for local content.
 """
 
 import platform
-from django.core.files.storage import default_storage
 
 import wx
-
 from cefpython3 import cefpython as cef
-from .schcef import initialize, shutdown, create_browser
+from django.core.files.storage import default_storage
 
 CEF_INITIATED = False
 TIMER = None

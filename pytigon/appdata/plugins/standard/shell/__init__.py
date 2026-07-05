@@ -23,10 +23,11 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         toolbar: Tool bar.
         accel: Accelerator table.
     """
-    import wx.py as py
     import wx
-    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
+    import wx.py as py
+
     import pytigon_gui.guictrl.ctrl
+    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
 
     _DEFAULT_LOCALS = {
         "app": wx.GetApp(),

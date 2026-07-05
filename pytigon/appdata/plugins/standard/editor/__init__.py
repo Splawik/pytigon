@@ -8,7 +8,7 @@ import os.path
 
 import wx
 
-from pytigon_lib.schtools.tools import bencode, bdecode
+from pytigon_lib.schtools.tools import bdecode, bencode
 
 
 def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
@@ -26,9 +26,10 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         toolbar: Tool bar.
         accel: Accelerator table.
     """
-    from .editor import CodeEditor
-    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
     import pytigon_gui.guictrl.ctrl
+    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
+
+    from .editor import CodeEditor
 
     class Styledtext(CodeEditor, SchBaseCtrl):
         """Styled text editor control with syntax highlighting and save support."""

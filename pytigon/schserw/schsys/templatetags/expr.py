@@ -4,8 +4,8 @@ import operator
 import re
 
 from django import template
-from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
 
 register = template.Library()
 

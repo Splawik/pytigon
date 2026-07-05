@@ -97,24 +97,21 @@ Filters:
 - remove_suffix: Removes the suffix from the value.
 """
 
-from base64 import b64encode, b64decode
 import datetime
 import importlib
 import uuid
+from base64 import b64decode, b64encode
 
-from django import template
-from django.urls import reverse
-from django.db.models import Count, Max, Min, Sum, Avg
-from django.utils import formats
 import markdown
-
+from django import template
+from django.db.models import Avg, Count, Max, Min, Sum
+from django.urls import reverse
+from django.utils import formats
+from django_bootstrap5.forms import render_form
 
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
-from pytigon_lib.schtools.wiki import wiki_from_str, make_href, wikify
 from pytigon_lib.schtools.schjson import json_dumps
-
-
-from django_bootstrap5.forms import render_form
+from pytigon_lib.schtools.wiki import make_href, wiki_from_str, wikify
 
 register = template.Library()
 
@@ -754,7 +751,7 @@ def model_has_children(value):
     if hasattr(value, set_name + "_set"):
         o = getattr(value, set_name + "_set")
     else:
-        o = getattr(value, "children")
+        o = value.children
     l = o.all()
     if len(l) > 0:
         return True
@@ -1017,7 +1014,7 @@ def only_items_containing(select_field, mask):
     if mask:
         to_delete = []
         for item in select_field.field.widget.choices:
-            if not mask in item[0]:
+            if mask not in item[0]:
                 to_delete.append(item)
         for item in to_delete:
             select_field.field.widget.choices.remove(item)

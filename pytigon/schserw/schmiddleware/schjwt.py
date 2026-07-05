@@ -1,7 +1,7 @@
 import logging
 
-from django.utils.deprecation import MiddlewareMixin
 from django.contrib.auth import get_user_model
+from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import SimpleLazyObject
 from graphql_jwt.utils import get_http_authorization, get_payload
 

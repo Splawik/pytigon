@@ -5,15 +5,15 @@ web browser features: navigation (back/forward/stop/refresh), bookmarking,
 local request interception, JavaScript command routing, and PDF handling.
 """
 
-from tempfile import NamedTemporaryFile
-from base64 import decodebytes, b64encode, b64decode
-import urllib.parse
 import os
+import urllib.parse
+from base64 import b64decode, b64encode, decodebytes
+from tempfile import NamedTemporaryFile
 
 import wx
 
-from pytigon_gui.guilib.tools import get_colour
 from pytigon_gui.guilib.events import *
+from pytigon_gui.guilib.tools import get_colour
 from pytigon_lib.schtools.tools import split2
 
 # JavaScript snippet to display PDF via PDF.js in the browser

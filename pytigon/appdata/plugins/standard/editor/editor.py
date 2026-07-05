@@ -13,7 +13,6 @@ import keyword
 import wx
 import wx.stc as stc
 
-
 # Platform-specific font configuration
 if wx.Platform == "__WXMSW__":
     faces = {

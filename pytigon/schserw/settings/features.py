@@ -1,27 +1,27 @@
 import os
-import sys
 
-from .base import (
-    ENV,
-    DEBUG,
-    GRAPHQL,
-    REST,
-    RULES_ENABLED,
-    MAILER,
-    ALLAUTH,
-    COMPRESS_ENABLED,
-    PWA,
-    PYTIGON_PATH,
-    DATA_PATH,
-    PRJ_PATH,
-    PRJ_PATH_ALT,
-    BASE_PRJ_NAME,
-    PRODUCTION_VERSION,
-    SERW_PATH,
-    PLATFORM_TYPE,
-)
 from pytigon_lib.schtools.main_paths import get_prj_name
 from pytigon_lib.schtools.platform_info import platform_name
+
+from .base import (
+    ALLAUTH,
+    BASE_PRJ_NAME,
+    COMPRESS_ENABLED,
+    DATA_PATH,
+    DEBUG,
+    ENV,
+    GRAPHQL,
+    MAILER,
+    PLATFORM_TYPE,
+    PRJ_PATH,
+    PRJ_PATH_ALT,
+    PRODUCTION_VERSION,
+    PWA,
+    PYTIGON_PATH,
+    REST,
+    RULES_ENABLED,
+    SERW_PATH,
+)
 
 ROOT_URLCONF = "pytigon.schserw.urls"
 
@@ -202,6 +202,7 @@ if PWA:
         if not pub_key or not prv_key:
             try:
                 import base64
+
                 from cryptography.hazmat.primitives.asymmetric import ec
 
                 private_key = ec.generate_private_key(ec.SECP256R1())

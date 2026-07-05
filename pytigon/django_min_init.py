@@ -7,9 +7,8 @@ and embedded environments without loading the full Django configuration.
 import os
 import sys
 
-from pytigon_lib.schtools.main_paths import get_main_paths
 from pytigon_lib import init_paths
-from django import setup
+from pytigon_lib.schtools.main_paths import get_main_paths
 
 
 def init(

@@ -7,7 +7,6 @@ import os
 import sys
 
 from ..errors import CommandError
-
 from .base import CommandHandler
 
 

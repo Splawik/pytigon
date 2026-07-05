@@ -4,14 +4,17 @@ Provides CEF initialization, resource handling, and browser creation
 utilities for the CEF-based web browser backend.
 """
 
-from cefpython3 import cefpython as cef
-import platform
-import time
-import http.client
 import asyncio
-from pytigon.pytigon_request import request as pytigon_request, init
-import sys
 import ctypes
+import http.client
+import platform
+import sys
+import time
+
+from cefpython3 import cefpython as cef
+
+from pytigon.pytigon_request import init
+from pytigon.pytigon_request import request as pytigon_request
 
 # HTML loading screen shown while the page loads
 LOADER = """   
@@ -107,7 +110,7 @@ class ClientHandler:
         self.close = True
 
     def GetResourceHandler(self, browser, frame, request):
-        if not "127.0.0.2" in request.GetUrl():
+        if "127.0.0.2" not in request.GetUrl():
             return None
         resHandler = ResourceHandler()
         resHandler._clientHandler = self

@@ -5,12 +5,13 @@ with support for local request interception, script message handling, and
 navigation controls.
 """
 
-import os
 import base64
 import json
+import os
+
+from django.conf import settings
 
 from pytigon.pytigon_request import request
-from django.conf import settings
 
 
 def init_plugin_web_view(
@@ -32,9 +33,10 @@ def init_plugin_web_view(
         None
     """
     import wx.html2
-    from pytigon_lib.schindent.indent_tools import norm_html
-    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
+
     import pytigon_gui.guictrl.ctrl
+    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
+    from pytigon_lib.schindent.indent_tools import norm_html
 
     # Workaround for DMA-BUF renderer issues on Linux
     os.environ.setdefault("WEBKIT_DISABLE_DMABUF_RENDERER", "1")

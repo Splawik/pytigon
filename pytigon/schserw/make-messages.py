@@ -6,11 +6,11 @@ translatable strings and generates or updates .po files for the specified
 languages.
 """
 
+import getopt
 import os
 import re
 import subprocess
 import sys
-import getopt
 import tempfile
 
 from django.conf import settings

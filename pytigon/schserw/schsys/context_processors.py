@@ -1,20 +1,19 @@
 """Module contains standard context processors"""
 
-import functools
-import uuid
-import time
-from urllib.parse import urlparse
-
-import traceback
-import sys
 import datetime
+import functools
+import sys
+import time
+import traceback
+import uuid
+from urllib.parse import urlparse
 
 from django.conf import settings
 from django.urls import get_script_prefix
 
 try:
-    from django.contrib.auth.models import Permission
     from django.contrib.auth.context_processors import PermWrapper
+    from django.contrib.auth.models import Permission
 except Exception:
     Permission = None
     PermWrapper = None
@@ -23,8 +22,8 @@ from pytigon_lib.schdjangoext.django_init import get_app_name
 from pytigon_lib.schtools.env import get_environ
 
 if settings.ALLAUTH:
-    from allauth.socialaccount.providers import registry
     from allauth.socialaccount.adapter import get_adapter
+    from allauth.socialaccount.providers import registry
 else:
     registry = None
 
@@ -69,7 +68,7 @@ def test_tablet(request):
 def standard_web_browser(request):
     if "browser_type" in request.GET:
         return int(request.GET["browser_type"])
-    if not "HTTP_USER_AGENT" in request.META:
+    if "HTTP_USER_AGENT" not in request.META:
         return 0
     if (
         request
@@ -428,7 +427,7 @@ class AppManager:
         items = self.get_app_items(prj)
         no_empty_apps = []
         for item in items:
-            if not item.app_name in no_empty_apps:
+            if item.app_name not in no_empty_apps:
                 no_empty_apps.append(item.app_name)
         for item in self.get_apps(prj):
             if item.app_name in settings.HIDE_APPS:

@@ -6,6 +6,7 @@ is set to 'standard'.
 """
 
 import wx
+
 from pytigon_lib.schtools.tools import extend_fun_to
 
 

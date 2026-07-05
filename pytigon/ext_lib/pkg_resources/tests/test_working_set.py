@@ -3,9 +3,8 @@ import inspect
 import re
 import textwrap
 
-import pytest
-
 import pkg_resources
+import pytest
 
 from .test_resources import Metadata
 

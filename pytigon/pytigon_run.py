@@ -4,9 +4,9 @@ Handles all pytigon CLI commands including project management,
 web server startup, script execution, and tool integration.
 """
 
-import sys
-import os
 import logging
+import os
+import sys
 
 # ---------------------------------------------------------------------------
 # Early initialization

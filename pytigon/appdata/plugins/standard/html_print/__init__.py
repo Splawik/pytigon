@@ -19,8 +19,9 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         toolbar: Tool bar.
         accel: Accelerator table.
     """
-    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
     import pytigon_gui.guictrl.ctrl
+    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
+
     from .printframework import HtmlPreviewCanvas, get_printout
 
     class Htmlprint(HtmlPreviewCanvas, SchBaseCtrl):

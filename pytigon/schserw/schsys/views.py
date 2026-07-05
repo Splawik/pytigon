@@ -21,20 +21,17 @@ from django.contrib.auth import authenticate
 from django.http import (
     Http404,
     HttpResponse,
-    HttpResponseRedirect,
     HttpResponseForbidden,
+    HttpResponseRedirect,
 )
-from django.views.decorators.cache import cache_page
 from django.template.loader import render_to_string
+from django.views.decorators.cache import cache_page
 
-from pytigon_lib.schdjangoext.tools import import_model
-from pytigon_lib.schtable.dbtable import DbTable
+from pytigon_lib.schdjangoext.tools import import_model, make_href
 from pytigon_lib.schtools import schjson
-from pytigon_lib.schviews.viewtools import render_to_response
+from pytigon_lib.schtools.tools import bdecode, bencode
 from pytigon_lib.schviews import actions
-from pytigon_lib.schdjangoext.tools import make_href
-from pytigon_lib.schviews.viewtools import dict_to_json
-from pytigon_lib.schtools.tools import bencode, bdecode
+from pytigon_lib.schviews.viewtools import dict_to_json, render_to_response
 
 logger = logging.getLogger(__name__)
 

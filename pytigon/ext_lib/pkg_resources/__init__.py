@@ -50,13 +50,12 @@ import types
 import warnings
 import zipfile
 import zipimport
-from collections.abc import Iterable, Iterator, Mapping, MutableSequence
+from collections.abc import Callable, Iterable, Iterator, Mapping, MutableSequence
 from pkgutil import get_importer
 from typing import (
     TYPE_CHECKING,
     Any,
     BinaryIO,
-    Callable,
     Literal,
     NamedTuple,
     NoReturn,
@@ -82,6 +81,8 @@ except ImportError:
     # no write support, probably under GAE
     WRITE_SUPPORT = False
 
+import contextlib
+
 import packaging.markers
 import packaging.requirements
 import packaging.specifiers
@@ -89,17 +90,17 @@ import packaging.utils
 import packaging.version
 from jaraco.text import drop_comment, join_continuation, yield_lines
 from platformdirs import user_cache_dir as _user_cache_dir
-import contextlib
 
 if TYPE_CHECKING:
+    from typing import Self, TypeAlias
+
     from _typeshed import BytesPath, StrOrBytesPath, StrPath
     from _typeshed.importlib import LoaderProtocol
-    from typing_extensions import Self, TypeAlias
 
 _T = TypeVar("_T")
 _DistributionT = TypeVar("_DistributionT", bound="Distribution")
 # Type aliases
-_NestedStr: TypeAlias = Union[str, Iterable[Union[str, Iterable["_NestedStr"]]]]
+_NestedStr: TypeAlias = str | Iterable[str | Iterable["_NestedStr"]]
 _StrictInstallerType: TypeAlias = Callable[["Requirement"], "_DistributionT"]
 _InstallerType: TypeAlias = Callable[["Requirement"], Union["Distribution", None]]
 _PkgReqType: TypeAlias = Union[str, "Requirement"]
@@ -108,11 +109,11 @@ _MetadataType: TypeAlias = Union["IResourceProvider", None]
 _ResolvedEntryPoint: TypeAlias = Any  # Can be any attribute in the module
 _ResourceStream: TypeAlias = Any  # TODO / Incomplete: A readable file-like object
 # Any object works, but let's indicate we expect something like a module (optionally has __loader__ or __file__)
-_ModuleLike: TypeAlias = Union[object, types.ModuleType]
+_ModuleLike: TypeAlias = object | types.ModuleType
 # Any: Should be _ModuleLike but we end up with issues where _ModuleLike doesn't have _ZipLoaderModule's __loader__
 _ProviderFactoryType: TypeAlias = Callable[[Any], "IResourceProvider"]
 _DistFinderType: TypeAlias = Callable[[_T, str, bool], Iterable["Distribution"]]
-_NSHandlerType: TypeAlias = Callable[[_T, str, str, types.ModuleType], Union[str, None]]
+_NSHandlerType: TypeAlias = Callable[[_T, str, str, types.ModuleType], str | None]
 _AdapterT = TypeVar(
     "_AdapterT", _DistFinderType[Any], _ProviderFactoryType, _NSHandlerType[Any]
 )

@@ -31,7 +31,7 @@ from copy import deepcopy
 
 from django.db import models
 from django.forms.forms import BaseForm
-from django.forms.widgets import TextInput, PasswordInput
+from django.forms.widgets import PasswordInput, TextInput
 from django_bootstrap5.forms import render_form
 
 # NOTE: The monkey-patches below modify Django internals at import time.

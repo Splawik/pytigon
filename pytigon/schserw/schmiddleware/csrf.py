@@ -17,4 +17,4 @@ class DisableCSRF(MiddlewareMixin):
         Args:
             request: The HTTP request object.
         """
-        setattr(request, "_dont_enforce_csrf_checks", True)
+        request._dont_enforce_csrf_checks = True

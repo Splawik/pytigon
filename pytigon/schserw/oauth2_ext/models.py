@@ -1,7 +1,7 @@
-from django.db import models
 from django.contrib import admin
-from oauth2_provider.models import Application
 from django.core.exceptions import ValidationError
+from django.db import models
+from oauth2_provider.models import Application
 
 
 class PytigonOAuth2Application(models.Model):

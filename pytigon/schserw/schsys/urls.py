@@ -1,23 +1,18 @@
 from base64 import b64decode
-from django.utils.translation import gettext_lazy as _
-from django.utils.http import url_has_allowed_host_and_scheme
-
-from django.urls import path
-from django.contrib.auth import authenticate, login, logout
-
-from django.views.generic import TemplateView
-from django.http import HttpResponseRedirect, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.cache import cache_page
-from django.views.decorators.vary import vary_on_headers
-from django.contrib.auth import get_user_model
-from django.contrib.auth.decorators import login_required
-
-from pytigon_lib.schdjangoext.tools import make_href
-
-from pytigon_lib.schtools.tools import is_in_dicts, get_from_dicts
 
 from django.conf import settings
+from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import path
+from django.utils.translation import gettext_lazy as _
+from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.vary import vary_on_headers
+from django.views.generic import TemplateView
+
+from pytigon_lib.schdjangoext.tools import make_href
+from pytigon_lib.schtools.tools import get_from_dicts, is_in_dicts
 
 from . import views
 
