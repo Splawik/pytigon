@@ -73,6 +73,7 @@ include-package-data = true
 
 [tool.ruff]
 line-length = 100
+exclude = ["pytigon/static_src", "pytigon/static", "pytigon/prj"]
 # Ruff automatycznie odczyta minimalną wersję z project.requires-python
 
 [tool.ruff.lint]
