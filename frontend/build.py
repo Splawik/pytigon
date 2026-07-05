@@ -57,7 +57,7 @@ IMPORT_ELEMENTS = {
 
 NO_JS_MODULES = ["bootstrap-icons", "select2-bootstrap-5-theme"]
 
-with open("requirements_js.txt", "rt") as f:
+with open("js_requirements.txt", "rt") as f:
     requirements = f.read().splitlines()
 
 buf = ""

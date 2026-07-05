@@ -2,7 +2,7 @@ import subprocess
 from pytigon.pytigon_run import run
 
 
-with open("requirements_js.txt", "rt") as f:
+with open("js_requirements.txt", "rt") as f:
     requirements = f.read().splitlines()
 
 for requirement in requirements:
