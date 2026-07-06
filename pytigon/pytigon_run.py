@@ -19,6 +19,7 @@ _logger = logging.getLogger("pytigon_run")
 try:
     from pytigon_lib.schtools.tools import get_executable
 except ImportError:
+
     def get_executable():
         """Return the Python executable path."""
         return sys.executable
@@ -33,6 +34,7 @@ os.environ["XKB_CONFIG_ROOT"] = "/usr/share/X11/xkb"
 # Set secret key if not provided (generates random key for dev)
 if not ("SECRET_KEY" in os.environ or "PYTIGON_SECRET_KEY" in os.environ):
     import secrets
+
     os.environ["SECRET_KEY"] = secrets.token_hex(50)
 
 # Handle --dev flag: use local project paths for development
