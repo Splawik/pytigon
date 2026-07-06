@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pytigon"
-version = "0.260705"
+version = "0.260706"
 description = "Pytigon - Application framework based on Django and wxWidgets"
 authors = [
     {name = "Sławomir Chołaj", email = "slawomir.cholaj@gmail.com"},
@@ -30,7 +30,7 @@ classifiers = [
 ]
 dependencies = [
     "django>=6.0",
-    "fs>=2.4",
+    "fsspec>=2024.0",
     "pytigon-lib",
     "asgiref>=3.0",
     "polib>=1.2",

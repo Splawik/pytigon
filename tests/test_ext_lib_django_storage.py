@@ -1,4 +1,4 @@
-"""Pytest tests for pytigon.ext_lib.django_storage module.
+"""Pytest tests for pytigon_lib.schdjangoext.django_storage module.
 
 Tests focus on class structure, validation logic, and name generation
 that don't require a fully configured Django filesystem backend.
@@ -6,11 +6,11 @@ that don't require a fully configured Django filesystem backend.
 
 import pytest
 
-# Skip tests if pyfilesystem is not available
-pytest.importorskip("fs", reason="pyfilesystem (fs) package not installed")
+# Skip tests if fsspec is not available
+pytest.importorskip("fsspec", reason="fsspec package not installed")
 pytest.importorskip("django", reason="Django not installed")
 
-from pytigon.ext_lib.django_storage import (
+from pytigon_lib.schdjangoext.django_storage import (
     OSFS_EXT,
     FSStorage,
     ThumbnailFileSystemStorage,
@@ -31,12 +31,8 @@ class TestFSStorageValidation:
 
     def test_validate_file_name_allow_relative(self):
         """Test validate_file_name with allow_relative_path parameter."""
-        assert (
-            FSStorage.validate_file_name("file.txt", allow_relative_path=True) is True
-        )
-        assert (
-            FSStorage.validate_file_name("file.txt", allow_relative_path=False) is True
-        )
+        assert FSStorage.validate_file_name("file.txt", allow_relative_path=True) is True
+        assert FSStorage.validate_file_name("file.txt", allow_relative_path=False) is True
 
 
 # ---------------------------------------------------------------------------
@@ -95,7 +91,7 @@ class TestThumbnailFileSystemStorage:
 
 class TestOSFSExt:
     def test_class_exists(self):
-        """Test OSFS_EXT class exists and inherits from OSFS."""
+        """Test OSFS_EXT class exists and inherits from _AutoCreateLocalFs."""
         assert OSFS_EXT is not None
 
     def test_init_creates_directory(self, tmp_path):
@@ -104,6 +100,7 @@ class TestOSFSExt:
         assert not new_dir.exists()
 
         fs_instance = OSFS_EXT(str(new_dir))
+        assert fs_instance is not None
         assert new_dir.exists()
         assert new_dir.is_dir()
 
@@ -114,4 +111,5 @@ class TestOSFSExt:
         assert existing_dir.exists()
 
         fs_instance = OSFS_EXT(str(existing_dir))
+        assert fs_instance is not None
         assert existing_dir.exists()

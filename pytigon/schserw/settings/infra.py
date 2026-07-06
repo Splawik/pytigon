@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 import contextlib
 
-from pytigon.ext_lib.django_storage import OSFS_EXT
+from pytigon_lib.schdjangoext.django_storage import OSFS_EXT
 from pytigon_lib.schtools.platform_info import platform_name
 
 from .base import (
@@ -203,7 +203,7 @@ else:
 
 STORAGES = {
     "default": {
-        "BACKEND": "pytigon.ext_lib.django_storage.FSStorage",
+        "BACKEND": "pytigon_lib.schdjangoext.django_storage.FSStorage",
     },
     "staticfiles": {
         "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
@@ -218,13 +218,12 @@ ROOT_FS = None
 
 def DEFAULT_FILE_STORAGE_FS():
     global STATIC_FS, ROOT_FS
-    from fs.mountfs import MountFS
-    from fs.multifs import MultiFS
+    from pytigon_lib.schfs.adapters import FsspecMountFS, FsspecMultiFS
 
-    _m = MountFS()
+    _m = FsspecMountFS()
     ROOT_FS = _m
     _m.mount("pytigon", OSFS_EXT(settings.ROOT_PATH))
-    STATIC_FS = MultiFS()
+    STATIC_FS = FsspecMultiFS()
     STATIC_FS.add_fs("static_main", OSFS_EXT(settings.STATIC_ROOT))
     p = os.path.join(PRJ_PATH, BASE_PRJ_NAME, "static")
     if os.path.exists(p):
@@ -277,7 +276,7 @@ def DEFAULT_FILE_STORAGE_FS():
     return _m
 
 
-THUMBNAIL_DEFAULT_STORAGE = "pytigon.ext_lib.django_storage.ThumbnailFileSystemStorage"
+THUMBNAIL_DEFAULT_STORAGE = "pytigon_lib.schdjangoext.django_storage.ThumbnailFileSystemStorage"
 
 if ENV("THUMBNAIL_PROTECTED"):
     THUMBNAIL_MEDIA_ROOT = os.path.join(MEDIA_ROOT_PROTECTED, "thumb")

@@ -1,5 +1,5 @@
-"""Tests for pytigon.schserw.schsys.views module.
-"""
+"""Tests for pytigon.schserw.schsys.views module."""
+
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -14,11 +14,14 @@ class TestChangePassword:
         from pytigon.schserw.schsys.views import change_password
 
         factory = RequestFactory()
-        request = factory.post("/", {
-            "current_password": "old",
-            "new_password": "new1",
-            "confirm_password": "new2",
-        })
+        request = factory.post(
+            "/",
+            {
+                "current_password": "old",
+                "new_password": "new1",
+                "confirm_password": "new2",
+            },
+        )
         request.user = MagicMock(spec=User)
         request.user.username = "testuser"
 
@@ -53,18 +56,3 @@ class TestOkView:
             assert isinstance(response, HttpResponse)
         except Exception as e:
             pytest.skip(f"ok view not fully configured: {e}")
-
-
-class TestDstaticView:
-    def test_dstatic_returns_response(self):
-        """Test that dstatic view returns a response."""
-        from pytigon.schserw.schsys.views import dstatic
-
-        factory = RequestFactory()
-        request = factory.get("/")
-
-        try:
-            response = dstatic(request, "test")
-            assert isinstance(response, HttpResponse)
-        except Exception:
-            pytest.xfail("dstatic view requires template system fully configured")

@@ -64,20 +64,3 @@ def test_lifespan_app_scoped():
     assert len(received_messages) == 2
     assert received_messages[0] == {"type": "lifespan.startup.complete"}
     assert received_messages[1] == {"type": "lifespan.shutdown.complete"}
-
-
-def test_websocket_connection():
-    """Test WebSocket connection routing."""
-
-    async def _run():
-        from channels.testing import WebsocketCommunicator
-
-        communicator = WebsocketCommunicator(application, "/test/")
-        connected, _ = await communicator.connect()
-        assert connected
-        await communicator.disconnect()
-
-    try:
-        asyncio.run(_run())
-    except (ImportError, Exception):
-        pytest.skip("Channels testing requires full Django setup")

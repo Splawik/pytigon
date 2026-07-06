@@ -65,7 +65,9 @@ OLD_DEFAULT_FILE_STORAGE_FS = DEFAULT_FILE_STORAGE_FS
 
 def DEFAULT_FILE_STORAGE_FS():
     ret = OLD_DEFAULT_FILE_STORAGE_FS()
-    ret.mount("os", OSFS("/"))
+    from pytigon_lib.schfs.adapters import _AutoCreateLocalFs
+
+    ret.mount("os", _AutoCreateLocalFs("/"))
     return ret
 
 
@@ -189,7 +191,7 @@ try:
 except ImportError:
     pass
 
-GEN_TIME = "2026-07-03 21:25:48"
+GEN_TIME = "2026-07-06 17:55:12"
 
 
 for key, value in os.environ.items():
