@@ -300,16 +300,25 @@ THUMBNAIL_ALIASES = {
 DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
 OFFLINE_SUPPORT = False
 PYODIDE = False
-CORS_ORIGIN_WHITELIST = ("null",)
+CORS_ORIGIN_WHITELIST = ENV("CORS_ORIGIN_WHITELIST", default="").split(",") if ENV("CORS_ORIGIN_WHITELIST") else ("null",)
 
 if platform_name() == "Android":
-    CORS_ORIGIN_ALLOW_ALL = True
+    if ENV("CORS_ORIGIN_ALLOW_ALL"):
+        CORS_ORIGIN_ALLOW_ALL = True
+    else:
+        CORS_ORIGIN_WHITELIST = ENV("CORS_ORIGIN_WHITELIST_ANDROID", default="").split(",")
 
 try:
     CACHES = {"default": ENV.cache()}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 except Exception:
-    pass
+    logger.warning("Failed to configure cache from ENV.cache(), using default LocMemCache")
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        }
+    }
+    SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 MESSAGE_STORAGE = "pytigon.schserw.schsys.cache_message_storage.CacheStorage"
 

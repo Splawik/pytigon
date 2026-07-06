@@ -1,8 +1,0 @@
-% extends "forms/form.html"
-
-% load exfiltry
-% load exsyntax
-
-
-%% content
-    ptig-webrtc src=https://pytigon.cloud/teleconference/teleconference/channel/

@@ -6,21 +6,18 @@ Provides middleware classes for:
 
 import logging
 
-from django.utils.deprecation import MiddlewareMixin
-
 logger = logging.getLogger(__name__)
 
 
-class ViewRequests(MiddlewareMixin):
+class ViewRequests:
     """Log the HTTP method and path of each request."""
 
-    def process_request(self, request):
-        """Log request method and path.
+    def __init__(self, get_response):
+        self.get_response = get_response
 
-        Args:
-            request: The HTTP request object.
-        """
+    def __call__(self, request):
         logger.debug("%s %s", request.method, request.path)
+        return self.get_response(request)
 
 
 def view_post(get_response):
@@ -48,15 +45,13 @@ def view_post(get_response):
     return middleware
 
 
-class ViewPost(MiddlewareMixin):
+class ViewPost:
     """Middleware for logging POST request bodies (class-based version)."""
 
-    def process_request(self, request):
-        """Log POST data if the request method is POST.
+    def __init__(self, get_response):
+        self.get_response = get_response
 
-        Args:
-            request: The HTTP request object.
-        """
+    def __call__(self, request):
         try:
             if request.method == "POST":
                 logger.debug("=================== POST ======================")
@@ -65,3 +60,4 @@ class ViewPost(MiddlewareMixin):
                 logger.debug("===============================================")
         except Exception:
             logger.warning("Failed to log POST data", exc_info=True)
+        return self.get_response(request)
