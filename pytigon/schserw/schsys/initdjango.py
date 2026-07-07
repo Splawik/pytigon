@@ -29,15 +29,16 @@ Modifications to Django:
 import mimetypes
 from copy import deepcopy
 
+import django
 from django.db import models
 from django.forms.forms import BaseForm
 from django.forms.widgets import PasswordInput, TextInput
 from django_bootstrap5.forms import render_form
 
-# NOTE: The monkey-patches below modify Django internals at import time.
-# They have been stable since Django 2.x but may need updating for newer Django versions.
-# See: https://docs.djangoproject.com/en/stable/ref/forms/renderers/ for the official
-# form rendering customization mechanism introduced in Django 4.0.
+assert django.VERSION[:2] == (6, 0), (
+    "Monkey-patches in initdjango.py target Django 6.0.x internals. "
+    f"Found Django {django.VERSION}. Review patches before upgrading."
+)
 
 django.db.models.fields.prep_for_like_query = lambda x: str(x).replace("\\", "\\\\")
 

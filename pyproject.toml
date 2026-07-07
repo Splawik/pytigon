@@ -75,7 +75,7 @@ include-package-data = true
 [tool.ruff]
 line-length = 100
 force-exclude = true
-exclude = ["pytigon/static_src", "pytigon/static", "pytigon/prj", "pytigon/ext_lib", "pytigon/schserw/translate.py"]
+exclude = ["pytigon/static_src", "pytigon/static", "pytigon/prj", "pytigon/ext_lib"]
 
 [tool.ruff.lint]
 select = [
@@ -100,7 +100,7 @@ ignore = [
 "pytigon/schserw/schsys/initdjango.py" = ["F821", "E711", "B007"]
 "pytigon/schserw/schsys/context_processors.py" = ["E711", "E721", "F841", "B019"]
 "pytigon/schserw/schsys/cache_message_storage.py" = ["B904"]
-"pytigon/schserw/translate.py" = ["F821"]
+"pytigon/schserw/translate.py" = []
 "pytigon/schserw/schsys/schema.py" = ["W291"]
 "pytigon/schserw/schsys/templatetags/*.py" = ["B904", "E711", "E712", "E721", "E741", "F821", "F841", "W291", "B905"]
 "pytigon/schserw/schsys/management/commands/*.py" = ["E721", "E741", "B007", "F841", "B905"]

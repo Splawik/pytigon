@@ -1,2 +1,6 @@
 global-exclude __pycache__
 global-exclude *.py[cod]
+
+recursive-include pytigon/templates *
+recursive-include pytigon/static *
+include pytigon/py.typed

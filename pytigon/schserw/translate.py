@@ -1,3 +1,5 @@
+from django.utils.translation import gettext as _
+
 _("Field")
 _("Value")
 _("Delete the item")
