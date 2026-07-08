@@ -11,7 +11,6 @@ from .base import CommandHandler
 
 
 class ToolCommandHandler(CommandHandler):
-
     """Handler for external tool commands.
 
     Handles commands like:
@@ -63,7 +62,9 @@ class ToolCommandHandler(CommandHandler):
             raise CommandError(msg, code=30)
 
         except Exception as e:
-            return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "tool"})
+            return self.handle_error(
+                e, {"command": argv[1] if len(argv) > 1 else "tool"}
+            )
 
     def _handle_nim(self, argv: list[str], paths: dict[str, str]) -> int:
         """Handle nim/nimble commands.

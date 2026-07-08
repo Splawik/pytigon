@@ -13,6 +13,7 @@ from django.conf import settings
 
 from pytigon_lib.schhttptools import httpclient
 from pytigon_lib.schtools.main_paths import get_main_paths
+from pytigon_lib.schtools.env import get_environ
 
 HTTP = None
 _logger = logging.getLogger("pytigon_request")
@@ -67,7 +68,11 @@ def init(
     if create_auto_user:
         from django.contrib.auth.models import User
 
-        User.objects.create_superuser("auto", "auto@pytigon.cloud", "anawa")
+        env = get_environ()
+        username = env("USERNAME")
+        password = env("PASSWORD")
+
+        User.objects.create_superuser(username, "auto@pytigon.cloud", password)
 
     HTTP = httpclient.HttpClient("http://127.0.0.2")
 

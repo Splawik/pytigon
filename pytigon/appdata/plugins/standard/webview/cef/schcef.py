@@ -15,6 +15,7 @@ from cefpython3 import cefpython as cef
 
 from pytigon.pytigon_request import init
 from pytigon.pytigon_request import request as pytigon_request
+from pytigon_lib.schtools.env import get_environ
 
 # HTML loading screen shown while the page loads
 LOADER = """   
@@ -62,9 +63,7 @@ def check_versions():
     print("[pytigon] CEF Python {ver}".format(ver=ver["version"]))
     print("[pytigon] Chromium {ver}".format(ver=ver["chrome_version"]))
     print("[pytigon] CEF {ver}".format(ver=ver["cef_version"]))
-    print(
-        f"[pytigon] Python {platform.python_version()} {platform.architecture()[0]}"
-    )
+    print(f"[pytigon] Python {platform.python_version()} {platform.architecture()[0]}")
     assert cef.__version__ >= "57.0", "CEF Python v57.0+ required to run this"
 
 
@@ -358,6 +357,9 @@ def run(
     url, app, title="Pytigon", parent_win=None, x=200, y=200, width=1024, height=768
 ):
     initialize()
-    init(app, "auto", "anawa")
+    env = get_environ()
+    username = env("USERNAME")
+    password = env("PASSWORD")
+    init(app, username, password)
     asyncio.run(run_async(url, title, parent_win, x, y, width, height))
     shutdown()

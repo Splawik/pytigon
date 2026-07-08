@@ -5,12 +5,12 @@ Handles default case (GUI mode or help).
 import os
 import sys
 from typing import Any
+from pytigon_lib.schtools.env import get_environ
 
 from .base import CommandHandler
 
 
 class DefaultCommandHandler(CommandHandler):
-
     """Handler for default case (GUI mode or help).
 
     Handles commands like:
@@ -100,7 +100,9 @@ class DefaultCommandHandler(CommandHandler):
         print("")
         return 0
 
-    def _run_pywebview(self, argv: list[str], paths: dict[str, str], app: str | None) -> int:
+    def _run_pywebview(
+        self, argv: list[str], paths: dict[str, str], app: str | None
+    ) -> int:
         """Run with pywebview.
 
         Args:
@@ -121,7 +123,9 @@ class DefaultCommandHandler(CommandHandler):
             conf = self._get_app_conf(os.path.join(paths.get("PRJ_PATH", ""), argv[1]))
 
             # Load index.html
-            index_path = os.path.join(paths.get("STATIC_PATH", ""), "pywebview", "index.html")
+            index_path = os.path.join(
+                paths.get("STATIC_PATH", ""), "pywebview", "index.html"
+            )
             try:
                 with open(index_path) as f:
                     index_str = f.read()
@@ -165,7 +169,10 @@ class DefaultCommandHandler(CommandHandler):
                 webview.windows[0].events.loaded -= on_loaded
 
                 def _init():
-                    init(app, "auto", "anawa", user_agent="webviewembeded")
+                    env = get_environ()
+                    username = env("USERNAME")
+                    password = env("PASSWORD")
+                    init(app, username, password, user_agent="webviewembeded")
 
                 ret = _init()
                 start_request = _request("/")
