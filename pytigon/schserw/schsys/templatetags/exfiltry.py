@@ -575,7 +575,10 @@ def fmultiply(value, arg):
 @register.filter(name="divide")
 def divide(value, arg):
     """Returns the quotient of value and arg as integers."""
-    return int(value) / int(arg)
+    try:
+        return int(value) / int(arg)
+    except (ValueError, TypeError, ZeroDivisionError):
+        return 0
 
 
 @register.filter(name="fdivide")

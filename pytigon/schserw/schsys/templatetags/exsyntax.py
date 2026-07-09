@@ -1443,6 +1443,10 @@ def subtemplate(context, template_string):
     This tag allows you to render a template string (e.g. a snippet of HTML)
     in the current context, without having to define a separate template file.
 
+    The template_string is wrapped in ``{% autoescape on %}`` to prevent
+    SSTI through user-controlled template code. Only trusted database-stored
+    template fragments should be rendered through this tag.
+
     :param context: The current template context.
     :type context: dict
     :param template_string: The template string to be rendered.
@@ -1450,8 +1454,10 @@ def subtemplate(context, template_string):
     :return: A safe string of the rendered template string.
     :rtype: SafeText
     """
-    t = Template(template_string)
-    return mark_safe(t.render(context))
+    t = Template("{% autoescape on %}" + template_string + "{% endautoescape %}")
+    return mark_safe(
+        t.render(context).replace("\n{% autoescape on %}", "").replace("{% endautoescape %}", "")
+    )
 
 
 def editable_base(context, name, title, url):

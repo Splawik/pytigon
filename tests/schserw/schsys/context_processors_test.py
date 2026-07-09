@@ -12,43 +12,43 @@ from pytigon.schserw.schsys.context_processors import (
     default_template2,
     get_fragment,
     standard_web_browser,
-    test_mobile,
-    test_tablet,
+    test_mobile as _test_mobile,
+    test_tablet as _test_tablet,
 )
 
 
 class TestMobileDetection:
     def test_no_user_agent_returns_false(self):
         request = HttpRequest()
-        assert test_mobile(request) is False
+        assert _test_mobile(request) is False
 
     def test_opera_mini_headers_returns_true(self):
         request = HttpRequest()
         request.META["HTTP_X_OPERAMINI_FEATURES"] = "something"
-        assert test_mobile(request) is True
+        assert _test_mobile(request) is True
 
     def test_mobile_user_agent_android(self):
         request = HttpRequest()
         request.META["HTTP_USER_AGENT"] = "Mozilla/5.0 Android"
         request.META["HTTP_ACCEPT"] = "text/html"
-        assert test_mobile(request) is True
+        assert _test_mobile(request) is True
 
     def test_desktop_user_agent_returns_false(self):
         request = HttpRequest()
         request.META["HTTP_USER_AGENT"] = "Mozilla/5.0 (Windows NT 10.0)"
         request.META["HTTP_ACCEPT"] = "text/html"
-        assert test_mobile(request) is False
+        assert _test_mobile(request) is False
 
 
 class TestTabletDetection:
     def test_xtablet_user_agent(self):
         request = HttpRequest()
         request.META["HTTP_USER_AGENT"] = "Mozilla/5.0 xtablet"
-        assert test_tablet(request) is True
+        assert _test_tablet(request) is True
 
     def test_no_user_agent_returns_false(self):
         request = HttpRequest()
-        assert test_tablet(request) is False
+        assert _test_tablet(request) is False
 
 
 class TestStandardWebBrowser:

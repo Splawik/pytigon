@@ -30,7 +30,7 @@ MOBILE_USER_AGENTS = (
 def test_mobile(request):
     if "HTTP_X_OPERAMINI_FEATURES" in request.META:
         return True
-    if "HTTP_ACCEPT" in request.META and request.META["HTTP_USER_AGENT"]:
+    if "HTTP_ACCEPT" in request.META and request.META.get("HTTP_USER_AGENT"):
         s = request.META["HTTP_ACCEPT"].lower()
         if "application/vnd.wap.xhtml+xml" in s:
             return True
@@ -326,7 +326,7 @@ def sch_standard(request):
         "ro": ro,
         "form_info": form_info,
         "form_grid": form_grid,
-        "URL_ROOT_FOLDER": settings.URL_ROOT_FOLDER,
+        "form_ext": form_ext,        "URL_ROOT_FOLDER": settings.URL_ROOT_FOLDER,
         "base_path": url_base + "/",
         "app_path": app_path,
         "URL_APP_BASE": url_app_base,

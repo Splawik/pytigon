@@ -220,7 +220,9 @@ class AppManager:
             i += 1
         return 0
 
-    def get_app_items(self, prj=settings.PRJ_NAME):
+    def get_app_items(self, prj=None):
+        if prj is None:
+            prj = settings.PRJ_NAME
         apps = self._get_apps(prj)
         ret = []
         for app in apps:
@@ -285,7 +287,9 @@ class AppManager:
                                 ret.append(app_info)
         return ret
 
-    def get_apps_width_perm(self, prj=settings.PRJ_NAME):
+    def get_apps_width_perm(self, prj=None):
+        if prj is None:
+            prj = settings.PRJ_NAME
         ret = []
         items = self.get_app_items(prj)
         no_empty_apps = []
@@ -303,7 +307,9 @@ class AppManager:
                     ret.append(item)
         return ret
 
-    def get_app_items_width_perm(self, prj=settings.PRJ_NAME):
+    def get_app_items_width_perm(self, prj=None):
+        if prj is None:
+            prj = settings.PRJ_NAME
         ret = []
         for item in self.get_app_items(prj):
             if item.app_name in settings.HIDE_APPS:
@@ -328,14 +334,18 @@ class AppManager:
                         ret.append(item)
         return ret
 
-    def get_main_tools_app_items_width_perm(self, prj=settings.PRJ_NAME):
+    def get_main_tools_app_items_width_perm(self, prj=None):
+        if prj is None:
+            prj = settings.PRJ_NAME
         ret = self.get_app_items_width_perm(prj)
         if settings.THREE_LEVEL_MENU:
             return [item for item in ret if item.module_name == "main tools"]
         else:
             return [item for item in ret if item.module_name != "config"]
 
-    def get_not_main_tools_app_items_width_perm(self, prj=settings.PRJ_NAME):
+    def get_not_main_tools_app_items_width_perm(self, prj=None):
+        if prj is None:
+            prj = settings.PRJ_NAME
         ret = self.get_app_items_width_perm(prj)
         if settings.THREE_LEVEL_MENU:
             return [item for item in ret if item.module_name != "main tools"]

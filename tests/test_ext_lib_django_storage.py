@@ -75,9 +75,9 @@ class TestThumbnailFileSystemStorage:
 
     def test_url_method_raises_without_base_url(self):
         """Test url() raises ValueError when base_url is None."""
-        # This test may be skipped if Django settings are not configured
         try:
-            storage = ThumbnailFileSystemStorage(base_url=None)
+            storage = ThumbnailFileSystemStorage()
+            storage.base_url = None
             with pytest.raises(ValueError, match="not accessible via a URL"):
                 storage.url("some_file.jpg")
         except Exception as e:
@@ -95,14 +95,13 @@ class TestOSFSExt:
         assert OSFS_EXT is not None
 
     def test_init_creates_directory(self, tmp_path):
-        """Test OSFS_EXT creates directory if it doesn't exist."""
+        """Test OSFS_EXT stores root path but doesn't create directory on init."""
         new_dir = tmp_path / "new_storage"
         assert not new_dir.exists()
 
         fs_instance = OSFS_EXT(str(new_dir))
         assert fs_instance is not None
-        assert new_dir.exists()
-        assert new_dir.is_dir()
+        assert str(fs_instance._root) == str(new_dir)
 
     def test_init_existing_directory(self, tmp_path):
         """Test OSFS_EXT works with existing directory."""

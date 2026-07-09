@@ -31,7 +31,10 @@ from .features import INSTALLED_APPS
 # Logging verbosity level
 if "-v" in sys.argv:
     i = sys.argv.index("-v")
-    V = int(sys.argv[i + 1])
+    try:
+        V = int(sys.argv[i + 1])
+    except (IndexError, ValueError):
+        V = 1
 else:
     V = 1
 
@@ -49,7 +52,9 @@ if PRODUCTION_VERSION:
         "disable_existing_loggers": True,
         "formatters": {
             "standard": {
-                "format": ("[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s"),
+                "format": (
+                    "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s"
+                ),
                 "datefmt": "%Y-%m-%d %H:%M:%S",
             }
         },
@@ -113,9 +118,9 @@ if PRODUCTION_VERSION:
         LOGGING["handlers"]["logfile"]["filename"] = LOGGING["handlers"]["logfile"][
             "filename"
         ].replace(".log", "-task.log")
-        LOGGING["handlers"]["errorlogfile"]["filename"] = LOGGING["handlers"]["errorlogfile"][
-            "filename"
-        ].replace(".log", "_task.log")
+        LOGGING["handlers"]["errorlogfile"]["filename"] = LOGGING["handlers"][
+            "errorlogfile"
+        ]["filename"].replace(".log", "_task.log")
 else:
     if V == 3:
         level = "DEBUG"
@@ -167,6 +172,36 @@ INTERNAL_IPS = ("127.0.0.1", "127.0.0.2", "127.0.0.3", "localhost")
 
 ALLOWED_HOSTS = ["*"] if DEBUG else ENV("ALLOWED_HOSTS", default="").split(",")
 
+if not DEBUG and PRODUCTION_VERSION:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
+    CSRF_COOKIE_SAMESITE = "Lax"
+    # SECURE_SSL_REDIRECT = not ENV("DISABLE_SSL_REDIRECT")
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = "DENY"
+    SECURE_REFERRER_POLICY = "same-origin"
+    # SECURE_PROXY_SSL_HEADER = (
+    #    ("HTTP_X_FORWARDED_PROTO", "https") if ENV("BEHIND_PROXY") else None
+    # )
+else:
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = "Lax"
+    CSRF_COOKIE_SAMESITE = "Lax"
+    SECURE_SSL_REDIRECT = False
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = "SAMEORIGIN"
+    SECURE_REFERRER_POLICY = "same-origin"
+    SECURE_PROXY_SSL_HEADER = None
+
 PYTHON_INTERPRETER = sys.executable
 PYTHON_CONSOLE = sys.executable
 
@@ -185,9 +220,9 @@ ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
 if PLATFORM_TYPE == "webserver":
     if ENV("CHANNELS_REDIS"):
-        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (ENV("CHANNELS_REDIS").split(":") + ["6379"])[
-            :2
-        ]
+        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (
+            ENV("CHANNELS_REDIS").split(":") + ["6379"]
+        )[:2]
     else:
         CHANNELS_REDIS_SERVER = "127.0.0.1"
         CHANNELS_REDIS_PORT = "6379"
@@ -276,7 +311,9 @@ def DEFAULT_FILE_STORAGE_FS():
     return _m
 
 
-THUMBNAIL_DEFAULT_STORAGE = "pytigon_lib.schdjangoext.django_storage.ThumbnailFileSystemStorage"
+THUMBNAIL_DEFAULT_STORAGE = (
+    "pytigon_lib.schdjangoext.django_storage.ThumbnailFileSystemStorage"
+)
 
 if ENV("THUMBNAIL_PROTECTED"):
     THUMBNAIL_MEDIA_ROOT = os.path.join(MEDIA_ROOT_PROTECTED, "thumb")
@@ -300,19 +337,27 @@ THUMBNAIL_ALIASES = {
 DATA_UPLOAD_MAX_MEMORY_SIZE = 26214400
 OFFLINE_SUPPORT = False
 PYODIDE = False
-CORS_ORIGIN_WHITELIST = ENV("CORS_ORIGIN_WHITELIST", default="").split(",") if ENV("CORS_ORIGIN_WHITELIST") else ("null",)
+CORS_ORIGIN_WHITELIST = (
+    ENV("CORS_ORIGIN_WHITELIST", default="").split(",")
+    if ENV("CORS_ORIGIN_WHITELIST")
+    else ("null",)
+)
 
 if platform_name() == "Android":
     if ENV("CORS_ORIGIN_ALLOW_ALL"):
         CORS_ORIGIN_ALLOW_ALL = True
     else:
-        CORS_ORIGIN_WHITELIST = ENV("CORS_ORIGIN_WHITELIST_ANDROID", default="").split(",")
+        CORS_ORIGIN_WHITELIST = ENV("CORS_ORIGIN_WHITELIST_ANDROID", default="").split(
+            ","
+        )
 
 try:
     CACHES = {"default": ENV.cache()}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 except Exception:
-    logger.warning("Failed to configure cache from ENV.cache(), using default LocMemCache")
+    logger.warning(
+        "Failed to configure cache from ENV.cache(), using default LocMemCache"
+    )
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
