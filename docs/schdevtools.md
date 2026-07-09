@@ -47,7 +47,7 @@ hand or extend the builder itself.
 
 ```bash
 # Run schdevtools (Pytigon IDE)
-python pytigon.py schdevtools
+ptig schdevtools
 ```
 
 This launches a desktop or web-based IDE. Inside it you can:

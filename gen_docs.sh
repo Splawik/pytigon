@@ -11,7 +11,7 @@
 #   ./gen_docs.sh deploy       # Build and deploy to GitHub Pages (if configured)
 #
 # Prerequisites:
-#   - Python 3.10+
+#   - Python 3.12+
 #   - pip / pipx
 #
 # Output:
@@ -64,11 +64,11 @@ check_deps() {
         log_error "mkdocs not found. Run './gen_docs.sh install' first."
         exit 1
     fi
-    if ! python3.13 -c "import mkdocstrings" 2>/dev/null; then
+    if ! python3 -c "import mkdocstrings" 2>/dev/null; then
         log_error "mkdocstrings not found. Run './gen_docs.sh install' first."
         exit 1
     fi
-    if ! python3.13 -c "import material" 2>/dev/null; then
+    if ! python3 -c "import material" 2>/dev/null; then
         log_error "mkdocs-material not found. Run './gen_docs.sh install' first."
         exit 1
     fi

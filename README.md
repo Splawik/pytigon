@@ -14,18 +14,17 @@ Pytigon brings together the prowess of several cutting-edge technologies: Python
    - Harness the versatility of the Python language.
    - Leverage the capabilities of the Django web framework.
    - Utilize the wxWidgets toolkit to create desktop applications.
-   - Craft modern web clients using Bootstrap.
+   - Craft modern web clients using Bootstrap and custom Web Components.
 
 - **Cross-Platform Compatibility:**
-   - Develop desktop applications for Linux, Windows, and OSX.
+   - Develop desktop applications for Linux, Windows, and macOS.
    - Create web-based clients for both mobile and desktop usage.
 
 - **Robust Component Integration:**
    - Immerse yourself in Python's philosophy throughout:
-     - Employ modified Django templates that align with Pythonic indentation principles.
-     - Seamlessly integrate Python with JavaScript using the embedded python to javascript compiler.
-   - Merge wxPython widgets seamlessly with Django model fields.
-   - Achieve harmony between Django server and wxPython client programs.
+      - Employ modified Django templates that align with Pythonic indentation principles (IHTML format).
+      - Seamlessly integrate Python with JavaScript using the embedded pscript compiler.
+      - Define custom HTML elements (Web Components) using Python syntax.
 
 - **All-in-One Pytigon IDE:**
    

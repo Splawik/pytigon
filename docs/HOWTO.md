@@ -9,20 +9,17 @@ for MkDocs** theme and **mkdocstrings**.
 ## Quick Start (TL;DR)
 
 ```bash
-# 1. Enter the pytigon package directory
-cd pytigon
-
-# 2. Install dependencies (one-time)
+# 1. At the project root (where mkdocs.yml lives)
 ./gen_docs.sh install
 
-# 3. Start live-reload preview server
+# 2. Start live-reload preview server
 ./gen_docs.sh serve
 
-# 4. Open http://127.0.0.1:8000 in your browser
+# 3. Open http://127.0.0.1:8000 in your browser
 
-# 5. When ready, build static HTML
+# 4. When ready, build static HTML
 ./gen_docs.sh build
-# Output is in: pytigon/site/
+# Output is in: site/
 ```
 
 ---
@@ -36,23 +33,25 @@ The documentation covers all Python modules in `pytigon/` **excluding** the
 |---------|---------|
 | **Core** | `pytigon_run`, `pytigon_request`, `pytigon_task`, `django_min_init`, `manage`, `ptig` |
 | **Commands** | `dispatcher`, `registry`, `handlers`, `errors`, `utils` |
-| **Ext Lib** | `autocomplete`, `django_storage`, `naivehtmlparser`, `pygettext` |
+| **Ext Lib** | `autocomplete`, `naivehtmlparser`, `pygettext`, `wxasync` |
 
 ---
 
 ## File Structure
 
 ```
-pytigon/
 ├── mkdocs.yml                    # MkDocs configuration
 ├── gen_docs.sh                   # Bash script (build/serve/clean/install/deploy)
 ├── docs/                         # Documentation source
 │   ├── index.md                  # Landing page
 │   ├── HOWTO.md                  # This file
+│   ├── indent.md                 # IHTML format documentation
+│   ├── schdevtools.md            # Developer tools guide
+│   ├── webcomponents.md          # Web Components guide
 │   ├── getting-started/
 │   │   ├── overview.md           # Architecture overview
 │   │   └── quick-import.md       # Import cheat sheet
-│   └── api/                      # API reference (auto-generated)
+│   └── api/                      # API reference
 │       ├── pytigon.md
 │       ├── pytigon_run.md
 │       ├── pytigon_request.md
@@ -109,7 +108,7 @@ signatures, parameter tables, and optional source code.
 **Step 1:** Create the API reference file:
 
 ```bash
-cat > pytigon/docs/api/new_module.md << 'EOF'
+cat > docs/api/new_module.md << 'EOF'
 # new_module – Description
 
 ::: pytigon.new_module
@@ -119,7 +118,7 @@ cat > pytigon/docs/api/new_module.md << 'EOF'
 EOF
 ```
 
-**Step 2:** Add the page to [`mkdocs.yml`](../mkdocs.yml) under `nav`:
+**Step 2:** Add the page to [`mkdocs.yml`](mkdocs.yml) under `nav`:
 
 ```yaml
 nav:
@@ -145,7 +144,7 @@ tree and mkdocstrings will not import it.
 
 ## Customizing the Theme
 
-Edit [`mkdocs.yml`](../mkdocs.yml):
+Edit [`mkdocs.yml`](mkdocs.yml):
 
 - **Color**: Change `theme.palette[].primary` (e.g., `indigo`, `deep-purple`, `teal`)
 - **Navigation**: Add/remove entries under `nav`

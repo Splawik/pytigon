@@ -484,14 +484,12 @@ The Django-aware converter in [`django_ihtml.py`](../pytigon_lib/schdjangoext/dj
 
 ### CLI Conversion
 
-The [`ihtml2html.py`](../pytigon/prj/schscripts/ihtml2html.py) script provides command-line conversion:
+Conversion between `.ihtml` and `.html` is handled programmatically. The
+converter is available as the `ihtml_to_html()` function:
 
 ```bash
-# Convert .ihtml to .html
-python ihtml2html.py template.ihtml -o template.html
-
-# Convert .html to .ihtml
-python ihtml2html.py template.html -o template.ihtml
+# Convert from Python
+python -c "from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html; print(ihtml_to_html('template.ihtml'))"
 ```
 
 ### Programmatic Conversion

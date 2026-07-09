@@ -1,6 +1,6 @@
 # Pytigon Application
 
-**Version:** 0.260511 · **License:** LGPL 3.0 · **Author:** Sławomir Chołaj
+**Version:** 0.260706 · **License:** LGPL 3.0 · **Author:** Sławomir Chołaj
 
 ---
 
@@ -22,7 +22,7 @@ task scheduling infrastructure.
 | [`manage`](api/manage.md) | Django `manage.py` entry point within pytigon paths |
 | [`ptig`](api/ptig.md) | Ptig package installer – archive extraction and deployment |
 | [`commands`](api/commands.md) | Refactored command dispatching architecture |
-| [`ext_lib`](api/ext_lib.md) | Bundled external libraries (autocomplete, storage, i18n) |
+| [`ext_lib`](api/ext_lib.md) | Bundled external libraries (autocomplete, HTML parser, i18n, wx async) |
 
 ## Quick Start
 
@@ -37,8 +37,8 @@ init("myapp", username="admin", password="secret")
 resp = request("/api/data/")
 
 # CLI entry
-import pytigon.pytigon_run
-pytigon.pytigon_run.run()
+from pytigon.pytigon_run import run
+run()
 ```
 
 ## Key Design Patterns

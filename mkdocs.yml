@@ -4,7 +4,7 @@ site_author: Sławomir Chołaj
 site_url: ""
 repo_name: pytigon
 repo_url: ""
-copyright: "&copy; 2025 Sławomir Chołaj &middot; LGPL 3.0"
+copyright: "&copy; 2025–2026 Sławomir Chołaj &middot; LGPL 3.0"
 theme:
   name: material
   language: en
@@ -45,7 +45,7 @@ plugins:
       handlers:
         python:
           paths: [.]
-          import:
+          inventories:
             - https://docs.python.org/3/objects.inv
             - https://docs.djangoproject.com/en/stable/_objects/
           options:
@@ -124,6 +124,11 @@ nav:
   - Getting Started:
       - Overview: getting-started/overview.md
       - Quick Import: getting-started/quick-import.md
+  - Guides:
+      - schdevtools: schdevtools.md
+      - Web Components: webcomponents.md
+      - IHTML Format: indent.md
+      - Documentation HOWTO: HOWTO.md
   - Core:
       - pytigon (root): api/pytigon.md
       - pytigon_run: api/pytigon_run.md
