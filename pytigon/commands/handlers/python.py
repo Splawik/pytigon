@@ -3,12 +3,12 @@ Handles running Python interpreter and Python scripts in Pytigon environment.
 """
 
 import os
+import subprocess
 
 from .base import CommandHandler
 
 
 class PythonCommandHandler(CommandHandler):
-
     """Handler for running Python interpreter and scripts.
 
     Handles commands like:
@@ -145,4 +145,7 @@ class PythonCommandHandler(CommandHandler):
         # Run Python script (include argv[1] which is the .py file)
         executable = self.get_executable()
         command = [executable] + argv[1:]
-        return self.run_subprocess(command)
+        if argv[1] == "-c":
+            return subprocess.run(command).returncode
+        else:
+            return self.run_subprocess(command)

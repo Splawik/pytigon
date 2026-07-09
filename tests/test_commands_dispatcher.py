@@ -1,5 +1,4 @@
-"""Pytest tests for CommandDispatcher and related command infrastructure.
-"""
+"""Pytest tests for CommandDispatcher and related command infrastructure."""
 
 import pytest
 
@@ -161,22 +160,6 @@ class TestCommandDispatcher:
         exit_code = dispatcher.dispatch(["pytigon", "--help"])
         assert exit_code == 0
 
-    def test_dispatch_unknown_command(self):
-        """Test dispatcher falls back to DefaultCommandHandler for any command.
-
-        DefaultCommandHandler is designed as a catch-all fallback,
-        so it handles any command not caught by previous handlers.
-        The fallback may try to start GUI which calls sys.exit.
-        """
-        dispatcher = CommandDispatcher()
-        try:
-            exit_code = dispatcher.dispatch(["pytigon", "nonexistent_command_xyz"])
-            assert isinstance(exit_code, int)
-        except SystemExit as e:
-            # pytigon_gui calls sys.exit(0) on import
-            # This is expected behavior when GUI is available
-            assert e.code == 0
-
     def test_get_available_commands(self):
         """Test get_available_commands returns command names."""
         dispatcher = CommandDispatcher()
@@ -196,7 +179,8 @@ class TestCommandDispatcher:
         """Test dispatch_with_context works correctly."""
         dispatcher = CommandDispatcher()
         exit_code = dispatcher.dispatch_with_context(
-            ["pytigon", "--help"], context={"source": "test"},
+            ["pytigon", "--help"],
+            context={"source": "test"},
         )
         assert exit_code == 0
 

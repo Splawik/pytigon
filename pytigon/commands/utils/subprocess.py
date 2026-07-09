@@ -9,7 +9,6 @@ import sys
 
 
 class SafeSubprocess:
-
     """Secure subprocess execution with input validation.
 
     Validates that arguments contain no shell injection characters.
@@ -41,7 +40,8 @@ class SafeSubprocess:
             if not isinstance(arg, str):
                 msg = f"Argument {i} must be a string, got {type(arg).__name__}"
                 raise SecurityError(
-                    msg, code=22,
+                    msg,
+                    code=22,
                 )
             if self._contains_dangerous_chars(arg):
                 msg = f"Argument {i} contains dangerous characters: {arg}"
@@ -178,7 +178,10 @@ class SafeSubprocess:
             )
 
     def run_simple(
-        self, command: list[str], cwd: str | None = None, capture_output=False,
+        self,
+        command: list[str],
+        cwd: str | None = None,
+        capture_output=False,
     ) -> int:
         """Simple subprocess execution that returns exit code.
 

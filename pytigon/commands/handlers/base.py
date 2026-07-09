@@ -12,7 +12,6 @@ from ..utils import PathResolver, SafeSubprocess
 
 
 class CommandHandler(ABC):
-
     """Abstract base class for command handlers.
 
     All command handlers must implement the execute method.
