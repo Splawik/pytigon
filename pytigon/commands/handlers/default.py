@@ -100,9 +100,7 @@ class DefaultCommandHandler(CommandHandler):
         print("")
         return 0
 
-    def _run_pywebview(
-        self, argv: list[str], paths: dict[str, str], app: str | None
-    ) -> int:
+    def _run_pywebview(self, argv: list[str], paths: dict[str, str], app: str | None) -> int:
         """Run with pywebview.
 
         Args:
@@ -123,9 +121,7 @@ class DefaultCommandHandler(CommandHandler):
             conf = self._get_app_conf(os.path.join(paths.get("PRJ_PATH", ""), argv[1]))
 
             # Load index.html
-            index_path = os.path.join(
-                paths.get("STATIC_PATH", ""), "pywebview", "index.html"
-            )
+            index_path = os.path.join(paths.get("STATIC_PATH", ""), "pywebview", "index.html")
             try:
                 with open(index_path) as f:
                     index_str = f.read()
@@ -170,8 +166,8 @@ class DefaultCommandHandler(CommandHandler):
 
                 def _init():
                     env = get_environ()
-                    username = env("USERNAME")
-                    password = env("PASSWORD")
+                    username = env("AUTOUSERNAME")
+                    password = env("AUTOPASSWORD")
                     init(app, username, password, user_agent="webviewembeded")
 
                 ret = _init()

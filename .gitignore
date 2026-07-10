@@ -64,6 +64,7 @@ doc
 site
 pytigon_lib
 pytigon_gui
+pytigon_standard_prj
 ext_lib_cli_lin/
 ext_prg/
 last_error.html

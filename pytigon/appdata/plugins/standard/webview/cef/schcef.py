@@ -150,8 +150,7 @@ class ResourceHandler:
         self._web_request_client = WebRequestClient()
         self._web_request_client._resourceHandler = self
         request.SetFlags(
-            cef.Request.Flags["AllowCachedCredentials"]
-            | cef.Request.Flags["AllowCookies"]
+            cef.Request.Flags["AllowCachedCredentials"] | cef.Request.Flags["AllowCookies"]
         )
         self._web_request = cef.WebRequest.Create(request, self._web_request_client)
         return True
@@ -271,18 +270,13 @@ def create_browser(
     return browser, client_handler
 
 
-async def run_async(
-    url, title="Pytigon", parent_win=None, x=200, y=200, width=1024, height=768
-):
+async def run_async(url, title="Pytigon", parent_win=None, x=200, y=200, width=1024, height=768):
     def py_function(value, js_callback):
         url = value[0]
         params = value[1]
         url2 = url.replace("file://" + cef.GetModuleDirectory(), "http://127.0.0.2")
         ret = pytigon_request(url2 + "/", params)
-        ret = (
-            f'<base href="file://{cef.GetModuleDirectory()}/" target="_blank">'
-            + ret.str()
-        )
+        ret = f'<base href="file://{cef.GetModuleDirectory()}/" target="_blank">' + ret.str()
         ret = ret.replace(
             "window.BASE_PATH = '/'",
             f"window.BASE_PATH = 'file://{cef.GetModuleDirectory()}/'",
@@ -292,9 +286,7 @@ async def run_async(
     def py_callback(value):
         print("Value sent from Javascript: " + value)
 
-    browser, client_handler = create_browser(
-        None, title, parent_win, x, y, width, height
-    )
+    browser, client_handler = create_browser(None, title, parent_win, x, y, width, height)
 
     bindings = cef.JavascriptBindings()
     bindings.SetFunction("py_function", py_function)
@@ -353,13 +345,11 @@ def shutdown():
     cef.Shutdown()
 
 
-def run(
-    url, app, title="Pytigon", parent_win=None, x=200, y=200, width=1024, height=768
-):
+def run(url, app, title="Pytigon", parent_win=None, x=200, y=200, width=1024, height=768):
     initialize()
     env = get_environ()
-    username = env("USERNAME")
-    password = env("PASSWORD")
+    username = env("AUTOUSERNAME")
+    password = env("AUTOPASSWORD")
     init(app, username, password)
     asyncio.run(run_async(url, title, parent_win, x, y, width, height))
     shutdown()

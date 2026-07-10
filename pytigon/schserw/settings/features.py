@@ -149,7 +149,6 @@ if REST:
 
 if GRAPHQL or REST:
     AUTHENTICATION_BACKENDS.append("graphql_jwt.backends.JSONWebTokenBackend")
-    # AUTHENTICATION_BACKENDS.append("oauth2_provider.backends.OAuth2Backend")
     MIDDLEWARE.append("oauth2_provider.middleware.OAuth2TokenMiddleware")
 
     OAUTH2_PROVIDER = {
@@ -253,6 +252,15 @@ if ENV("DJANGO_Q"):
     INSTALLED_APPS.append("django_q")
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
+SKIP_APPS_PREFIXES = [
+    "django",
+    "debug",
+    "registration",
+    "bootstrap_admin",
+    "channels",
+    "django_bootstrap5",
+]
 
 CHANNELS_URL_TAB = []
 

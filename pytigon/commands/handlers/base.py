@@ -145,6 +145,30 @@ class CommandHandler(ABC):
 
         return None
 
+    def _prepare_project(self, app: str) -> tuple[str, str, dict[str, str]]:
+        """Prepare project environment: resolve paths, init prj path, init project dirs.
+
+        Args:
+            app: Application name
+
+        Returns:
+            Tuple of (app_name, prj_path, paths_dict)
+
+        """
+        paths = self.setup_paths(app)
+        prj_path = paths.get("PRJ_PATH", "")
+
+        ret = self._init_prj_path(paths, app)
+        if ret:
+            app = ret[0]
+            prj_path = ret[1]
+
+        self.init_project(app, paths)
+
+        os.chdir(os.path.join(prj_path, app))
+
+        return app, prj_path, paths
+
     def init_project(self, app: str, paths: dict[str, str]) -> None:
         """Initialize project directories if they don't exist.
 

@@ -68,19 +68,8 @@ class RunCommandHandler(CommandHandler):
                     module_name = x[1] + ".run"
                     script = "run"
 
-            # Get paths for the app
-            paths = self.setup_paths(app)
-            PRJ_PATH = paths.get("PRJ_PATH", "")
-            DATA_PATH = paths.get("DATA_PATH", "")
-
-            # Initialize project paths if needed
-            ret = self._init_prj_path(paths, app)
-            if ret:
-                app = ret[0]
-                PRJ_PATH = ret[1]
-
-            # Initialize project if directories don't exist
-            self.init_project(app, paths)
+            # Prepare project environment
+            app, PRJ_PATH, paths = self._prepare_project(app)
 
             # Add project path to sys.path
             prj_path = os.path.join(PRJ_PATH, app)

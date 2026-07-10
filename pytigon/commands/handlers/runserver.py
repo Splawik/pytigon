@@ -49,23 +49,8 @@ class RunServerCommandHandler(CommandHandler):
             x = argv[1].split("_", 1)
             app = x[1]
 
-            # Get paths for the app
-            paths = self.setup_paths(app)
-            PRJ_PATH = paths.get("PRJ_PATH", "")
-            DATA_PATH = paths.get("DATA_PATH", "")
-
-            # Initialize project paths if needed
-            ret = self._init_prj_path(paths, app)
-            if ret:
-                app = ret[0]
-                PRJ_PATH = ret[1]
-
-            # Initialize project if directories don't exist
-            self.init_project(app, paths)
-
-            # Change to project directory
-            path3 = os.path.join(PRJ_PATH, app)
-            os.chdir(path3)
+            # Prepare project environment
+            app, PRJ_PATH, paths = self._prepare_project(app)
 
             try:
                 # Parse server options

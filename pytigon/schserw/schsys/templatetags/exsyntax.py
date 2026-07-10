@@ -58,23 +58,22 @@ import os
 import re
 from base64 import b64encode
 
-from django import forms, template
+from django import template
 from django.conf import settings
-from django.forms import CheckboxInput, CheckboxSelectMultiple, FileInput, RadioSelect
 from django.template import Template
 from django.template.base import Node, TemplateSyntaxError, token_kwargs
 from django.template.loader import get_template
 from django.utils.safestring import SafeString, SafeText, mark_safe
-from django_select2 import forms as s2forms
 from pyquery import PyQuery as pq
 
-from pytigon_lib.schdjangoext.models import TreeModel
-from pytigon_lib.schdjangoext.tools import import_model, make_href
 from pytigon_lib.schdjangoext.tools import make_href as mhref
 from pytigon_lib.schtools.href_action import action_fun, actions_dict, standard_dict
 from pytigon_lib.schtools.wiki import wiki_from_str, wikify
 
 register = template.Library()
+
+from .exsyntax_form import *  # noqa: E402, F403
+from .exsyntax_include import *  # noqa: E402, F403
 
 ## tools
 

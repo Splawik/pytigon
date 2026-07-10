@@ -39,17 +39,6 @@ APP = None
 
 
 def change_password(request):
-    """Handle password change requests.
-
-    Args:
-        request: Django HTTP request. POST must contain:
-            - current_password
-            - new_password
-            - confirm_password
-
-    Returns:
-        HttpResponseRedirect: Redirects to logout on success, home on failure.
-    """
     old_password = request.POST.get("current_password", "")
     new_password = request.POST.get("new_password", "")
     confirm_password = request.POST.get("confirm_password", ".")
@@ -69,33 +58,15 @@ def change_password(request):
 
 
 def dstatic(request, script_name):
-    """Serve dynamic JavaScript content.
-
-    Args:
-        request: Django HTTP request.
-        sc (str): Script code.
-
-    Returns:
-        HttpResponse: JavaScript code.
-    """
     sc = render_to_string(f"js/{script_name}.html", context={}, request=request)
     return HttpResponse(sc, content_type="application/javascript")
 
 
 def ok(request):
-    """Handle successful form submission redirect.
-
-    Args:
-        request: Django HTTP request.
-
-    Returns:
-        HttpResponse: Result from actions.ok().
-    """
     logger.debug("OK view called for user: %s", request.user)
     return actions.ok(request)
 
 
-# Mapping from Django message levels to Bootstrap CSS classes
 MSG_MAP = {
     messages.DEBUG: "",
     messages.INFO: "text-bg-info",
@@ -106,14 +77,6 @@ MSG_MAP = {
 
 
 def get_messages(request):
-    """Retrieve and render accumulated messages.
-
-    Args:
-        request: Django HTTP request.
-
-    Returns:
-        HttpResponse: Rendered messages template or empty response.
-    """
     tab = []
     for message in messages.get_messages(request):
         tab.append(
@@ -134,66 +97,57 @@ def get_messages(request):
     return HttpResponse("")
 
 
-# def tbl(request, app, tab, value=None, template_name=None):
-#     """Render a database table view using DbTable.
+class _DialogView:
+    """Base class for dialog views (date, list, tree, tab).
 
-#     Args:
-#         request: Django HTTP request.
-#         app: Application name.
-#         tab: Table name.
-#         value: Optional value parameter.
-#         template_name: Optional template name.
-
-#     Returns:
-#         HttpResponse: The rendered table output.
-#     """
-#     if request.POST:
-#         p = request.POST.copy()
-#         d = {}
-#         for key, val in list(p.items()):
-#             if key == "csrfmiddlewaretoken":
-#                 d[str(key)] = val
-#             else:
-#                 d[str(key)] = schjson.loads(val)
-#     else:
-#         d = {}
-
-#     if value and value != "":
-#         d["value"] = bdecode(value.encode("ascii"))
-
-#     dbtab = DbTable(app, tab)
-#     retstr = dbtab.command(d)
-#     return HttpResponse(retstr)
-
-
-def datedialog(request, action):
-    """Handle date dialog actions (size, dialog, test).
-
-    Args:
-        request: Django HTTP request.
-        action: One of 'size', 'dialog', or 'test'.
-
-    Returns:
-        HttpResponse: JSON-encoded size, HTML dialog, or test result.
+    Subclasses must define ``size_to_render``, ``action_to_render``,
+    and ``template_to_render``.
     """
-    if request.POST or request.GET:
-        p = request.POST.copy() if request.POST else request.GET.copy()
-        value = bdecode(p["value"].encode("ascii"))
-    else:
-        value = ""
 
-    if action == "size":
-        return HttpResponse(schjson.dumps((280, 200)))
+    size = (280, 200)
+    template_name = ""
+    action = ""
 
-    if action == "dialog":
+    def get_value(self, request):
+        if request.POST or request.GET:
+            p = request.POST.copy() if request.POST else request.GET.copy()
+            return bdecode(p["value"].encode("ascii"))
+        return ""
+
+    def handle_size(self, request):
+        return HttpResponse(schjson.dumps(self.size))
+
+    def handle_dialog(self, request, value, *args, **kwargs):
+        c = {"value": value}
+        return render_to_response(self.template_name, context=c, request=request)
+
+    def handle_test(self, request, value, *args, **kwargs):
+        return HttpResponse(schjson.dumps((2, None, (None,))))
+
+    def __call__(self, request, action, *args, **kwargs):
+        value = self.get_value(request)
+        if action == "size":
+            return self.handle_size(request)
+        if action == "dialog":
+            return self.handle_dialog(request, value, *args, **kwargs)
+        if action == "test":
+            return self.handle_test(request, value, *args, **kwargs)
+        return HttpResponse("")
+
+
+class _DateDialogView(_DialogView):
+    size = (280, 200)
+    template_name = "schsys/date.html"
+
+    def handle_dialog(self, request, value, *args, **kwargs):
         if isinstance(value, int):
             d = datetime.date.today()
             d = d + datetime.timedelta(int(value))
             value = d
         c = {"value": value}
-        return render_to_response("schsys/date.html", context=c, request=request)
+        return render_to_response(self.template_name, context=c, request=request)
 
-    if action == "test":
+    def handle_test(self, request, value, *args, **kwargs):
         if isinstance(value, int):
             d = datetime.date.today()
             d = d + datetime.timedelta(int(value))
@@ -203,65 +157,26 @@ def datedialog(request, action):
                 value = value.decode("utf-8")
             return HttpResponse(schjson.dumps((1, value, (value,))))
 
-    return HttpResponse("")
+
+class _ListDialogView(_DialogView):
+    size = (250, 300)
+    template_name = "schsys/list.html"
+
+    def get_value(self, request):
+        if request.POST or request.GET:
+            p = request.POST.copy() if request.POST else request.GET.copy()
+            value = bdecode(p["value"])
+            if value is None:
+                value = ""
+            return value
+        return ""
 
 
-def listdialog(request, action):
-    """Handle list dialog actions (size, dialog, test).
+class _TreeDialogView(_DialogView):
+    size = (450, 400)
+    template_name = "schsys/get_from_tree.html"
 
-    Args:
-        request: Django HTTP request.
-        action: One of 'size', 'dialog', or 'test'.
-
-    Returns:
-        HttpResponse: JSON-encoded size, HTML dialog, or test result.
-    """
-    if request.POST or request.GET:
-        p = request.POST.copy() if request.POST else request.GET.copy()
-        value = bdecode(p["value"])
-        if value is None:
-            value = ""
-    else:
-        value = ""
-
-    if action == "size":
-        return HttpResponse(schjson.dumps((250, 300)))
-
-    if action == "dialog":
-        c = {"value": value}
-        return render_to_response("schsys/list.html", context=c, request=request)
-
-    if action == "test":
-        return HttpResponse(schjson.dumps((2, None, (None,))))
-
-    return HttpResponse("")
-
-
-def treedialog(request, app, tab, id, action):
-    """Handle tree dialog actions (size, dialog, test).
-
-    Args:
-        request: Django HTTP request.
-        app: Application name.
-        tab: Table name.
-        id: Object ID.
-        action: One of 'size', 'dialog', or 'test'.
-
-    Returns:
-        HttpResponse: JSON-encoded size, HTML dialog, or test result.
-    """
-    if request.POST or request.GET:
-        p = request.POST.copy() if request.POST else request.GET.copy()
-        value = bdecode(p["value"].encode("ascii"))
-        if value is None:
-            value = ""
-    else:
-        value = ""
-
-    if action == "size":
-        return HttpResponse(schjson.dumps((450, 400)))
-
-    if action == "dialog":
+    def handle_dialog(self, request, value, app, tab, id):
         model = import_model(app, tab)
         obj = None
         parent_pk = -1
@@ -283,41 +198,14 @@ def treedialog(request, app, tab, id, action):
             "model": model,
             "object": obj,
         }
-        return render_to_response(
-            "schsys/get_from_tree.html", context=c, request=request
-        )
-
-    if action == "test":
-        return HttpResponse(schjson.dumps((2, None, (None,))))
-
-    return HttpResponse("")
+        return render_to_response(self.template_name, context=c, request=request)
 
 
-def tabdialog(request, app, tab, id, action):
-    """Handle tab dialog actions (size, dialog, test).
+class _TabDialogView(_DialogView):
+    size = (450, 400)
+    template_name = "schsys/get_from_tab.html"
 
-    Args:
-        request: Django HTTP request.
-        app: Application name.
-        tab: Table name.
-        id: Object ID.
-        action: One of 'size', 'dialog', or 'test'.
-
-    Returns:
-        HttpResponse: JSON-encoded size, HTML dialog, or test result.
-    """
-    if request.POST or request.GET:
-        p = request.POST.copy() if request.POST else request.GET.copy()
-        value = bdecode(p["value"].encode("ascii"))
-        if value is None:
-            value = ""
-    else:
-        value = ""
-
-    if action == "size":
-        return HttpResponse(schjson.dumps((450, 400)))
-
-    if action == "dialog":
+    def handle_dialog(self, request, value, app, tab, id):
         model = import_model(app, tab)
         obj = None
         if int(id) >= 0:
@@ -333,14 +221,29 @@ def tabdialog(request, app, tab, id, action):
             "model": model,
             "obj": obj,
         }
-        return render_to_response(
-            "schsys/get_from_tab.html", context=c, request=request
-        )
+        return render_to_response(self.template_name, context=c, request=request)
 
-    if action == "test":
-        return HttpResponse(schjson.dumps((2, None, (None,))))
 
-    return HttpResponse("")
+_datedialog = _DateDialogView()
+_listdialog = _ListDialogView()
+_treedialog = _TreeDialogView()
+_tabdialog = _TabDialogView()
+
+
+def datedialog(request, action):
+    return _datedialog(request, action)
+
+
+def listdialog(request, action):
+    return _listdialog(request, action)
+
+
+def treedialog(request, app, tab, id, action):
+    return _treedialog(request, action, app, tab, id)
+
+
+def tabdialog(request, app, tab, id, action):
+    return _tabdialog(request, action, app, tab, id)
 
 
 def plugin_template(request, template_name):

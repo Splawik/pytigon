@@ -160,14 +160,7 @@ if settings.REST:
             pos = app.name
         else:
             pos = app
-            if (
-                pos.startswith("django")
-                or pos.startswith("debug")
-                or pos.startswith("registration")
-                or pos.startswith("bootstrap_admin")
-                or pos.startswith("channels")
-                or pos.startswith("django_bootstrap5")
-            ):
+            if any(pos.startswith(p) for p in settings.SKIP_APPS_PREFIXES):
                 continue
         module_name = f"{str(pos)}.rest_api"
         try:
@@ -281,14 +274,7 @@ for app in settings.INSTALLED_APPS:
         pos = app.name
     else:
         pos = app
-        if (
-            pos.startswith("django")
-            or pos.startswith("debug")
-            or pos.startswith("registration")
-            or pos.startswith("bootstrap_admin")
-            or pos.startswith("channels")
-            or pos.startswith("django_bootstrap5")
-        ):
+        if any(pos.startswith(p) for p in settings.SKIP_APPS_PREFIXES):
             continue
 
     elementy = pos.split(".")

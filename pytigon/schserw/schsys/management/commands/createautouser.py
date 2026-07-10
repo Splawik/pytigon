@@ -8,8 +8,8 @@ class Command(createsuperuser.Command):
 
     def handle(self, *args, **options):
         env = get_environ()
-        username = env("USERNAME")
-        password = env("PASSWORD")
+        username = env("AUTOUSERNAME")
+        password = env("AUTOPASSWORD")
         d = {self.UserModel.USERNAME_FIELD: username}
         user = self.UserModel.objects.filter(**d).first()
         if not user:

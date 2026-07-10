@@ -170,100 +170,37 @@ if PermWrapper:
                 return super().__getitem(app_label)
 
 
-def sch_standard(request):
-    """Context processor function
-
-    Args:
-        requst - django reuqest
-
-    Returns dict with vars:
-        standard_web_browser - 0 - wxPython client, 1 - standard browser, 2 - hybrid (webkit embeded in wxPython
-        application, 3 - webkit in wxPython frame (no hybrid), 5 - render only content (for javascript ajax),
-        6 - render only table content (for javascript ajax)
-
-        app_manager - AppManager(request)browser_type=1
-
-        form_edit - True if request in edit mode
-
-        form_add - True if request in new form mode,
-
-        form_delete - True if request in delete mode
-
-        form_ext -  True if request in form mode
-
-        form_list - True if request in list view mode
-
-        readonly - True if readonly mode
-
-        ro - '_' in readonly mode else ''
-
-        form_info - True if request in form info mode
-
-        form_grid - True if request in form grid mode
-
-        URL_ROOT_FOLDER - url root folder
-
-        URL_BASE - url base folder
-
-        show_form - True if request in show form mode
-
-        browser_type - 'desktop_standard', 'tablet_standard', 'smartfon_standard', 'schweb'
-
-        application_type - 'standard',
-
-        default_template - default template for browser
-
-        default_template2 - default template for browser
-
-        prj_name - prj name
-
-        prj_title - prj title
-
-        show_title_bar - show title bar
-
-        get - True if request in get mode
-
-        settings - settings module
-
-        uuid - uniquie id
-
-        lang: two letters language
-
-        DEBUG: settings.DEBUG
-    """
-
-    standard = standard_web_browser(request)
-
+def _extract_path_info(request):
     r = urlparse(request.path)
     rr = r.path.split("/")
     last_fragment = (rr[-1] if rr[-1] else rr[-2] if len(rr) > 1 else "") if len(rr) > 0 else r.path
+    return r, rr, last_fragment
 
-    form_edit = True if last_fragment == "edit" or last_fragment == "add" else False
-    form_add = True if last_fragment == "add" else False
-    form_delete = True if last_fragment == "delete" else False
 
-    form_info = True if request.path.endswith("/view/") else False
+def _extract_form_state(request, last_fragment):
+    return {
+        "form_edit": last_fragment in ("edit", "add"),
+        "form_add": last_fragment == "add",
+        "form_delete": last_fragment == "delete",
+        "form_info": request.path.endswith("/view/"),
+        "form_grid": "/grid" in request.path,
+        "form_ext": "_ext" in request.path,
+        "form_list": "form/list" in request.path,
+    }
 
-    show_form = True if form_edit or form_delete or form_info else False
-    form_grid = True if "/grid" in request.path else False
-    form_ext = True if "_ext" in request.path else False
-    if "/_" in request.path:
-        readonly = True
-        ro = "_"
-    else:
-        readonly = False
-        ro = ""
-    list_view = True if "form/list" in request.path else False
-    if "_set" in request.path or "/sublist" in request.path or "/get" in request.path:
-        show_title_bar = True
-    else:
-        show_title_bar = False
-    get = ("gettree" if "/gettree" in request.path else "get") if "/get" in request.path else ""
-    if settings.URL_ROOT_FOLDER and len(settings.URL_ROOT_FOLDER) > 0:
-        url_base = "/" + settings.URL_ROOT_FOLDER
-    else:
-        url_base = ""
 
+def _extract_view_state(request, rr):
+    readonly = "/_" in request.path
+    return {
+        "readonly": readonly,
+        "ro": "_" if readonly else "",
+        "show_title_bar": any(x in request.path for x in ("/sublist", "/get", "_set")),
+        "get": ("gettree" if "/gettree" in request.path else "get") if "/get" in request.path else "",
+    }
+
+
+def _extract_url_info(rr):
+    url_base = "/" + settings.URL_ROOT_FOLDER if settings.URL_ROOT_FOLDER else ""
     i = 0
     app_path = url_base + "/"
     for pos in rr:
@@ -271,7 +208,11 @@ def sch_standard(request):
             app_path = "/".join(rr[: i + 2]) + "/"
             break
         i += 1
+    return url_base, app_path
 
+
+def _extract_project_info(request):
+    url_base = "/" + settings.URL_ROOT_FOLDER if settings.URL_ROOT_FOLDER else ""
     url_app_base = url_base
     prj = None
     if len(settings.PRJS) > 0:
@@ -283,20 +224,40 @@ def sch_standard(request):
                     break
     if not prj:
         prj = settings.PRJ_NAME
+    return url_app_base, prj
 
+
+def _extract_browser_info(request):
     lng = request.LANGUAGE_CODE[:2].lower() if hasattr(request, "LANGUAGE_CODE") else "en"
-
     b_type = browser_type(request)
     c_type = client_type(request)
-
     x = b_type.split("_")
     b_type = x[0]
     b_type2 = x[1] if len(x) > 1 else "standard"
-
     d_template = default_template2(b_type)
-
     if lng and lng != "en":
         d_template = d_template.replace(".html", "_" + lng + ".html")
+    return b_type, b_type2, c_type, d_template, lng
+
+
+def _extract_theme(settings):
+    if hasattr(settings, "BOOTSTRAP_TEMPLATE"):
+        return settings.BOOTSTRAP_TEMPLATE.replace("/", "_")
+    return ""
+
+
+def sch_standard(request):
+    standard = standard_web_browser(request)
+    _r, rr, last_fragment = _extract_path_info(request)
+
+    form_state = _extract_form_state(request, last_fragment)
+    view_state = _extract_view_state(request, rr)
+    show_form = form_state["form_edit"] or form_state["form_delete"] or form_state["form_info"]
+
+    url_base, app_path = _extract_url_info(rr)
+    url_app_base, prj = _extract_project_info(request)
+
+    b_type, b_type2, c_type, d_template, lng = _extract_browser_info(request)
 
     if settings.GEN_TIME:
         gmt_str = settings.GEN_TIME
@@ -304,45 +265,25 @@ def sch_standard(request):
         gmt = time.gmtime()
         gmt_str = f"{gmt[0]:04d}.{gmt[1]:02d}.{gmt[2]:02d} {gmt[3]:02d}:{gmt[4]:02d}:{gmt[5]:02d}"
 
-    if "HTTP_USER_AGENT" in request.META and request.META["HTTP_USER_AGENT"]:
-        user_agent = request.META["HTTP_USER_AGENT"]
-    else:
-        user_agent = ""
-
-    if hasattr(settings, "BOOTSTRAP_TEMPLATE"):
-        theme = settings.BOOTSTRAP_TEMPLATE.replace("/", "_")
-    else:
-        theme = ""
-
-    extra_param = request.GET.get("extra_param") if "extra_param" in request.GET else ""
+    user_agent = request.META.get("HTTP_USER_AGENT", "")
 
     ret = {
         "standard_web_browser": standard,
-        "form_edit": form_edit,
-        "form_add": form_add,
-        "form_delete": form_delete,
-        "form_list": list_view,
-        "readonly": readonly,
-        "ro": ro,
-        "form_info": form_info,
-        "form_grid": form_grid,
-        "form_ext": form_ext,        "URL_ROOT_FOLDER": settings.URL_ROOT_FOLDER,
+        **form_state,
+        **view_state,
+        "show_form": show_form,
+        "URL_ROOT_FOLDER": settings.URL_ROOT_FOLDER,
         "base_path": url_base + "/",
         "app_path": app_path,
         "URL_APP_BASE": url_app_base,
-        "show_form": show_form,
         "browser_type": b_type,
         "client_type": c_type,
         "application_type": b_type2,
         "default_template": d_template,
         "prj_name": settings.PRJ_NAME,
         "prj_title": settings.PRJ_TITLE,
-        "show_title_bar": show_title_bar,
-        "get": get,
         "uuid": "x" + str(uuid.uuid4()),
-        "lang": request.LANGUAGE_CODE[:2].lower()
-        if hasattr(request, "LANGUAGE_CODE") and request.LANGUAGE_CODE
-        else "en",
+        "lang": lng,
         "prj": prj,
         "offline_support": settings.OFFLINE_SUPPORT,
         "gen_time": gmt_str,
@@ -353,10 +294,10 @@ def sch_standard(request):
         "user_agent": user_agent,
         "errors": False,
         "app_manager": AppManager(request),
-        "theme": theme,
+        "theme": _extract_theme(settings),
         "settings": settings,
         "fragment": get_fragment(request) if standard else "",
-        "extra_param": extra_param,
+        "extra_param": request.GET.get("extra_param", ""),
         "datetime": datetime,
     }
     if hasattr(request, "session") and "client_param" in request.session:
