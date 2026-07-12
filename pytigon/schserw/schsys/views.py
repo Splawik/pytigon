@@ -14,6 +14,7 @@ import datetime
 import logging
 import os
 import re
+import time
 
 from django.conf import settings
 from django.contrib import messages
@@ -47,7 +48,7 @@ def change_password(request):
         messages.add_message(request, messages.ERROR, "Bad confirmed password")
         return HttpResponseRedirect(make_href("/"))
 
-    user = authenticate(username=request.user, password=old_password)
+    user = authenticate(request, username=request.user.username, password=old_password)
     if user is not None and user.is_active:
         user.set_password(new_password)
         user.save()
@@ -369,7 +370,7 @@ def app_time_stamp(request, **argv):
     if settings.GEN_TIME:
         return {"TIME": settings.GEN_TIME}
 
-    gmt = datetime.time.gmtime()
+    gmt = time.gmtime()
     gmt_str = f"{gmt[0]:04d}.{gmt[1]:02d}.{gmt[2]:02d} {gmt[3]:02d}:{gmt[4]:02d}:{gmt[5]:02d}"
     return {"TIME": gmt_str}
 
@@ -441,10 +442,10 @@ def site_media_protected(request, *argi, **argv):
                         if request.user.is_authenticated:
                             return redirect_site_media_protected(request)
                     elif row[1] == "username":
-                        if (f"{{{request.username}}}") in path:
+                        if (f"{{{request.user.username}}}") in path:
                             return redirect_site_media_protected(request)
                     elif row[1] == "email":
-                        if (f"{{{request.email}}}") in path:
+                        if (f"{{{request.user.email}}}") in path:
                             return redirect_site_media_protected(request)
                     else:
                         if request.user.has_perm(row[1]):

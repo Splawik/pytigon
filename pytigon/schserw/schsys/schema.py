@@ -42,13 +42,19 @@ class UserMutation(graphene.Mutation):
     user = graphene.Field(UserType)
 
     def mutate(self, info, username, email, id="0"):
+        if not info.context.user.is_authenticated:
+            raise Exception("Authentication required")
         idd = int(id)
         if idd > 0:
+            if info.context.user.id != idd and not info.context.user.is_superuser:
+                raise Exception("Not authorized to modify this user")
             try:
                 _user = get_user_model().objects.get(pk=idd)
             except get_user_model().DoesNotExist:
                 _user = get_user_model()()
         else:
+            if not info.context.user.is_superuser:
+                raise Exception("Only superusers can create new users")
             _user = get_user_model()()
         _user.username = username
         _user.email = email

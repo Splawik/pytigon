@@ -6,16 +6,77 @@ import uuid
 from urllib.parse import urlparse
 
 from django.conf import settings
+from django.utils.functional import SimpleLazyObject
 
 try:
     from django.contrib.auth.context_processors import PermWrapper
-except Exception:
+except ImportError:
     PermWrapper = None
 
 from pytigon_lib.schdjangoext.django_init import get_app_name
 from pytigon_lib.schtools.env import get_environ
 
 from .app_manager import AppItemInfo, AppManager
+
+# Safe settings attributes exposed to templates — secrets like SECRET_KEY,
+# DATABASES, etc. are NOT included.
+_SAFE_SETTINGS_ATTRS = frozenset(
+    {
+        "DEBUG",
+        "URL_ROOT_FOLDER",
+        "URL_ROOT_PREFIX",
+        "STATIC_URL",
+        "MEDIA_URL",
+        "MEDIA_URL_PROTECTED",
+        "UPLOAD_URL",
+        "DOC_URL",
+        "APPEND_SLASH",
+        "PRJ_NAME",
+        "PRJ_TITLE",
+        "LANGUAGE_CODE",
+        "TIME_ZONE",
+        "USE_I18N",
+        "USE_TZ",
+        "SITE_ID",
+        "LANGUAGES",
+        "LOGIN_REDIRECT_URL",
+        "COMPRESS_ENABLED",
+        "PWA",
+        "OFFLINE_SUPPORT",
+        "PYODIDE",
+        "BOOTSTRAP_BUTTON_SIZE_CLASS",
+        "GEN_TIME",
+        "BASE_URL",
+        "RULES_ENABLED",
+        "GRAPHQL",
+        "REST",
+        "MAILER",
+        "ALLAUTH",
+        "SHOW_LOGIN_WIN",
+        "PUBLIC",
+        "PRODUCTION_VERSION",
+        "THREE_LEVEL_MENU",
+        "SELECT2_THEME",
+        "BOOTSTRAP5",
+        "BOOTSTRAP_TEMPLATE",
+    }
+)
+
+
+class SafeSettingsProxy:
+    """Proxy that only exposes whitelisted settings attributes to templates.
+
+    Prevents accidental leakage of secrets (SECRET_KEY, DATABASES, etc.)
+    through the template context.
+    """
+
+    def __getattr__(self, name):
+        if name in _SAFE_SETTINGS_ATTRS:
+            return getattr(settings, name)
+        raise AttributeError(name)
+
+    def __dir__(self):
+        return sorted(_SAFE_SETTINGS_ATTRS)
 
 MOBILE_USER_AGENTS = (
     "sony,symbian,nokia,samsung,mobile,windows ce,epoc,opera mini,nitro,j2me,midp-,"
@@ -295,15 +356,13 @@ def sch_standard(request):
         "errors": False,
         "app_manager": AppManager(request),
         "theme": _extract_theme(settings),
-        "settings": settings,
+        "settings": SimpleLazyObject(SafeSettingsProxy),
         "fragment": get_fragment(request) if standard else "",
         "extra_param": request.GET.get("extra_param", ""),
         "datetime": datetime,
     }
     if hasattr(request, "session") and "client_param" in request.session:
         ret.update(request.session["client_param"])
-
-    ret["settings"] = settings
 
     if settings.DEBUG:
         ret["context"] = ret

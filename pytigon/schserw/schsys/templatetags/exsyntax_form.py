@@ -1,5 +1,7 @@
 """Form template tags for Pytigon exsyntax library."""
 
+from functools import lru_cache
+
 from django import forms, template
 from django.forms import CheckboxInput, CheckboxSelectMultiple, FileInput, RadioSelect
 from django.template.base import Node, token_kwargs
@@ -11,6 +13,15 @@ from pytigon_lib.schdjangoext.tools import import_model, make_href
 from pytigon_lib.schtools.href_action import action_fun
 
 register = template.Library()
+
+
+@lru_cache(maxsize=256)
+def _get_form_template(template_str):
+    """Compile and cache a Django Template from a string.
+
+    Avoids recompiling the same form template on every render call.
+    """
+    return template.Template(template_str)
 
 
 @register.inclusion_tag("widgets/field.html")
@@ -191,8 +202,8 @@ class Form(Node):
                 template_str += field
             else:
                 template_str += f"{{% field '{field[0]}' '{field[1]}' {self.inline} %}}"
-        template_str += "</div>"
-        t = template.Template(template_str)
+            template_str += "</div>"
+        t = _get_form_template(template_str)
         return t.render(context)
 
 

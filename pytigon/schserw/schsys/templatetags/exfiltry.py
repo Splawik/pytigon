@@ -379,6 +379,7 @@ def genericfloatformat(text, arg="{: .2f}"):
     """Formats the float value using the specified format string."""
     try:
         f = float(text)
+        space_convert = False
         if ": " in arg:
             space_convert = True
             arg2 = arg.replace(": ", ":,")
@@ -388,7 +389,7 @@ def genericfloatformat(text, arg="{: .2f}"):
         if space_convert:
             return x.replace(",", " ")
         else:
-            return ""
+            return x
     except ValueError:
         return ""
 
@@ -447,6 +448,7 @@ def amount(text):
 
 def parse_locale_date(formatted_date):
     """Parses a locale-specific date string into a datetime object."""
+    parsed_date = None
     for date_format in formats.get_format("DATE_INPUT_FORMATS"):
         try:
             parsed_date = datetime.datetime.strptime(formatted_date, date_format)
@@ -454,7 +456,7 @@ def parse_locale_date(formatted_date):
             continue
         else:
             break
-    if not parsed_date:
+    if parsed_date is None:
         raise ValueError
     return parsed_date
 
@@ -682,7 +684,7 @@ def get_model_ooxml_row(obj):
 @register.filter(name="get_all_model_fields")
 def get_all_model_fields(value):
     """Returns all fields of the model, including many-to-many fields."""
-    return list(value._meta.fields + value._meta.many_to_many)
+    return list(value._meta.fields) + list(value._meta.many_to_many)
 
 
 @register.filter(name="get_all_model_parents")
@@ -756,10 +758,7 @@ def model_has_children(value):
     else:
         o = value.children
     l = o.all()
-    if len(l) > 0:
-        return True
-    else:
-        return False
+    return l.exists()
 
 
 @register.filter(name="model_can_have_children")
@@ -996,11 +995,25 @@ def is_menu_checked(url, full_path):
         return False
 
 
+_IMPORT_VAR_ALLOWED = frozenset(
+    {
+        "pytigon_lib.schtools.schjson",
+        "pytigon_lib.schtools.tools",
+        "pytigon_lib.schtools.wiki",
+        "pytigon_lib.schdjangoext.tools",
+        "pytigon_lib.schviews",
+        "pytigon_lib.schviews.actions",
+    }
+)
+
+
 @register.filter(name="import_var")
 def _import_var(obj):
-    """Imports a variable from a module."""
+    """Imports a variable from a whitelisted module."""
     path = str(obj)
     base_path, item = path.split(":")
+    if base_path not in _IMPORT_VAR_ALLOWED:
+        raise ValueError(f"Module '{base_path}' is not allowed for import_var")
     m = importlib.import_module(base_path)
     return getattr(m, item)
 

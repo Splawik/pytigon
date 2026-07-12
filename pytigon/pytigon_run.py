@@ -8,23 +8,10 @@ import logging
 import os
 import sys
 
-# ---------------------------------------------------------------------------
-# Early initialization
-# ---------------------------------------------------------------------------
+from pytigon_lib.schtools.tools import get_executable
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 _logger = logging.getLogger("pytigon_run")
-
-# Add pytigon_lib to path if available
-try:
-    from pytigon_lib.schtools.tools import get_executable
-except ImportError:
-
-    def get_executable():
-        """Return the Python executable path."""
-        return sys.executable
-
-    _logger.debug("Using system Python executable as fallback")
 
 
 # Set environment variables

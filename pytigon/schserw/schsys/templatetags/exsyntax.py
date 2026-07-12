@@ -57,6 +57,7 @@ import contextlib
 import os
 import re
 from base64 import b64encode
+from functools import lru_cache
 
 from django import template
 from django.conf import settings
@@ -74,6 +75,13 @@ register = template.Library()
 
 from .exsyntax_form import *  # noqa: E402, F403
 from .exsyntax_include import *  # noqa: E402, F403
+
+
+@lru_cache(maxsize=256)
+def _get_row_action_template(template_str):
+    """Compile and cache a Django Template from rendered row actions output."""
+    return Template(template_str)
+
 
 ## tools
 
@@ -123,19 +131,9 @@ class RowActionNode(Node):
         self.nodelist = nodelist
 
     def render(self, context):
-        """
-        Renders the node list within the given context, processes the output,
-        and returns the rendered template for row actions.
-
-        :param context: The context in which this node should be rendered.
-        :type context: django.template.Context
-        :return: The rendered template as a string.
-        :rtype: str
-        """
-
         output = self.nodelist.render(context)
         if output.replace("\n", ""):
-            t = Template(output)
+            t = _get_row_action_template(output)
             output2 = t.render(context).replace("\n", ";")
             t = get_template("widgets/row_actions.html")
             d = actions_dict(context, output2)
@@ -1436,27 +1434,19 @@ def markdown2html(context, markdown_str, path=None, section=None):
 
 @register.simple_tag(takes_context=True)
 def subtemplate(context, template_string):
-    """
-    Simple tag to render a subtemplate string in the current context.
+    """Render a subtemplate string in the current context.
 
-    This tag allows you to render a template string (e.g. a snippet of HTML)
-    in the current context, without having to define a separate template file.
-
-    The template_string is wrapped in ``{% autoescape on %}`` to prevent
+    Security: blocks ``{% load %}`` and ``{% include %}`` tags to prevent
     SSTI through user-controlled template code. Only trusted database-stored
     template fragments should be rendered through this tag.
-
-    :param context: The current template context.
-    :type context: dict
-    :param template_string: The template string to be rendered.
-    :type template_string: str
-    :return: A safe string of the rendered template string.
-    :rtype: SafeText
     """
-    t = Template("{% autoescape on %}" + template_string + "{% endautoescape %}")
-    return mark_safe(
-        t.render(context).replace("\n{% autoescape on %}", "").replace("{% endautoescape %}", "")
-    )
+    import re as _re
+
+    _blocked = _re.compile(r"{%\s*(load|include|extends|ssi)\b")
+    if _blocked.search(template_string):
+        return mark_safe("")
+    t = Template(template_string)
+    return mark_safe(t.render(context))
 
 
 def editable_base(context, name, title, url):
@@ -1816,34 +1806,37 @@ def do_html_widget(parser, token):
     )
 
 
-ICON_CACHE = {}
+def _safe_path(base, *path_tab):
+    """Join path segments and verify the result stays within base directory."""
+    full = os.path.normpath(os.path.join(base, *path_tab))
+    if not full.startswith(os.path.normpath(base)):
+        raise ValueError(f"Path traversal detected: {path_tab}")
+    return full
 
 
+@lru_cache(maxsize=256)
 def _read_icon_file(path):
-    tmp = None
     path_tab = path.split("/")
-    with open(os.path.join(settings.STATIC_ROOT, *path_tab)) as f:
-        tmp = f.read()
-    return tmp
+    with open(_safe_path(settings.STATIC_ROOT, *path_tab)) as f:
+        return f.read()
 
 
+@lru_cache(maxsize=256)
 def _read_user_icon_file(path):
-    tmp = None
     path_tab = path.split("/")
-    with open(os.path.join(settings.MEDIA_ROOT, *path_tab)) as f:
-        tmp = f.read()
-    return tmp
+    with open(_safe_path(settings.MEDIA_ROOT, *path_tab)) as f:
+        return f.read()
 
 
 def _to_b64(href):
-    content_path = os.path.join(settings.STATIC_ROOT, href)
+    content_path = _safe_path(settings.STATIC_ROOT, href)
     bcontent = ""
     try:
         with open(content_path, "rb") as f:
             content = f.read()
             bcontent = b64encode(content).decode("utf-8")
-    except Exception:
-        print("file: ", content_path, "does'nt exists")
+    except (FileNotFoundError, OSError, ValueError):
+        logger.warning("file: %s doesn't exist", content_path)
     return bcontent
 
 
@@ -1880,8 +1873,6 @@ def icon(context, class_str, width=None, height=None):
     :rtype: django.utils.safestring.SafeString
     """
 
-    global ICON_CACHE
-
     if class_str.startswith("fa://"):
         return mark_safe(
             "<i class='fa fa-{}'></i>".format(class_str[5:].replace(".png", ""))
@@ -1892,17 +1883,14 @@ def icon(context, class_str, width=None, height=None):
         x = re.findall("bi-" + r"[\w-]+", class_str)
         if x:
             icon_name = x[0].replace("bi-", "")
-            if icon_name not in ICON_CACHE:
-                tmp = _read_icon_file(
+            try:
+                icon = _read_icon_file(
                     "icons/bootstrap-icons/icons/"
                     + icon_name.replace("--", "/")
                     + ".svg"
                 )
-                if tmp:
-                    ICON_CACHE[icon_name] = tmp
-                else:
-                    return mark_safe("<i></i>")
-            icon = ICON_CACHE[icon_name]
+            except (FileNotFoundError, OSError):
+                return mark_safe("<i></i>")
             if width:
                 icon = icon.replace('width="16"', f'width="{width}"').replace(
                     'height="16"', f'height="{height if height else width}"'
@@ -1912,29 +1900,23 @@ def icon(context, class_str, width=None, height=None):
         x = re.findall("icon-" + r"[\w-]+", class_str)
         if x:
             icon_name = x[0].replace("icon-", "")
-            if icon_name not in ICON_CACHE:
-                tmp = _read_user_icon_file(
+            try:
+                icon = _read_user_icon_file(
                     "icons/" + icon_name.replace("--", "/") + ".svg"
                 )
-                if tmp:
-                    ICON_CACHE[icon_name] = tmp
-                else:
-                    return mark_safe("<i></i>")
-            icon = ICON_CACHE[icon_name]
+            except (FileNotFoundError, OSError):
+                return mark_safe("<i></i>")
             return mark_safe(f"<i>{icon}</i>")
     elif class_str.startswith("svg-"):
         x = re.findall("svg-" + r"[\w-]+", class_str)
         if x:
             icon_name = x[0].replace("svg-", "")
-            if icon_name not in ICON_CACHE:
-                tmp = _read_icon_file(
+            try:
+                icon = _read_icon_file(
                     "icons/scalable/" + icon_name.replace("--", "/") + ".svg"
                 )
-                if tmp:
-                    ICON_CACHE[icon_name] = tmp
-                else:
-                    return mark_safe("<i></i>")
-            icon = ICON_CACHE[icon_name]
+            except (FileNotFoundError, OSError):
+                return mark_safe("<i></i>")
             return mark_safe(f"<i>{icon}</i>")
     elif class_str.startswith("png://"):
         x = class_str[6:]
@@ -2208,10 +2190,10 @@ class ModifyNode(Node):
             if key == "replace":
                 for item in value.split(";"):
                     if item:
-                        x = split("/", 1)
+                        x = item.split("/", 1)
                         txt = txt.replace(x[0], x[1])
 
-        return d.html()
+        return txt
 
 
 @register.tag
