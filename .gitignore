@@ -74,4 +74,5 @@ tools/pytigon.xml
 kilo.json
 .pre-commit-config.yaml
 .kilo/**
+.*/
 
