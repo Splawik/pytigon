@@ -1436,15 +1436,18 @@ def markdown2html(context, markdown_str, path=None, section=None):
 def subtemplate(context, template_string):
     """Render a subtemplate string in the current context.
 
-    Security: blocks ``{% load %}`` and ``{% include %}`` tags to prevent
-    SSTI through user-controlled template code. Only trusted database-stored
-    template fragments should be rendered through this tag.
+    By default blocks ``{% load %}``, ``{% include %}``, ``{% extends %}``,
+    and ``{% ssi %}`` to prevent SSTI through untrusted template code.
+    Set ``SUBTEMPLATE_ALLOW_ALL_TAGS = True`` in settings to disable this
+    restriction, e.g. when template fragments are sourced from admin-only
+    database fields.
     """
-    import re as _re
+    if not getattr(settings, "SUBTEMPLATE_ALLOW_ALL_TAGS", False):
+        import re as _re
 
-    _blocked = _re.compile(r"{%\s*(load|include|extends|ssi)\b")
-    if _blocked.search(template_string):
-        return mark_safe("")
+        _blocked = _re.compile(r"{%\s*(load|include|extends|ssi)\b")
+        if _blocked.search(template_string):
+            return mark_safe("")
     t = Template(template_string)
     return mark_safe(t.render(context))
 

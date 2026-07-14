@@ -2507,10 +2507,6 @@
       "bytes": 4350,
       "imports": []
     },
-    "not_node_modules/select2-material.css": {
-      "bytes": 804,
-      "imports": []
-    },
     "not_node_modules/bootstrap5-editable/img/loading.gif": {
       "bytes": 1849,
       "imports": []
@@ -2664,7 +2660,7 @@
       ]
     },
     "tmp.js": {
-      "bytes": 4535,
+      "bytes": 4485,
       "imports": [
         {
           "path": "not_node_modules/pytigon-tools.js",
@@ -2910,11 +2906,6 @@
           "path": "not_node_modules/sidebar-menu/sidebar-menu.css",
           "kind": "import-statement",
           "original": "./not_node_modules/sidebar-menu/sidebar-menu.css"
-        },
-        {
-          "path": "not_node_modules/select2-material.css",
-          "kind": "import-statement",
-          "original": "./not_node_modules/select2-material.css"
         },
         {
           "path": "not_node_modules/bootstrap5-editable/css/bootstrap-editable.css",
@@ -3291,9 +3282,6 @@
         "not_node_modules/sidebar-menu/sidebar-menu.css": {
           "bytesInOutput": 0
         },
-        "not_node_modules/select2-material.css": {
-          "bytesInOutput": 0
-        },
         "not_node_modules/bootstrap5-editable/css/bootstrap-editable.css": {
           "bytesInOutput": 0
         },
@@ -3484,9 +3472,6 @@
         "not_node_modules/sidebar-menu/sidebar-menu.css": {
           "bytesInOutput": 3251
         },
-        "not_node_modules/select2-material.css": {
-          "bytesInOutput": 594
-        },
         "not_node_modules/bootstrap5-editable/css/bootstrap-editable.css": {
           "bytesInOutput": 20453
         },
@@ -3500,7 +3485,7 @@
           "bytesInOutput": 31326
         }
       },
-      "bytes": 154238
+      "bytes": 153644
     }
   }
 }

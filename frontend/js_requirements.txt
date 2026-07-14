@@ -50,7 +50,6 @@ ladda/dist/ladda.min.css
 sweetalert2/dist/sweetalert2.css
 om-perfect-scrollbar/css/perfect-scrollbar.css
 ./not_node_modules/sidebar-menu/sidebar-menu.css
-./not_node_modules/select2-material.css
 ./not_node_modules/bootstrap5-editable/css/bootstrap-editable.css
 ./not_node_modules/fab/fab.css
 ./not_node_modules/tree/tree.css
