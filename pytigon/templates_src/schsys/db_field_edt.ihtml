@@ -148,7 +148,7 @@ end_code
                 td align=center,,,border=0,,,border-color=#{{color_body_0_7}}
                     span class=form_title
                         %%form_title
-                            .Edycja: {{title}}
+                            .Edit: {{title}}
         % if standard_web_browser:
             hr
         % else

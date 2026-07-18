@@ -1,0 +1,79 @@
+{% extends 'theme/desktop_base.html' %}
+{% load exfiltry %}
+{% load exsyntax %}
+{% block menu_start %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary win-header" id="topmenu">
+                <a class="navbar-brand txt3d" href="{{base_path}}" target="_top">
+                {{prj_title}}
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-ex1-collapse" aria-controls="navbar-ex1-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon">
+                        </span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar-ex1-collapse">
+                        <ul class="navbar-nav mr-auto">
+{% endblock %}
+{% block topmenu_start %}
+{% endblock %}
+{% block topmenu %}
+{% endblock %}
+{% block topmenu_end %}
+{% endblock %}
+{% block submenu %}
+        {% ifchanged item_info.app_name %}
+                {% if not forloop.first %}
+                        </div></li>
+                {% endif %}
+                <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" data-bs-toggle="dropdown">
+                                {{item_info.app_name}}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+        {% endifchanged %}
+        <a class="menu-href dropdown-item" href="{{base_path}}{{item_info.url|append_get_param:'fragment=page'}}" target="_parent">
+        {{item_info.description}}
+        </a>
+    {% if forloop.last %}
+                </div></li>
+    {% endif %}
+{% endblock %}
+{% block menu_end %}
+        {% if user.is_authenticated %}
+                </ul>
+                {% block drop_down_blocks %}{% endblock %}
+                <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="# id=system_menu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        {% icon "fa-user-plus fa-lg" %}
+                                        System
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-lg-end" aria-labelledby="navbarDropdownMenuLink">
+                                        {% if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN %}
+                                                {% if user and user.get_username != 'auto' %}
+                                                        <a class="dropdown-item system_menu" href="={{base_path}}schsys/do_logout/" title="Logout" target="_top">Logout</a>
+                                                {% endif %}
+                                                {% if settings.CAN_CHANGE_PASSWORD and request.user|user_can_change_password %}
+                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#change_passwd">Change password</a>
+                                                {% endif %}
+                                        {% endif %}
+                                        {% if user.is_superuser %}
+                                                <a class="dropdown-item system_menu" href="{{base_path}}schmanage/" title="Manage" target="_top">Manage</a>
+                                        {% endif %}
+                                        {% block system_menu %}{% endblock %}
+                                </div>
+                        </li>
+                </ul>
+          {% else %}
+                {% if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN %}
+                        <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="{{base_path}}{% if settings.ALLAUTH and standard_web_browser %}accounts/login/{% else %}schsys/login/{% endif %}" title="Login">
+                                        {% icon "fa-sing-in fa-lg" %}
+                                        Login
+                                </a>
+                        </li>
+                {% endif %}
+                </ul>
+        {% endif %}
+        </div></nav>
+{% endblock %}
+

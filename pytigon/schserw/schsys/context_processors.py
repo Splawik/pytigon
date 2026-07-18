@@ -161,7 +161,7 @@ def client_type(request):
             if test_tablet(request):
                 return "tablet"
             else:
-                return "smartfon"
+                return "smartphone"
         else:
             return "desktop"
     else:
@@ -180,7 +180,7 @@ def browser_type(request):
                     return themes[1]
             else:
                 if themes[2] == "auto" or not themes[2]:
-                    return "smartfon_standard"
+                    return "smartphone_standard"
                 else:
                     return themes[2]
         else:

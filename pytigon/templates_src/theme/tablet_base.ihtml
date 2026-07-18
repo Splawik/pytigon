@@ -21,7 +21,7 @@
 
 %% menu
     div class=sidebarmenu 
-        sys-sidebarmenu type={% if 'smartfon' in client_type %}smartfon{% else %}desktop{% endif %}
+        sys-sidebarmenu type={% if 'smartphone' in client_type %}smartphone{% else %}desktop{% endif %}
             sys-perfectscrollbar
             aside class=main-sidebar collapse show,,,id=menu,,,role=dialog
                 div sidebar-menu
@@ -149,7 +149,7 @@
             % else:
                 i class=fa fa-refresh fa-pulse fa-2x fa-fw text-info loading-indicator-hidden,,,id=loading-indicator
 
-            button class=main-sidebar-toggle sidebar-toggle {% if 'smartfon' in client_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
+            button class=main-sidebar-toggle sidebar-toggle {% if 'smartphone' in client_type %}auto-hide{% endif %},,,role=button,,,title=Toggle navigation
                 {% icon "fa-bars fa-lg" %}
 
             % comment:

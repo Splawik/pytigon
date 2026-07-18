@@ -75,7 +75,7 @@ _SAFE_OPS = {
     ast.NotIn: lambda a, b: a not in b,
 }
 
-# Atrybuty dozwolone dla typów wbudowanych
+# Allowed attributes for built-in types
 _SAFE_ATTRIBUTES = {
     str: {
         "capitalize", "casefold", "center", "count", "encode", "endswith",
@@ -111,12 +111,12 @@ _SAFE_ATTRIBUTES = {
 
 
 def _is_safe_attribute(value, attr):
-    """Sprawdza czy dostęp do atrybutu jest dozwolony."""
-    # Blokuj bezwzględnie wszystkie atrybuty zaczynające się od '_'
+    """Check if attribute access is allowed."""
+    # Block absolutely all attributes starting with '_'
     if attr.startswith("_"):
         raise ValueError(f"Access to private/dunder attribute '{attr}' is forbidden")
 
-    # Sprawdź białą listę dla typów wbudowanych
+    # Check whitelist for built-in types
     for safe_type, safe_attrs in _SAFE_ATTRIBUTES.items():
         if isinstance(value, safe_type):
             if attr not in safe_attrs:
@@ -125,7 +125,7 @@ def _is_safe_attribute(value, attr):
                 )
             return True
 
-    # Dla pozostałych typów (np. modele Django) — blokuj dostęp
+    # For remaining types (e.g. Django models) — block access
     raise ValueError(
         f"Attribute access on type '{type(value).__name__}' is not permitted"
     )
@@ -136,11 +136,11 @@ class _SafeEval(ast.NodeVisitor):
         self.context = context
 
     def visit_Expression(self, node):
-        """Korzeń drzewa przy ast.parse(..., mode='eval')"""
+        """Tree root for ast.parse(..., mode='eval')"""
         return self.visit(node.body)
 
     def visit_Module(self, node):
-        """Korzeń drzewa przy ast.parse(..., mode='exec') — fallback"""
+        """Tree root for ast.parse(..., mode='exec') — fallback"""
         if len(node.body) != 1:
             raise ValueError("Only single expressions allowed")
         return self.visit(node.body[0])
@@ -258,15 +258,15 @@ def mark_safe2(x):
         return x
 
 
-# Regex zakotwiczony na początku i końcu, używany z re.fullmatch
+# Regex anchored at start and end, used with re.fullmatch
 r_expr = re.compile(r"^(.*?)\s+as\s+(\w+)$", re.DOTALL)
 
 
 def _parse_expr_arg(tag_name, arg):
     """
-    Parsuje argument tagu expr.
-    Używa fullmatch zamiast search, aby uniknąć cichego ignorowania
-    fragmentów wyrażenia zawierających słowo kluczowe 'as'.
+    Parse expr tag argument.
+    Use fullmatch instead of search to avoid silently ignoring
+    expression fragments containing the keyword 'as'.
     """
     if not arg:
         raise template.TemplateSyntaxError(

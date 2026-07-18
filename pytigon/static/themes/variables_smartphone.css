@@ -1,0 +1,5 @@
+:root {
+    --sidebar-width: 18rem;
+    --sidebar-width-min: 0rem;
+    --sidebar-off-width-hover: 0rem;
+}

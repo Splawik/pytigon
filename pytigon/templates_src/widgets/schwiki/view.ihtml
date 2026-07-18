@@ -34,9 +34,9 @@
             tr
                 td bgcolor=#fff
                     strong
-                        .Hasło: "{{page_name}}"
+                        .Entry: "{{page_name}}"
                 td align=right,,,bgcolor=#fff
-                        a href=/schwiki/{{page_name}}/edit/,,,class=popup...edytuj stronę
+                        a href=/schwiki/{{page_name}}/edit/,,,class=popup...edit page
     % else
         table width=100%,,,cellspacing=0,,,cellpadding=1,,,bgcolor=#{{color_body_0_7}}:::tr:::td
             table width=100%,,,cellspacing=0,,,cellpadding=3
@@ -46,9 +46,9 @@
                             strong
                                 font color=#000
                                     %%form_title
-                                        .Hasło: "{{page_name}}"
+                                        .Entry: "{{page_name}}"
                         td align=left,,,valign=top
-                            CTRLBUTTON HREF=/schwiki/{{page_name}}/edit/,,,LABEL=edytuj stronę
+                            CTRLBUTTON HREF=/schwiki/{{page_name}}/edit/,,,LABEL=edit page
                         td right=left,,,valign=top
                             CTRLCLOSEBUTTON NAME=EXIT,,,SRC=wx.ART_CROSS_MARK
 
@@ -58,5 +58,5 @@
                 % if content
                     {{content|wikify|safe}}
                 % else
-                    .Ta strona jeszcze nie istnieje!
+                    .This page does not exist yet!
 

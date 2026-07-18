@@ -4,7 +4,7 @@
 % load exsyntax
 
 %% form_title
-    .Hasło: "{{page_name}}" - edycja
+    .Entry: "{{page_name}}" - edit
 
 %% form_action
     /schwiki/{{page_name}}/save/
@@ -21,5 +21,5 @@
 
 %% form_ok_cancel
     % if not standard_web_browser
-        CTRL-BUTTON NAME=Anuluj,,,label=Anuluj,,,TARGET=_parent
+        CTRL-BUTTON NAME=Cancel,,,label=Cancel,,,TARGET=_parent
         CTRL-BUTTON href=/schwiki/{{page_name}}/save/,,,DEFAULTVALUE=1,,,PARAM=post,,,TARGET=_parent_refr,,,label=OK,,,FIELDS=POST:content,csrfmiddlewaretoken

@@ -1,7 +1,7 @@
 <html>
         head
             %% title
-                title...Raport
+                title...Report
 
 
             %% css
@@ -120,7 +120,7 @@
                     i:
                         font-style:italic
 
-                    .podpis:
+                    .signature:
                         align: center
                         
                     small:
@@ -145,7 +145,7 @@
                 %% page_header
                 %% page_footer
                     footer height=30 
-                        p width=100%,,,align=center...Strona <calc>body.page</calc>
+                        p width=100%,,,align=center...Page <calc>body.page</calc>
 
         %% header
         %% content

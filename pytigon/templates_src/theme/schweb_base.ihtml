@@ -53,24 +53,24 @@
 %% submenu
     % if not app_manager.appname or request.path == '/'|append_str:URL_ROOT_FOLDER|append_str:"/":
         % if forloop.first
-            h1...Aplikacja:
+            h1...Application:
             h2...SCHWeb
             h3
-                span class=font-bold...Zawartość pola komenda - zawartość pola dane
+                span class=font-bold...Command field content - data field content
 
-            .html - adres strony<br />
-            .txt - nazwa pliku<br />
-            .grid - adres tabeli<br />
-            .python - kod w pythonie<br />
-            .sys - nazwa przedefiniowanego zdarzenia<br />
+            .html - page address<br />
+            .txt - file name<br />
+            .grid - table address<br />
+            .python - Python code<br />
+            .sys - predefined event name<br />
             br
 
             h1...Menu bar or toolbar:
             <table class="table-full-width" border="1">
             tr
-                th...Menu - poziom 1
-                th...Menu - poziom 2
-                th...Menu - poziom 3
+                th...Menu - level 1
+                th...Menu - level 2
+                th...Menu - level 3
                 th...Typ
                 th...Ikona
                 th...Command
@@ -141,10 +141,10 @@
     % if not app_manager.appname or request.path == '/'|append_str:URL_ROOT_FOLDER|append_str:"/":
         h1...Toolbar 1
         .Typ:<br />
-            .0 - przycisk<br />
+            .0 - button<br />
             .1 - checktool<br />
             .2 - radiotool<br />
-            .3 - control, w polu opis długi - kod w pythonie dla obiektu "control"<br />
+            .3 - control, in long description field - Python code for "control" object<br />
         br
         table class=table-full-width,,,border=1
             tr
