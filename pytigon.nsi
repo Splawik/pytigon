@@ -102,7 +102,7 @@ Section "pytigon - client"
   SetOutPath $INSTDIR\prj\schdevtools
   File /r  /x __pycache__ /x *.pyc /x *.pyo prj\schdevtools\*.*
   SetOutPath $INSTDIR\install
-  File /r install\*.prj
+  File /r install\*.ptigprj
 
   SetOutPath $INSTDIR
   File pytigon

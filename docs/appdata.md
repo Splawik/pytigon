@@ -19,7 +19,7 @@ appdata/
 ## Standard Plugins
 
 Each plugin lives under `appdata/plugins/standard/<name>/` and is enabled
-in a project's `.prj` file via the `plugins` attribute (semicolon-separated
+in a project's `.ptigprj` file via the `plugins` attribute (semicolon-separated
 paths, e.g. `standard/keymap;standard/tablefilter`).
 
 | Plugin | Purpose |

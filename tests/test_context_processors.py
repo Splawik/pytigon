@@ -111,7 +111,7 @@ class TestContextProcessors:
         from pytigon.schserw.schsys.context_processors import client_type
 
         http_request.META["HTTP_USER_AGENT"] = "Android Mobile"
-        assert client_type(http_request) == "smartfon"
+        assert client_type(http_request) == "smartphone"
 
     def test_client_type_tablet(self, http_request):
         from pytigon.schserw.schsys.context_processors import client_type
@@ -128,7 +128,7 @@ class TestContextProcessors:
         from pytigon.schserw.schsys.context_processors import browser_type
 
         http_request.META["HTTP_USER_AGENT"] = "Android Mobile"
-        assert browser_type(http_request) == "smartfon_standard"
+        assert browser_type(http_request) == "smartphone_standard"
 
     def test_browser_type_tablet(self, http_request):
         from pytigon.schserw.schsys.context_processors import browser_type

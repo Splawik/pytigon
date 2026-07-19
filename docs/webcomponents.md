@@ -334,7 +334,7 @@ disconnectedCallback()       # Removal from DOM — cleanup
 
 ## Storing Components in the Database
 
-Components are stored in the project file `_schcomponents.prj` as `SChStatic` objects with
+Components are stored in the project file `_schcomponents.ptigprj` as `SChStatic` objects with
 type `"R"` (pscript, compiled Python→JS). Fields:
 
 ```json

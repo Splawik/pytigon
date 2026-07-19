@@ -690,7 +690,7 @@ Python-in-HTML, pscript for JS, SASS for CSS).
 
 ### Project Build
 
-The builder generates a complete Django application from the `.prj` file:
+The builder generates a complete Django application from the `.ptigprj` file:
 
 1. **Python sources:** `models.py`, `views.py`, `urls.py`, `tasks.py`,
    `consumers.py`, `forms.py`, `admin.py`
@@ -733,7 +733,7 @@ ICON=media/app.png
 From the IDE, select **Build** to regenerate the application from the
 project file. The build process:
 
-1. Parses the `.prj` JSON tree
+1. Parses the `.ptigprj` JSON tree
 2. Creates Django app structure under the project directory
 3. Compiles Python→JS (pscript), SASS→CSS
 4. Compiles Django templates (Pytigon's indentation-based template engine)
@@ -743,7 +743,7 @@ project file. The build process:
 
 ## Summary
 
-The `.prj` file is a complete declarative description of a Pytigon
+The `.ptigprj` file is a complete declarative description of a Pytigon
 application. It contains:
 
 - **Schema** (tables + fields = Django models)
