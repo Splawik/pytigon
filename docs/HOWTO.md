@@ -26,14 +26,20 @@ for MkDocs** theme and **mkdocstrings**.
 
 ## What Is Documented
 
-The documentation covers all Python modules in `pytigon/` **excluding** the
-`prj/` subdirectory (project templates):
+The documentation covers the Python modules shipped under `pytigon/`. The
+generated project sources under `appdata/plugins_src/` and `templates_src/`
+are not API-documented here — they are build-time inputs that compile to
+runtime assets.
 
 | Section | Modules |
 |---------|---------|
 | **Core** | `pytigon_run`, `pytigon_request`, `pytigon_task`, `django_min_init`, `manage`, `ptig` |
 | **Commands** | `dispatcher`, `registry`, `handlers`, `errors`, `utils` |
 | **Ext Lib** | `autocomplete`, `naivehtmlparser`, `pygettext`, `wxasync` |
+
+For the `pytigon_lib` and `pytigon_gui` packages (core library and desktop
+client), see their respective repositories — they are imported here via
+symlinks at development time.
 
 ---
 
@@ -137,8 +143,10 @@ nav:
 ## Excluding Modules
 
 Modules are excluded by **not listing them** in `mkdocs.yml`'s `nav` section.
-The `prj/` directory is excluded this way – it has no entries in the navigation
-tree and mkdocstrings will not import it.
+The bundled plugin sources under `appdata/plugins_src/`, the iHTML templates
+under `templates_src/`, and the frontend Python-to-JS sources under
+`static_src/pytigon_js/` are intentionally absent from the navigation tree —
+mkdocstrings will not import them.
 
 ---
 
@@ -159,5 +167,5 @@ Edit [`mkdocs.yml`](mkdocs.yml):
 |---------|----------|
 | `mkdocs: command not found` | Run `./gen_docs.sh install` |
 | `ModuleNotFoundError` from mkdocstrings | Ensure the module's dependencies (Django, etc.) are installed |
-| Import errors from `prj/` | Confirm no nav entries reference `prj/` paths |
+| Import errors from `appdata/plugins_src/` | Confirm no nav entries reference plugin source paths |
 | Build is slow | Use `mkdocs serve --dirty` for incremental rebuilds during editing |

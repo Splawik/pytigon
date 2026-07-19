@@ -76,7 +76,10 @@ tagname attr1=value1,,,attr2=value2,,,attr3
 
 ### Self-Closing (Void) Elements
 
-The following elements are treated as self-closing: `br`, `meta`, `input`, `hr`, `img`, `link`.
+The following elements are treated as self-closing by default: `br`, `meta`,
+`input`. Other HTML void elements (`hr`, `img`, `link`) are **not**
+auto-closed by the base converter — write them with an explicit closing
+slash or let the browser handle them.
 
 ```
 meta charset=utf-8
@@ -274,9 +277,11 @@ style type=text/css{:}
 
 This compiles to standard CSS within `<style>` tags. The `{:}` block syntax uses indentation instead of `{` `}` and `:` instead of `{`.
 
-### `===` - Python Code Block (wxPython/desktop templates)
+### `===>` - Python Code Block (wxPython/desktop templates)
 
-Embedded Python code for wxPython desktop forms:
+Embedded Python code for wxPython desktop forms. The `===>` marker starts a
+Python code block — the indentation of the first line after the marker sets
+the base indentation for the block:
 
 ```
 script language=python===>
@@ -284,8 +289,6 @@ script language=python===>
         self.save_btn.Bind(wx.EVT_BUTTON, self.on_click)
         self.save_btn.Disable()
 ```
-
-The `===>` marker starts a Python code block. The indentation of the first line after the marker determines the base indentation for the block.
 
 ### `script language=python` - Python Code Block
 
@@ -296,6 +299,9 @@ script language=python
     def init_form(self):
         ...
 ```
+
+Both `script language=python` and the `===>` marker compile the indented
+block as wxPython form code (initialisation callbacks, event handlers).
 
 ### `pscript` - Python-to-JavaScript Block
 
@@ -617,7 +623,7 @@ div class=documentation
 | `%tag:` | Auto-closing template tag |
 | `>>>` / `<<<` | Raw text block delimiters |
 | `{:}` | Indented CSS block |
-| `===` | Python code block (wxPython) |
+| `===>` | Python code block (wxPython) |
 | `###>` | Markdown block |
 | `^^^` | Passthrough mode (no conversion) |
 | `@@(` | Output processor |

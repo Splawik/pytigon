@@ -16,30 +16,30 @@ hand or extend the builder itself.
 - [Quick Start](#quick-start)
 - [Project File Structure](#project-file-structure)
 - [Core Models Reference](#core-models-reference)
-  - [SChProject — The Root](#schproject--the-root)
-  - [SChApp — Application Module](#schapp--application-module)
-  - [SChTable — Database Table / Model](#schtable--database-table--model)
-  - [SChField — Model Field](#schfield--model-field)
-  - [SChView — View / URL Endpoint](#schview--view--url-endpoint)
-  - [SChAppMenu — Navigation Menu](#schappmenu--navigation-menu)
-  - [SChForm — Form Definition](#schform--form-definition)
-  - [SChFormField — Form Field](#schformfield--form-field)
-  - [SChTemplate — Template](#schtemplate--template)
-  - [SChStatic — Static Asset](#schstatic--static-asset)
-  - [SChFile — Custom File](#schfile--custom-file)
-  - [SChTask — Background Task](#schtask--background-task)
-  - [SChChannelConsumer — WebSocket Consumer](#schchannelconsumer--websocket-consumer)
-  - [SChLocale, SChTranslate — i18n / l10n](#schlocale-schtranslate--i18n--l10n)
-  - [SChChoice / SChChoiceItem — Choice Lists](#schchoice--schchoiceitem--choice-lists)
+  - [SChProject — The Root](#schproject-the-root)
+  - [SChApp — Application Module](#schapp-application-module)
+  - [SChTable — Database Table / Model](#schtable-database-table-model)
+  - [SChField — Model Field](#schfield-model-field)
+  - [SChView — View / URL Endpoint](#schview-view-url-endpoint)
+  - [SChAppMenu — Navigation Menu](#schappmenu-navigation-menu)
+  - [SChForm — Form Definition](#schform-form-definition)
+  - [SChFormField — Form Field](#schformfield-form-field)
+  - [SChTemplate — Template](#schtemplate-template)
+  - [SChStatic — Static Asset](#schstatic-static-asset)
+  - [SChFile — Custom File](#schfile-custom-file)
+  - [SChTask — Background Task](#schtask-background-task)
+  - [SChChannelConsumer — WebSocket Consumer](#schchannelconsumer-websocket-consumer)
+  - [SChLocale, SChTranslate — i18n / l10n](#schlocale-schtranslate-i18n-l10n)
+  - [SChChoice / SChChoiceItem — Choice Lists](#schchoice-schchoiceitem-choice-lists)
 - [Field Types Reference](#field-types-reference)
 - [Gui Types](#gui-types)
 - [View Return Types](#view-return-types)
 - [File Types](#file-types)
 - [Static Asset Types](#static-asset-types)
 - [Form Field Types](#form-field-types)
-- [Template Tags & Custom Components](#template-tags--custom-components)
+- [Template Tags & Custom Components](#template-tags-custom-components)
 - [Advanced: Embedded Python/JS Code](#advanced-embedded-pythonjs-code)
-- [Building & Installing](#building--installing)
+- [Building & Installing](#building-installing)
 
 ---
 
@@ -117,6 +117,11 @@ projects, i.e. the tables, fields, and views that the builder itself uses.
 
 ## Core Models Reference
 
+> **Note:** The attribute tables below reflect the `schbuilder` schema at the
+> time of writing. The schema evolves between releases — when in doubt,
+> inspect `schdevtools/schbuilder/models.py` in your `pytigon_standard_prj`
+> checkout for the authoritative field list.
+
 ### SChProject — The Root
 
 A single project is one Django application. The root node represents the
@@ -149,9 +154,9 @@ entire project.
 | `icon` | CharField(256) | Icon path |
 | `icon_size` | CharField(1) | `0`=small, `1`=medium, `2`=large |
 | `git_repository` | CharField(255) | Git remote URL |
-| `autor_name` | CharField(255) | Author name |
-| `autor_email` | CharField(256) | Author email |
-| `autor_www` | CharField(256) | Author website |
+| `author_name` | CharField(255) | Author name |
+| `author_email` | CharField(256) | Author email |
+| `author_www` | CharField(256) | Author website |
 | `components_initial_state` | CharField(1024) | JSON initial state for frontend components |
 | `template_desktop` | TextField | Django template for desktop layout |
 | `template_smartfon` | TextField | Django template for smartphone layout |
@@ -259,26 +264,17 @@ the frontend.
 |-----------|------|-------------|
 | `parent` | PtigHiddenForeignKey→SChApp | Owning app |
 | `name` | CharField(255) | View name (used as URL name) |
-| `title` | CharField(255) | Display title |
-| `type` | CharField(1) | **Required.** View action type (see below) |
-| `table` | CharField(255) | Target model (e.g. `"SChProject"` or `"app.Model"`) |
-| `view_type` | CharField(1) | Return type (see [View Return Types](#view-return-types)) |
-| `template` | CharField(255) | Template path (if view_type=`T`) |
-| `base_filter` | TextField | JSON filter applied to the queryset |
-| `default_sort` | CharField(255) | Default sort field |
-| `search_fields` | CharField(255) | Comma-separated fields searchable in the UI |
-| `link` | CharField(255) | Custom URL path |
-| `where` | CharField(255) | Server-side WHERE clause |
-| `action` | CharField(255) | Custom action name |
-| `gen_function` | CharField(255) | Generator function name |
-| `rows_on_page` | IntegerField | Pagination: rows per page |
-| `valid_form` | TextField | Django form class to validate submissions |
-| `code` | TextField | Custom Python view code |
-| `doc` | TextField | Documentation |
+| `view_type` | CharField(1) | View action type (see below) |
+| `param` | CharField(255) | Parameter expression passed to the view (e.g. `"pk"`, `"id"`, or a Python expression) |
+| `url` | CharField(255) | Target model or URL path (e.g. `"SChProject"` or `"app.Model"`) |
+| `view_code` | TextField | Custom Python view code (editable=False — set via the builder UI) |
 | `url_params` | CharField(255) | Extra URL parameters |
-| `embedded` | BooleanField | Embed as sub-view in another page |
+| `ret_type` | CharField(1) | Return type (see [View Return Types](#view-return-types)); default `"U"` |
+| `asynchronous` | BooleanField | Run as an async view (ASGI) |
+| `extra_code` | TextField | Auxiliary code (helpers, imports) compiled alongside the view |
+| `doc` | TextField | Documentation |
 
-**View type (`type`):**
+**View type (`view_type`):**
 
 | Code | Meaning |
 |------|---------|
@@ -310,17 +306,12 @@ Defines a menu item in the application's navigation.
 |-----------|------|-------------|
 | `parent` | PtigHiddenForeignKey→SChApp | Owning app |
 | `name` | CharField(255) | Display label |
-| `link` | CharField(255) | URL or view name |
-| `link_type` | CharField(1) | `-`=default, `desktop`, `panel`, `header`, `footer`, `script`, `pscript`, `browser`, `browser_panel`, `browser_header`, `browser_footer` |
-| `view` | CharField(1) | `t`=table action, `r`=row action, `u`=view |
-| `align` | CharField(255) | Alignment hint |
-| `position` | CharField(255) | Position in menu |
+| `url` | CharField(255) | URL or view name |
+| `url_type` | CharField(1) | Link target: `-`=default, `desktop`, `panel`, `header`, `footer`, `script`, `pscript`, `browser`, `browser_panel`, `browser_header`, `browser_footer` |
+| `perms` | CharField(255) | Permission required to see the item |
 | `icon` | CharField(256) | Icon path |
-| `submenu` | CharField(255) | JSON submenu definition |
-| `user_param` | TextField | User parameter string |
-| `html_before` | TextField | Raw HTML inserted before the menu item |
-| `html_after` | TextField | Raw HTML inserted after the menu item |
-| `fragment` | CharField(255) | URL fragment for the menu item |
+| `icon_size` | CharField(1) | `0`=small, `1`=medium, `2`=large |
+| `icon_code` | TextField | Inline SVG icon |
 
 ---
 
@@ -332,12 +323,11 @@ Defines a Django form class.
 |-----------|------|-------------|
 | `parent` | PtigHiddenForeignKey→SChApp | Owning app |
 | `name` | CharField(255) | Form class name |
-| `title` | CharField(255) | Display title |
-| `table` | CharField(255) | Target model (for ModelForm) |
-| `base_class` | CharField(255) | Base form class (e.g. `"ModelForm"`) |
-| `layout` | TextField | Form layout definition |
-| `code` | TextField | Custom form code |
-| `valid` | TextField | Validation code |
+| `module` | CharField(255) | Module label / grouping |
+| `process_code` | TextField | Code injected into the form's `__init__` / processing flow |
+| `end_class_code` | TextField | Code appended at the end of the form class body |
+| `end_code` | TextField | Code emitted after the class definition (helpers, registration) |
+| `asynchronous` | BooleanField | Generate an async form handler (ASGI) |
 | `doc` | TextField | Documentation |
 
 **Children:** `SChFormField` nodes.
@@ -353,13 +343,13 @@ Defines a single field within a form.
 | `parent` | PtigHiddenForeignKey→SChForm | Owning form |
 | `name` | CharField(255) | Field name |
 | `type` | CharField(64) | Django form field class (e.g. `CharField`, `IntegerField`, `ChoiceField`, `ModelChoiceField`) |
-| `label` | CharField(255) | Label text |
-| `widget` | CharField(128) | Widget class (e.g. `TextInput`, `Select`, `CheckboxInput`) |
-| `param` | CharField(255) | Extra field parameters |
-| `initial` | CharField(255) | Initial value |
 | `required` | BooleanField | Required flag |
-| `position` | IntegerField | Display order |
+| `label` | CharField(255) | Label text |
+| `initial` | CharField(255) | Initial value |
+| `widget` | CharField(128) | Widget class (e.g. `TextInput`, `Select`, `CheckboxInput`) |
 | `help_text` | CharField(255) | Help text |
+| `error_messages` | TextField | Custom error messages (JSON or Python dict) |
+| `param` | CharField(255) | Extra field parameters |
 
 ---
 
@@ -371,51 +361,28 @@ Defines a Django template file.
 |-----------|------|-------------|
 | `parent` | PtigHiddenForeignKey→SChApp | Owning app |
 | `name` | CharField(255) | File name (e.g. `"list.html"`) |
-| `type` | CharField(1) | Template type (see below) |
-| `path` | CharField(255) | Directory path relative to templates |
-| `code` | TextField | Template source code |
-| `doc` | TextField | Documentation |
-
-**Template type:**
-
-| Code | Meaning |
-|------|---------|
-| `f` | Template filter library |
-| `t` | Template tag library |
-| `c` | Custom file |
-| `m` | Management command |
-| `p` | Plugin code |
-| `i` | Plugin template |
-| `l` | Library code |
-| `s` | GraphQL schema |
-| `r` | REST API definition |
-| `j` | Frontend view (JS) |
-| `T` | Frontend template (JS) |
-| `n` | Nim extension |
-| `N` | Nim executable source |
-| `E` | Nimpy extension |
-| `C` | CSS (included in desktop.html) |
-| `J` | JavaScript (included in desktop.html) |
-| `P` | Python→JS via Transcrypt (included in desktop.html) |
-| `R` | Web component (included in desktop.html) |
-| `I` | SASS→CSS (included in desktop.html) |
-| `U` | Custom file with translation support (.pyj, .webc, .sass) |
-| `O` | Other application file |
-| `B` | Other application file (base64 encoded) |
+| `direct_to_template` | BooleanField | Expose as a direct-to-template URL (no view) |
+| `url` | CharField(255) | URL pattern when `direct_to_template` is set |
+| `url_parm` | CharField(255) | URL parameter for the direct-to-template route |
+| `template_code` | TextField | Template source code (iHTML or HTML) |
+| `static_files` | CharField(255) | Static file dependencies to bundle |
+| `tags_mount` | CharField(255) | Template tag library mount point |
+| `asynchronous` | BooleanField | Generate an async template view |
 
 ---
 
 ### SChStatic — Static Asset
 
-Defines a static file bundled with the application.
+Defines a static file bundled with the application. The `type` field
+determines how the asset is processed at build time (see
+[File Types](#file-types)).
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `parent` | PtigHiddenForeignKey→SChApp | Owning app |
+| `type` | CharField(1) | Asset type code (see [File Types](#file-types)) |
 | `name` | CharField(255) | File name |
-| `type` | CharField(1) | Asset type (same codes as [Template types](#schtemplate--template) but static context) |
-| `path` | CharField(255) | Directory path under `static/` |
-| `code` | TextField | File content |
+| `content` | TextField | File content |
 | `doc` | TextField | Documentation |
 
 ---
@@ -423,27 +390,35 @@ Defines a static file bundled with the application.
 ### SChFile — Custom File
 
 An arbitrary file to include in the generated application (e.g. a README,
-a license, a config file).
+a license, a config file). Same shape as `SChStatic` but stored under
+non-static paths.
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `parent` | PtigHiddenForeignKey→SChApp | Owning app |
+| `type` | CharField(1) | File type code (see [File Types](#file-types)) |
 | `name` | CharField(255) | File path/name |
-| `code` | TextField | File content |
+| `content` | TextField | File content |
+| `doc` | TextField | Documentation |
 
 ---
 
 ### SChTask — Background Task
 
-Defines a background task (Django-Q or similar).
+Defines a background task. The `code` field holds the full task body
+(function definition + optional `init_schedule` registration); pytigon
+dispatches it via `django_q.async_task` or the `SChScheduler` depending on
+runtime configuration.
 
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `parent` | PtigHiddenForeignKey→SChApp | Owning app |
 | `name` | CharField(255) | Task name |
-| `function` | CharField(255) | Python function path to call |
-| `schedule` | CharField(255) | Cron or interval schedule |
-| `code` | TextField | Custom task code |
+| `code` | TextField | Task source code (function + schedule registration) |
+| `doc` | TextField | Documentation |
+| `perms` | CharField(255) | Permission required to manage the task |
+| `publish` | BooleanField | Publish the task to the task list UI |
+| `publish_group` | CharField(255) | Grouping label for published tasks |
 
 ---
 
@@ -455,8 +430,10 @@ Defines a Django Channels consumer for WebSocket communication.
 |-----------|------|-------------|
 | `parent` | PtigHiddenForeignKey→SChApp | Owning app |
 | `name` | CharField(255) | Consumer name |
-| `type` | CharField(64) | Consumer class: `WebsocketConsumer`, `AsyncWebsocketConsumer`, `JsonWebsocketConsumer`, `AsyncJsonWebsocketConsumer`, `AsyncHttpConsumer`, `AsyncConsumer`, `SyncConsumer` |
-| `code` | TextField | Custom consumer code |
+| `consumer_type` | CharField(64) | Consumer class: `WebsocketConsumer`, `AsyncWebsocketConsumer`, `JsonWebsocketConsumer`, `AsyncJsonWebsocketConsumer`, `AsyncHttpConsumer`, `AsyncConsumer`, `SyncConsumer` |
+| `url` | CharField(255) | WebSocket URL route |
+| `consumer_code` | TextField | Custom consumer code |
+| `doc` | TextField | Documentation |
 
 ---
 
@@ -467,8 +444,7 @@ Defines a Django Channels consumer for WebSocket communication.
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `parent` | PtigHiddenForeignKey→SChApp | Owning app |
-| `code` | CharField(8) | 2-letter language code (e.g. `"pl"`, `"en"`) |
-| `name` | CharField(255) | Language name |
+| `name` | CharField(255) | Language name (also used as the locale code, e.g. `"pl"`, `"en"`) |
 
 **Children:** `SChTranslate` nodes.
 
@@ -477,9 +453,9 @@ Defines a Django Channels consumer for WebSocket communication.
 | Attribute | Type | Description |
 |-----------|------|-------------|
 | `parent` | PtigHiddenForeignKey→SChLocale | Owning locale |
-| `msgid` | CharField(255) | Source string |
-| `msgstr` | CharField(255) | Translated string |
-| `context` | CharField(255) | Translation context (msgctxt) |
+| `description` | CharField(255) | Source string (msgid) |
+| `translation` | CharField(255) | Translated string (msgstr) |
+| `status` | CharField(1) | Translation status flag |
 
 ---
 
@@ -507,7 +483,9 @@ Reusable enumerated choice lists for model fields.
 
 ## Field Types Reference
 
-Pytigon extends Django's field types with custom ones prefixed `Ptig`:
+The `SChField.type` attribute accepts either a standard Django field class
+name or a Pytigon-extended type. Extended types are resolved by the builder
+into concrete field classes from `pytigon_lib.schdjangoext.fields`.
 
 ### Standard Django Fields
 
@@ -521,19 +499,23 @@ Pytigon extends Django's field types with custom ones prefixed `Ptig`:
 
 ### Pytigon Extended Fields
 
+The `Ptig*` names below are aliases exported by
+`pytigon_lib.schdjangoext.fields` (e.g. `PtigForeignKey = ForeignKey`).
+The non-`Ptig` names are recognised by the builder and mapped to the
+appropriate field class or generated code.
+
 | Field | Description |
 |-------|-------------|
-| `PtigForeignKey` | ForeignKey with Pytigon UI integration |
-| `PtigManyToManyField` | ManyToManyField with Pytigon UI |
-| `PtigHiddenForeignKey` | ForeignKey hidden from forms/UI (internal parent links) |
-| `PtigForeignKeyWithIcon` | ForeignKey with icon support in the UI |
-| `PtigManyToManyFieldWithIcon` | M2M field with icon support |
-| `PtigTreeForeignKey` | ForeignKey for tree/hierarchy structures |
-| `UserField` | Custom user reference field |
-| `HiddenForeignKey` | Standard hidden FK |
-| `GForeignKey` | GenericForeignKey |
-| `GManyToManyField` | Generic M2M |
-| `GHiddenForeignKey` | Hidden GenericForeignKey |
+| `PtigForeignKey` (= `ForeignKey`) | ForeignKey with Pytigon UI integration (search, add, popup form) |
+| `PtigManyToManyField` (= `ManyToManyField`) | ManyToManyField with Pytigon UI |
+| `PtigHiddenForeignKey` (= `HiddenForeignKey`) | ForeignKey hidden from forms/UI (internal parent links) |
+| `PtigForeignKeyWithIcon` (= `ForeignKeyWithIcon`) | ForeignKey with icon support in the UI |
+| `PtigManyToManyFieldWithIcon` (= `ManyToManyFieldWithIcon`) | M2M field with icon support |
+| `PtigTreeForeignKey` (= `TreeForeignKey`) | ForeignKey for tree/hierarchy structures |
+| `UserField` | Custom user-reference field (builder expands to a CharField + helper) |
+| `GForeignKey` | GenericForeignKey (builder-generated) |
+| `GManyToManyField` | Generic M2M (builder-generated) |
+| `GHiddenForeignKey` | Hidden GenericForeignKey (builder-generated) |
 
 ---
 
@@ -600,7 +582,7 @@ field determines how the file is processed during the build:
 |------|------------|
 | `C` | Plain CSS, linked in desktop.html |
 | `J` | Plain JavaScript, linked in desktop.html |
-| `P` | Python compiled to JavaScript (Transcrypt), linked in desktop.html |
+| `P` | Python compiled to JavaScript (pscript), linked in desktop.html |
 | `R` | Web component, linked in desktop.html |
 | `I` | SASS compiled to CSS, linked in desktop.html |
 | `U` | Custom file with embedded translation support (.pyj, .webc, .sass) |
@@ -632,7 +614,7 @@ for static assets:
 |------|---------|
 | `C` | CSS (included in desktop.html) |
 | `J` | JavaScript (included in desktop.html) |
-| `P` | Python→JS via Transcrypt (included in desktop.html) |
+| `P` | Python→JS via pscript (included in desktop.html) |
 | `R` | Component (included in desktop.html) |
 | `I` | SASS→CSS (included in desktop.html) |
 | `U` | Custom file (supports embedded translation) |
@@ -700,7 +682,7 @@ generated Django application:
 | `additional_settings` | Appended to Django `settings.py` |
 
 These fields support the full Pytigon template syntax (indentation-based
-Python-in-HTML, Transcrypt for JS, SASS for CSS).
+Python-in-HTML, pscript for JS, SASS for CSS).
 
 ---
 
@@ -753,7 +735,7 @@ project file. The build process:
 
 1. Parses the `.prj` JSON tree
 2. Creates Django app structure under the project directory
-3. Compiles Python→JS (Transcrypt), SASS→CSS
+3. Compiles Python→JS (pscript), SASS→CSS
 4. Compiles Django templates (Pytigon's indentation-based template engine)
 5. Generates `.po` translation files
 

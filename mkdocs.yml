@@ -126,6 +126,8 @@ nav:
       - Quick Import: getting-started/quick-import.md
   - Guides:
       - schdevtools: schdevtools.md
+      - schserw (Django extensions): schserw.md
+      - appdata (Plugins & Assets): appdata.md
       - Web Components: webcomponents.md
       - IHTML Format: indent.md
       - Documentation HOWTO: HOWTO.md

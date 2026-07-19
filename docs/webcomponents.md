@@ -3,7 +3,7 @@
 ## Introduction
 
 Pytigon enables defining custom HTML elements (Web Components) using Python, which is then
-compiled to JavaScript via the **pscript** (RapydScript) library.
+compiled to JavaScript via the **pscript** library.
 
 The core of the system is the `DefineWebComponent` class defined in
 `pytigon/static_src/pytigon_js/component.py`. This class provides a declarative API for building
@@ -335,7 +335,7 @@ disconnectedCallback()       # Removal from DOM — cleanup
 ## Storing Components in the Database
 
 Components are stored in the project file `_schcomponents.prj` as `SChStatic` objects with
-type `"R"` (RapydScript). Fields:
+type `"R"` (pscript, compiled Python→JS). Fields:
 
 ```json
 {
