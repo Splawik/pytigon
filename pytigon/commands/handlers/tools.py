@@ -84,9 +84,9 @@ class ToolCommandHandler(CommandHandler):
             if nim_path:
                 nim_path = os.path.join(nim_path, "bin")
                 if os.name == "nt":
-                    os.environ["PATH"] = os.environ["PATH"] + ";" + nim_path
+                    os.environ["PATH"] = os.environ.get("PATH", "") + ";" + nim_path
                 else:
-                    os.environ["PATH"] = os.environ["PATH"] + ":" + nim_path
+                    os.environ["PATH"] = os.environ.get("PATH", "") + os.pathsep + nim_path
 
                 # Build command
                 exe_name = argv[1] + ".exe" if os.name == "nt" else argv[1]
@@ -114,7 +114,7 @@ class ToolCommandHandler(CommandHandler):
         if argv[1] == "@zig":
             argv[1] = "@ziglang"
 
-        if importlib.util.find_spec(argv[1][1:]) is not None:
+        if len(argv[1]) > 1 and importlib.util.find_spec(argv[1][1:]) is not None:
             # Run Python interpreter
             executable = self.get_executable()
             command = [executable, "-m", argv[1][1:]] + argv[2:]

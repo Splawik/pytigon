@@ -1,4 +1,6 @@
 import functools
+import importlib
+import logging
 import sys
 import traceback
 
@@ -11,6 +13,8 @@ except Exception:
     Permission = None
 
 from pytigon_lib.schdjangoext.django_init import get_app_name
+
+_logger = logging.getLogger(__name__)
 
 try:
     if settings.ALLAUTH:
@@ -26,7 +30,7 @@ def has_user_perm(user, perm):
     if "|" in perm:
         arg, fun_path = perm.split("|", 1)
         module_path, fun_name = fun_path.rsplit(".", 1)
-        module = __import__(module_path, fromlist=[None])
+        module = importlib.import_module(module_path)
         fun = getattr(module, fun_name)
         return fun(user, arg)
 
@@ -103,6 +107,74 @@ class AppItemInfo(AppInfo):
         return super().__str__() + "\n" + f"description: {self.description}\n"
 
 
+@functools.lru_cache(maxsize=128)
+def _get_apps_cached(prj, host):
+    """Module-level cached app list builder.
+
+    Cached on ``(prj, host)`` so it is shared across requests and does not
+    hold references to request/user objects.
+    """
+    ret = []
+
+    if prj:
+        _temp = importlib.import_module(prj + ".apps")
+        apps = _temp.APPS
+    else:
+        apps = None
+
+    for _app in settings.INSTALLED_APPS:
+        if apps:
+            test = False
+            name = _app if isinstance(_app, str) else _app.name
+            if name.startswith(prj):
+                test = True
+            else:
+                for app in apps:
+                    if name in app:
+                        test = True
+                        break
+            if not test:
+                continue
+
+        app = get_app_name(_app)
+        if host == "127.0.0.2" and app == "schserw.schsys":
+            continue
+        try:
+            module_title = None
+            module_name = None
+            title = None
+            perms = None
+            url = None
+            elementy = app.split(".")
+            appname = elementy[-1]
+            module = importlib.import_module(elementy[0])
+            module2 = getattr(module, elementy[-1]) if len(elementy) > 1 else module
+            if module2:
+                module_title = module2.ModuleTitle
+                try:
+                    module_name = module2.ModuleName
+                except Exception:
+                    module_name = module_title
+                title = module2.Title
+                perms = module2.Perms
+                index = module2.Index
+                user_param = module2.UserParam if hasattr(module2, "UserParam") else {}
+
+                app_info = AppInfo()
+                app_info.app_title = title
+                app_info.app_perms = perms
+                app_info.index = index
+                app_info.app_name = appname
+                app_info.module_name = module_name
+                app_info.module_title = module_title
+                app_info.sys_module_name = elementy[0]
+                app_info.user_param = user_param
+                ret.append(app_info)
+        except Exception:
+            _logger.debug("Error loading app info for %s", _app, exc_info=True)
+    return ret
+
+
 class AppManager:
     """Class to manage applications."""
 
@@ -136,67 +208,8 @@ class AppManager:
                 return app[0]
         return ""
 
-    @functools.lru_cache(maxsize=32)
     def _get_apps(self, prj=None):
-        ret = []
-
-        if prj:
-            _temp = __import__(prj + ".apps")
-            apps = _temp.apps.APPS
-        else:
-            apps = None
-
-        for _app in settings.INSTALLED_APPS:
-            if apps:
-                test = False
-                name = _app if type(_app) == str else _app.name
-                if name.startswith(prj):
-                    test = True
-                else:
-                    for app in apps:
-                        if name in app:
-                            test = True
-                            break
-                if not test:
-                    continue
-
-            app = get_app_name(_app)
-            if self.request.get_host() == "127.0.0.2" and app == "schserw.schsys":
-                continue
-            try:
-                module_title = None
-                module_name = None
-                title = None
-                perms = None
-                url = None
-                elementy = app.split(".")
-                appname = elementy[-1]
-                module = __import__(elementy[0])
-                module2 = getattr(module, elementy[-1]) if len(elementy) > 1 else module
-                if module2:
-                    module_title = module2.ModuleTitle
-                    try:
-                        module_name = module2.ModuleName
-                    except Exception:
-                        module_name = module_title
-                    title = module2.Title
-                    perms = module2.Perms
-                    index = module2.Index
-                    user_param = module2.UserParam if hasattr(module2, "UserParam") else {}
-
-                    app_info = AppInfo()
-                    app_info.app_title = title
-                    app_info.app_perms = perms
-                    app_info.index = index
-                    app_info.app_name = appname
-                    app_info.module_name = module_name
-                    app_info.module_title = module_title
-                    app_info.sys_module_name = elementy[0]
-                    app_info.user_param = user_param
-                    ret.append(app_info)
-            except Exception:
-                pass
-        return ret
+        return _get_apps_cached(prj, self.request.get_host())
 
     def get_apps(self, prj=None):
         ret = []
@@ -226,8 +239,8 @@ class AppManager:
         apps = self._get_apps(prj)
         ret = []
         for app in apps:
-            if app.app_name != None and app.app_name != "":
-                module = __import__(app.sys_module_name)
+            if app.app_name is not None and app.app_name != "":
+                module = importlib.import_module(app.sys_module_name)
                 if app.sys_module_name != app.app_name:
                     module2 = getattr(module, app.app_name)
                 else:
@@ -292,10 +305,9 @@ class AppManager:
             prj = settings.PRJ_NAME
         ret = []
         items = self.get_app_items(prj)
-        no_empty_apps = []
+        no_empty_apps = set()
         for item in items:
-            if item.app_name not in no_empty_apps:
-                no_empty_apps.append(item.app_name)
+            no_empty_apps.add(item.app_name)
         for item in self.get_apps(prj):
             if item.app_name in settings.HIDE_APPS:
                 continue
@@ -362,6 +374,5 @@ class AppManager:
                     adapter.get_provider(None, key)
                     ret.append((key, value.name, value))
                 except Exception:
-                    print(sys.exc_info()[0])
-                    print(traceback.print_exc())
+                    _logger.debug("Failed to get provider %s", key, exc_info=True)
         return ret

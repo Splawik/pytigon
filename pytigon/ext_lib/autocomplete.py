@@ -149,7 +149,7 @@ class TextCtrlAutoComplete(wx.TextCtrl, listmix.ColumnSorterMixin):
             self.SetChoices(choices)
 
         gp = self
-        while gp != None:
+        while gp is not None:
             gp.Bind(wx.EVT_MOVE, self.onControlChanged, gp)
             gp.Bind(wx.EVT_SIZE, self.onControlChanged, gp)
             gp = gp.GetParent()
@@ -237,7 +237,7 @@ class TextCtrlAutoComplete(wx.TextCtrl, listmix.ColumnSorterMixin):
             dd = self.dropdownlistbox
             choices = [
                 dd.GetItem(x, self._colSearch).GetText()
-                for x in xrange(dd.GetItemCount())
+                for x in range(dd.GetItemCount())
             ]
         else:
             choices = self._choices
@@ -338,11 +338,7 @@ class TextCtrlAutoComplete(wx.TextCtrl, listmix.ColumnSorterMixin):
             flags |= wx.LC_NO_HEADER
         self.dropdownlistbox.SetWindowStyleFlag(flags)
 
-        # prevent errors on "old" systems
-        if sys.version.startswith("2.3"):
-            self._multiChoices.sort(lambda x, y: cmp(x[0].lower(), y[0].lower()))
-        else:
-            self._multiChoices.sort(key=lambda x: locale.strxfrm(x[0]).lower())
+        self._multiChoices.sort(key=lambda x: locale.strxfrm(x[0]).lower())
 
         self._updateDataList(self._multiChoices)
 
@@ -359,7 +355,7 @@ class TextCtrlAutoComplete(wx.TextCtrl, listmix.ColumnSorterMixin):
             for numCol, colVal in enumerate(valRow):
                 if numCol == 0:
                     index = self.dropdownlistbox.InsertImageStringItem(
-                        sys.maxint, colVal, -1
+                        sys.maxsize, colVal, -1
                     )
                 self.dropdownlistbox.SetStringItem(index, numCol, colVal)
                 self.dropdownlistbox.SetItemData(index, numRow)
@@ -381,11 +377,7 @@ class TextCtrlAutoComplete(wx.TextCtrl, listmix.ColumnSorterMixin):
         if not isinstance(choices, list):
             self._choices = [x for x in choices]
 
-        # prevent errors on "old" systems
-        if sys.version.startswith("2.3"):
-            self._choices.sort(lambda x, y: cmp(x.lower(), y.lower()))
-        else:
-            self._choices.sort(key=lambda x: locale.strxfrm(x).lower())
+        self._choices.sort(key=lambda x: locale.strxfrm(x).lower())
 
         self._updateDataList(self._choices)
 
@@ -432,7 +424,7 @@ class TextCtrlAutoComplete(wx.TextCtrl, listmix.ColumnSorterMixin):
             if self._selectCallback:
                 dd = self.dropdownlistbox
                 values = [
-                    dd.GetItem(sel, x).GetText() for x in xrange(dd.GetColumnCount())
+                    dd.GetItem(sel, x).GetText() for x in range(dd.GetColumnCount())
                 ]
                 self._selectCallback(values)
 

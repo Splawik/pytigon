@@ -1,5 +1,6 @@
 """Inclusion template tags for Pytigon exsyntax library."""
 
+import logging
 import os
 
 from django import template
@@ -7,6 +8,8 @@ from django.conf import settings
 from django.utils.safestring import mark_safe
 
 from pytigon_lib.schtools.href_action import standard_dict
+
+logger = logging.getLogger(__name__)
 
 register = template.Library()
 
@@ -44,7 +47,7 @@ def module_link(context, href):
                     .replace("</script>", "</_script_>")
                 )
         except Exception:
-            print("file: ", href, "does'nt exists")
+            logger.warning("File not found: %s", href)
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
         return {"href": mark_safe(href), "content": None}
@@ -63,7 +66,7 @@ def jscript_link(context, href):
                     .replace("</script>", "</_script_>")
                 )
         except Exception:
-            print("file: ", href, "does'nt exists")
+            logger.warning("File not found: %s", href)
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
         return {"href": mark_safe(href), "content": None}
@@ -82,7 +85,7 @@ def css_link(context, href):
                     .replace("</script>", "</_script_>")
                 )
         except Exception:
-            print("file: ", href, "does'nt exists")
+            logger.warning("File not found: %s", href)
         return standard_dict(context, {"href": href, "content": mark_safe(content)})
     else:
         return standard_dict(context, {"href": href, "content": None})
@@ -118,7 +121,7 @@ def component(context, href):
                     .replace("</script>", "</_script_>")
                 )
         except Exception:
-            print("file: ", href, "does'nt exists")
+            logger.warning("File not found: %s", href)
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
         return {"href": mark_safe(href), "content": None}

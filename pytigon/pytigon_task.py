@@ -120,7 +120,9 @@ if __name__ == "__main__":
 
     if view:
         _login(http, username, password)
-        if arguments or force_get:
+        if force_get:
+            ret, newaddr = http.get(None, view, arguments)
+        elif arguments:
             ret, newaddr = http.post(None, view, arguments)
         else:
             ret, newaddr = http.get(None, view)

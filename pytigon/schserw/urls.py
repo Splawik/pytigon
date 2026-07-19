@@ -279,9 +279,6 @@ for app in settings.INSTALLED_APPS:
 
     elementy = pos.split(".")
 
-    if pos == "pytigon":
-        pass
-
     try:
         test = importlib.import_module(pos)
         if hasattr(test, "ModuleName"):

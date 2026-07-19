@@ -9,9 +9,11 @@ logger = logging.getLogger(__name__)
 
 def get_user(request, username):
     """Retrieve and cache the user object based on the username."""
-    if not hasattr(request, "_cached_user") or request._cached_user.is_anonymous:
-        users = get_user_model().objects.filter(username=username)
-        request._cached_user = users[0] if users.exists() else None
+    cached = getattr(request, "_cached_user", None)
+    if cached is None or cached.is_anonymous:
+        request._cached_user = (
+            get_user_model().objects.filter(username=username).first()
+        )
     return request._cached_user
 
 

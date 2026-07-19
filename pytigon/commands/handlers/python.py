@@ -33,7 +33,6 @@ class PythonCommandHandler(CommandHandler):
                 argv[1] == "python"
                 or argv[1].startswith("python_")
                 or argv[1].endswith(".py")
-                or argv[1][-4:-1] == ".py"
                 or (argv[1].startswith("-") and not argv[1].startswith("--"))
             )
         return False
@@ -56,7 +55,6 @@ class PythonCommandHandler(CommandHandler):
             # Check if it's a .py file (ptig script.py = ptig python script.py)
             if (
                 argv[1].endswith(".py")
-                or argv[1][-4:-1] == ".py"
                 or (argv[1].startswith("-") and not argv[1].startswith("--"))
             ):
                 return self._handle_script_file(argv)

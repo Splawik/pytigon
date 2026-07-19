@@ -20,6 +20,18 @@ class ViewRequests:
         return self.get_response(request)
 
 
+def _log_post(request):
+    """Log a POST request's path and body, swallowing logging failures."""
+    try:
+        if request.method == "POST":
+            logger.debug("=================== POST ======================")
+            logger.debug(request.path)
+            logger.debug(request.POST)
+            logger.debug("===============================================")
+    except Exception:
+        logger.warning("Failed to log POST data", exc_info=True)
+
+
 def view_post(get_response):
     """Middleware factory for logging POST request bodies.
 
@@ -31,33 +43,21 @@ def view_post(get_response):
     """
 
     def middleware(request):
-        try:
-            if request.method == "POST":
-                logger.debug("=================== POST ======================")
-                logger.debug(request.path)
-                logger.debug(request.POST)
-                logger.debug("===============================================")
-        except Exception:
-            logger.warning("Failed to log POST data", exc_info=True)
-        response = get_response(request)
-        return response
+        _log_post(request)
+        return get_response(request)
 
     return middleware
 
 
 class ViewPost:
-    """Middleware for logging POST request bodies (class-based version)."""
+    """Middleware for logging POST request bodies (class-based version).
+
+    Equivalent to :func:`view_post` but usable in ``MIDDLEWARE`` as a class.
+    """
 
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        try:
-            if request.method == "POST":
-                logger.debug("=================== POST ======================")
-                logger.debug(request.path)
-                logger.debug(request.POST)
-                logger.debug("===============================================")
-        except Exception:
-            logger.warning("Failed to log POST data", exc_info=True)
+        _log_post(request)
         return self.get_response(request)

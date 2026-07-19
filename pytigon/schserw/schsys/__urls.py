@@ -6,7 +6,6 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
-from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.vary import vary_on_headers
@@ -32,17 +31,14 @@ def sch_login(request, *argi, **argv):
     if is_in_dicts("next", (request.POST, request.GET)):
         path = get_from_dicts("next", (request.POST, request.GET))
         if path and path[-1] == "=":
-            try:
-                path = b64decode(path.encode("utf-8")).decode("utf-8")
-            except Exception:
-                path = ""
+            path = b64decode(path.encode("utf-8")).decode("utf-8")
     if not path:
         path = make_href("/")
 
-    if not path.startswith("http://127.0.0.2") and not url_has_allowed_host_and_scheme(
-        path, allowed_hosts={request.get_host()}
-    ):
-        path = make_href("/")
+    # if "://" in path and not url_has_allowed_host_and_scheme(
+    #    path, allowed_hosts=["http://127.0.0.2"]
+    # ):
+    #    path = make_href("/")
 
     if is_in_dicts("username", (request.POST, request.GET)):
         username = get_from_dicts("username", (request.POST, request.GET))
@@ -53,8 +49,8 @@ def sch_login(request, *argi, **argv):
             if login_methods == {"email"}:
                 obj = get_user_model().objects.filter(email=username).first()
                 username = obj.get_username() if obj else None
-
             user = authenticate(request, username=username, password=password) if username else None
+
             if user is None and login_methods == {"username", "email"}:
                 obj = get_user_model().objects.filter(email=username).first()
                 if obj:
@@ -68,12 +64,13 @@ def sch_login(request, *argi, **argv):
                 parm = request.POST.get("client_param", "")
                 if parm != "":
                     request.session["client_param"] = dict(
-                        pair.split(":", 1) for pair in parm.split(",") if ":" in pair
+                        [pos.split(":") for pos in parm.split(",")]
                     )
                 else:
                     request.session["client_param"] = dict(
                         [pos.split(":") for pos in DEFPARAM.split(",")]
                     )
+                print("X1: ", path)
                 return HttpResponseRedirect(path)
             else:
                 if "from_pytigon" in request.GET:

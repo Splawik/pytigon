@@ -59,8 +59,7 @@ class TestJWTUserMiddleware:
                 objects=MagicMock(
                     filter=MagicMock(
                         return_value=MagicMock(
-                            exists=MagicMock(return_value=True),
-                            __getitem__=MagicMock(return_value=mock_user),
+                            first=MagicMock(return_value=mock_user),
                         )
                     )
                 )

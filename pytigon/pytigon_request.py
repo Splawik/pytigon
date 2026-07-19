@@ -51,8 +51,8 @@ def init(
             ptig_file = io.BytesIO(ptig_installer)
             ptig = Ptig(ptig_file)
         elif isinstance(ptig_installer, str):
-            ptig_file = open(ptig_installer, "rb")
-            ptig = Ptig(ptig_file)
+            with open(ptig_installer, "rb") as ptig_file:
+                ptig = Ptig(ptig_file)
         else:
             ptig = Ptig(ptig_installer)
         ptig.extract_ptig(path_alt)
@@ -72,7 +72,10 @@ def init(
         username = env("AUTOUSERNAME")
         password = env("AUTOPASSWORD")
 
-        User.objects.create_superuser(username, "auto@pytigon.cloud", password)
+        try:
+            User.objects.get(username=username)
+        except User.DoesNotExist:
+            User.objects.create_superuser(username, "auto@pytigon.cloud", password)
 
     HTTP = httpclient.HttpClient("http://127.0.0.2")
 

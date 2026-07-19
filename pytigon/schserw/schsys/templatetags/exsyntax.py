@@ -54,6 +54,7 @@ Template Tags:
 """
 
 import contextlib
+import logging
 import os
 import re
 from base64 import b64encode
@@ -70,6 +71,8 @@ from pyquery import PyQuery as pq
 from pytigon_lib.schdjangoext.tools import make_href as mhref
 from pytigon_lib.schtools.href_action import action_fun, actions_dict, standard_dict
 from pytigon_lib.schtools.wiki import wiki_from_str, wikify
+
+logger = logging.getLogger(__name__)
 
 register = template.Library()
 
@@ -848,7 +851,7 @@ class Form(Node):
         else:
             template_str = "{% load exsyntax %}<div class='row'>"
         for field in fields:
-            if type(field) == str:
+            if isinstance(field, str):
                 template_str += field
             else:
                 template_str += f"{{% field '{field[0]}' '{field[1]}' {self.inline} %}}"
@@ -1171,7 +1174,7 @@ def module_link(context, href):
                     f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
                 )
         except Exception:
-            print("file: ", href, "does'nt exists")
+            logger.warning("File not found: %s", href)
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
         return {"href": mark_safe(href), "content": None}
@@ -1200,7 +1203,7 @@ def jscript_link(context, href):
                     f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
                 )
         except Exception:
-            print("file: ", href, "does'nt exists")
+            logger.warning("File not found: %s", href)
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
         return {"href": mark_safe(href), "content": None}
@@ -1229,7 +1232,7 @@ def css_link(context, href):
                     f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
                 )
         except Exception:
-            print("file: ", href, "does'nt exists")
+            logger.warning("File not found: %s", href)
         return standard_dict(context, {"href": href, "content": mark_safe(content)})
     else:
         return standard_dict(context, {"href": href, "content": None})
@@ -1303,7 +1306,7 @@ def component(context, href):
                     f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
                 )
         except Exception:
-            print("file: ", href, "does'nt exists")
+            logger.warning("File not found: %s", href)
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
         return {"href": mark_safe(href), "content": None}
@@ -1961,7 +1964,7 @@ class TreeNode(Node):
 
         tree = self.tree.resolve(context)
 
-        if type(tree) == list:
+        if isinstance(tree, list):
             with context.push(
                 {
                     "tree_element": "element_list",
@@ -1970,7 +1973,7 @@ class TreeNode(Node):
                 }
             ):
                 return nodelist.render(context)
-        elif type(tree) == dict:
+        elif isinstance(tree, dict):
             with context.push(
                 {
                     "tree_element": "element",
@@ -2033,7 +2036,7 @@ class RowDetailsNode(Node):
                     perm, title = title.split(")", 1)
                     perm = perm[1:]
 
-                if perm == None or (
+                if perm is None or (
                     "perms" in context
                     and hasattr(context["perms"], "user")
                     and context["perms"].user.has_perm(perm)

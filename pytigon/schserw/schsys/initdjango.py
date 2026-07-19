@@ -35,10 +35,15 @@ from django.forms.forms import BaseForm
 from django.forms.widgets import PasswordInput, TextInput
 from django_bootstrap5.forms import render_form
 
-assert django.VERSION[:2] == (6, 0), (
-    "Monkey-patches in initdjango.py target Django 6.0.x internals. "
-    f"Found Django {django.VERSION}. Review patches before upgrading."
-)
+if django.VERSION[:2] != (6, 0):
+    import warnings
+
+    warnings.warn(
+        "Monkey-patches in initdjango.py target Django 6.0.x internals. "
+        f"Found Django {django.VERSION}. Review patches before upgrading.",
+        RuntimeWarning,
+        stacklevel=2,
+    )
 
 django.db.models.fields.prep_for_like_query = lambda x: str(x).replace("\\", "\\\\")
 
@@ -74,9 +79,10 @@ BaseForm.as_p = as_p
 
 def widget_attrs(self, widget):
     """Set widget attributes for CharField based on max_length."""
-    max2 = 80 if self.max_length == None else 80 if self.max_length > 80 else self.max_length
+    max2 = 80 if self.max_length is None else 80 if self.max_length > 80 else self.max_length
     if self.max_length is not None and isinstance(widget, (TextInput, PasswordInput)):
         return {"max_length": str(self.max_length), "size": str(max2)}
+    return {}
 
 
 django.forms.fields.CharField.widget_attrs = widget_attrs

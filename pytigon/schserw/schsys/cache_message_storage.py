@@ -42,7 +42,7 @@ class CacheStorage(SessionStorage):
             list: An empty list, as no messages are stored in the response.
         """
         if not self.request.session or not self.request.session.session_key:
-            return
+            return []
 
         cache_key = f"{self.session_key}_{self.request.session.session_key}"
 

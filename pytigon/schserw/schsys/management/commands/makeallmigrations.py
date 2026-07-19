@@ -6,8 +6,12 @@ class Command(makemigrations.Command):
     help = "Make migrations for all applications"
 
     def handle(self, *args, **options):
+        seen_labels = set()
         for app in settings.INSTALLED_APPS:
-            app_name = app if type(app) == str else app.name
-            app_name = app_name.split(".")[-1]
-            print(app_name)
-            super().handle(app_name, **options)
+            app_name = app if isinstance(app, str) else app.name
+            label = app_name.split(".")[-1]
+            if label in seen_labels:
+                continue
+            seen_labels.add(label)
+            print(label)
+            super().handle(label, **options)

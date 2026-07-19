@@ -85,6 +85,12 @@ class RunCommandHandler(CommandHandler):
                 import importlib.util
 
                 spec = importlib.util.spec_from_file_location(script, file_name)
+                if spec is None or spec.loader is None:
+                    from ..errors import PathError
+
+                    raise PathError(
+                        f"Cannot load Python spec from '{file_name}'", code=54
+                    )
                 module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(module)
             else:

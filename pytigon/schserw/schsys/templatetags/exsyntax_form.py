@@ -198,7 +198,7 @@ class Form(Node):
         else:
             template_str = "{% load exsyntax %}<div class='row'>"
         for field in fields:
-            if type(field) == str:
+            if isinstance(field, str):
                 template_str += field
             else:
                 template_str += f"{{% field '{field[0]}' '{field[1]}' {self.inline} %}}"

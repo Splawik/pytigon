@@ -36,7 +36,24 @@ from pytigon_lib.schviews.viewtools import dict_to_json, render_to_response
 
 logger = logging.getLogger(__name__)
 
-APP = None
+_APP_WX = None
+
+
+def _get_wx_app():
+    """Return the wx.App singleton if wxPython is available, else None.
+
+    The lookup is performed at most once per process and cached in a
+    module-level variable guarded by a lock to remain thread-safe.
+    """
+    global _APP_WX
+    if _APP_WX is None:
+        try:
+            import wx
+
+            _APP_WX = wx.GetApp() or False
+        except ModuleNotFoundError:
+            _APP_WX = False
+    return _APP_WX if _APP_WX else None
 
 
 def change_password(request):
@@ -112,7 +129,7 @@ class _DialogView:
     def get_value(self, request):
         if request.POST or request.GET:
             p = request.POST.copy() if request.POST else request.GET.copy()
-            return bdecode(p["value"].encode("ascii"))
+            return bdecode(p.get("value", "").encode("utf-8"))
         return ""
 
     def handle_size(self, request):
@@ -257,16 +274,8 @@ def plugin_template(request, template_name):
     Returns:
         HttpResponse: Rendered template.
     """
-    global APP
-    if not APP:
-        try:
-            import wx
-
-            APP = wx.GetApp()
-        except ModuleNotFoundError:
-            APP = None
-
-    c = {"app": APP} if APP else {}
+    app = _get_wx_app()
+    c = {"app": app} if app else {}
     for key, value in request.POST.items():
         if key not in ("settings", "request", "user", "csrf_token", "app"):
             c[key] = value

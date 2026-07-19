@@ -9,7 +9,7 @@ from .base import CommandHandler
 
 class PipCommandHandler(CommandHandler):
 
-    """Handler for running Python scripts.
+    """Handler for running pip in prj environment.
 
     Handles commands like:
     - pytigon pip_<app> args
@@ -41,6 +41,12 @@ class PipCommandHandler(CommandHandler):
 
         """
         try:
+            if len(argv) < 3:
+                return self.handle_error(
+                    ValueError("Missing pip subcommand. Usage: ptig pip_<app> <command> [args]"),
+                    {"command": argv[1] if len(argv) > 1 else "pip"},
+                )
+
             # Parse command to extract app and script
             x = argv[1].split("_", 1)
             app = x[1]

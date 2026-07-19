@@ -28,6 +28,7 @@ def _build_websocket_routes():
         return
 
     for row in settings.CHANNELS_URL_TAB:
+        consumer_path = None
         try:
             url_pattern = row[0]
             consumer_path = row[1]
@@ -42,7 +43,7 @@ def _build_websocket_routes():
         except (ImportError, AttributeError, ValueError) as e:
             logger.error(
                 "Failed to load WebSocket consumer '%s': %s",
-                consumer_path if "consumer_path" in dir() else str(row),
+                consumer_path if consumer_path is not None else str(row),
                 e,
             )
 

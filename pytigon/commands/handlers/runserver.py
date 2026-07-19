@@ -2,10 +2,13 @@
 Handles running web servers (WSGI/ASGI).
 """
 
+import logging
 import os
 import sys
 
 from .base import CommandHandler
+
+_logger = logging.getLogger(__name__)
 
 
 class RunServerCommandHandler(CommandHandler):
@@ -166,8 +169,12 @@ class RunServerCommandHandler(CommandHandler):
         try:
             from pytigon_gui.pytigon import main
 
-            sys.argv = [app] + gui_args
-            main()
+            tmp = sys.argv
+            try:
+                sys.argv = [app] + gui_args
+                main()
+            finally:
+                sys.argv = tmp
             return 0
         except ImportError:
             print("Error: pytigon_gui not available", file=sys.stderr)
@@ -191,7 +198,7 @@ class RunServerCommandHandler(CommandHandler):
         try:
             # Build server arguments
             sys.argv = [""] + argv[2:] + options
-            print("Web server: ", sys.argv[1:])
+            _logger.info("Web server: %s", sys.argv[1:])
 
             # Run appropriate server
             if wsgi:

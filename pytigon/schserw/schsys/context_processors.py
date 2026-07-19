@@ -1,6 +1,7 @@
 """Module contains standard context processors"""
 
 import datetime
+import re
 import time
 import uuid
 from urllib.parse import urlparse
@@ -87,6 +88,8 @@ MOBILE_USER_AGENTS = (
     "nintendo,webtv,playstation"
 ).split(",")
 
+_MOBILE_USER_AGENTS_RE = re.compile("|".join(re.escape(ua) for ua in MOBILE_USER_AGENTS if ua))
+
 
 def test_mobile(request):
     if "HTTP_X_OPERAMINI_FEATURES" in request.META:
@@ -97,9 +100,8 @@ def test_mobile(request):
             return True
     if "HTTP_USER_AGENT" in request.META and request.META["HTTP_USER_AGENT"]:
         s = request.META["HTTP_USER_AGENT"].lower()
-        for ua in MOBILE_USER_AGENTS:
-            if ua in s:
-                return True
+        if _MOBILE_USER_AGENTS_RE.search(s):
+            return True
     return False
 
 
@@ -113,7 +115,10 @@ def test_tablet(request):
 
 def standard_web_browser(request):
     if "browser_type" in request.GET:
-        return int(request.GET["browser_type"])
+        try:
+            return int(request.GET["browser_type"])
+        except (TypeError, ValueError):
+            return 0
     if "HTTP_USER_AGENT" not in request.META:
         return 0
     if (
@@ -128,8 +133,7 @@ def standard_web_browser(request):
             return 0
     else:
         if (
-            hasattr(request, "session")
-            and "HYBRID_BROWSER" in request.session
+            (hasattr(request, "session") and "HYBRID_BROWSER" in request.session)
             or "hybrid" in request.GET
         ):
             return 2

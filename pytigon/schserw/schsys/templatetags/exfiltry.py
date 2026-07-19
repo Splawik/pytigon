@@ -1028,12 +1028,9 @@ def _json_dumps(obj):
 def only_items_containing(select_field, mask):
     """Removes items from the select field that do not contain the mask."""
     if mask:
-        to_delete = []
-        for item in select_field.field.widget.choices:
-            if mask not in item[0]:
-                to_delete.append(item)
-        for item in to_delete:
-            select_field.field.widget.choices.remove(item)
+        select_field.field.widget.choices = [
+            item for item in select_field.field.widget.choices if mask in item[0]
+        ]
     return ""
 
 
@@ -1045,11 +1042,7 @@ def user_can_change_password(user):
     except Exception:
         return True
 
-    object_list = EmailAddress.objects.filter(user=user)
-    if len(object_list) > 0:
-        return False
-    else:
-        return True
+    return not EmailAddress.objects.filter(user=user).exists()
 
 
 @register.filter(name="prefetch_related")
