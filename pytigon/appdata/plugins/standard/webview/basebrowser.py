@@ -624,9 +624,16 @@ class BaseWebBrowser:
             s = self._local_request(href, parm)
             self.value_to_var(l[2], s)
         elif l[0] == "run_js":
-            self.execute_javascript(l[1])
+            # Arbitrary JS execution is gated to debug builds to avoid
+            # drive-by script injection from untrusted loaded pages.
+            if os.environ.get("PYTIGON_DEBUG"):
+                self.execute_javascript(l[1])
         elif l[0] == "python":
-            self.GetParent().exec_code(l[1])
+            # Remote Python execution from a loaded page is a critical RCE
+            # vector. Only allow it in debug builds where the embedded
+            # server is trusted to originate the command.
+            if os.environ.get("PYTIGON_DEBUG"):
+                self.GetParent().exec_code(l[1])
         elif l[0] == "ajax_get":
             if l[1].startswith("static:/"):
                 x = os.path.join(l[1].replace("static:/", wx.GetApp().root_path))

@@ -7,6 +7,7 @@ utilities for the CEF-based web browser backend.
 import asyncio
 import ctypes
 import http.client
+import os
 import platform
 import sys
 import time
@@ -330,13 +331,18 @@ def initialize():
             "external_browser": True,
             "devtools": True,
         },
-        "ignore_certificate_errors": True,
+        # Only ignore certificate errors in debug builds — in production this
+        # would allow man-in-the-middle attacks against the embedded client.
+        "ignore_certificate_errors": bool(os.environ.get("PYTIGON_DEBUG")),
     }
     switches = {
         # "disable-gpu": "1",
         "no-proxy-server": "1",
-        "disable-web-security": "1",
     }
+    # disable-web-security disables the Same-Origin Policy and is only safe
+    # in development for loading cross-origin assets; never enable in prod.
+    if os.environ.get("PYTIGON_DEBUG"):
+        switches["disable-web-security"] = "1"
 
     cef.Initialize(settings, switches=switches)
 

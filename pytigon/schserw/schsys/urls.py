@@ -1,5 +1,7 @@
 from base64 import b64decode
 
+import os
+
 from django.conf import settings
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
@@ -26,7 +28,6 @@ color_background_1_2:F3F3F3,color_background_1_5:F7F7F7,color_info:FFFFF0"
 )
 
 
-@csrf_exempt
 def sch_login(request, *argi, **argv):
     path = ""
     if is_in_dicts("next", (request.POST, request.GET)):
@@ -89,6 +90,14 @@ def sch_login(request, *argi, **argv):
         return HttpResponse("Error!")
     else:
         return HttpResponseRedirect(request.get_full_path())
+
+
+# CSRF exemption for the login endpoint is only needed by the embedded
+# wxPython client (which talks to 127.0.0.2 without a Django-rendered form
+# and therefore has no CSRF token). In a normal web-server deployment we
+# keep CSRF protection to prevent login CSRF.
+if os.environ.get("EMBEDED_DJANGO_SERVER"):
+    sch_login = csrf_exempt(sch_login)
 
 
 def sch_logout(request):

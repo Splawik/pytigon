@@ -267,6 +267,10 @@ def tabdialog(request, app, tab, id, action):
 def plugin_template(request, template_name):
     """Render a plugin template within the application context.
 
+    Only authenticated users may render templates in non-public mode. The
+    ``template_name`` is validated against path traversal and must live
+    under the ``plugins/`` namespace to avoid arbitrary template loading.
+
     Args:
         request: Django HTTP request.
         template_name: Name of the template to render.
@@ -274,6 +278,13 @@ def plugin_template(request, template_name):
     Returns:
         HttpResponse: Rendered template.
     """
+    if not settings.PUBLIC and not request.user.is_authenticated:
+        return HttpResponseForbidden()
+
+    # Block path traversal — template_name must not escape the plugins dir.
+    if ".." in template_name or template_name.startswith(("/", "\\")):
+        return HttpResponseForbidden()
+
     app = _get_wx_app()
     c = {"app": app} if app else {}
     for key, value in request.POST.items():
@@ -444,6 +455,11 @@ def site_media_protected(request, *argi, **argv):
         x = request.path.split("site_media_protected/")
         if len(x) >= 2:
             path = x[1]
+            # Reject path traversal attempts early — the path is later
+            # forwarded to nginx via X-Accel-Redirect, so we must not let
+            # "../" sequences escape the protected media root.
+            if ".." in path:
+                return HttpResponseForbidden()
             for row in settings.PROTECTED_MEDIA_PERMISSIONS:
                 result = re.match(row[0], path)
                 if result:
@@ -451,10 +467,12 @@ def site_media_protected(request, *argi, **argv):
                         if request.user.is_authenticated:
                             return redirect_site_media_protected(request)
                     elif row[1] == "username":
-                        if (f"{{{request.user.username}}}") in path:
+                        username = getattr(request.user, "username", None)
+                        if username and f"{{{username}}}" in path:
                             return redirect_site_media_protected(request)
                     elif row[1] == "email":
-                        if (f"{{{request.user.email}}}") in path:
+                        email = getattr(request.user, "email", None)
+                        if email and f"{{{email}}}" in path:
                             return redirect_site_media_protected(request)
                     else:
                         if request.user.has_perm(row[1]):

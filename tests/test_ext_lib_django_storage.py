@@ -23,16 +23,25 @@ from pytigon_lib.schdjangoext.django_storage import (
 
 class TestFSStorageValidation:
     def test_validate_file_name_always_true(self):
-        """Test validate_file_name always returns True."""
+        """Test validate_file_name accepts safe names."""
         assert FSStorage.validate_file_name("anything.txt") is True
-        assert FSStorage.validate_file_name("/absolute/path/file.txt") is True
-        assert FSStorage.validate_file_name("../relative/path.txt") is True
+        assert FSStorage.validate_file_name("subdir/file.txt") is True
         assert FSStorage.validate_file_name("") is True
+
+    def test_validate_file_name_rejects_traversal(self):
+        """Test validate_file_name rejects path traversal attempts."""
+        assert FSStorage.validate_file_name("../relative/path.txt") is False
+        assert FSStorage.validate_file_name("dir/../../etc/passwd") is False
+        assert FSStorage.validate_file_name("/absolute/path/file.txt") is False
 
     def test_validate_file_name_allow_relative(self):
         """Test validate_file_name with allow_relative_path parameter."""
         assert FSStorage.validate_file_name("file.txt", allow_relative_path=True) is True
         assert FSStorage.validate_file_name("file.txt", allow_relative_path=False) is True
+        assert (
+            FSStorage.validate_file_name("dir/file.txt", allow_relative_path=False)
+            is False
+        )
 
 
 # ---------------------------------------------------------------------------

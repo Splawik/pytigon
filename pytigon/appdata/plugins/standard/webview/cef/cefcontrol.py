@@ -4,6 +4,7 @@ Provides the CEFControl wx widget that embeds a Chromium browser
 and handles resource interception for local content.
 """
 
+import os
 import platform
 
 import wx
@@ -86,13 +87,18 @@ def cef_init():
                 "external_browser": True,
                 "devtools": True,
             },
-            "ignore_certificate_errors": True,
+            # Only ignore certificate errors in debug builds — in production
+            # this would allow MITM attacks against the embedded client.
+            "ignore_certificate_errors": bool(os.environ.get("PYTIGON_DEBUG")),
         }
         switches = {
             # "disable-gpu": "1",
             "no-proxy-server": "1",
-            "disable-web-security": "1",
         }
+        # disable-web-security turns off the Same-Origin Policy and is only
+        # safe for development; never enable in production.
+        if os.environ.get("PYTIGON_DEBUG"):
+            switches["disable-web-security"] = "1"
 
         cef.Initialize(settings, switches=switches)
 
