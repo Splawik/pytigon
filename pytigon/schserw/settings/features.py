@@ -12,6 +12,7 @@ from .base import (
     ENV,
     GRAPHQL,
     MAILER,
+    MCP_SERVER,
     PLATFORM_TYPE,
     PRJ_PATH,
     PRJ_PATH_ALT,
@@ -147,6 +148,12 @@ if REST:
         "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     }
 
+if MCP_SERVER:
+    if "oauth2_provider" not in INSTALLED_APPS:
+        INSTALLED_APPS.append("oauth2_provider")
+        INSTALLED_APPS.append("pytigon.schserw.oauth2_ext")
+    INSTALLED_APPS.append("pytigon.schserw.mcp")
+
 if GRAPHQL or REST:
     AUTHENTICATION_BACKENDS.append("graphql_jwt.backends.JSONWebTokenBackend")
     MIDDLEWARE.append("oauth2_provider.middleware.OAuth2TokenMiddleware")
@@ -209,14 +216,14 @@ if PWA:
                 pub_numbers = public_key.public_numbers()
                 prv_numbers = private_key.private_numbers()
                 raw_pub = (
-                    b"\x04"
-                    + pub_numbers.x.to_bytes(32, "big")
-                    + pub_numbers.y.to_bytes(32, "big")
+                    b"\x04" + pub_numbers.x.to_bytes(32, "big") + pub_numbers.y.to_bytes(32, "big")
                 )
                 pub_key = base64.urlsafe_b64encode(raw_pub).rstrip(b"=").decode()
-                prv_key = base64.urlsafe_b64encode(
-                    prv_numbers.private_value.to_bytes(32, "big")
-                ).rstrip(b"=").decode()
+                prv_key = (
+                    base64.urlsafe_b64encode(prv_numbers.private_value.to_bytes(32, "big"))
+                    .rstrip(b"=")
+                    .decode()
+                )
             except ImportError:
                 import warnings
 

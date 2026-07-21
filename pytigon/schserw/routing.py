@@ -85,6 +85,14 @@ class LifespanApp:
 
 django_asgi_app = get_asgi_application()
 
+# When MCP_SERVER is enabled, route the MCP Streamable HTTP endpoint
+# (/mcp) to a native ASGI app and leave everything else to Django. This keeps
+# the MCP request path on the event loop (no sync<->async bridging).
+if getattr(settings, "MCP_SERVER", False):
+    from pytigon.schserw.mcp.http import MCPHttpRouter, mcp_path
+
+    django_asgi_app = MCPHttpRouter(django_asgi_app, mcp_path())
+
 application = ProtocolTypeRouter(
     {
         "http": django_asgi_app,

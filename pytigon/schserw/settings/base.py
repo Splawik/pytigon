@@ -18,10 +18,7 @@ DATE_INPUT_FORMATS = [
 
 if (
     sys.argv
-    and (
-        (sys.argv[0].endswith("manage.py") and "runserver" in sys.argv)
-        or "--dev" in sys.argv
-    )
+    and ((sys.argv[0].endswith("manage.py") and "runserver" in sys.argv) or "--dev" in sys.argv)
 ) or ENV("PYTIGON_DEBUG"):
     DEBUG = True
     DB_DEBUG = True
@@ -94,9 +91,7 @@ DOC_URL_PROTECTED = "site_media_protected/doc/"
 APPEND_SLASH = False
 
 MEDIA_ROOT = os.path.join(os.path.join(DATA_PATH, BASE_PRJ_NAME), "media")
-MEDIA_ROOT_PROTECTED = os.path.join(
-    os.path.join(DATA_PATH, BASE_PRJ_NAME), "media_protected"
-)
+MEDIA_ROOT_PROTECTED = os.path.join(os.path.join(DATA_PATH, BASE_PRJ_NAME), "media_protected")
 UPLOAD_PATH = os.path.join(MEDIA_ROOT, "upload")
 UPLOAD_PATH_PROTECTED = os.path.join(MEDIA_ROOT_PROTECTED, "upload")
 DOC_PATH = os.path.join(MEDIA_ROOT, "doc")
@@ -107,16 +102,20 @@ SECRET_KEY = ENV("SECRET_KEY")
 if not SECRET_KEY:
     if (not PRODUCTION_VERSION) or DEBUG or ENV("EMBEDED_DJANGO_SERVER"):
         from django.core.management.utils import get_random_secret_key
+
         SECRET_KEY = get_random_secret_key()
     else:
         raise ValueError(
-            "SECRET_KEY must be set in production. "
-            "Set the SECRET_KEY environment variable."
+            "SECRET_KEY must be set in production. Set the SECRET_KEY environment variable."
         )
 
 GRAPHQL = True if ENV("GRAPHQL") else False
 
 REST = True if ENV("REST") else False
+
+MCP_SERVER = True if ENV("MCP_SERVER") else False
+
+MCP_SERVER_PRV = True if ENV("MCP_SERVER_PRV") else False
 
 RULES_ENABLED = True if ENV("RULES_ENABLED") else False
 
@@ -183,6 +182,8 @@ __all__ = [
     "SECRET_KEY",
     "GRAPHQL",
     "REST",
+    "MCP_SERVER",
+    "MCP_SERVER_PRV",
     "RULES_ENABLED",
     "MAILER",
     "ALLAUTH",
