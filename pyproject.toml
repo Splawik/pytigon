@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pytigon"
-version = "0.260721"
+version = "0.260723"
 description = "Pytigon - Application framework based on Django and wxWidgets"
 authors = [
     {name = "Sławomir Chołaj", email = "slawomir.cholaj@gmail.com"},

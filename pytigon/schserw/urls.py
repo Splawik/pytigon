@@ -173,7 +173,7 @@ if settings.REST:
             pass
 
 
-if settings.GRAPHQL or settings.REST:
+if settings.GRAPHQL or settings.REST or settings.MCP_SERVER_PRV:
     from oauth2_ext.views import ApplicationScopesTokenView
 
     _urlpatterns.extend(

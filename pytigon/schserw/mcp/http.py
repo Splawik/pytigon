@@ -141,10 +141,7 @@ async def _authenticate(scope):
                     result = auth_cls().authenticate(shim)
                 except Exception:
                     continue
-                if result:
-                    # DRF authenticators return (user, token); the graphql_jwt
-                    # backend returns the user directly.
-                    return result[0] if isinstance(result, (tuple, list)) else result
+                return result
             return None
         finally:
             close_old_connections()
@@ -200,8 +197,18 @@ async def mcp_streamable_http_protected(scope, receive, send):
         await mcp_streamable_http(scope, receive, send)
         return
 
-    user = await _authenticate(scope)
-    if user is None or not getattr(user, "is_authenticated", False):
+    auth_data = await _authenticate(scope)
+    if isinstance(auth_data, (tuple, list)):
+        is_authenticated = auth_data[0]
+        user = auth_data[1]
+    else:
+        user = auth_data
+        if user:
+            is_authenticate = getattr(user, "is_authenticated", False)
+        else:
+            is_authenticated = False
+
+    if not is_authenticated:
         await _unauthorized(send)
         return
     scope = dict(scope)
@@ -222,7 +229,9 @@ class MCPHttpRouter:
         self.django_app = django_app
         self.path = path
         self.protected = bool(getattr(settings, "MCP_SERVER_PRV", False))
-        self.mcp_app = mcp_streamable_http_protected if self.protected else mcp_streamable_http
+        self.mcp_app = (
+            mcp_streamable_http_protected if self.protected else mcp_streamable_http
+        )
 
     async def __call__(self, scope, receive, send):
         if scope.get("type") == "http" and self._matches(scope):

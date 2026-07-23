@@ -13,6 +13,7 @@ from .base import (
     GRAPHQL,
     MAILER,
     MCP_SERVER,
+    MCP_SERVER_PRV,
     PLATFORM_TYPE,
     PRJ_PATH,
     PRJ_PATH_ALT,
@@ -154,8 +155,12 @@ if MCP_SERVER:
         INSTALLED_APPS.append("pytigon.schserw.oauth2_ext")
     INSTALLED_APPS.append("pytigon.schserw.mcp")
 
-if GRAPHQL or REST:
-    AUTHENTICATION_BACKENDS.append("graphql_jwt.backends.JSONWebTokenBackend")
+if GRAPHQL or REST or MCP_SERVER_PRV:
+    if GRAPHQL:
+        AUTHENTICATION_BACKENDS.append("graphql_jwt.backends.JSONWebTokenBackend")
+    AUTHENTICATION_BACKENDS.append(
+        "oauth2_provider.backends.OAuth2Backend",
+    )
     MIDDLEWARE.append("oauth2_provider.middleware.OAuth2TokenMiddleware")
 
     OAUTH2_PROVIDER = {
