@@ -38,20 +38,20 @@ class CommandDispatcher:
             InitCommandHandler,
             ManageCommandHandler,
             PipCommandHandler,
-            PythonCommandHandler,
             RunCommandHandler,
             RunServerCommandHandler,
             ToolCommandHandler,
+            PythonCommandHandler,
         )
 
         # Register handlers in priority order
         self.registry.register(ManageCommandHandler(self.config))
         self.registry.register(RunCommandHandler(self.config))
         self.registry.register(RunServerCommandHandler(self.config))
-        self.registry.register(PythonCommandHandler(self.config))
         self.registry.register(InitCommandHandler(self.config))
         self.registry.register(PipCommandHandler(self.config))
         self.registry.register(ToolCommandHandler(self.config))
+        self.registry.register(PythonCommandHandler(self.config))
         self.registry.register(DefaultCommandHandler(self.config))
 
     def dispatch(self, argv: list[str], **kwargs) -> int:

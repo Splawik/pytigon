@@ -150,17 +150,20 @@ if REST:
     }
 
 if MCP_SERVER:
+    INSTALLED_APPS.append("pytigon.schserw.mcp")
+
+if MCP_SERVER_PRV:
     if "oauth2_provider" not in INSTALLED_APPS:
         INSTALLED_APPS.append("oauth2_provider")
         INSTALLED_APPS.append("pytigon.schserw.oauth2_ext")
-    INSTALLED_APPS.append("pytigon.schserw.mcp")
 
 if GRAPHQL or REST or MCP_SERVER_PRV:
-    if GRAPHQL:
-        AUTHENTICATION_BACKENDS.append("graphql_jwt.backends.JSONWebTokenBackend")
     AUTHENTICATION_BACKENDS.append(
         "oauth2_provider.backends.OAuth2Backend",
     )
+    if GRAPHQL:
+        AUTHENTICATION_BACKENDS.append("graphql_jwt.backends.JSONWebTokenBackend")
+
     MIDDLEWARE.append("oauth2_provider.middleware.OAuth2TokenMiddleware")
 
     OAUTH2_PROVIDER = {

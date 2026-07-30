@@ -119,6 +119,7 @@ class PythonCommandHandler(CommandHandler):
         # Run Python interpreter
         executable = self.get_executable()
         command = [executable] + argv[2:]
+        
         return self.run_subprocess(command)
 
     def _handle_script_file(self, argv: list[str]) -> int:
@@ -144,6 +145,9 @@ class PythonCommandHandler(CommandHandler):
         executable = self.get_executable()
         command = [executable] + argv[1:]
         if argv[1] == "-c":
-            return subprocess.run(command).returncode
+            result = subprocess.run([command[0], "-"], input = command[2], capture_output=True, text=True, check=True)
+            print(result.stdout)
+            print(result.stderr)
+            return result.returncode
         else:
             return self.run_subprocess(command)

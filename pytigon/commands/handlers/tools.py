@@ -30,6 +30,11 @@ class ToolCommandHandler(CommandHandler):
 
         """
         if len(argv) > 1:
+            if len(argv)==2 and argv[1] == '@':
+                argv[1] = '-c'
+                argv.append(r"import pkgutil, importlib.util, os; print('\n'.join(sorted([m.name for m in pkgutil.iter_modules() if not m.name.startswith('_') and (any(os.path.exists(os.path.join(loc, '__main__.py')) for loc in (importlib.util.find_spec(m.name).submodule_search_locations or []) if loc)) ])))")
+
+                return False
             return argv[1] in ("nim", "nimble", "-y") or argv[1].startswith("@")
         return False
 

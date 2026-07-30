@@ -8,6 +8,7 @@ import logging
 import os
 import sys
 
+
 from pytigon_lib.schtools.tools import get_executable
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")

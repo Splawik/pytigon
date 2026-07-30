@@ -111,11 +111,11 @@ if not SECRET_KEY:
 
 GRAPHQL = True if ENV("GRAPHQL") else False
 
-REST = True if ENV("REST") else False
-
 MCP_SERVER = True if ENV("MCP_SERVER") else False
 
 MCP_SERVER_PRV = True if ENV("MCP_SERVER_PRV") else False
+
+REST = True if ENV("REST") or MCP_SERVER else False
 
 RULES_ENABLED = True if ENV("RULES_ENABLED") else False
 
