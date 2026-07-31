@@ -1,7 +1,6 @@
 rm -rf /tmp/pytigon
 mkdir /tmp/pytigon
 cd pytigon
-ptig manage_schdevtools prepare_installer_files 
 export DATA_PATH=/tmp/pytigon
 ptig manage__schdata makeallmigrations
 ptig manage__schtools makeallmigrations
