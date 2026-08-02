@@ -37,11 +37,11 @@
                         <tr>
                                 <td bgcolor="#fff">
                                         <strong>
-                                                Hasło: "{{page_name}}"
+                                                Entry: "{{page_name}}"
                                         </strong>
                                 </td>
                                 <td align="right" bgcolor="#fff">
-                                                <a href="/schwiki/{{page_name}}/edit/" class="popup">edytuj stronę</a>
+                                                <a href="/schwiki/{{page_name}}/edit/" class="popup">edit page</a>
                                 </td>
                         </tr>
                 </table>
@@ -54,13 +54,13 @@
                                                         <strong>
                                                                 <font color="#000">
                                                                         {% block form_title %}
-                                                                                Hasło: "{{page_name}}"
+                                                                                Entry: "{{page_name}}"
                                                                         {% endblock %}
                                                                 </font>
                                                         </strong>
                                                 </td>
                                                 <td align="left" valign="top">
-                                                        <CTRLBUTTON HREF="/schwiki/{{page_name}}/edit/" LABEL="edytuj stronę"></CTRLBUTTON>
+                                                        <CTRLBUTTON HREF="/schwiki/{{page_name}}/edit/" LABEL="edit page"></CTRLBUTTON>
                                                 </td>
                                                 <td right="left" valign="top">
                                                         <CTRLCLOSEBUTTON NAME="EXIT" SRC="wx.ART_CROSS_MARK">
@@ -76,7 +76,7 @@
                                 {% if content %}
                                         {{content|wikify|safe}}
                                   {% else %}
-                                        Ta strona jeszcze nie istnieje!
+                                        This page does not exist yet!
                                 {% endif %}
                         </td>
                 </tr>
