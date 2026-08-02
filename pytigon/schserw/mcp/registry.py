@@ -1,6 +1,6 @@
 """MCP server registry — the extensible layer (no Django Channels here).
 
-This module owns the :class:`~mcp.server.FastMCP` server and the registration of
+This module owns the :class:`~fastmcp.FastMCP` server and the registration of
 MCP tools. Adding a new MCP capability is done here (or in application code via
 the public decorators) and never requires touching the Channels transport in
 ``pytigon.schserw.mcp.consumer``.
@@ -36,7 +36,7 @@ import inspect
 import logging
 
 from django.conf import settings
-from mcp.server import FastMCP
+from fastmcp import FastMCP
 
 logger = logging.getLogger(__name__)
 
