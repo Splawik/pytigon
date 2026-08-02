@@ -16,8 +16,11 @@ ptig manage_[[nazwa_projektu]] runserver
 Aby uruchomić python użyj:
 ptig python [[parametry]]
 
+WAŻNE: Do wszelkich wywołań interpretera Pythona używaj "ptig python", a nie gołego "python", także przy szybkich sprawdzeniach i importach (np. "ptig python -c 'import mcp'"). Środowisko ptig może mieć inny (większy) zestaw zależności niż bazowy interpreter — pakiet dostępny w ptig może być niedostępny w gołym python, i odwrotnie. Sprawdzenie wersji pakietu: "ptig python -m pip show [[pakiet]]" lub "ptig python -m pip list".
+
 Aby uruchomić testy użyj polecenia:
 ptig -m pytest lub ptig @pytest (@ zastępuje -m)
+Testy uruchamiaj zawsze z katalogu głównego repozytorium jedną komendą (np. "ptig @pytest tests/"), aby uniknąć rozjazdów konfiguracji pytest między pyproject.toml a plikami pytest.ini w podkatalogach.
 
 Aby zarządzać projektem uruchom:
 ptig manage_[[nazwa_projektu]] [[polecenie]] 

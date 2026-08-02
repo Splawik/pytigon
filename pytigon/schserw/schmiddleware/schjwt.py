@@ -2,6 +2,7 @@ import logging
 
 from django.contrib.auth import get_user_model
 from django.utils.functional import SimpleLazyObject
+from graphql_jwt.exceptions import JSONWebTokenError
 from graphql_jwt.utils import get_http_authorization, get_payload
 
 logger = logging.getLogger(__name__)
@@ -31,6 +32,6 @@ class JWTUserMiddleware:
                 username = payload.get("username")
                 if username:
                     request.user = SimpleLazyObject(lambda: get_user(request, username))
-            except Exception:
+            except (JSONWebTokenError, ValueError, TypeError, KeyError):
                 logger.debug("JWT authentication failed", exc_info=True)
         return self.get_response(request)

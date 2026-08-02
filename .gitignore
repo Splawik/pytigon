@@ -2,6 +2,17 @@ __pycache__/
 *.py[cod]
 .ipynb_checkpoints/
 
+# Test / coverage / tooling reports and caches
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.tox/
+*.coverage
+
 pip-log.txt
 pip-delete-this-directory.txt
 launch.json
@@ -75,4 +86,5 @@ kilo.json
 .pre-commit-config.yaml
 .kilo/**
 .*/
+!.github/
 

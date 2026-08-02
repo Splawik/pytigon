@@ -174,6 +174,7 @@ if settings.REST:
 
 
 if settings.GRAPHQL or settings.REST or settings.MCP_SERVER_PRV:
+    from oauth2_ext.discovery import OAuth2AuthorizationServerMetadataView
     from oauth2_ext.views import ApplicationScopesTokenView
 
     _urlpatterns.extend(
@@ -183,6 +184,16 @@ if settings.GRAPHQL or settings.REST or settings.MCP_SERVER_PRV:
                 include("oauth2_provider.urls", namespace="oauth2_provider"),
             ),
             path("o/token/", ApplicationScopesTokenView.as_view(), name="token"),
+            path(
+                ".well-known/oauth-authorization-server",
+                OAuth2AuthorizationServerMetadataView.as_view(),
+                name="oauth2-authorization-server-metadata",
+            ),
+            path(
+                "o/.well-known/oauth-authorization-server",
+                OAuth2AuthorizationServerMetadataView.as_view(),
+                name="oauth2-authorization-server-metadata-internal",
+            ),
         ]
     )
 

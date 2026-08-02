@@ -171,7 +171,7 @@ if GRAPHQL or REST or MCP_SERVER_PRV:
             "read": "Read scope",
             "write": "Write scope",
         },
-        "PKCE_REQUIRED": False,
+        "PKCE_REQUIRED": True,
     }
 
     OAUTH2_PROVIDER_APPLICATION_MODEL = "oauth2_provider.Application"

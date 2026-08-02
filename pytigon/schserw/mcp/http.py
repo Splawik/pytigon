@@ -139,7 +139,13 @@ async def _authenticate(scope):
             for auth_cls in authenticators:
                 try:
                     result = auth_cls().authenticate(shim)
-                except Exception:
+                except Exception as exc:  # noqa: BLE001 - authenticator contract
+                    logger.warning(
+                        "MCP auth: authenticator %s raised %s: %s",
+                        getattr(auth_cls, "__name__", auth_cls),
+                        type(exc).__name__,
+                        exc,
+                    )
                     continue
                 return result
             return None
@@ -204,7 +210,7 @@ async def mcp_streamable_http_protected(scope, receive, send):
     else:
         user = auth_data
         if user:
-            is_authenticate = getattr(user, "is_authenticated", False)
+            is_authenticated = getattr(user, "is_authenticated", False)
         else:
             is_authenticated = False
 

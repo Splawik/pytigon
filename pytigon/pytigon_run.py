@@ -8,36 +8,56 @@ import logging
 import os
 import sys
 
-
-from pytigon_lib.schtools.tools import get_executable
-
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 _logger = logging.getLogger("pytigon_run")
 
 
-# Set environment variables
-os.environ["START_PATH"] = os.path.abspath(os.getcwd())
-os.environ["XKB_CONFIG_ROOT"] = "/usr/share/X11/xkb"
+def _configure_logging() -> None:
+    """Configure root logging for the CLI process.
 
-# Set secret key if not provided (generates random key for dev)
-if not ("SECRET_KEY" in os.environ or "PYTIGON_SECRET_KEY" in os.environ):
-    import secrets
+    Deliberately called from ``run`` (the process entry point) rather than at
+    import time, so that importing this module — for example from an application
+    that embeds Pytigon, from the GUI, or from tests — does not take over the
+    embedding process's logging configuration.
+    """
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 
-    os.environ["SECRET_KEY"] = secrets.token_hex(50)
 
-# Handle --dev flag: use local project paths for development
-if "--dev" in sys.argv or "ptig.py" in sys.argv:
-    if "--dev" in sys.argv:
-        sys.argv.remove("--dev")
-    os.environ["PYTIGON_PRJ_PATH"] = os.path.join(os.environ["START_PATH"], "prj")
-    os.environ["PYTIGON_DEBUG"] = "1"
-    if not os.path.exists(os.environ["PYTIGON_PRJ_PATH"]):
-        os.environ["PYTIGON_PRJ_PATH"] = os.environ["START_PATH"]
+def _setup_process_environment(argv: list[str]) -> list[str]:
+    """Apply CLI/environment setup previously done at import time.
 
-# Handle --script-mode flag
-if "--script-mode" in sys.argv:
-    sys.argv.remove("--script-mode")
-    os.environ["SCRIPT_MODE"] = "1"
+    Sets the working-directory and secret-key environment variables, and strips
+    the ``--dev`` / ``--script-mode`` convenience flags from ``argv`` so the
+    dispatcher only sees real commands.
+
+    Args:
+        argv: The raw command-line arguments.
+
+    Returns:
+        The cleaned argument list (flags removed).
+    """
+    os.environ["START_PATH"] = os.path.abspath(os.getcwd())
+    os.environ["XKB_CONFIG_ROOT"] = "/usr/share/X11/xkb"
+
+    if not ("SECRET_KEY" in os.environ or "PYTIGON_SECRET_KEY" in os.environ):
+        import secrets
+
+        os.environ["SECRET_KEY"] = secrets.token_hex(50)
+
+    argv = list(argv)
+
+    if "--dev" in argv or "ptig.py" in argv:
+        if "--dev" in argv:
+            argv.remove("--dev")
+        os.environ["PYTIGON_PRJ_PATH"] = os.path.join(os.environ["START_PATH"], "prj")
+        os.environ["PYTIGON_DEBUG"] = "1"
+        if not os.path.exists(os.environ["PYTIGON_PRJ_PATH"]):
+            os.environ["PYTIGON_PRJ_PATH"] = os.environ["START_PATH"]
+
+    if "--script-mode" in argv:
+        argv.remove("--script-mode")
+        os.environ["SCRIPT_MODE"] = "1"
+
+    return argv
 
 
 # ---------------------------------------------------------------------------
@@ -54,9 +74,12 @@ def run(param=None):
         param: Optional list of command-line arguments (overrides sys.argv).
     """
     try:
+        _configure_logging()
+
         from pytigon.commands import CommandDispatcher
 
-        argv = param if param else sys.argv
+        argv = param if param is not None else sys.argv
+        argv = _setup_process_environment(argv)
 
         base_path = os.path.abspath(os.getcwd())
         ext_lib_path = os.path.join(base_path, "ext_lib")

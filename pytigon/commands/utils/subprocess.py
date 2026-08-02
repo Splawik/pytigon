@@ -7,6 +7,8 @@ import shutil
 import subprocess
 import sys
 
+from ..errors import SecurityError, SubprocessError
+
 
 class SafeSubprocess:
     """Secure subprocess execution with input validation.
@@ -196,5 +198,5 @@ class SafeSubprocess:
         try:
             result = self.run(command, cwd=cwd, check=True, capture_output=capture_output)
             return result.returncode
-        except Exception:
+        except (SecurityError, SubprocessError, OSError):
             return 1
