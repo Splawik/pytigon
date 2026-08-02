@@ -163,6 +163,22 @@ class TestSafeSubprocess:
         assert sp._contains_dangerous_chars("$(whoami)") is True
         assert sp._contains_dangerous_chars("`whoami`") is True
 
+    def test_contains_dangerous_chars_control_characters(self):
+        sp = SafeSubprocess()
+        assert sp._contains_dangerous_chars("arg\x00nul") is True
+        assert sp._contains_dangerous_chars("arg\nnewline") is True
+
+    def test_python_dash_c_code_is_allowed(self):
+        """Shell metacharacters needed by Python code (() {} [] < > ~) must not
+        be rejected: subprocess.run() uses an argv list, never a shell."""
+        sp = SafeSubprocess()
+        result = sp.validate_command(["python3", "-c", "print('hello')"])
+        assert result == ["python3", "-c", "print('hello')"]
+        assert sp._contains_dangerous_chars("print('hello')") is False
+        assert sp._contains_dangerous_chars("{'a': [1, 2]}") is False
+        assert sp._contains_dangerous_chars("1 < 2") is False
+        assert sp._contains_dangerous_chars("~/.config") is False
+
     def test_run_simple_with_valid_command(self):
         sp = SafeSubprocess()
         exit_code = sp.run_simple(["python3", "--version"])

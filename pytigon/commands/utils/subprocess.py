@@ -21,7 +21,16 @@ class SafeSubprocess:
     - The Python interpreter itself
     """
 
-    DANGEROUS_CHARS = set(";&|`$(){}[]<>!#~")
+    # Characters rejected in command arguments.
+    #
+    # subprocess.run() is always invoked with an argv list (never a shell), so
+    # shell metacharacters like () {} [] <> ~ are harmless there — and must stay
+    # allowed, e.g. `ptig python -c "print('hello')"`. NUL and other control
+    # characters are always rejected (NUL cannot even be passed via argv).
+    # The remaining shell markers (; & | $ ` ! #) are kept as a conservative
+    # defense-in-depth set in case an argument is ever re-joined into a shell
+    # command by another handler.
+    DANGEROUS_CHARS = set(";&|`$!#") | {chr(c) for c in range(32)}
 
     def __init__(self):
         pass
@@ -198,5 +207,7 @@ class SafeSubprocess:
         try:
             result = self.run(command, cwd=cwd, check=True, capture_output=capture_output)
             return result.returncode
-        except (SecurityError, SubprocessError, OSError):
+        except (SecurityError, SubprocessError, OSError) as e:
+            # Never fail silently: report the reason so callers get diagnostics.
+            print(f"Error: {e}", file=sys.stderr)
             return 1

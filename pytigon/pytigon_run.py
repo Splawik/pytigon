@@ -43,7 +43,7 @@ def _setup_process_environment(argv: list[str]) -> list[str]:
 
         os.environ["SECRET_KEY"] = secrets.token_hex(50)
 
-    argv = list(argv)
+    # argv = list(argv)
 
     if "--dev" in argv or "ptig.py" in argv:
         if "--dev" in argv:

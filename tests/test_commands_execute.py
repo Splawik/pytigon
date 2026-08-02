@@ -202,11 +202,31 @@ class TestSafeSubprocessErrors:
         with pytest.raises(SubprocessError, match="Failed to execute"):
             sp.run(["python3", "--version"])
 
-    def test_run_simple_swallows_exceptions(self, monkeypatch):
-        """run_simple must return 1 instead of raising on any failure."""
+    def test_run_simple_reports_errors(self, monkeypatch, capsys):
+        """run_simple must return 1 and report the reason on stderr."""
         sp = SafeSubprocess()
         monkeypatch.setattr(sp, "run", lambda *a, **k: (_ for _ in ()).throw(SubprocessError("x")))
         assert sp.run_simple(["python3", "--version"]) == 1
+        captured = capsys.readouterr()
+        assert "x" in captured.err
+
+    def test_run_simple_reports_security_error(self, capsys):
+        """SecurityError (e.g. dangerous chars) must be reported, not silent."""
+        sp = SafeSubprocess()
+        assert sp.run_simple(["python3", "-c", "print('hello'); print(1)"]) == 1
+        captured = capsys.readouterr()
+        assert "dangerous characters" in captured.err
+
+    def test_run_dash_c_via_argv(self):
+        """End-to-end: -c code as argv (no shell) executes and prints."""
+        sp = SafeSubprocess()
+        result = sp.run(
+            ["python3", "-c", "print('hello')"],
+            capture_output=True,
+            check=False,
+        )
+        assert result.returncode == 0
+        assert b"hello" in result.stdout
 
 
 # ---------------------------------------------------------------------------

@@ -3,7 +3,6 @@ Handles running Python interpreter and Python scripts in Pytigon environment.
 """
 
 import os
-import subprocess
 
 from .base import CommandHandler
 
@@ -53,9 +52,8 @@ class PythonCommandHandler(CommandHandler):
             if argv[1].startswith("python_"):
                 return self._handle_python_app(argv)
             # Check if it's a .py file (ptig script.py = ptig python script.py)
-            if (
-                argv[1].endswith(".py")
-                or (argv[1].startswith("-") and not argv[1].startswith("--"))
+            if argv[1].endswith(".py") or (
+                argv[1].startswith("-") and not argv[1].startswith("--")
             ):
                 return self._handle_script_file(argv)
             # Otherwise it's just 'python'
@@ -119,7 +117,6 @@ class PythonCommandHandler(CommandHandler):
         # Run Python interpreter
         executable = self.get_executable()
         command = [executable] + argv[2:]
-        
         return self.run_subprocess(command)
 
     def _handle_script_file(self, argv: list[str]) -> int:
@@ -141,13 +138,10 @@ class PythonCommandHandler(CommandHandler):
         if ret:
             argv[1] = ret[0]
 
-        # Run Python script (include argv[1] which is the .py file)
+        # Run Python script (include argv[1] which is the .py file).
+        # -c / -m and any other Python interpreter flags are routed through the
+        # same safe subprocess path: subprocess.run() uses an argv list (no
+        # shell), so the code string is passed as a plain argument.
         executable = self.get_executable()
         command = [executable] + argv[1:]
-        if argv[1] == "-c":
-            result = subprocess.run([command[0], "-"], input = command[2], capture_output=True, text=True, check=True)
-            print(result.stdout)
-            print(result.stderr)
-            return result.returncode
-        else:
-            return self.run_subprocess(command)
+        return self.run_subprocess(command)

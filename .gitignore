@@ -88,3 +88,5 @@ kilo.json
 .*/
 !.github/
 
+reasonix.toml
+todo.md

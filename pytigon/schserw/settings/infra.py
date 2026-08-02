@@ -38,6 +38,54 @@ if "-v" in sys.argv:
 else:
     V = 1
 
+def _get_logging_handlers(level: str) -> dict:
+    """Build the production LOGGING handlers dict.
+
+    Prefers file handlers writing into LOG_PATH, but falls back to console
+    (StreamHandler) handlers when LOG_PATH is missing or not writable, so that
+    Django's dictConfig never fails during startup — mirroring the CACHES
+    fallback below.
+    """
+    try:
+        os.makedirs(LOG_PATH, exist_ok=True)
+        probe = os.path.join(LOG_PATH, ".pytigon-log-write-test")
+        with open(probe, "w"):
+            pass
+        os.remove(probe)
+    except OSError as e:
+        logger.warning(
+            "Log path %s is not writable (%s); using console logging instead",
+            LOG_PATH,
+            e,
+        )
+        return {
+            "logfile": {
+                "level": level,
+                "class": "logging.StreamHandler",
+                "formatter": "standard",
+            },
+            "errorlogfile": {
+                "level": level,
+                "class": "logging.StreamHandler",
+                "formatter": "standard",
+            },
+        }
+    return {
+        "logfile": {
+            "level": level,
+            "class": "logging.FileHandler",
+            "filename": LOG_PATH + "/pytigon.log",
+            "formatter": "standard",
+        },
+        "errorlogfile": {
+            "level": level,
+            "class": "logging.FileHandler",
+            "filename": LOG_PATH + "/pytigon-err.log",
+            "formatter": "standard",
+        },
+    }
+
+
 if PRODUCTION_VERSION:
     if V == 3:
         level = "INFO"
@@ -58,20 +106,7 @@ if PRODUCTION_VERSION:
                 "datefmt": "%Y-%m-%d %H:%M:%S",
             }
         },
-        "handlers": {
-            "logfile": {
-                "level": level,
-                "class": "logging.FileHandler",
-                "filename": LOG_PATH + "/pytigon.log",
-                "formatter": "standard",
-            },
-            "errorlogfile": {
-                "level": level,
-                "class": "logging.FileHandler",
-                "filename": LOG_PATH + "/pytigon-err.log",
-                "formatter": "standard",
-            },
-        },
+        "handlers": _get_logging_handlers(level),
         "loggers": {
             "django": {
                 "handlers": ["logfile", "errorlogfile"],
@@ -115,12 +150,13 @@ if PRODUCTION_VERSION:
             },
         }
     elif ENV("PYTIGON_TASK"):
-        LOGGING["handlers"]["logfile"]["filename"] = LOGGING["handlers"]["logfile"][
-            "filename"
-        ].replace(".log", "-task.log")
-        LOGGING["handlers"]["errorlogfile"]["filename"] = LOGGING["handlers"][
-            "errorlogfile"
-        ]["filename"].replace(".log", "_task.log")
+        for handler_name, suffix in (
+            ("logfile", "-task.log"),
+            ("errorlogfile", "_task.log"),
+        ):
+            handler = LOGGING["handlers"][handler_name]
+            if "filename" in handler:
+                handler["filename"] = handler["filename"].replace(".log", suffix)
 else:
     if V == 3:
         level = "DEBUG"
