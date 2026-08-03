@@ -209,10 +209,14 @@ async def mcp_streamable_http_protected(scope, receive, send):
         user = auth_data[1]
     else:
         user = auth_data
-        if user:
+
+    if user:
+        if hasattr(user, "is_authenticated"):
             is_authenticated = getattr(user, "is_authenticated", False)
         else:
-            is_authenticated = False
+            is_authenticated = True
+    else:
+        is_authenticated = False
 
     if not is_authenticated:
         await _unauthorized(send)
@@ -235,9 +239,7 @@ class MCPHttpRouter:
         self.django_app = django_app
         self.path = path
         self.protected = bool(getattr(settings, "MCP_SERVER_PRV", False))
-        self.mcp_app = (
-            mcp_streamable_http_protected if self.protected else mcp_streamable_http
-        )
+        self.mcp_app = mcp_streamable_http_protected if self.protected else mcp_streamable_http
 
     async def __call__(self, scope, receive, send):
         if scope.get("type") == "http" and self._matches(scope):
