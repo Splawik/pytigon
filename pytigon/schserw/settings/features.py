@@ -167,6 +167,8 @@ if GRAPHQL or REST or MCP_SERVER_PRV:
     MIDDLEWARE.append("oauth2_provider.middleware.OAuth2TokenMiddleware")
 
     OAUTH2_PROVIDER = {
+        "OIDC_ENABLED": True,
+        "OIDC_RSA_PRIVATE_KEY": os.environ.get("OIDC_RSA_PRIVATE_KEY", ""),
         "SCOPES": {
             "read": "Read scope",
             "write": "Write scope",
