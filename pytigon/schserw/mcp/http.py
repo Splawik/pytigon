@@ -22,7 +22,7 @@ import posixpath
 
 from asgiref.sync import sync_to_async
 from django.conf import settings
-from django.http import QueryDict
+from django.http import HttpRequest, QueryDict
 from django.utils.module_loading import import_string
 from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
 
@@ -44,21 +44,38 @@ def mcp_path() -> str:
 # ---------------------------------------------------------------------------
 
 _JWT_BACKEND_PATH = "graphql_jwt.backends.JSONWebTokenBackend"
+# OAuth2 auth stack is configured for MCP_SERVER_PRV even when REST is off, so
+# the OAuth2 authenticator must also be derived from AUTHENTICATION_BACKENDS.
+_OAUTH2_BACKEND_PATH = "oauth2_provider.backends.OAuth2Backend"
+_OAUTH2_AUTHENTICATION_PATH = "oauth2_provider.contrib.rest_framework.OAuth2Authentication"
 
 
-class _AuthRequest:
-    """Minimal HttpRequest-like shim for the REST auth backends.
+class _AuthRequest(HttpRequest):
+    """HttpRequest populated from an ASGI scope for the REST auth backends.
 
-    The OAuth2 and JWT authenticators only inspect request headers (the
-    ``Authorization`` bearer/JWT token); the request body is not needed to
-    validate a bearer token, so this shim avoids consuming the body that the
-    MCP handler still has to read.
+    Built on a real ``django.http.HttpRequest`` (not a plain object) so that
+    every attribute/method the OAuth2/JWT authenticators rely on — ``GET``,
+    ``POST``, ``META``, ``COOKIES``, ``build_absolute_uri``, ``is_secure``,
+    ``get_full_path`` — behaves exactly like in a normal Django request. This
+    matters because newer django-oauth-toolkit versions (>= 3.4.0) call
+    ``request.GET`` and ``request.build_absolute_uri()`` inside
+    ``OAuthLibCore.verify_request``.
+
+    The request body is not needed to validate a bearer token, so it is not
+    consumed from the stream (the MCP handler still has to read it).
     """
 
     def __init__(self, scope):
+        super().__init__()
         self.method = scope.get("method", "GET")
-        self.path = scope.get("path", "")
-        self.META = self._headers_to_meta(scope)
+        path = scope.get("path") or ""
+        self.path = path
+        self.path_info = path
+        self.META = self._build_meta(scope)
+        qs = scope.get("query_string", b"")
+        if isinstance(qs, bytes):
+            qs = qs.decode("latin-1")
+        self.GET = QueryDict(qs)
         self.POST = QueryDict()
         self.COOKIES = {}
         self._scope = scope
@@ -78,14 +95,44 @@ class _AuthRequest:
             meta[key] = value
         return meta
 
-    def get_full_path(self):
-        qs = self._scope.get("query_string", b"")
-        if isinstance(qs, bytes):
-            qs = qs.decode("latin-1")
-        return self.path + (("?" + qs) if qs else "")
+    @classmethod
+    def _build_meta(cls, scope):
+        meta = cls._headers_to_meta(scope)
+        scheme = scope.get("scheme", "http")
+        meta["wsgi.url_scheme"] = scheme
+        server = scope.get("server") or ()
+        if len(server) >= 2 and server[0]:
+            host, port = server[0], server[1]
+            if "HTTP_HOST" not in meta:
+                default_port = 443 if scheme == "https" else 80
+                authority = (
+                    host if (not port or int(port) == default_port) else f"{host}:{port}"
+                )
+                meta["HTTP_HOST"] = authority
+            meta["SERVER_NAME"] = str(host)
+            if port:
+                meta["SERVER_PORT"] = str(port)
+        meta["SCRIPT_NAME"] = ""
+        meta.setdefault("PATH_INFO", scope.get("path") or "")
+        return meta
 
-    def is_secure(self):
-        return self._scope.get("scheme") == "https"
+    def build_absolute_uri(self, location=None):
+        """Build an absolute URI from the ASGI scope.
+
+        django-oauth-toolkit >= 3.4 calls ``build_absolute_uri`` in
+        ``verify_request`` (RFC 8707 audience handling). We reconstruct the
+        absolute URI directly from the scope so it never depends on
+        ``ALLOWED_HOSTS`` or proxy-header settings.
+        """
+        if location is None:
+            location = self.get_full_path()
+        if location.startswith(("http://", "https://")):
+            return location
+        scheme = self.META.get("wsgi.url_scheme") or "http"
+        host = self.META.get("HTTP_HOST") or self.META.get("SERVER_NAME") or "localhost"
+        if not location.startswith("/"):
+            location = "/" + location
+        return f"{scheme}://{host}{location}"
 
 
 def _resolve_authenticators():
@@ -99,8 +146,11 @@ def _resolve_authenticators():
     paths = []
     rest_framework = getattr(settings, "REST_FRAMEWORK", None) or {}
     paths.extend(rest_framework.get("DEFAULT_AUTHENTICATION_CLASSES", []))
-    if _JWT_BACKEND_PATH in getattr(settings, "AUTHENTICATION_BACKENDS", []):
+    auth_backends = getattr(settings, "AUTHENTICATION_BACKENDS", [])
+    if _JWT_BACKEND_PATH in auth_backends:
         paths.append(_JWT_BACKEND_PATH)
+    if _OAUTH2_BACKEND_PATH in auth_backends:
+        paths.append(_OAUTH2_AUTHENTICATION_PATH)
 
     seen = set()
     classes = []
@@ -137,17 +187,32 @@ async def _authenticate(scope):
 
         try:
             for auth_cls in authenticators:
+                name = getattr(auth_cls, "__name__", str(auth_cls))
                 try:
                     result = auth_cls().authenticate(shim)
                 except Exception as exc:  # noqa: BLE001 - authenticator contract
                     logger.warning(
                         "MCP auth: authenticator %s raised %s: %s",
-                        getattr(auth_cls, "__name__", auth_cls),
+                        name,
                         type(exc).__name__,
                         exc,
                     )
                     continue
-                return result
+                if isinstance(result, (tuple, list)) and len(result) >= 2:
+                    # A DRF authenticator returned a valid ``(user, auth)``.
+                    if result[0] is None:
+                        logger.info(
+                            "MCP auth: %s accepted a valid token without a user "
+                            "(e.g. client_credentials grant)",
+                            name,
+                        )
+                    return result
+                if result is not None:
+                    return result
+            logger.warning(
+                "MCP auth: no authenticator accepted the request "
+                "(%d configured)", len(authenticators),
+            )
             return None
         finally:
             close_old_connections()
@@ -204,19 +269,24 @@ async def mcp_streamable_http_protected(scope, receive, send):
         return
 
     auth_data = await _authenticate(scope)
-    if isinstance(auth_data, (tuple, list)):
-        is_authenticated = auth_data[0]
-        user = auth_data[1]
+    if isinstance(auth_data, (tuple, list)) and len(auth_data) >= 2:
+        # A DRF authenticator returns ``(user, auth)`` on success (e.g. OAuth2
+        # returns ``(access_token.user, access_token)``) and ``None`` on
+        # failure. A tuple therefore always means authentication succeeded,
+        # even when ``user`` is ``None`` (e.g. ``client_credentials`` grants,
+        # where the access token has no associated user).
+        is_authenticated = True
+        user = auth_data[0]
     else:
+        # Non-DRF authenticators (e.g. the JWT backend) return a user object or
+        # ``None``; authentication succeeded only if a user is present.
         user = auth_data
-
-    if user:
-        if hasattr(user, "is_authenticated"):
+        if user is None:
+            is_authenticated = False
+        elif hasattr(user, "is_authenticated"):
             is_authenticated = getattr(user, "is_authenticated", False)
         else:
             is_authenticated = True
-    else:
-        is_authenticated = False
 
     if not is_authenticated:
         await _unauthorized(send)
