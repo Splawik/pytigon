@@ -115,6 +115,7 @@ class SafeSubprocess:
         capture_output: bool = False,
         timeout: int | None = None,
         check: bool = True,
+        validate: bool = True,
     ) -> subprocess.CompletedProcess:
         """Safely execute a subprocess command.
 
@@ -137,7 +138,10 @@ class SafeSubprocess:
         from ..errors import SubprocessError
 
         # Validate command
-        validated_command = self.validate_command(command)
+        if validate:
+            validated_command = self.validate_command(command)
+        else:
+            validated_command = list(command)
 
         # Prepare environment
         subprocess_env = os.environ.copy()
@@ -193,6 +197,7 @@ class SafeSubprocess:
         command: list[str],
         cwd: str | None = None,
         capture_output=False,
+        validate: bool = True,
     ) -> int:
         """Simple subprocess execution that returns exit code.
 
@@ -205,7 +210,13 @@ class SafeSubprocess:
 
         """
         try:
-            result = self.run(command, cwd=cwd, check=True, capture_output=capture_output)
+            result = self.run(
+                command,
+                cwd=cwd,
+                check=True,
+                capture_output=capture_output,
+                validate=validate,
+            )
             return result.returncode
         except (SecurityError, SubprocessError, OSError) as e:
             # Never fail silently: report the reason so callers get diagnostics.

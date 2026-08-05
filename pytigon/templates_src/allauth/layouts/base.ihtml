@@ -15,7 +15,7 @@
         {{ block.super }}
 
     % if not user.is_authenticated or FORCE_LOGIN_WIN:
-        % if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN or "login" in request.path or "signup" in request.path:
+        % if settings.SHOW_LOGIN_WIN or SHOW_LOGIN_WIN or "login" in request.path or "/accounts/" in request.path:
             %% login_background
                 {{ block.super }}
 

@@ -211,18 +211,24 @@ class CommandHandler(ABC):
         except ImportError:
             return sys.executable
 
-    def run_subprocess(self, command: list[str], cwd: str | None = None) -> int:
+    def run_subprocess(
+        self,
+        command: list[str],
+        cwd: str | None = None,
+        validate: bool = True,
+    ) -> int:
         """Run a subprocess command safely.
 
         Args:
             command: Command to execute
             cwd: Working directory
+            validate: Whether to apply argument security validation
 
         Returns:
             Exit code
 
         """
-        return self.subprocess.run_simple(command, cwd=cwd)
+        return self.subprocess.run_simple(command, cwd=cwd, validate=validate)
 
     def handle_error(self, error: Exception, context: dict[str, Any] | None = None) -> int:
         """Handle an error using the error handler.

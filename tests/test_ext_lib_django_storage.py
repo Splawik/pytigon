@@ -110,7 +110,7 @@ class TestOSFSExt:
 
         fs_instance = OSFS_EXT(str(new_dir))
         assert fs_instance is not None
-        assert str(fs_instance._root) == str(new_dir)
+        assert str(fs_instance.root) == str(new_dir)
 
     def test_init_existing_directory(self, tmp_path):
         """Test OSFS_EXT works with existing directory."""

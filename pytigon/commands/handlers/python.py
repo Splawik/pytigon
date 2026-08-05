@@ -36,6 +36,16 @@ class PythonCommandHandler(CommandHandler):
             )
         return False
 
+    def _is_c_command(self, argv: list[str]) -> bool:
+        """Return True if this is a python -c 'code' invocation.
+
+        `ptig python -c '...'` and `ptig -c '...'` are equivalent to running
+        python with the -c flag: the code argument is a raw Python program and
+        may legitimately contain shell metacharacters that the argument
+        security validation would otherwise reject.
+        """
+        return "-c" in argv
+
     def execute(self, argv: list[str], **kwargs) -> int:
         """Execute the python command.
 
@@ -94,7 +104,7 @@ class PythonCommandHandler(CommandHandler):
         # Run Python interpreter
         executable = self.get_executable()
         command = [executable] + argv[2:]
-        return self.run_subprocess(command)
+        return self.run_subprocess(command, validate=not self._is_c_command(argv))
 
     def _handle_python_simple(self, argv: list[str]) -> int:
         """Handle simple python command (without app specified).
@@ -117,7 +127,7 @@ class PythonCommandHandler(CommandHandler):
         # Run Python interpreter
         executable = self.get_executable()
         command = [executable] + argv[2:]
-        return self.run_subprocess(command)
+        return self.run_subprocess(command, validate=not self._is_c_command(argv))
 
     def _handle_script_file(self, argv: list[str]) -> int:
         """Handle .py script file execution (ptig script.py = ptig python script.py).
@@ -144,4 +154,4 @@ class PythonCommandHandler(CommandHandler):
         # shell), so the code string is passed as a plain argument.
         executable = self.get_executable()
         command = [executable] + argv[1:]
-        return self.run_subprocess(command)
+        return self.run_subprocess(command, validate=not self._is_c_command(argv))
