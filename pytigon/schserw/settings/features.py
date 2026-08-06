@@ -140,13 +140,19 @@ if REST:
     if "oauth2_provider" not in INSTALLED_APPS:
         INSTALLED_APPS.append("oauth2_provider")
         INSTALLED_APPS.append("pytigon.schserw.oauth2_ext")
-    INSTALLED_APPS.append("drf_yasg")
-    SWAGGER_USE_COMPAT_RENDERERS = False
+    INSTALLED_APPS.append("drf_spectacular")
+    SPECTACULAR_SETTINGS = {
+        "TITLE": "Rest API",
+        "DESCRIPTION": "Rest API for Pytigon application",
+        "VERSION": "1.0.0",
+        "CONTACT": {"email": "admin@pytigon.eu"},
+    }
     REST_FRAMEWORK = {
         "DEFAULT_AUTHENTICATION_CLASSES": [
             "oauth2_provider.contrib.rest_framework.OAuth2Authentication",
         ],
         "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+        "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     }
 
 if MCP_SERVER:

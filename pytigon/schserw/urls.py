@@ -111,29 +111,18 @@ if settings.GRAPHQL:
     )
 
 if settings.REST:
-    from drf_yasg import openapi
-    from drf_yasg.views import get_schema_view
-    from rest_framework import permissions, status
+    from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+    from rest_framework import status
     from rest_framework.decorators import api_view
     from rest_framework.response import Response
-
-    schema_view = get_schema_view(
-        openapi.Info(
-            title="Rest API",
-            default_version="v1",
-            description="Rest API for Pytigon application",
-            contact=openapi.Contact(email="admin@pytigon.eu"),
-        ),
-        public=True,
-        permission_classes=(permissions.AllowAny,),
-    )
 
     _urlpatterns.extend(
         [
             path("api-auth/", include("rest_framework.urls")),
+            path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
             path(
-                "api/",
-                schema_view.with_ui("swagger", cache_timeout=0),
+                "api/schema/swagger-ui/",
+                SpectacularSwaggerView.as_view(url_name="schema"),
                 name="schema-swagger-ui",
             ),
         ]
