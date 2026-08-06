@@ -9,7 +9,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
 from django.utils.http import url_has_allowed_host_and_scheme
-from django.views.decorators.cache import cache_page
+from django.views.decorators.cache import cache_page, never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.vary import vary_on_headers
 from django.views.generic import TemplateView
@@ -117,14 +117,7 @@ def login_required_for_non_public(view_func):
 
 urlpatterns = [
     path("ok/", views.ok, name="ok"),
-    path(
-        "login/",
-        cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
-            vary_on_headers("User-Agent", "Cookie")(
-                TemplateView.as_view(template_name="schsys/app/login.html")
-            )
-        ),
-    ),
+    path("login/", never_cache(TemplateView.as_view(template_name="schsys/app/login.html"))),
     path("do_login/", sch_login),
     path("do_logout/", login_required(sch_logout)),
     path("change_password/", login_required(views.change_password)),
