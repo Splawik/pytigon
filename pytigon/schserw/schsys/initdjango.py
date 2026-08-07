@@ -35,20 +35,26 @@ from django.forms.forms import BaseForm
 from django.forms.widgets import PasswordInput, TextInput
 from django_bootstrap5.forms import render_form
 
-if django.VERSION[:2] != (6, 0):
+# This module is imported lazily (e.g. by ``pytigon.schserw.schsys``) to apply
+# compatibility patches to Django internals. All patches are version-guarded
+# so that the module can be imported safely on every Django major/minor
+# version supported by Pytigon (>= 6.0). Patches that no longer apply to the
+# current Django internals are silently skipped instead of crashing at import
+# time.
+if django.VERSION[0] < 6:
     import warnings
 
     warnings.warn(
-        "Monkey-patches in initdjango.py target Django 6.0.x internals. "
-        f"Found Django {django.VERSION}. Review patches before upgrading.",
+        "Monkey-patches in initdjango.py target Django >=6.0 internals. "
+        f"Found Django {django.VERSION}. Upgrade Django or review these patches.",
         RuntimeWarning,
         stacklevel=2,
     )
 
-django.db.models.fields.prep_for_like_query = lambda x: str(x).replace("\\", "\\\\")
-
-_original_html_output = BaseForm._html_output
-_original_as_p = BaseForm.as_p
+if hasattr(django.db.models.fields, "prep_for_like_query"):
+    django.db.models.fields.prep_for_like_query = lambda x: str(x).replace(
+        "\\", "\\\\"
+    )
 
 models.TreeForeignKey = models.ForeignKey
 models.GTreeForeignKey = models.ForeignKey
@@ -61,12 +67,17 @@ def _html_output(
     normal_row2 = normal_row.replace("<th>", "<th align='left'><em>").replace(
         "</th>", "</em></th>"
     )
-    return self._old_html_output(
-        normal_row2, error_row, row_ender, help_text_html, errors_on_separate_row
+    return _original_html_output(
+        self, normal_row2, error_row, row_ender, help_text_html, errors_on_separate_row
     )
 
 
-BaseForm._html_output = _html_output
+# ``BaseForm._html_output`` was removed in Django 6.x in favour of
+# template-based form rendering, so this patch is only applied when the
+# internal still exists (Django < 6).
+if hasattr(BaseForm, "_html_output"):
+    _original_html_output = BaseForm._html_output
+    BaseForm._html_output = _html_output
 
 
 def as_p(self):
@@ -74,7 +85,8 @@ def as_p(self):
     return render_form(self)
 
 
-BaseForm.as_p = as_p
+if hasattr(BaseForm, "as_p"):
+    BaseForm.as_p = as_p
 
 
 def widget_attrs(self, widget):

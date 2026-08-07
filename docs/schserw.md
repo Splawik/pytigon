@@ -191,13 +191,16 @@ extraction tool, used by `make_i18n.py` at the repo root.
 
 ## Runtime Monkey-Patches
 
-`scherw.schsys.initdjango` applies targeted patches to Django internals
-at import time (guarded by a `RuntimeWarning` if the Django version differs
-from the targeted release). Current patches:
+`scherw.schsys.initdjango` applies compatibility patches to Django internals
+at import time. All patches are version-guarded so the module imports safely
+on every supported Django release (>= 6.0); a `RuntimeWarning` is emitted
+only when Django is older than 6.0, and patches that no longer apply to the
+current Django internals (e.g. `BaseForm._html_output`, removed in 6.x) are
+silently skipped instead of crashing. Current patches:
 
-- `BaseForm._html_output` — left-aligned headers
+- `BaseForm._html_output` — left-aligned headers (Django < 6 only)
 - `BaseForm.as_p` — render via `django_bootstrap5`
 - `CharField.widget_attrs` — inject `max_length` / `size` attributes
 - `models.TreeForeignKey` / `models.GTreeForeignKey` — aliases to
   `ForeignKey` for compatibility with mptt/django-tree-libs
-- `db.models.fields.prep_for_like_query` — backslash escaping fix
+- `db.models.fields.prep_for_like_query` — backslash escaping fix (Django < 6)
