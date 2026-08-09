@@ -68,7 +68,6 @@
                 text   = self.search_txt
             tab = self._get_tab()
             if tab:
-                #tab.filter(text)
                 wx.CallAfter(tab.filter, text)
             return True
 

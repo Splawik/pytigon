@@ -101,7 +101,9 @@ if PRODUCTION_VERSION:
         "disable_existing_loggers": True,
         "formatters": {
             "standard": {
-                "format": ("[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s"),
+                "format": (
+                    "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s"
+                ),
                 "datefmt": "%Y-%m-%d %H:%M:%S",
             }
         },
@@ -251,9 +253,9 @@ ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
 if PLATFORM_TYPE == "webserver":
     if ENV("CHANNELS_REDIS"):
-        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (ENV("CHANNELS_REDIS").split(":") + ["6379"])[
-            :2
-        ]
+        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (
+            ENV("CHANNELS_REDIS").split(":") + ["6379"]
+        )[:2]
     else:
         CHANNELS_REDIS_SERVER = "127.0.0.1"
         CHANNELS_REDIS_PORT = "6379"
@@ -338,7 +340,7 @@ def DEFAULT_FILE_STORAGE_FS():
         if platform_name() == "Windows":
             _m.mount("osfs", OSFS_EXT("c:\\"))
         else:
-            _m.mount("osfs", OSFS_EXT("/"))
+            _m.mount("osfs", OSFS_EXT("/home"))
 
     if SCRIPT_MODE:
         cwd = os.path.abspath(os.getcwd())
@@ -347,7 +349,9 @@ def DEFAULT_FILE_STORAGE_FS():
     return _m
 
 
-THUMBNAIL_DEFAULT_STORAGE = "pytigon_lib.schdjangoext.django_storage.ThumbnailFileSystemStorage"
+THUMBNAIL_DEFAULT_STORAGE = (
+    "pytigon_lib.schdjangoext.django_storage.ThumbnailFileSystemStorage"
+)
 
 if ENV("THUMBNAIL_PROTECTED"):
     THUMBNAIL_MEDIA_ROOT = os.path.join(MEDIA_ROOT_PROTECTED, "thumb")
@@ -381,13 +385,17 @@ if platform_name() == "Android":
     if ENV("CORS_ORIGIN_ALLOW_ALL"):
         CORS_ORIGIN_ALLOW_ALL = True
     else:
-        CORS_ORIGIN_WHITELIST = ENV("CORS_ORIGIN_WHITELIST_ANDROID", default="").split(",")
+        CORS_ORIGIN_WHITELIST = ENV("CORS_ORIGIN_WHITELIST_ANDROID", default="").split(
+            ","
+        )
 
 try:
     CACHES = {"default": ENV.cache()}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 except Exception:
-    logger.warning("Failed to configure cache from ENV.cache(), using default LocMemCache")
+    logger.warning(
+        "Failed to configure cache from ENV.cache(), using default LocMemCache"
+    )
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
