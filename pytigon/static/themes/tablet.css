@@ -149,7 +149,7 @@ section.sidebar {
   min-height: 100%; }
 
 ul.sidebar-menu ul.treeview-menu {
-  padding-left: 25px !important; }
+  padding-left: 1.2rem !important; }
 
 .sidebar-menu > li:hover > a, .sidebar-menu > li.active > a {
   border-left-color: #FDFD8C !important; }
@@ -194,9 +194,8 @@ ul.sidebar-menu ul.treeview-menu {
   color: var(--sidebar-color-active-level2); }
 
 a.logo span {
-  top: -3px;
-  position: relative;
-  left: 5px; }
+  top: 0px;
+  position: relative; }
 
 aside.main-sidebar {
   transition: width 0.2s;
@@ -227,7 +226,7 @@ li.treeview-merged > ul.list-unstyled > li > a {
   padding: 5px 5px 5px 15px; }
 
 ul.sidebar-menu ul.treeview-menu {
-  padding-left: 25px !important; }
+  padding-left: 1.2rem !important; }
 
 ul.treeview-menu a .fa {
   width: 20px; }

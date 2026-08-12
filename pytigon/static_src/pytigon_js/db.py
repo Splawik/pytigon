@@ -12,7 +12,6 @@ Provides:
 # Database initialization
 # =============================================================================
 
-import contextlib
 INIT_DB_STRUCT = None
 
 
@@ -293,8 +292,8 @@ def sync_and_run(tbl, fun):
                 nonlocal fun
                 fun("timeout")
 
-            with contextlib.suppress(Exception):
-                request.timeout = 2000
+            # with contextlib.suppress(Exception):
+            request.timeout = 2000
             request.ontimeout = _on_timeout
 
         ajax_get(rec[1], complete, _on_request_init)

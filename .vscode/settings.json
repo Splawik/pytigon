@@ -3,5 +3,6 @@
         "install"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "basedpyright.disableLanguageServices": true
 }

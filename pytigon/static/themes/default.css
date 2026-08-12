@@ -1265,8 +1265,7 @@ table.layout0 tr td {
   height: 10px; }
 
 .logo-link {
-  white-space: nowrap;
-  text-align: center; }
+  white-space: nowrap; }
 
 .dropdown-menu-wide {
   width: 470px; }

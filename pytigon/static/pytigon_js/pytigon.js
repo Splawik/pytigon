@@ -176,7 +176,7 @@ standard_error_handler = function flx_standard_error_handler (req) {
                 console.log(reader.result);
                 (window.open().document.write)(reader.result);
             } else {
-                Swal.fire(({icon: "error", title: _pymeth_format.call("Error: {:d}", req.status), text: reader.result}));
+                Swal.fire(({icon: "error", title: _pymeth_format.call("Error: {}", req.status), text: reader.result}));
             }
             return null;
         }).bind(this);
@@ -805,16 +805,8 @@ history_push_state = function flx_history_push_state (title, url, data) {
     //         title: History entry title.
     //         url: URL for the history entry.
     //         data: Optional data tuple [html_content, element_id] for state restoration.
-    if ((((!_pyfunc_truthy(url))) || _pyfunc_op_equals(url, "/"))) {
-        url2 = url;
-    } else {
-        url2 = "?subpage=" + ((new URL(url, "http://127.0.0.1")).pathname);
-    }
-    if (_pyfunc_truthy(data)) {
-        data2 = [LZString.compress(data[0]), data[1]];
-    } else {
-        data2 = title;
-    }
+    url2 = ((((!_pyfunc_truthy(url))) || _pyfunc_op_equals(url, "/")))? (url) : ("?subpage=" + ((new URL(url, "http://127.0.0.1")).pathname));
+    data2 = (_pyfunc_truthy(data))? ([LZString.compress(data[0]), data[1]]) : (title);
     window.history.pushState(data2, title, url2);
     return null;
 };
@@ -1029,11 +1021,7 @@ super_insert = function flx_super_insert (base_element, insert_selector, inserte
     //         The target element or None if not found.
     if ((_pyfunc_truthy(insert_selector) && _pyfunc_op_contains(":", insert_selector))) {
         x = _pymeth_split.call(insert_selector, ":");
-        if (_pyfunc_truthy(x[0])) {
-            element = super_query_selector(base_element, x[0]);
-        } else {
-            element = base_element;
-        }
+        element = (_pyfunc_truthy(x[0]))? (super_query_selector(base_element, x[0])) : (base_element);
         selector2 = x[1];
     } else {
         if (_pyfunc_truthy(insert_selector)) {
@@ -1604,11 +1592,7 @@ set_state = function flx_set_state (component, state) {
                             if (_pyfunc_op_equals(mod_fun, "!")) {
                                 value2 = !_pyfunc_truthy(value);
                             } else if (_pyfunc_op_equals(mod_fun, "?")) {
-                                if (_pyfunc_truthy(value)) {
-                                    value2 = true;
-                                } else {
-                                    value2 = false;
-                                }
+                                value2 = (_pyfunc_truthy(value))? (true) : (false);
                             } else if (_pyfunc_op_equals(mod_fun, "*")) {
                                 value2 = _pyfunc_str(value);
                             } else if (_pyfunc_op_equals(mod_fun, "+")) {
@@ -2791,11 +2775,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
             return _refresh_page(region, data);
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_OK", "$$RETURN_NEW_ROW_OK", "$$RETURN_UPDATE_ROW_OK"])) {
             plug = region.closest(".plug");
-            if (_pyfunc_truthy(plug)) {
-                elem = region.closest(".plug").parentElement;
-            } else {
-                elem = element;
-            }
+            elem = (_pyfunc_truthy(plug))? (region.closest(".plug").parentElement) : (element);
             if (_pyfunc_truthy(callback)) {
                 callback();
             }
@@ -2816,11 +2796,7 @@ refresh_ajax_frame = function flx_refresh_ajax_frame (element, region_name, data
         } else if (_pyfunc_op_equals(dt, "$$RETURN_REFRESH_AUTO_FRAME")) {
             auto_frame_init(frame);
         } else if (_pyfunc_op_equals(dt, "$$RETURN_HTML_ERROR")) {
-            if ((Object.prototype.toString.call(data).slice(8,-1).toLowerCase() === 'string')) {
-                txt = data;
-            } else {
-                txt = data.innerHTML;
-            }
+            txt = ((Object.prototype.toString.call(data).slice(8,-1).toLowerCase() === 'string'))? (data) : (data.innerHTML);
             options = ({title: "Error!", html: txt, icon: "error", buttonsStyling: false, showCancelButton: false, customClass: ({confirmButton: "btn btn-primary btn-lg"})});
             Swal.fire(options);
         } else if (_pyfunc_op_equals(dt, "$$RETURN_JSON")) {
@@ -2996,11 +2972,7 @@ get_table = function flx_get_table (table_name, on_open, read_only) {
     //         read_only: If True, opens in readonly mode; otherwise readwrite.
     _on_open = (function flx__on_open (db) {
         var mode, tabObjectStore, tabTrans;
-        if (_pyfunc_op_equals(read_only, true)) {
-            mode = "readonly";
-        } else {
-            mode = "readwrite";
-        }
+        mode = (_pyfunc_op_equals(read_only, true))? ("readonly") : ("readwrite");
         tabTrans = db.transaction(table_name, mode);
         tabObjectStore = tabTrans.objectStore(table_name);
         on_open(tabTrans, tabObjectStore);
@@ -3207,12 +3179,7 @@ sync_and_run = function flx_sync_and_run (tbl, fun) {
                 return null;
             };
 
-            try {
-                request.timeout = 2000;
-            } catch(err_4) {
-                {
-                }
-            }
+            request.timeout = 2000;
             request.ontimeout = _on_timeout;
             return null;
         }).bind(this);
@@ -3290,21 +3257,13 @@ _get_title = function flx__get_title (element, data_element, url) {
     title = element.getAttribute("title");
     if (_pyfunc_truthy(data_element)) {
         title_element = data_element.querySelector("title");
-        if (_pyfunc_truthy(title_element)) {
-            title_alt = _pymeth_strip.call(title_element.innerHTML);
-        } else {
-            title_alt = "";
-        }
+        title_alt = (_pyfunc_truthy(title_element))? (_pymeth_strip.call(title_element.innerHTML)) : ("");
     } else {
         title_alt = "";
     }
     if (_pyfunc_truthy(((!_pyfunc_truthy(title))) && ((!_pyfunc_truthy(title_alt))))) {
         url2 = _pymeth_split.call(url, "?")[0];
-        if ((url2.length > 16)) {
-            title = "..." + url2.slice(-13);
-        } else {
-            title = url2;
-        }
+        title = ((url2.length > 16))? ("..." + url2.slice(-13)) : (url2);
     } else if ((!_pyfunc_truthy(title))) {
         title = title_alt;
         title_alt = "";
@@ -3575,11 +3534,7 @@ on_click_default_action = function flx_on_click_default_action (event, target_el
             } else {
                 new_target_elem = data_element.querySelector("meta[name='target']");
             }
-            if (_pyfunc_truthy(new_target_elem)) {
-                new_target = new_target_elem.getAttribute("content");
-            } else {
-                new_target = null;
-            }
+            new_target = (_pyfunc_truthy(new_target_elem))? (new_target_elem.getAttribute("content")) : (null);
             if ((_pyfunc_truthy(new_target) && ((!_pyfunc_op_equals(new_target, target))))) {
                 stub9_ = _get_click_event_from_tab(target_element, new_target, url);
                 new_url = stub9_[0];new_callback = stub9_[1];
@@ -3792,11 +3747,7 @@ _on_inline = function flx__on_inline (target_element, data_element, url, param, 
         bottom = _pyfunc_op_add(top, viewportOffset.height);
         height = window.innerHeight;
         if ((bottom > height)) {
-            if ((height > viewportOffset.height)) {
-                top2 = (height - viewportOffset.height) / 2;
-            } else {
-                top2 = 0;
-            }
+            top2 = ((height > viewportOffset.height))? ((height - viewportOffset.height) / 2) : (0);
             dy = top - top2;
             scroll_frame = plug.firstElementChild;
             sy = scroll_frame.scrollTop;
@@ -4021,11 +3972,7 @@ on_replace_app = function flx_on_replace_app (target_element, data_element, new_
     //     response's body-body section, reinitializes the start page, and
     //     re-activates the menu. Preserves subpage navigation if present.
     subpages = ((new URLSearchParams(window.location.search)).getAll)("subpage");
-    if (_pyfunc_truthy(subpages)) {
-        subpage = subpages[0];
-    } else {
-        subpage = null;
-    }
+    subpage = (_pyfunc_truthy(subpages))? (subpages[0]) : (null);
     if (_pyfunc_truthy(window.PUSH_STATE)) {
         history_push_state("", window.BASE_PATH);
     } else {
@@ -4186,16 +4133,8 @@ close_frame = function flx_close_frame (target_element, data_element, new_url, p
     //         data_element: Response data to mount after close.
     //         data_region: Optional region name override.
     f = target_element.getAttribute("data-link");
-    if (_pyfunc_truthy(f)) {
-        data_element2 = super_query_selector(data_element, f);
-    } else {
-        data_element2 = data_element;
-    }
-    if (_pyfunc_truthy(data_region)) {
-        data_region2 = data_region;
-    } else {
-        data_region2 = target_element.getAttribute("data-region");
-    }
+    data_element2 = (_pyfunc_truthy(f))? (super_query_selector(data_element, f)) : (data_element);
+    data_region2 = _pyfunc_truthy(data_region) || target_element.getAttribute("data-region");
     region = get_ajax_region(get_ajax_region(target_element, "page").parentElement, data_region2);
     dialog = null;
     aside = target_element.closest(".plug");
@@ -4240,16 +4179,8 @@ refresh_frame = function flx_refresh_frame (target_element, data_element, new_ur
     //         data_element: New content to mount.
     //         data_region: Optional region name for the frame to refresh.
     f = target_element.getAttribute("data-link");
-    if (_pyfunc_truthy(f)) {
-        data_element2 = super_query_selector(data_element, f);
-    } else {
-        data_element2 = data_element;
-    }
-    if (_pyfunc_truthy(data_region)) {
-        data_region2 = data_region;
-    } else {
-        data_region2 = target_element.getAttribute("data-region");
-    }
+    data_element2 = (_pyfunc_truthy(f))? (super_query_selector(data_element, f)) : (data_element);
+    data_region2 = _pyfunc_truthy(data_region) || target_element.getAttribute("data-region");
     return refresh_ajax_frame(target_element, data_region2, data_element2);
 };
 
@@ -4647,11 +4578,7 @@ TabMenu.prototype.on_menu_href = function (elem, data_or_html, title, title_alt,
             this.activate(title);
         } else {
             this.register_title(title);
-            if (_pyfunc_truthy(url)) {
-                href = url;
-            } else {
-                href = (jQuery(elem).attr)("href");
-            }
+            href = _pyfunc_truthy(url) || ((jQuery(elem).attr)("href"));
             href2 = correct_href(href);
             (jQuery("#body_desktop").hide)();
             this.new_page(title, data_or_html, href2, title_alt);
@@ -5051,20 +4978,12 @@ table_loadeddata = function flx_table_loadeddata (event) {
         } else if (_pyfunc_op_equals(dt, "$$RETURN_ERROR")) {
             refresh_ajax_frame((_pyfunc_truthy(event.srcElement))? (event.srcElement) : (event.data_source), "error", event.data);
         } else if (_pyfunc_op_equals(dt, "$$RETURN_HTML_ERROR")) {
-            if ((Object.prototype.toString.call(event.data).slice(8,-1).toLowerCase() === 'string')) {
-                txt = event.data;
-            } else {
-                txt = event.data.innerHTML;
-            }
+            txt = ((Object.prototype.toString.call(event.data).slice(8,-1).toLowerCase() === 'string'))? (event.data) : (event.data.innerHTML);
             options = ({title: "Error!", html: txt, icon: "error", buttonsStyling: false, showCancelButton: false, customClass: ({confirmButton: "btn btn-primary btn-lg"})});
             Swal.fire(options);
         } else if (_pyfunc_op_contains(dt, ["$$RETURN_UPDATE_ROW_OK", "$$RETURN_NEW_ROW_OK"])) {
             try {
-                if ((Object.prototype.toString.call(event.data).slice(8,-1).toLowerCase() === 'string')) {
-                    _data = event.data;
-                } else {
-                    _data = event.data.innerHTML;
-                }
+                _data = ((Object.prototype.toString.call(event.data).slice(8,-1).toLowerCase() === 'string'))? (event.data) : (event.data.innerHTML);
                 pk = _pyfunc_int((_pymeth_strip.call(((_pymeth_split.call(_data, "id:")[1])))));
                 table = (_pyfunc_truthy(event.srcElement))? (event.srcElement) : (event.data_source);
                 datatable = _pymeth_find.call(jQuery(table), "table[name=tabsort].datatable");
@@ -5210,11 +5129,7 @@ on_check_toggle_visibility = function flx_on_check_toggle_visibility () {
                 if ((typeof stub7_seq === "object") && (!Array.isArray(stub7_seq))) { stub7_seq = Object.keys(stub7_seq);}
                 for (stub8_itr = 0; stub8_itr < stub7_seq.length; stub8_itr += 1) {
                     s = stub7_seq[stub8_itr];
-                    if (_pyfunc_op_contains("/", s)) {
-                        x = _pymeth_split.call(s, "/");
-                    } else {
-                        x = [s, s];
-                    }
+                    x = (_pyfunc_op_contains("/", s))? (_pymeth_split.call(s, "/")) : ([s, s]);
                     html = _pyfunc_op_add(html, (((("<button class='dropdown-item' type='button' onclick=\"datatable_action(this, '") + _pymeth_strip.call(x[0])) + ("');\">")) + _pymeth_strip.call(x[1])) + "</button>");
                 }
                 html += "</div>";
@@ -5254,11 +5169,7 @@ humanFileSize = function flx_humanFileSize (bytes, si) {
     //         tuple: (formatted_size_string, unit_level)
     //             - formatted_size_string: e.g. "1.5 MB"
     //             - unit_level: 0-based index into the unit array (0 = B, 1 = kB/KiB, ...)
-    if (_pyfunc_truthy(si)) {
-        thresh = 1000;
-    } else {
-        thresh = 1024;
-    }
+    thresh = (_pyfunc_truthy(si))? (1000) : (1024);
     if ((Math.abs(bytes) < thresh)) {
         return [bytes + " B", 0];
     }
