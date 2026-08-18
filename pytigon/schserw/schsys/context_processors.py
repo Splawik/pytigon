@@ -14,10 +14,9 @@ try:
 except ImportError:
     PermWrapper = None
 
-from pytigon_lib.schdjangoext.django_init import get_app_name
 from pytigon_lib.schtools.env import get_environ
 
-from .app_manager import AppItemInfo, AppManager
+from .app_manager import AppManager
 
 # Safe settings attributes exposed to templates — secrets like SECRET_KEY,
 # DATABASES, etc. are NOT included.

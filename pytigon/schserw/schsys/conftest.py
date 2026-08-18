@@ -1,4 +1,3 @@
-from pathlib import Path
 
 
 def pytest_ignore_collect(collection_path, config):

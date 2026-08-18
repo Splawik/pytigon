@@ -38,10 +38,10 @@ class CommandDispatcher:
             InitCommandHandler,
             ManageCommandHandler,
             PipCommandHandler,
+            PythonCommandHandler,
             RunCommandHandler,
             RunServerCommandHandler,
             ToolCommandHandler,
-            PythonCommandHandler,
         )
 
         # Register handlers in priority order

@@ -12,8 +12,8 @@ import sys
 from django.conf import settings
 
 from pytigon_lib.schhttptools import httpclient
-from pytigon_lib.schtools.main_paths import get_main_paths
 from pytigon_lib.schtools.env import get_environ
+from pytigon_lib.schtools.main_paths import get_main_paths
 
 HTTP = None
 _logger = logging.getLogger("pytigon_request")

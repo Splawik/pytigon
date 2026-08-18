@@ -1,8 +1,9 @@
 # myapp/management/commands/create_access_token.py
 import datetime
 import secrets
-from django.core.management.base import BaseCommand, CommandError
+
 from django.contrib.auth import get_user_model
+from django.core.management.base import BaseCommand, CommandError
 from oauth2_provider.models import get_access_token_model, get_application_model
 
 AccessToken = get_access_token_model()
@@ -69,7 +70,7 @@ class Command(BaseCommand):
         # Calculate expiration date
         expires = None
         if expires_days is not None:
-            expires = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(
+            expires = datetime.datetime.now(datetime.UTC) + datetime.timedelta(
                 days=expires_days
             )
 

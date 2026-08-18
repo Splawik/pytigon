@@ -1,8 +1,6 @@
 import functools
 import importlib
 import logging
-import sys
-import traceback
 
 from django.conf import settings
 from django.urls import get_script_prefix

@@ -5,6 +5,7 @@ Handles default case (GUI mode or help).
 import os
 import sys
 from typing import Any
+
 from pytigon_lib.schtools.env import get_environ
 
 from .base import CommandHandler
