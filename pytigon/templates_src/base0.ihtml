@@ -87,10 +87,11 @@
         %% html_widgets_init
 
         %% body_footer
-    %if not 'no_scripts' in request.GET:
+
+    %if standard_web_browser and not 'no_scripts' in request.GET:
         %% body_footer_scripts
     %% page_footer
-        %if not 'no_scripts' in request.GET:
+        %if standard_web_browser and not 'no_scripts' in request.GET:
             %% page_footer_scripts
  
         %% page_finish

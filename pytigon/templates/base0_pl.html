@@ -106,13 +106,14 @@
                 {% endblock %}
                 {% block html_widgets_init %}
                 {% endblock %}
-                {% block body_footer %}{% endblock %}
+                {% block body_footer %}
+                {% endblock %}
         {% endblock %}
-        {% if not 'no_scripts' in request.GET %}
+        {% if standard_web_browser and not 'no_scripts' in request.GET %}
                 {% block body_footer_scripts %}{% endblock %}
         {% endif %}
         {% block page_footer %}
-                {% if not 'no_scripts' in request.GET %}
+                {% if standard_web_browser and not 'no_scripts' in request.GET %}
                         {% block page_footer_scripts %}
                         {% endblock %}
                 {% endif %}
