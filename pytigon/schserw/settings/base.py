@@ -4,11 +4,24 @@ import sys
 from pytigon_lib.schtools.env import get_environ
 from pytigon_lib.schtools.main_paths import get_main_paths, get_prj_name
 
-ENV = get_environ()
+paths = get_main_paths()
+
+SERW_PATH = paths["SERW_PATH"]
+DATA_PATH = paths["DATA_PATH"]
+LOG_PATH = paths["LOG_PATH"]
+TEMP_PATH = paths["TEMP_PATH"]
+PRJ_PATH = paths["PRJ_PATH"]
+PRJ_PATH_ALT = paths["PRJ_PATH_ALT"]
+STATIC_ROOT = paths["STATIC_PATH"]
+STATICFILES_DIRS = paths["STATICFILES_DIRS"]
+ROOT_PATH = paths["ROOT_PATH"]
+
 BASE_PRJ_NAME = get_prj_name()
 
 if not BASE_PRJ_NAME:
     BASE_PRJ_NAME = "_schall"
+
+ENV = get_environ(os.path.join(PRJ_PATH, BASE_PRJ_NAME))
 
 GEN_TIME = "0000.00.00 00:00:00"
 USE_TZ = True
@@ -34,18 +47,6 @@ if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")
 PUBLIC = True if ENV("PUBLIC") else False
 
 SHOW_LOGIN_WIN = True
-
-paths = get_main_paths()
-
-SERW_PATH = paths["SERW_PATH"]
-DATA_PATH = paths["DATA_PATH"]
-LOG_PATH = paths["LOG_PATH"]
-TEMP_PATH = paths["TEMP_PATH"]
-PRJ_PATH = paths["PRJ_PATH"]
-PRJ_PATH_ALT = paths["PRJ_PATH_ALT"]
-STATIC_ROOT = paths["STATIC_PATH"]
-STATICFILES_DIRS = paths["STATICFILES_DIRS"]
-ROOT_PATH = paths["ROOT_PATH"]
 
 if ENV("SCRIPT_MODE"):
     SCRIPT_MODE = True

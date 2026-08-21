@@ -38,11 +38,6 @@ def _setup_process_environment(argv: list[str]) -> list[str]:
     os.environ["START_PATH"] = os.path.abspath(os.getcwd())
     os.environ["XKB_CONFIG_ROOT"] = "/usr/share/X11/xkb"
 
-    if not ("SECRET_KEY" in os.environ or "PYTIGON_SECRET_KEY" in os.environ):
-        import secrets
-
-        os.environ["SECRET_KEY"] = secrets.token_hex(50)
-
     # argv = list(argv)
 
     if "--dev" in argv or "ptig.py" in argv:
