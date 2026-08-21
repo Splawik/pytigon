@@ -203,7 +203,10 @@ class DefaultCommandHandler(CommandHandler):
             main()
             return 0
         except ImportError:
-            print("Error: pytigon_gui not available", file=sys.stderr)
+            import traceback
+
+            print(f"Error: pytigon_gui not available", file=sys.stderr)
+            traceback.print_exc(file=sys.stderr)
             return 1
 
     def _get_app_conf(self, path: str) -> dict[str, Any] | None:

@@ -12,7 +12,6 @@ _logger = logging.getLogger(__name__)
 
 
 class RunServerCommandHandler(CommandHandler):
-
     """Handler for running web servers.
 
     Handles commands like:
@@ -176,8 +175,11 @@ class RunServerCommandHandler(CommandHandler):
             finally:
                 sys.argv = tmp
             return 0
-        except ImportError:
-            print("Error: pytigon_gui not available", file=sys.stderr)
+        except ImportError as e:
+            import traceback
+
+            print(f"Error: pytigon_gui not available", file=sys.stderr)
+            traceback.print_exc(file=sys.stderr)
             return 1
 
     def _run_server(self, argv: list[str], options: list[str], wsgi: bool) -> int:
