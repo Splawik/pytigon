@@ -205,7 +205,9 @@ ATOMIC_REQUESTS = True
 
 INTERNAL_IPS = ("127.0.0.1", "127.0.0.2", "127.0.0.3", "localhost")
 
-ALLOWED_HOSTS = ["*"] if DEBUG else ENV("ALLOWED_HOSTS", default="").split(",")
+ALLOWED_HOSTS = (
+    ["*"] if DEBUG else ENV("ALLOWED_HOSTS", default="127.0.0.1,127.0.0.2,127.0.0.3").split(",")
+)
 
 if not DEBUG and PRODUCTION_VERSION:
     SESSION_COOKIE_SECURE = True
