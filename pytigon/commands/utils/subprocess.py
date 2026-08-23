@@ -3,7 +3,9 @@ Provides secure subprocess execution with input validation and sanitization.
 """
 
 import os
+import shlex
 import shutil
+import signal
 import subprocess
 import sys
 
@@ -107,6 +109,74 @@ class SafeSubprocess:
     def _contains_dangerous_chars(self, arg: str) -> bool:
         return bool(self.DANGEROUS_CHARS & set(arg))
 
+    @staticmethod
+    def _decode_output(data) -> str:
+        """Decode bytes/str subprocess output, tolerating encoding errors."""
+        if data is None:
+            return ""
+        if isinstance(data, bytes):
+            return data.decode("utf-8", errors="replace").rstrip("\n")
+        return str(data).rstrip("\n")
+
+    def _format_failure(
+        self,
+        command: list[str],
+        cwd: str | None,
+        result: subprocess.CompletedProcess | None,
+        capture_output: bool,
+    ) -> str:
+        """Build a detailed, multi-line message describing a failed subprocess.
+
+        Args:
+            command: The validated command that was run
+            cwd: Working directory of the subprocess (if any)
+            result: CompletedProcess of the failed run, or None if it never
+                started (e.g. OSError)
+            capture_output: Whether stdout/stderr were captured
+
+        Returns:
+            Human readable multi-line error description.
+
+        """
+        lines = [
+            "Subprocess command failed",
+            "------------------------",
+            f"  Command:    {shlex.join(command)}",
+        ]
+        if cwd:
+            lines.append(f"  Working in: {cwd}")
+
+        if result is not None:
+            returncode = result.returncode
+            if returncode < 0:
+                signum = -returncode
+                try:
+                    signame = signal.Signals(signum).name
+                except (ValueError, OSError):
+                    signame = f"signal {signum}"
+                lines.append(f"  Exit code:  {returncode} ({signame})")
+            else:
+                lines.append(f"  Exit code:  {returncode}")
+
+            if capture_output:
+                for name in ("stdout", "stderr"):
+                    text = self._decode_output(getattr(result, name))
+                    if not text:
+                        continue
+                    lines.append("")
+                    lines.append(f"  --- {name} ---")
+                    lines.extend(f"  {line}" if line else "" for line in text.split("\n"))
+            else:
+                lines.append("")
+                lines.append(
+                    "  Note: stdout/stderr were not captured "
+                    "(capture_output=True) so they are not shown here."
+                )
+        else:
+            lines.append("  Exit code:  (process did not start)")
+
+        return "\n".join(lines)
+
     def run(
         self,
         command: list[str],
@@ -170,7 +240,12 @@ class SafeSubprocess:
 
             # Check return code if requested
             if check and result.returncode != 0:
-                msg = f"Command failed with exit code {result.returncode}: {' '.join(validated_command)}"
+                msg = self._format_failure(
+                    validated_command,
+                    str(cwd_path) if cwd_path else None,
+                    result,
+                    capture_output,
+                )
                 raise SubprocessError(
                     msg,
                     code=40,
@@ -180,17 +255,26 @@ class SafeSubprocess:
             return result
 
         except subprocess.TimeoutExpired:
-            msg = f"Command timed out after {timeout} seconds: {' '.join(validated_command)}"
+            details = self._format_failure(
+                validated_command,
+                str(cwd_path) if cwd_path else None,
+                None,
+                capture_output,
+            )
+            msg = f"Command timed out after {timeout} seconds.\n{details}"
             raise SubprocessError(
                 msg,
                 code=41,
             )
-        except OSError as e:
-            msg = f"Failed to execute command: {e}"
-            raise SubprocessError(
-                msg,
-                code=42,
+        except OSError as err:
+            details = self._format_failure(
+                validated_command,
+                str(cwd_path) if cwd_path else None,
+                None,
+                capture_output,
             )
+            msg = f"Failed to execute command: {err}\n{details}"
+            raise SubprocessError(msg, code=42)
 
     def run_simple(
         self,

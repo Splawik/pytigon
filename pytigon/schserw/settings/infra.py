@@ -263,7 +263,16 @@ if PLATFORM_TYPE == "webserver":
     CHANNEL_LAYERS = {
         "default": {
             "BACKEND": "channels_redis.core.RedisChannelLayer",
-            "CONFIG": {"hosts": [(CHANNELS_REDIS_SERVER, int(CHANNELS_REDIS_PORT))]},
+            "CONFIG": {
+                "hosts": [
+                    {
+                        "host": CHANNELS_REDIS_SERVER,
+                        "port": int(CHANNELS_REDIS_PORT),
+                        "socket_timeout": 300,
+                        "socket_connect_timeout": 10,
+                    }
+                ]
+            },
         }
     }
 else:
