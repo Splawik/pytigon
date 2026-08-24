@@ -165,7 +165,9 @@ class SafeSubprocess:
                         continue
                     lines.append("")
                     lines.append(f"  --- {name} ---")
-                    lines.extend(f"  {line}" if line else "" for line in text.split("\n"))
+                    lines.extend(
+                        f"  {line}" if line else "" for line in text.split("\n")
+                    )
             else:
                 lines.append("")
                 lines.append(

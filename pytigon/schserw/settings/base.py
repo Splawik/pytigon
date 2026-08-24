@@ -30,9 +30,13 @@ DATE_INPUT_FORMATS = [
 ]
 
 if (
-    sys.argv
-    and ((sys.argv[0].endswith("manage.py") and "runserver" in sys.argv) or "--dev" in sys.argv)
-) or ENV("PYTIGON_DEBUG"):
+    (
+        sys.argv
+        and ((sys.argv[0].endswith("manage.py") and "runserver" in sys.argv) or "--dev" in sys.argv)
+    )
+    or ENV("PYTIGON_DEBUG")
+    or ENV("DEBUG")
+):
     DEBUG = True
     DB_DEBUG = True
     PRODUCTION_VERSION = False
