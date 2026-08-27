@@ -28,11 +28,32 @@ USE_TZ = True
 DATE_INPUT_FORMATS = [
     "%Y-%m-%d",
 ]
+COMMANDS_IN_DEBUG_MODE = [
+    "changepassword",
+    "createsuperuser",
+    "compilemessages",
+    "makemessages",
+    "makemigrations",
+    "migrate",
+    "optimizemigration",
+    "showmigrations",
+    "sqlmigrate",
+    "runserver",
+    "compiletemplates",
+    "makeallmigrations",
+]
 
 if (
     (
         sys.argv
-        and ((sys.argv[0].endswith("manage.py") and "runserver" in sys.argv) or "--dev" in sys.argv)
+        and (
+            (
+                sys.argv[0].endswith("manage.py")
+                and (len(sys.argv) < 2 or sys.argv[1] in COMMANDS_IN_DEBUG_MODE)
+            )
+            or "--dev" in sys.argv
+            or "manage_" in sys.argv[0]
+        )
     )
     or ENV("PYTIGON_DEBUG")
     or ENV("DEBUG")

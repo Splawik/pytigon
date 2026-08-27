@@ -30,12 +30,14 @@ class ToolCommandHandler(CommandHandler):
 
         """
         if len(argv) > 1:
-            if len(argv)==2 and argv[1] == '@':
-                argv[1] = '-c'
-                argv.append(r"import pkgutil, importlib.util, os; print('\n'.join(sorted([m.name for m in pkgutil.iter_modules() if not m.name.startswith('_') and (any(os.path.exists(os.path.join(loc, '__main__.py')) for loc in (importlib.util.find_spec(m.name).submodule_search_locations or []) if loc)) ])))")
+            if len(argv) == 2 and argv[1] == "@":
+                argv[1] = "-c"
+                argv.append(
+                    r"import pkgutil, importlib.util, os; print('\n'.join(sorted([m.name for m in pkgutil.iter_modules() if not m.name.startswith('_') and (any(os.path.exists(os.path.join(loc, '__main__.py')) for loc in (importlib.util.find_spec(m.name).submodule_search_locations or []) if loc)) ])))"
+                )
 
                 return False
-            return argv[1] in ("nim", "nimble", "-y") or argv[1].startswith("@")
+            return argv[1] in ("nim", "nimble", "-y", "zig") or argv[1].startswith("@")
         return False
 
     def execute(self, argv: list[str], **kwargs) -> int:
@@ -61,6 +63,8 @@ class ToolCommandHandler(CommandHandler):
             # Handle different tool types
             if argv[1] in ("nim", "nimble", "-y"):
                 return self._handle_nim(argv, paths)
+            if argv[1] in ("zig",):
+                return self._handle_zig(argv, paths)
             if argv[1].startswith("@"):
                 return self._handle_at_tool(argv, paths)
             msg = f"Unknown tool command: {argv[1]}"
@@ -91,7 +95,9 @@ class ToolCommandHandler(CommandHandler):
                 if os.name == "nt":
                     os.environ["PATH"] = os.environ.get("PATH", "") + ";" + nim_path
                 else:
-                    os.environ["PATH"] = os.environ.get("PATH", "") + os.pathsep + nim_path
+                    os.environ["PATH"] = (
+                        os.environ.get("PATH", "") + os.pathsep + nim_path
+                    )
 
                 # Build command
                 exe_name = argv[1] + ".exe" if os.name == "nt" else argv[1]
@@ -117,6 +123,36 @@ class ToolCommandHandler(CommandHandler):
         """
 
         if argv[1] == "@zig":
+            argv[1] = "@ziglang"
+
+        if len(argv[1]) > 1 and importlib.util.find_spec(argv[1][1:]) is not None:
+            # Run Python interpreter
+            executable = self.get_executable()
+            command = [executable, "-m", argv[1][1:]] + argv[2:]
+            return self.run_subprocess(command)
+        # Build tool path
+        prg_path = os.path.join(paths.get("DATA_PATH", ""), "prg")
+        tool_name = argv[1][1:]  # Remove @ prefix
+
+        # Build command
+        exe_name = tool_name + ".exe" if os.name == "nt" else tool_name
+
+        command = [os.path.join(prg_path, exe_name)] + argv[2:]
+        return self.run_subprocess(command)
+
+    def _handle_zig(self, argv: list[str], paths: dict[str, str]) -> int:
+        """Handle @tool commands.
+
+        Args:
+            argv: Command arguments
+            paths: Dictionary of paths
+
+        Returns:
+            Exit code
+
+        """
+
+        if argv[1] == "zig":
             argv[1] = "@ziglang"
 
         if len(argv[1]) > 1 and importlib.util.find_spec(argv[1][1:]) is not None:

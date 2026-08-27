@@ -14,9 +14,12 @@ from django.conf import settings
 from pytigon.pytigon_request import request
 
 
-def init_plugin_web_view(
-    app, mainframe, desktop, mgr, menubar, toolbar, accel, base_web_browser
-):
+# os.environ["GDK_GL"] = "disable"
+os.environ["WEBKIT_DISABLE_COMPOSITING_MODE"] = "1"
+os.environ["WEBKIT_DISABLE_DMABUF_RENDERER"] = "1"
+
+
+def init_plugin_web_view(app, mainframe, desktop, mgr, menubar, toolbar, accel, base_web_browser):
     """Initialize the wx.html2 WebView-based browser plugin.
 
     Args:
@@ -38,8 +41,11 @@ def init_plugin_web_view(
     from pytigon_gui.guictrl.ctrl import SchBaseCtrl
     from pytigon_lib.schindent.indent_tools import norm_html
 
-    # Workaround for DMA-BUF renderer issues on Linux
-    os.environ.setdefault("WEBKIT_DISABLE_DMABUF_RENDERER", "1")
+    # Workarounds for WebKit renderer/sandbox/JIT issues on Linux
+    # (see pytigon_lib.schtools.webkit_env for details).
+    from pytigon_lib.schtools.webkit_env import enable_webkit_stability_env
+
+    enable_webkit_stability_env()
 
     class BaseBrowser(SchBaseCtrl, base_web_browser):
         """wx.html2.WebView-based embedded browser with local request handling."""
@@ -60,6 +66,7 @@ def init_plugin_web_view(
             self.loaded = True
             self.next_in_new_win = False
             self.page_loaded = False
+            self._js_running = False
 
             self.redirect_to_html = [None, None]
             self.redirect_to_local = True
@@ -104,7 +111,6 @@ def init_plugin_web_view(
                     self.new_win(event.GetURL())
                 else:
                     self.next_in_new_win = False
-                    self.page_loaded = False
                     event.Skip()
 
         def on_received(self, event):
@@ -126,12 +132,10 @@ def init_plugin_web_view(
                     if msg["action"] == "get":
                         ret = request(msg["url"], None, user_agent="webviewembeded")
                     else:
-                        ret = request(
-                            msg["url"], msg.get("params"), user_agent="webviewembeded"
-                        )
+                        ret = request(msg["url"], msg.get("params"), user_agent="webviewembeded")
                     content = base64.b64encode(ret.ptr()).decode("utf-8")
                     script = f"window.callback_from_python({msg['callback_id']}, '{content}')"
-                    self.RunScriptAsync(script)
+                    self._run_script_async(script)
                 except Exception:
                     pass
 
@@ -237,12 +241,27 @@ def init_plugin_web_view(
             self.Reload()
 
         def execute_javascript(self, script):
-            """Execute JavaScript in the browser context.
+            print("loaded", self.loaded)
+            if not getattr(self, "loaded", True):
+                return
+            if getattr(self, "_js_running", False):
+                return
+            self._js_running = True
+            try:
+                self.RunScript(script)
+            finally:
+                self._js_running = False
 
-            Args:
-                script: JavaScript code to execute.
-            """
-            self.RunScript(script)
+        def _run_script_async(self, script):
+            if not getattr(self, "loaded", True):
+                return
+            if getattr(self, "_js_running", False):
+                return
+            self._js_running = True
+            try:
+                self.RunScriptAsync(script)
+            finally:
+                self._js_running = False
 
         def on_source(self, event):
             """Open page source in an editor tab."""

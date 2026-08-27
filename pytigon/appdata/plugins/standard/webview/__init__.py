@@ -4,9 +4,14 @@ Provides the COMPONENT factory and HTML2 browser control for
 embedded web browsing. Uses the wx.html2 WebView backend by default.
 """
 
+import logging
+import os
+
 import wx
 
 from .basebrowser import BaseWebBrowser
+
+logger = logging.getLogger(__name__)
 
 
 def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
@@ -54,6 +59,21 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         return obj
 
     pytigon_gui.guictrl.ctrl.COMPONENT = Component
+
+    backend = os.environ.get("PYTIGON_WEBVIEW_BACKEND", "wx").lower()
+    if backend == "cef":
+        from .cef import init_plugin_cef
+
+        return init_plugin_cef(
+            app,
+            mainframe,
+            desktop,
+            mgr,
+            menubar,
+            toolbar,
+            accel,
+            BaseWebBrowser,
+        )
 
     from .wxwebview import init_plugin_web_view
 

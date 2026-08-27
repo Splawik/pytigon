@@ -65,9 +65,7 @@ class BaseWebBrowser:
         self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_goforward, id=ID_WEB_FORWARD)
         self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_stop, id=ID_WEB_STOP)
         self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_refresh, id=ID_WEB_REFRESH)
-        self.Bind(
-            wx.EVT_UPDATE_UI, self.on_check_can_addbookmark, id=ID_WEB_ADDBOOKMARK
-        )
+        self.Bind(wx.EVT_UPDATE_UI, self.on_check_can_addbookmark, id=ID_WEB_ADDBOOKMARK)
         self.Bind(wx.EVT_MENU, self._on_back, id=ID_WEB_BACK)
         self.Bind(wx.EVT_MENU, self._on_forward, id=ID_WEB_FORWARD)
         self.Bind(wx.EVT_MENU, self._on_stop, id=ID_WEB_STOP)
@@ -157,9 +155,7 @@ class BaseWebBrowser:
         if self.tdata:
             try:
                 # Try to decode as base64-encoded string
-                data = decodebytes(self.tdata[0][0].data.encode("utf-8")).decode(
-                    "utf-8"
-                )
+                data = decodebytes(self.tdata[0][0].data.encode("utf-8")).decode("utf-8")
             except Exception:
                 # Fallback: assume data is already decoded
                 try:
@@ -192,11 +188,17 @@ class BaseWebBrowser:
 
     def on_key_j(self, event):
         """Scroll down by 50px."""
-        self.execute_javascript("window.scrollBy(0,50);")
+        print("on_key_j")
+        self.execute_javascript(
+            "setTimeout(function() { window.scrollBy(0, window.innerHeight / 8); }, 0); true;"
+        )
 
     def on_key_k(self, event):
         """Scroll up by 50px."""
-        self.execute_javascript("window.scrollBy(0,-50);")
+        print("on_key_k")
+        self.execute_javascript(
+            "setTimeout(function() { window.scrollBy(0, -1 *window.innerHeight / 8); }, 0); true;"
+        )
 
     def on_key_n(self, event):
         """Open a new browser window."""
@@ -300,11 +302,7 @@ class BaseWebBrowser:
         Returns:
             The new browser control.
         """
-        okno = (
-            wx.GetApp()
-            .GetTopWindow()
-            .new_main_page("^standard/webview/widget_web.html", "")
-        )
+        okno = wx.GetApp().GetTopWindow().new_main_page("^standard/webview/widget_web.html", "")
         return okno.body.WEB
 
     def new_win(self, bstr_url):
@@ -317,9 +315,7 @@ class BaseWebBrowser:
             True on success.
         """
         okno = (
-            wx.GetApp()
-            .GetTopWindow()
-            .new_main_page("^standard/webview/widget_web.html", bstr_url)
+            wx.GetApp().GetTopWindow().new_main_page("^standard/webview/widget_web.html", bstr_url)
         )
         okno.body.WEB.go(bstr_url)
         return True
@@ -359,9 +355,7 @@ class BaseWebBrowser:
         """
         title2 = (title if len(title) < 32 else title[:30] + "...") if title else "Empty page"
         if hasattr(self.get_parent_form(), "any_parent_command"):
-            self.get_parent_form().any_parent_command(
-                "change_notebook_page_title", title2
-            )
+            self.get_parent_form().any_parent_command("change_notebook_page_title", title2)
 
     def get_status(self):
         """Get the current browser status dictionary.
@@ -722,10 +716,7 @@ class BaseWebBrowser:
             uri2 = uri
 
         if "/images/ui" in uri2:
-            uri2 = (
-                "/static/themes/bootstrap/images/ui"
-                + uri2.split("/images/ui")[1].split("#")[0]
-            )
+            uri2 = "/static/themes/bootstrap/images/ui" + uri2.split("/images/ui")[1].split("#")[0]
 
         if uri.startswith("http://127.0.0.2/static") and "?" not in uri:
             path = uri.replace("http://127.0.0.2", "")
