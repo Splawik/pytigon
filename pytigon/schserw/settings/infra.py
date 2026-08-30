@@ -3,6 +3,8 @@ import os
 import sys
 
 from django.conf import settings
+from django.apps import AppConfig
+from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
@@ -101,7 +103,9 @@ if PRODUCTION_VERSION:
         "disable_existing_loggers": True,
         "formatters": {
             "standard": {
-                "format": ("[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s"),
+                "format": (
+                    "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s"
+                ),
                 "datefmt": "%Y-%m-%d %H:%M:%S",
             }
         },
@@ -206,7 +210,9 @@ ATOMIC_REQUESTS = True
 INTERNAL_IPS = ("127.0.0.1", "127.0.0.2", "127.0.0.3", "localhost")
 
 ALLOWED_HOSTS = (
-    ["*"] if DEBUG else ENV("ALLOWED_HOSTS", default="127.0.0.1,127.0.0.2,127.0.0.3").split(",")
+    ["*"]
+    if DEBUG
+    else ENV("ALLOWED_HOSTS", default="127.0.0.1,127.0.0.2,127.0.0.3").split(",")
 )
 
 if not DEBUG and PRODUCTION_VERSION:
@@ -253,9 +259,9 @@ ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
 if PLATFORM_TYPE == "webserver":
     if ENV("CHANNELS_REDIS"):
-        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (ENV("CHANNELS_REDIS").split(":") + ["6379"])[
-            :2
-        ]
+        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (
+            ENV("CHANNELS_REDIS").split(":") + ["6379"]
+        )[:2]
     else:
         CHANNELS_REDIS_SERVER = "127.0.0.1"
         CHANNELS_REDIS_PORT = "6379"
@@ -310,6 +316,16 @@ def DEFAULT_FILE_STORAGE_FS():
     p = os.path.join(PRJ_PATH, BASE_PRJ_NAME, "static")
     if os.path.exists(p):
         STATIC_FS.add_fs("static_prj", OSFS_EXT(p))
+    for app in INSTALLED_APPS:
+        if isinstance(app, AppConfig):
+            folder = Path(os.path.join(app.path, "static"))
+            if folder.is_dir():
+                is_empty = not any(folder.iterdir())
+            else:
+                is_empty = True
+            if not is_empty:
+                STATIC_FS.add_fs("static_" + app.name, OSFS_EXT(str(folder)))
+
     _m.mount("static", STATIC_FS)
     _m.mount("app", OSFS_EXT(settings.LOCAL_ROOT_PATH))
     _m.mount("data", OSFS_EXT(settings.DATA_PATH))
@@ -358,7 +374,9 @@ def DEFAULT_FILE_STORAGE_FS():
     return _m
 
 
-THUMBNAIL_DEFAULT_STORAGE = "pytigon_lib.schdjangoext.django_storage.ThumbnailFileSystemStorage"
+THUMBNAIL_DEFAULT_STORAGE = (
+    "pytigon_lib.schdjangoext.django_storage.ThumbnailFileSystemStorage"
+)
 
 if ENV("THUMBNAIL_PROTECTED"):
     THUMBNAIL_MEDIA_ROOT = os.path.join(MEDIA_ROOT_PROTECTED, "thumb")
@@ -392,13 +410,17 @@ if platform_name() == "Android":
     if ENV("CORS_ORIGIN_ALLOW_ALL"):
         CORS_ORIGIN_ALLOW_ALL = True
     else:
-        CORS_ORIGIN_WHITELIST = ENV("CORS_ORIGIN_WHITELIST_ANDROID", default="").split(",")
+        CORS_ORIGIN_WHITELIST = ENV("CORS_ORIGIN_WHITELIST_ANDROID", default="").split(
+            ","
+        )
 
 try:
     CACHES = {"default": ENV.cache(default="locmemcache://")}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 except Exception:
-    logger.warning("Failed to configure cache from ENV.cache(), using default LocMemCache")
+    logger.warning(
+        "Failed to configure cache from ENV.cache(), using default LocMemCache"
+    )
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
