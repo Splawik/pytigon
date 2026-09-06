@@ -1,5 +1,5 @@
 django>=6.0
-fs>=2.4
+fs>=2.4.16
 pytigon-lib
 asgiref>=3.0
 polib>=1.2
