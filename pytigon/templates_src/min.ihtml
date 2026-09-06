@@ -7,7 +7,6 @@
     % if fragment != 'content':
         script language=javascript,,,nonce={{ csp_nonce }}
             .window.BASE_PATH = '{{base_path}}';
-        {% jscript_link 'pytigon_js/pytigon-tools.js' %}
 
 %% css_links
     %% botstrap_css
@@ -22,8 +21,5 @@
    
     % if fragment != 'content':
         {% jscript_link 'pytigon_js/py_runtime.min.js' %}
-        {% jscript_link 'system/idiomorph.min.js' %}
-        {% jscript_link 'jquery/jquery-3.7.1.min.js' %}
-        {% jscript_link 'vanillajs_plugins/cookie/js.cookie.js' %}
-       
+        {% jscript_link 'pytigon-lib-min.js' %}
         {% module_link 'pytigon_js/pytigon.min.js' %}

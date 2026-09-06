@@ -5,7 +5,6 @@ import graphql_jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from graphene_django import DjangoObjectType
-from graphene_django.filter import DjangoFilterConnectionField
 
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
 
@@ -31,10 +30,6 @@ class UserType(DjangoObjectType):
     class Meta:
         model = get_user_model()
         fields = ["id", "username", "email"]
-        interfaces = (graphene.relay.Node,)
-        filter_fields = {
-            "username": ["istartswith"],
-        }
 
 
 # Define the UserMutation which allows updating or creating a user
@@ -108,26 +103,19 @@ for app in settings.INSTALLED_APPS:
 
 
 class Query(graphene.ObjectType, _Query):
-    # users = graphene.List(UserType)
+    users = graphene.List(UserType)
 
-    users = DjangoFilterConnectionField(UserType)
+    def resolve_users(self, info):
+        """Return all users. Restricted to authenticated staff members.
 
-    if False:
-
-        def resolve_users(self, info, username=None):
-            """Return all users. Restricted to authenticated staff members.
-
-            Exposing every account (including email addresses) to any logged-in
-            user would leak PII. Require ``is_staff`` so that only privileged
-            operators can enumerate the user directory.
-            """
-            user = info.context.user
-            if not (user.is_authenticated and user.is_staff):
-                return []
-            queryset = get_user_model().objects.all()
-            if username:
-                queryset = queryset.filter(username__istartswith=username)
-            return queryset
+        Exposing every account (including email addresses) to any logged-in
+        user would leak PII. Require ``is_staff`` so that only privileged
+        operators can enumerate the user directory.
+        """
+        user = info.context.user
+        if not (user.is_authenticated and user.is_staff):
+            return []
+        return get_user_model().objects.all()
 
 
 class Mutation(graphene.ObjectType, _Mutation):

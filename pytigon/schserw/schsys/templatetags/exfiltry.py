@@ -108,6 +108,7 @@ from django.db.models import Avg, Count, Max, Min, Sum
 from django.urls import reverse
 from django.utils import formats
 from django_bootstrap5.forms import render_form
+from django.apps import apps
 
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from pytigon_lib.schtools.schjson import json_dumps
@@ -187,6 +188,7 @@ def _eval(value):
     """Evaluates the value as a Python expression."""
     try:
         import ast
+
         return ast.literal_eval(value)
     except (SyntaxError, ValueError):
         return value
@@ -614,9 +616,7 @@ def date_dec(value, arg):
     """Decrements the date value by the specified number of days."""
     try:
         y, m, d = value.split("-")
-        return (
-            datetime.datetime(int(y), int(m), int(d)) - datetime.timedelta(int(arg))
-        ).date()
+        return (datetime.datetime(int(y), int(m), int(d)) - datetime.timedelta(int(arg))).date()
     except ValueError:
         return None
 
@@ -995,24 +995,12 @@ def is_menu_checked(url, full_path):
         return False
 
 
-_IMPORT_VAR_ALLOWED = frozenset(
-    {
-        "pytigon_lib.schtools.schjson",
-        "pytigon_lib.schtools.tools",
-        "pytigon_lib.schtools.wiki",
-        "pytigon_lib.schdjangoext.tools",
-        "pytigon_lib.schviews",
-        "pytigon_lib.schviews.actions",
-    }
-)
-
-
 @register.filter(name="import_var")
 def _import_var(obj):
     """Imports a variable from a whitelisted module."""
     path = str(obj)
     base_path, item = path.split(":")
-    if base_path not in _IMPORT_VAR_ALLOWED:
+    if not base_path.startswith(tuple([app.name for app in apps.get_app_configs()])):
         raise ValueError(f"Module '{base_path}' is not allowed for import_var")
     m = importlib.import_module(base_path)
     return getattr(m, item)

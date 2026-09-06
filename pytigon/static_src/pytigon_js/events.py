@@ -263,7 +263,9 @@ def on_click_default_action(event, target_element):
 
     # Handle data-link indirection: redirect the click to another element
     if target_element.hasAttribute("data-link"):
-        obj = super_query_selector(target_element, target_element.getAttribute("data-link"))
+        obj = super_query_selector(
+            target_element, target_element.getAttribute("data-link")
+        )
         if obj:
             # Merge URLs from the source and target elements
             tmp_url1 = window.element_get_url(obj)
@@ -357,10 +359,16 @@ def on_click_default_action(event, target_element):
                 new_target_elem = data_element
             else:
                 new_target_elem = data_element.querySelector("meta[name='target']")
-            new_target = new_target_elem.getAttribute("content") if new_target_elem else None
+            new_target = (
+                new_target_elem.getAttribute("content") if new_target_elem else None
+            )
             if new_target and new_target != target:
-                new_url, new_callback = _get_click_event_from_tab(target_element, new_target, url)
-                element = new_callback(target_element, data_element, new_url, param, event)
+                new_url, new_callback = _get_click_event_from_tab(
+                    target_element, new_target, url
+                )
+                element = new_callback(
+                    target_element, data_element, new_url, param, event
+                )
             else:
                 element = callback(target_element, data_element, url, param, event)
             return element
@@ -537,7 +545,9 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
     content = dialog_slot.querySelector("div.dialog-data")
 
     # Handle ajax-temp-item container unwrapping
-    if data_element.tagName.lower() == "div" and data_element.classList.contains("ajax-temp-item"):
+    if data_element.tagName.lower() == "div" and data_element.classList.contains(
+        "ajax-temp-item"
+    ):
         for item in Array.prototype.slice.call(data_element.childNodes):
             content.appendChild(item)
     else:
@@ -553,7 +563,9 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
     def on_hidden(self, event):
         """Clean up the dialog when closed."""
         nonlocal target_element, url
-        region = get_ajax_region(target_element, target_element.getAttribute("data-region"))
+        region = get_ajax_region(
+            target_element, target_element.getAttribute("data-region")
+        )
         if region:
             obj = region.querySelector(".plug")
             obj.remove()
@@ -579,7 +591,11 @@ def _on_inline(target_element, data_element, url, param, event, template_name):
         bottom = top + viewportOffset.height
         height = window.innerHeight
         if bottom > height:
-            top2 = (height - viewportOffset.height) / 2 if height > viewportOffset.height else 0
+            top2 = (
+                (height - viewportOffset.height) / 2
+                if height > viewportOffset.height
+                else 0
+            )
             dy = top - top2
 
             scroll_frame = plug.firstElementChild
@@ -637,7 +653,9 @@ window.on_inline = on_inline
 
 def on_inline_edit_new(target_element, data_element, new_url, param, event):
     """Create an inline edit dialog."""
-    return _on_inline(target_element, data_element, new_url, param, event, "INLINE_EDIT")
+    return _on_inline(
+        target_element, data_element, new_url, param, event, "INLINE_EDIT"
+    )
 
 
 window.on_inline_edit_new = on_inline_edit_new
@@ -645,7 +663,9 @@ window.on_inline_edit_new = on_inline_edit_new
 
 def on_inline_info(target_element, data_element, new_url, param, event):
     """Create an inline info dialog with copy-to-clipboard."""
-    return _on_inline(target_element, data_element, new_url, param, event, "INLINE_INFO")
+    return _on_inline(
+        target_element, data_element, new_url, param, event, "INLINE_INFO"
+    )
 
 
 window.on_inline_info = on_inline_info
@@ -656,7 +676,9 @@ window.on_inline_inf = on_inline_info
 
 def on_inline_delete(target_element, data_element, new_url, param, event):
     """Create an inline delete confirmation dialog."""
-    return _on_inline(target_element, data_element, new_url, param, event, "INLINE_DELETE")
+    return _on_inline(
+        target_element, data_element, new_url, param, event, "INLINE_DELETE"
+    )
 
 
 window.on_inline_delete = on_inline_delete
@@ -664,7 +686,9 @@ window.on_inline_delete = on_inline_delete
 
 def on_inline_error(target_element, data_element, new_url, param, event):
     """Create an inline error dialog."""
-    return _on_inline(target_element, data_element, new_url, param, event, "INLINE_ERROR")
+    return _on_inline(
+        target_element, data_element, new_url, param, event, "INLINE_ERROR"
+    )
 
 
 window.on_inline_error = on_inline_error
@@ -699,7 +723,9 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
         The created dialog content element.
     """
     if not can_popup():
-        return _on_inline(target_element, data_element, url, param, event, template_name)
+        return _on_inline(
+            target_element, data_element, url, param, event, template_name
+        )
 
     dialog_slot = document.createElement("aside")
     dialog_slot.setAttribute("class", "plug")
@@ -739,7 +765,9 @@ def _on_popup(target_element, data_element, url, param, event, template_name):
     # Initialize Bootstrap modal (v5 or legacy)
     if window.hasOwnProperty("bootstrap"):
         dialog_slot.firstElementChild.addEventListener("hidden.bs.modal", on_hidden)
-        dialog = window.bootstrap.Modal(dialog_slot.firstElementChild, {"backdrop": False})
+        dialog = window.bootstrap.Modal(
+            dialog_slot.firstElementChild, {"backdrop": False}
+        )
         if dialog:
             dialog.show()
             jQuery(dialog_slot).drags({"handle": ".modal-header"})
@@ -803,7 +831,9 @@ window.on_popup_info = on_popup_info
 
 def on_popup_delete(target_element, data_element, new_url, param, event):
     """Create a modal delete confirmation popup."""
-    return _on_popup(target_element, data_element, new_url, param, event, "MODAL_DELETE")
+    return _on_popup(
+        target_element, data_element, new_url, param, event, "MODAL_DELETE"
+    )
 
 
 window.on_popup_delete = on_popup_delete
@@ -834,7 +864,9 @@ def on_new_tab(target_element, data_element, new_url, param, event):
         # wrapper.appendChild(data_element)
         # data_element2 = wrapper
         data_element2 = data_element
-    return get_menu().on_menu_href(target_element, data_element2, title, title_alt, new_url)
+    return get_menu().on_menu_href(
+        target_element, data_element2, title, title_alt, new_url
+    )
 
 
 window.on_new_tab = on_new_tab
@@ -911,7 +943,9 @@ window.on_subpage = on_subpage
 def on_subframe(target_element, data_element, new_url, param, event):
     """Navigate to a subframe (within an ajax-frame or data-link target)."""
     if target_element.hasAttribute("data-link"):
-        frame = super_query_selector(target_element, target_element.getAttribute("data-link"))
+        frame = super_query_selector(
+            target_element, target_element.getAttribute("data-link")
+        )
     else:
         frame = target_element.closest(".ajax-frame")
     return _on_subframe(frame, target_element, data_element, new_url, param, event)
@@ -981,7 +1015,9 @@ def on_close_subpage_and_refresh(target_element, data_element, new_url, param, e
 def on_close_subframe(target_element, data_element, new_url, param, event):
     """Close the current subframe and restore previous content."""
     if target_element.hasAttribute("data-link"):
-        frame = super_query_selector(target_element, target_element.getAttribute("data-link"))
+        frame = super_query_selector(
+            target_element, target_element.getAttribute("data-link")
+        )
     else:
         frame = target_element.closest(".ajax-frame")
     return _on_close_subpage(frame, target_element, data_element, new_url, param, event)
@@ -990,7 +1026,9 @@ def on_close_subframe(target_element, data_element, new_url, param, event):
 def on_close_subframe_and_refresh(target_element, data_element, new_url, param, event):
     """Close subframe and refresh the parent."""
     if target_element.hasAttribute("data-link"):
-        frame = super_query_selector(target_element, target_element.getAttribute("data-link"))
+        frame = super_query_selector(
+            target_element, target_element.getAttribute("data-link")
+        )
     else:
         frame = target_element.closest(".ajax-frame")
     ret = on_close_subframe(target_element, data_element, new_url, param, event)
@@ -1019,7 +1057,9 @@ def close_frame(target_element, data_element, new_url, param, event, data_region
 
     data_region2 = data_region or target_element.getAttribute("data-region")
 
-    region = get_ajax_region(get_ajax_region(target_element, "page").parentElement, data_region2)
+    region = get_ajax_region(
+        get_ajax_region(target_element, "page").parentElement, data_region2
+    )
 
     dialog = None
     aside = target_element.closest(".plug")
@@ -1051,7 +1091,9 @@ def close_frame(target_element, data_element, new_url, param, event, data_region
     )
 
 
-def refresh_frame(target_element, data_element, new_url, param, event, data_region=None):
+def refresh_frame(
+    target_element, data_element, new_url, param, event, data_region=None
+):
     """Refresh a frame with new content.
 
     Args:
@@ -1069,7 +1111,9 @@ def refresh_frame(target_element, data_element, new_url, param, event, data_regi
 
 def refresh_page(target_element, data_element, new_url, param, event):
     """Refresh the page-content region of the current page."""
-    return refresh_frame(target_element, data_element, new_url, param, event, "page-content")
+    return refresh_frame(
+        target_element, data_element, new_url, param, event, "page-content"
+    )
 
 
 def refresh_app(target_element, data_element, new_url, param, event):

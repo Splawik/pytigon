@@ -1913,7 +1913,7 @@ GlobalBus.prototype.unregister = function (component) {
 
 window.GlobalBus = GlobalBus;
 
-var MOUNT_INIT_FUN, _get_region_element_closest, _get_region_elements_inside, _on_shown_bs_tab, _refresh_page, _valid_region_element, ajax_load, auto_frame_init, auto_refresh_tab, create_onloadeddata, data_type, datatable_init, get_ajax_frame, get_ajax_link, get_ajax_region, get_click_on_focus_fun, get_refresh_on_focus_fun, init_select2_ctrl, mount_html, moveelement_init, on_focus_action, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init, set_select2_value;
+var MOUNT_INIT_FUN, _get_region_element_closest, _get_region_elements_inside, _on_shown_bs_tab, _refresh_page, _valid_region_element, ajax_load, auto_frame_init, auto_refresh_tab, create_onloadeddata, data_type, datatable_init, details_window_init, get_ajax_frame, get_ajax_link, get_ajax_region, get_click_on_focus_fun, get_refresh_on_focus_fun, init_select2_ctrl, mount_html, moveelement_init, on_focus_action, refresh_ajax_frame, register_mount_fun, select2_init, select_combo_init, selectpicker_init, set_select2_value;
 "\nAJAX region management and HTML mounting module.\n\nProvides the core DOM manipulation and AJAX content loading layer:\n- data_type: Detects server response type markers for routing.\n- mount_html: Renders HTML content into a target element with morph support.\n- register_mount_fun: Plugin system for post-mount initialization hooks.\n- Select2, SelectPicker, DataTable initialization hooks.\n- AJAX region/link/frame element lookup helpers.\n- refresh_ajax_frame: Core function for AJAX-based content updates.\n\nDependencies (pscript cross-module):\n    pytigon_js.tools: Loading, correct_href, ajax_get, ajax_post,\n                      get_table_type, super_insert\n    pytigon_js.tbl: init_table\n";
 data_type = function flx_data_type (data_or_html) {
     var meta_list, pos, stub1_seq, stub2_itr;
@@ -2462,6 +2462,37 @@ datatable_init = function flx_datatable_init (dest_elem) {
 
 register_mount_fun(datatable_init);
 register_mount_fun(process_resize);
+details_window_init = function flx_details_window_init (dest_elem) {
+    var elem, element_list, on_change, stub27_seq, stub28_itr;
+    on_change = (function flx_on_change (event) {
+        var elem, obj, row_active_divs, stub25_seq, stub26_itr, x;
+        obj = event.target;
+        x = obj.closest(".ajax-region[data-region='page'");
+        if (_pyfunc_truthy(x)) {
+            row_active_divs = Array.prototype.slice.call(x.querySelectorAll(".table-row-active"));
+            stub25_seq = row_active_divs;
+            if ((typeof stub25_seq === "object") && (!Array.isArray(stub25_seq))) { stub25_seq = Object.keys(stub25_seq);}
+            for (stub26_itr = 0; stub26_itr < stub25_seq.length; stub26_itr += 1) {
+                elem = stub25_seq[stub26_itr];
+                if (_pyfunc_truthy(elem.classList.contains("show"))) {
+                    refresh_ajax_frame(elem);
+                }
+            }
+        }
+        return null;
+    }).bind(this);
+
+    element_list = Array.prototype.slice.call(dest_elem.querySelectorAll(".change-details"));
+    stub27_seq = element_list;
+    if ((typeof stub27_seq === "object") && (!Array.isArray(stub27_seq))) { stub27_seq = Object.keys(stub27_seq);}
+    for (stub28_itr = 0; stub28_itr < stub27_seq.length; stub28_itr += 1) {
+        elem = stub27_seq[stub28_itr];
+        elem.addEventListener("change", on_change);
+    }
+    return null;
+};
+
+register_mount_fun(details_window_init);
 _valid_region_element = function flx__valid_region_element (element, class_name, region_name) {
     var x;
     region_name = (region_name === undefined) ? null: region_name;
@@ -2497,7 +2528,7 @@ _valid_region_element = function flx__valid_region_element (element, class_name,
 };
 
 _get_region_elements_inside = function flx__get_region_elements_inside (element, class_name, region_name) {
-    var item, item_list, ret, stub25_seq, stub26_itr;
+    var item, item_list, ret, stub29_seq, stub30_itr;
     region_name = (region_name === undefined) ? null: region_name;
     // Find all elements with a given class inside a container.
     // 
@@ -2510,10 +2541,10 @@ _get_region_elements_inside = function flx__get_region_elements_inside (element,
     //         list: Matching DOM elements.
     item_list = Array.prototype.slice.call(element.querySelectorAll("." + class_name));
     ret = [];
-    stub25_seq = item_list;
-    if ((typeof stub25_seq === "object") && (!Array.isArray(stub25_seq))) { stub25_seq = Object.keys(stub25_seq);}
-    for (stub26_itr = 0; stub26_itr < stub25_seq.length; stub26_itr += 1) {
-        item = stub25_seq[stub26_itr];
+    stub29_seq = item_list;
+    if ((typeof stub29_seq === "object") && (!Array.isArray(stub29_seq))) { stub29_seq = Object.keys(stub29_seq);}
+    for (stub30_itr = 0; stub30_itr < stub29_seq.length; stub30_itr += 1) {
+        item = stub29_seq[stub30_itr];
         if (_pyfunc_truthy(item.classList.contains(class_name))) {
             if (_pyfunc_truthy(_valid_region_element(item, class_name, region_name))) {
                 _pymeth_append.call(ret, item);
@@ -2593,7 +2624,7 @@ get_ajax_region = function flx_get_ajax_region (element, region_name, strict_mod
 
 window.get_ajax_region = get_ajax_region;
 get_ajax_link = function flx_get_ajax_link (element, region_name, strict_mode) {
-    var link, link_list, region, stub27_seq, stub28_itr;
+    var link, link_list, region, stub31_seq, stub32_itr;
     region_name = (region_name === undefined) ? null: region_name;
     strict_mode = (strict_mode === undefined) ? false: strict_mode;
     // Find the .ajax-link element for a given region scope.
@@ -2620,10 +2651,10 @@ get_ajax_link = function flx_get_ajax_link (element, region_name, strict_mode) {
             if ((link_list.length == 1)) {
                 return link_list[0];
             }
-            stub27_seq = link_list;
-            if ((typeof stub27_seq === "object") && (!Array.isArray(stub27_seq))) { stub27_seq = Object.keys(stub27_seq);}
-            for (stub28_itr = 0; stub28_itr < stub27_seq.length; stub28_itr += 1) {
-                link = stub27_seq[stub28_itr];
+            stub31_seq = link_list;
+            if ((typeof stub31_seq === "object") && (!Array.isArray(stub31_seq))) { stub31_seq = Object.keys(stub31_seq);}
+            for (stub32_itr = 0; stub32_itr < stub31_seq.length; stub32_itr += 1) {
+                link = stub31_seq[stub32_itr];
                 if ((_pyfunc_op_equals(_get_region_element_closest(link, "ajax-region", region_name), region))) {
                     return link;
                 }
@@ -2645,7 +2676,7 @@ get_ajax_link = function flx_get_ajax_link (element, region_name, strict_mode) {
 
 window.get_ajax_link = get_ajax_link;
 get_ajax_frame = function flx_get_ajax_frame (element, region_name, strict_mode) {
-    var f, frame_list, region, stub29_seq, stub30_itr;
+    var f, frame_list, obj, region, stub33_seq, stub34_itr;
     region_name = (region_name === undefined) ? null: region_name;
     strict_mode = (strict_mode === undefined) ? false: strict_mode;
     // Find the .ajax-frame element for a given region scope.
@@ -2660,6 +2691,12 @@ get_ajax_frame = function flx_get_ajax_frame (element, region_name, strict_mode)
     //     Returns:
     //         The matching .ajax-frame element or None.
     region = get_ajax_region(element, region_name, strict_mode);
+    if ((_pyfunc_truthy(element) && (_pyfunc_truthy(element.hasAttribute("data-frame"))))) {
+        obj = window.super_query_selector(element, element.getAttribute("data-frame"));
+        if (_pyfunc_truthy(obj)) {
+            return obj;
+        }
+    }
     if ((!_pyfunc_op_equals(region, null))) {
         if (_pyfunc_truthy((_pyfunc_truthy(region.classList.contains("ajax-frame"))) && (_pyfunc_truthy(_valid_region_element(region, "ajax-frame", region_name))))) {
             return region;
@@ -2668,10 +2705,10 @@ get_ajax_frame = function flx_get_ajax_frame (element, region_name, strict_mode)
             if ((frame_list.length == 1)) {
                 return frame_list[0];
             }
-            stub29_seq = frame_list;
-            if ((typeof stub29_seq === "object") && (!Array.isArray(stub29_seq))) { stub29_seq = Object.keys(stub29_seq);}
-            for (stub30_itr = 0; stub30_itr < stub29_seq.length; stub30_itr += 1) {
-                f = stub29_seq[stub30_itr];
+            stub33_seq = frame_list;
+            if ((typeof stub33_seq === "object") && (!Array.isArray(stub33_seq))) { stub33_seq = Object.keys(stub33_seq);}
+            for (stub34_itr = 0; stub34_itr < stub33_seq.length; stub34_itr += 1) {
+                f = stub33_seq[stub34_itr];
                 if ((_pyfunc_op_equals(_get_region_element_closest(f, "ajax-region", region_name), region))) {
                     return f;
                 }

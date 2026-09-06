@@ -579,6 +579,30 @@ register_mount_fun(datatable_init)
 register_mount_fun(process_resize)
 
 
+def details_window_init(dest_elem):
+
+    def on_change(event):
+        obj = event.target
+        x = obj.closest(".ajax-region[data-region='page'")
+        if x:
+            row_active_divs = Array.prototype.slice.call(
+                x.querySelectorAll(".table-row-active")
+            )
+            for elem in row_active_divs:
+                if elem.classList.contains("show"):
+                    refresh_ajax_frame(elem)
+
+    element_list = Array.prototype.slice.call(
+        dest_elem.querySelectorAll(".change-details")
+    )
+
+    for elem in element_list:
+        elem.addEventListener("change", on_change)
+
+
+register_mount_fun(details_window_init)
+
+
 # =============================================================================
 # AJAX region/link/frame element lookup helpers
 # =============================================================================
@@ -761,6 +785,11 @@ def get_ajax_frame(element, region_name=None, strict_mode=False):
         The matching .ajax-frame element or None.
     """
     region = get_ajax_region(element, region_name, strict_mode)
+    if element and element.hasAttribute("data-frame"):
+        obj = window.super_query_selector(element, element.getAttribute("data-frame"))
+        if obj:
+            return obj
+
     if region != None:
         if region.classList.contains("ajax-frame") and _valid_region_element(
             region, "ajax-frame", region_name
