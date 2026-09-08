@@ -190,7 +190,7 @@ def _eval(value):
         import ast
 
         return ast.literal_eval(value)
-    except (SyntaxError, ValueError):
+    except (SyntaxError, ValueError, TypeError):
         return value
     except Exception:
         return ""
@@ -392,7 +392,7 @@ def genericfloatformat(text, arg="{: .2f}"):
             return x.replace(",", " ")
         else:
             return x
-    except ValueError:
+    except (ValueError, TypeError):
         return ""
 
 
@@ -402,7 +402,7 @@ def genericfloatnullformat(text, arg="{: .2f}"):
     try:
         f = float(text)
         return "-" if not f else genericfloatformat(text, arg)
-    except ValueError:
+    except (ValueError, TypeError):
         return "-"
 
 
@@ -435,7 +435,7 @@ def amount(text):
     """Formats the amount with thousand separators."""
     try:
         f = float(text)
-    except ValueError:
+    except (ValueError, TypeError):
         return ""
     if f == 0.0:
         return "-  "
@@ -454,7 +454,7 @@ def parse_locale_date(formatted_date):
     for date_format in formats.get_format("DATE_INPUT_FORMATS"):
         try:
             parsed_date = datetime.datetime.strptime(formatted_date, date_format)
-        except ValueError:
+        except (ValueError, TypeError):
             continue
         else:
             break
@@ -607,7 +607,7 @@ def date_inc(value, arg):
         date, time = value.split()
         y, m, d = date.split("-")
         return datetime.datetime(int(y), int(m), int(d)) + datetime.timedelta(int(arg))
-    except ValueError:
+    except (ValueError, TypeError):
         return None
 
 
@@ -617,7 +617,7 @@ def date_dec(value, arg):
     try:
         y, m, d = value.split("-")
         return (datetime.datetime(int(y), int(m), int(d)) - datetime.timedelta(int(arg))).date()
-    except ValueError:
+    except (ValueError, TypeError):
         return None
 
 
