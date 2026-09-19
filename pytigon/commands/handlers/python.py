@@ -3,7 +3,7 @@ Handles running Python interpreter and Python scripts in Pytigon environment.
 """
 
 import os
-
+import pytigon_lib
 from .base import CommandHandler
 
 
@@ -84,6 +84,8 @@ class PythonCommandHandler(CommandHandler):
         """
         # Extract app name from command
         app = argv[1].split("_", 1)[1]
+        if app:
+            pytigon_lib.init_paths(app)
 
         # Get paths for the app
         paths = self.setup_paths(app)
@@ -92,14 +94,6 @@ class PythonCommandHandler(CommandHandler):
         ret = self._init_prj_path(paths, app)
         if ret:
             argv[1] = ret[0]
-
-        data_path = paths.get("DATA_PATH", "")
-        prjlib = os.path.join(data_path, app, "prjlib")
-
-        if "PYTHONPATH" in os.environ:
-            os.environ["PYTHONPATH"] += ":" + prjlib
-        else:
-            os.environ["PYTHONPATH"] = prjlib
 
         # Run Python interpreter
         executable = self.get_executable()
