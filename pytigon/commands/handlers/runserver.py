@@ -5,10 +5,14 @@ Handles running web servers (WSGI/ASGI).
 import logging
 import os
 import sys
+import threading
 
 from .base import CommandHandler
 
 _logger = logging.getLogger(__name__)
+
+_ADDRESS_DEFAULT = "0.0.0.0"
+_PORT_DEFAULT = "8000"
 
 
 class RunServerCommandHandler(CommandHandler):
@@ -64,6 +68,7 @@ class RunServerCommandHandler(CommandHandler):
                 listen = None
                 port = "8000"
                 address = "0.0.0.0"
+                workers = None
 
                 for item in argv[2:]:
                     if item.startswith("--listen="):
@@ -76,8 +81,14 @@ class RunServerCommandHandler(CommandHandler):
                         argv.remove(item)
                         break
 
+                for item in argv[2:]:
+                    if item.startswith("--workers="):
+                        workers = int(item.split("=")[1])
+                        argv.remove(item)
+                        break
+
                 # Build server options
-                options = self._build_server_options(argv, wsgi, listen, address, port)
+                options = self._build_server_options(argv, wsgi, listen, address, port, workers)
 
                 # Check if running with GUI
                 if "--with-gui" in argv:
@@ -98,7 +109,8 @@ class RunServerCommandHandler(CommandHandler):
         listen: str | None,
         address: str,
         port: str,
-    ) -> list[str]:
+        workers: int | None = None,
+    ) -> dict:
         """Build server options based on arguments.
 
         Args:
@@ -107,37 +119,55 @@ class RunServerCommandHandler(CommandHandler):
             listen: Listen address (host:port)
             address: Bind address
             port: Bind port
+            workers: Number of worker threads/processes
 
         Returns:
-            List of server options
+            Dict with keys: target, address, port, workers, cli_options
 
         """
-        options = []
+        cli_options = []
+        target_address = address
+        target_port = port
 
         if listen:
             if wsgi:
-                options = ["--listen", listen]
+                cli_options = ["--listen", listen]
             else:
+                target_address = address
+                target_port = port
                 if "-p" not in argv and "--port" not in argv:
-                    options += ["-p", port]
+                    cli_options += ["-p", port]
                 if "-b" not in argv and "--bind" not in argv:
-                    options += ["-b", address]
+                    cli_options += ["-b", address]
+            if ":" in listen:
+                target_address, target_port = listen.split(":")
+            else:
+                target_address = listen
+                target_port = "8000"
         elif wsgi:
             if "--port" not in argv and "--host" not in argv:
-                options += ["--listen", "0.0.0.0:8000"]
+                cli_options += ["--listen", "0.0.0.0:8000"]
+            target_address = "0.0.0.0"
+            target_port = "8000"
         else:
             if "-p" not in argv and "--port" not in argv:
-                options += ["-p", port]
+                cli_options += ["-p", port]
             if "-b" not in argv and "--bind" not in argv:
-                options += ["-b", "0.0.0.0"]
+                cli_options += ["-b", _ADDRESS_DEFAULT]
+            target_address = address
+            target_port = port
 
-        # Add application entry point
-        if wsgi:
-            options.append("wsgi:application")
-        else:
-            options.append("asgi:application")
+        # Application entry point
+        target = "wsgi:application" if wsgi else "asgi:application"
+        cli_options.append(target)
 
-        return options
+        return {
+            "target": target,
+            "address": target_address,
+            "port": target_port,
+            "workers": workers,
+            "cli_options": cli_options,
+        }
 
     def _run_with_gui(self, argv: list[str], app: str, wsgi: bool, address: str, port: str) -> int:
         """Run server with GUI.
@@ -182,45 +212,79 @@ class RunServerCommandHandler(CommandHandler):
             traceback.print_exc(file=sys.stderr)
             return 1
 
-    def _run_server(self, argv: list[str], options: list[str], wsgi: bool) -> int:
+    def _run_server(self, argv: list[str], options: dict, wsgi: bool) -> int:
         """Run server without GUI.
 
         Args:
             argv: Command arguments
-            options: Server options
+            options: Server options dict with keys: target, address, port, workers, cli_options
             wsgi: Whether to use WSGI
 
         Returns:
             Exit code
 
         """
-        # Save original sys.argv
         tmp = sys.argv
 
         try:
-            # Build server arguments
-            sys.argv = [""] + argv[2:] + options
+            cli_options = options["cli_options"]
+            sys.argv = [""] + argv[2:] + cli_options
             _logger.info("Web server: %s", sys.argv[1:])
 
-            # Run appropriate server
-            if wsgi:
-                try:
-                    from waitress.runner import run
+            target = options["target"]
+            address = options["address"]
+            port = int(options["port"])
+            workers = options.get("workers")
 
-                    run()
-                    return 0
-                except ImportError:
-                    print("Error: waitress not available", file=sys.stderr)
-                    return 1
-            else:
-                try:
-                    from daphne.cli import CommandLineInterface
+            try:
+                from granian import Granian
+                from granian.constants import Interfaces
 
-                    CommandLineInterface.entrypoint()
-                    return 0
-                except ImportError:
-                    print("Error: daphne not available", file=sys.stderr)
-                    return 1
+                import asyncio
+
+                _orig_threading_excepthook = threading.excepthook
+                _orig_asyncio_exc_handler = (
+                    asyncio.base_events.BaseEventLoop.default_exception_handler
+                )
+
+                def _filtered_threading_hook(args):
+                    if isinstance(
+                        args.exc_value, asyncio.CancelledError
+                    ):
+                        return
+                    _orig_threading_excepthook(args)
+
+                def _filtered_asyncio_handler(loop, context):
+                    exc = context.get("exception")
+                    if isinstance(exc, asyncio.CancelledError):
+                        return
+                    _orig_asyncio_exc_handler(loop, context)
+
+                threading.excepthook = _filtered_threading_hook
+                asyncio.base_events.BaseEventLoop.default_exception_handler = (
+                    _filtered_asyncio_handler
+                )
+
+                interface = Interfaces.WSGI if wsgi else Interfaces.ASGI
+                kwargs = dict(
+                    target=target,
+                    address=address,
+                    port=port,
+                    interface=interface,
+                )
+                if workers is not None:
+                    kwargs["workers"] = workers
+                Granian(**kwargs).serve()
+                return 0
+            except ImportError:
+                if wsgi:
+                    _logger.info("granian not available, falling back to daphne for WSGI")
+                else:
+                    _logger.info("granian not available, falling back to daphne for ASGI")
+
+                from daphne.cli import CommandLineInterface
+
+                CommandLineInterface.entrypoint()
+                return 0
         finally:
-            # Restore original sys.argv
             sys.argv = tmp

@@ -5,10 +5,10 @@ Handles running pip in prj environment.
 import os
 
 from .base import CommandHandler
+import pytigon_lib
 
 
 class PipCommandHandler(CommandHandler):
-
     """Handler for running pip in prj environment.
 
     Handles commands like:
@@ -43,13 +43,17 @@ class PipCommandHandler(CommandHandler):
         try:
             if len(argv) < 3:
                 return self.handle_error(
-                    ValueError("Missing pip subcommand. Usage: ptig pip_<app> <command> [args]"),
+                    ValueError(
+                        "Missing pip subcommand. Usage: ptig pip_<app> <command> [args]"
+                    ),
                     {"command": argv[1] if len(argv) > 1 else "pip"},
                 )
 
             # Parse command to extract app and script
             x = argv[1].split("_", 1)
             app = x[1]
+            if app:
+                pytigon_lib.init_paths(app)
 
             # Get paths for the app
             paths = self.setup_paths(app)
@@ -66,12 +70,18 @@ class PipCommandHandler(CommandHandler):
             ]
 
             if argv[2] == "install":
-                command.append("--disable-pip-version-check")
-                command.append(f"--target={prjlib}")
+                command.append("--user")
+                # command.append("--disable-pip-version-check")
+                # command.append(f"--target={prjlib}")
 
             command += argv[3:]
 
-            python_path = os.environ["PYTHONPATH"] if "PYTHONPATH" in os.environ else None
+            # os.environ["PYTHONUSERBASE"] = prjlib
+            # os.environ["PIP_BREAK_SYSTEM_PACKAGES"] = "1"
+
+            python_path = (
+                os.environ["PYTHONPATH"] if "PYTHONPATH" in os.environ else None
+            )
             os.environ["PYTHONPATH"] = prjlib
             ret = self.run_subprocess(command)
             if python_path:
@@ -79,4 +89,6 @@ class PipCommandHandler(CommandHandler):
             return ret
 
         except Exception as e:
-            return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "pip"})
+            return self.handle_error(
+                e, {"command": argv[1] if len(argv) > 1 else "pip"}
+            )
