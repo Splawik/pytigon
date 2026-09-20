@@ -81,12 +81,11 @@ class SafeSubprocess:
         except Exception:
             pass
 
-        venv = os.environ.get("VIRTUAL_ENV")
+        venv = os.environ.get("PYTHONUSERBASE")
         if venv and os.path.isdir(venv):
             venv_bin = os.path.join(venv, "bin" if os.name != "nt" else "Scripts")
             if os.path.isdir(venv_bin):
                 dirs.add(os.path.realpath(venv_bin))
-
         return dirs
 
     def _is_executable_allowed(self, executable: str) -> bool:
@@ -165,9 +164,7 @@ class SafeSubprocess:
                         continue
                     lines.append("")
                     lines.append(f"  --- {name} ---")
-                    lines.extend(
-                        f"  {line}" if line else "" for line in text.split("\n")
-                    )
+                    lines.extend(f"  {line}" if line else "" for line in text.split("\n"))
             else:
                 lines.append("")
                 lines.append(

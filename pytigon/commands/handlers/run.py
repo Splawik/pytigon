@@ -4,12 +4,12 @@ Handles running Python scripts in Pytigon environment.
 
 import os
 import sys
+import pytigon_lib
 
 from .base import CommandHandler
 
 
 class RunCommandHandler(CommandHandler):
-
     """Handler for running Python scripts.
 
     Handles commands like:
@@ -58,12 +58,27 @@ class RunCommandHandler(CommandHandler):
                 app = x[1]
                 if len(argv) > 2:
                     file_name = argv[2]
-                    # Make path absolute if relative
-                    if not (file_name.startswith("/") or ":" in file_name[:2]):
-                        file_name = os.path.join(
-                            os.environ.get("START_PATH", os.getcwd()), file_name,
-                        )
-                    script = file_name.replace("\\", "/").split("/")[-1].split(".")[0]
+                    if file_name.startswith("@"):
+                        if app:
+                            pytigon_lib.init_paths(app)
+                        paths = self.setup_paths(app)
+                        file_name = file_name[1:]
+                        prg_path = os.path.join(paths["DATA_PATH"], app, "prjlib", "bin", file_name)
+                        command = [
+                            prg_path,
+                        ]
+                        if len(argv) > 3:
+                            command = command + argv[3:]
+                        ret = self.run_subprocess(command)
+                        return ret
+                    else:
+                        # Make path absolute if relative
+                        if not (file_name.startswith("/") or ":" in file_name[:2]):
+                            file_name = os.path.join(
+                                os.environ.get("START_PATH", os.getcwd()),
+                                file_name,
+                            )
+                        script = file_name.replace("\\", "/").split("/")[-1].split(".")[0]
                 else:
                     module_name = x[1] + ".run"
                     script = "run"
@@ -88,9 +103,7 @@ class RunCommandHandler(CommandHandler):
                 if spec is None or spec.loader is None:
                     from ..errors import PathError
 
-                    raise PathError(
-                        f"Cannot load Python spec from '{file_name}'", code=54
-                    )
+                    raise PathError(f"Cannot load Python spec from '{file_name}'", code=54)
                 module = importlib.util.module_from_spec(spec)
                 spec.loader.exec_module(module)
             else:

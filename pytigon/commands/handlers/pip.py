@@ -43,7 +43,9 @@ class PipCommandHandler(CommandHandler):
         try:
             if len(argv) < 3:
                 return self.handle_error(
-                    ValueError("Missing pip subcommand. Usage: ptig pip_<app> <command> [args]"),
+                    ValueError(
+                        "Missing pip subcommand. Usage: ptig pip_<app> <command> [args]"
+                    ),
                     {"command": argv[1] if len(argv) > 1 else "pip"},
                 )
 
@@ -63,6 +65,7 @@ class PipCommandHandler(CommandHandler):
             ]
 
             if argv[2] == "install":
+                command.append("--no-warn-script-location")
                 command.append("--user")
 
             command += argv[3:]
@@ -72,4 +75,6 @@ class PipCommandHandler(CommandHandler):
             return ret
 
         except Exception as e:
-            return self.handle_error(e, {"command": argv[1] if len(argv) > 1 else "pip"})
+            return self.handle_error(
+                e, {"command": argv[1] if len(argv) > 1 else "pip"}
+            )

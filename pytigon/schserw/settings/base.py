@@ -41,6 +41,7 @@ COMMANDS_IN_DEBUG_MODE = [
     "runserver",
     "compiletemplates",
     "makeallmigrations",
+    "upgradelocallibs",
 ]
 
 if (
@@ -65,6 +66,7 @@ else:
     DEBUG = False
     DB_DEBUG = False
     PRODUCTION_VERSION = True
+
 
 if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")):
     PRODUCTION_VERSION = False
