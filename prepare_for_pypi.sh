@@ -31,5 +31,6 @@ echo "'" >> /tmp/pytigon/install.ini
 echo "" > ./pytigon/install/__init__.py
 rm ./pytigon/install/.pytigon.zip
 rm -rf /tmp/pytigon/prg/{*,.*}
+find /tmp/pytigon -mindepth 1 -path '*/prjlib/*' -delete
 7z a $PWD/install/.pytigon.zip /tmp/pytigon/*
 cd ..
