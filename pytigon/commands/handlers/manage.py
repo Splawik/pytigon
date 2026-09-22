@@ -75,7 +75,7 @@ class ManageCommandHandler(CommandHandler):
             # Run Django manage.py
             executable = self.get_executable()
             command = [executable, "manage.py"] + argv[2:]
-            print("F3")
+            print("F3: ", command)
             ret = self.run_subprocess(command)
             print("F4")
             return ret
