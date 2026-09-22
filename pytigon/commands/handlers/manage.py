@@ -8,7 +8,6 @@ from .base import CommandHandler
 
 
 class ManageCommandHandler(CommandHandler):
-
     """Handler for Django management commands.
 
     Handles commands like:
@@ -69,8 +68,9 @@ class ManageCommandHandler(CommandHandler):
         app = x[1]
 
         # Prepare project environment
+        print("F1")
         app, PRJ_PATH, paths = self._prepare_project(app)
-
+        print("F2")
         try:
             # Run Django manage.py
             executable = self.get_executable()
@@ -79,6 +79,7 @@ class ManageCommandHandler(CommandHandler):
         finally:
             # Restore original working directory
             os.chdir(base_path)
+        print("F3")
 
     def _handle_manage_simple(self, argv: list[str], base_path: str) -> int:
         """Handle simple manage command (without app specified).
