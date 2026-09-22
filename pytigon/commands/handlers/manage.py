@@ -75,11 +75,14 @@ class ManageCommandHandler(CommandHandler):
             # Run Django manage.py
             executable = self.get_executable()
             command = [executable, "manage.py"] + argv[2:]
-            return self.run_subprocess(command)
+            print("F3")
+            ret = self.run_subprocess(command)
+            print("F4")
+            return ret
         finally:
             # Restore original working directory
             os.chdir(base_path)
-        print("F3")
+        print("F5")
 
     def _handle_manage_simple(self, argv: list[str], base_path: str) -> int:
         """Handle simple manage command (without app specified).
