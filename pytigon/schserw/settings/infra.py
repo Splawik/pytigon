@@ -103,9 +103,7 @@ if PRODUCTION_VERSION:
         "disable_existing_loggers": True,
         "formatters": {
             "standard": {
-                "format": (
-                    "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s"
-                ),
+                "format": ("[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s"),
                 "datefmt": "%Y-%m-%d %H:%M:%S",
             }
         },
@@ -210,9 +208,7 @@ ATOMIC_REQUESTS = True
 INTERNAL_IPS = ("127.0.0.1", "127.0.0.2", "127.0.0.3", "localhost")
 
 ALLOWED_HOSTS = (
-    ["*"]
-    if DEBUG
-    else ENV("ALLOWED_HOSTS", default="127.0.0.1,127.0.0.2,127.0.0.3").split(",")
+    ["*"] if DEBUG else ENV("ALLOWED_HOSTS", default="127.0.0.1,127.0.0.2,127.0.0.3").split(",")
 )
 
 if not DEBUG and PRODUCTION_VERSION:
@@ -259,9 +255,9 @@ ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
 if PLATFORM_TYPE == "webserver":
     if ENV("CHANNELS_REDIS"):
-        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (
-            ENV("CHANNELS_REDIS").split(":") + ["6379"]
-        )[:2]
+        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (ENV("CHANNELS_REDIS").split(":") + ["6379"])[
+            :2
+        ]
     else:
         CHANNELS_REDIS_SERVER = "127.0.0.1"
         CHANNELS_REDIS_PORT = "6379"
@@ -298,16 +294,13 @@ COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
 STATIC_FS = None
 ROOT_FS = None
 
-LOCK = 0
-
 
 def DEFAULT_FILE_STORAGE_FS():
     global STATIC_FS, ROOT_FS, LOCK
-    if LOCK == 1:
-        return
+    if ROOT_FS != None:
+        return ROOT_FS
     from pytigon_lib.schfs.adapters import FsspecMountFS, FsspecMultiFS
 
-    LOCK = 1
     _m = FsspecMountFS()
     ROOT_FS = _m
     # _m.mount("pytigon", OSFS_EXT(settings.ROOT_PATH))
@@ -374,9 +367,7 @@ def DEFAULT_FILE_STORAGE_FS():
     return _m
 
 
-THUMBNAIL_DEFAULT_STORAGE = (
-    "pytigon_lib.schdjangoext.django_storage.ThumbnailFileSystemStorage"
-)
+THUMBNAIL_DEFAULT_STORAGE = "pytigon_lib.schdjangoext.django_storage.ThumbnailFileSystemStorage"
 
 if ENV("THUMBNAIL_PROTECTED"):
     THUMBNAIL_MEDIA_ROOT = os.path.join(MEDIA_ROOT_PROTECTED, "thumb")
@@ -410,17 +401,13 @@ if platform_name() == "Android":
     if ENV("CORS_ORIGIN_ALLOW_ALL"):
         CORS_ORIGIN_ALLOW_ALL = True
     else:
-        CORS_ORIGIN_WHITELIST = ENV("CORS_ORIGIN_WHITELIST_ANDROID", default="").split(
-            ","
-        )
+        CORS_ORIGIN_WHITELIST = ENV("CORS_ORIGIN_WHITELIST_ANDROID", default="").split(",")
 
 try:
     CACHES = {"default": ENV.cache(default="locmemcache://")}
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 except Exception:
-    logger.warning(
-        "Failed to configure cache from ENV.cache(), using default LocMemCache"
-    )
+    logger.warning("Failed to configure cache from ENV.cache(), using default LocMemCache")
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",

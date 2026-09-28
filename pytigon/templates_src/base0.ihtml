@@ -77,12 +77,13 @@
             %% tabs
 
         %% js_all_scripts
-            %if not 'no_scripts' in request.GET:
-                % if not show_form:
-                    %%js_scripts
-                        %% js_scripts_base
+            %if standard_web_browser:
+                %if not 'no_scripts' in request.GET:
+                    % if not show_form:
+                        %%js_scripts
+                            %% js_scripts_base
 
-                %% js_extrascipts
+                    %% js_extrascipts
 
         %% html_widgets_init
 

@@ -93,15 +93,17 @@
                         {% endblock %}
                 {% endif %}
                 {% block js_all_scripts %}
-                        {% if not 'no_scripts' in request.GET %}
-                                {% if not show_form %}
-                                        {% block js_scripts %}
-                                                {% block js_scripts_base %}
+                        {% if standard_web_browser %}
+                                {% if not 'no_scripts' in request.GET %}
+                                        {% if not show_form %}
+                                                {% block js_scripts %}
+                                                        {% block js_scripts_base %}
+                                                        {% endblock %}
                                                 {% endblock %}
+                                        {% endif %}
+                                        {% block js_extrascipts %}
                                         {% endblock %}
                                 {% endif %}
-                                {% block js_extrascipts %}
-                                {% endblock %}
                         {% endif %}
                 {% endblock %}
                 {% block html_widgets_init %}
