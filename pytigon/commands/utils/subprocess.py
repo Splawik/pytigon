@@ -64,6 +64,15 @@ class SafeSubprocess:
         return sanitized
 
     def _safe_directories(self):
+        """Directories an executable may live in.
+
+        Pytigon's own data directory is included wholesale, not just
+        ``DATA_PATH/prg``: programs are also shipped in per-project
+        ``prjlib/bin`` and run as plain Python scripts from the data tree.
+
+        Returns:
+            set: Resolved directory paths.
+        """
         dirs = set()
 
         for path in os.environ.get("PATH", "").split(os.pathsep):
@@ -75,17 +84,34 @@ class SafeSubprocess:
             from pytigon_lib.schtools.main_paths import get_main_paths
 
             paths = get_main_paths()
-            prg = os.path.join(paths["DATA_PATH"], "prg")
-            if os.path.isdir(prg):
-                dirs.add(os.path.realpath(prg))
+            data_path = paths.get("DATA_PATH")
+            if data_path and os.path.isdir(data_path):
+                dirs.add(os.path.realpath(data_path))
         except Exception:
             pass
 
-        venv = os.environ.get("PYTHONUSERBASE")
-        if venv and os.path.isdir(venv):
-            venv_bin = os.path.join(venv, "bin" if os.name != "nt" else "Scripts")
-            if os.path.isdir(venv_bin):
-                dirs.add(os.path.realpath(venv_bin))
+        # PYTHONUSERBASE is the *user base* directory, not the environment, so
+        # using it alone left the ptig interpreter itself rejected. The
+        # interpreter's real environment and bin directory are what matter.
+        for key in ("PYTIGON_DATA", "PYTIGON_ROOT_PATH", "PYTHONUSERBASE", "VIRTUAL_ENV"):
+            value = os.environ.get(key)
+            if value and os.path.isdir(value):
+                dirs.add(os.path.realpath(value))
+                bin_dir = os.path.join(
+                    value, "bin" if os.name != "nt" else "Scripts"
+                )
+                if os.path.isdir(bin_dir):
+                    dirs.add(os.path.realpath(bin_dir))
+
+        bin_name = "bin" if os.name != "nt" else "Scripts"
+        for base in (sys.prefix, os.path.dirname(os.path.abspath(sys.executable))):
+            if not base:
+                continue
+            dirs.add(os.path.realpath(base))
+            candidate = os.path.join(base, bin_name)
+            if os.path.isdir(candidate):
+                dirs.add(os.path.realpath(candidate))
+
         return dirs
 
     def _is_executable_allowed(self, executable: str) -> bool:
@@ -103,7 +129,15 @@ class SafeSubprocess:
             exe_path = os.path.realpath(exe_path)
 
         exe_dir = os.path.dirname(exe_path)
-        return exe_dir in self._safe_directories()
+        # Containment, not set membership: an executable may sit in a nested
+        # directory such as DATA_PATH/prj/<app>/prjlib/bin, and the previous
+        # exact-match check only accepted a flat list of directories.
+        for allowed in self._safe_directories():
+            if exe_dir == allowed:
+                return True
+            if exe_dir.startswith(allowed + os.sep):
+                return True
+        return False
 
     def _contains_dangerous_chars(self, arg: str) -> bool:
         return bool(self.DANGEROUS_CHARS & set(arg))
