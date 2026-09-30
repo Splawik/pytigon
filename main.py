@@ -1,12 +1,9 @@
-from pytigon_lib.schandroid.android_client import InterfaceManager, PytigonApp
-
 import socket
-import fcntl
-import struct
 
-from jnius import autoclass, PythonJavaClass, java_method
-from android.runnable import run_on_ui_thread, Runnable
+from android.runnable import Runnable
+from jnius import PythonJavaClass, autoclass, java_method
 
+from pytigon_lib.schandroid.android_client import InterfaceManager, PytigonApp
 
 PytigonWebViewFragment = autoclass("cloud.pytigon.libpytigon.PytigonWebViewFragment")
 ACTIVITY = autoclass("org.kivy.android.PythonActivity").mActivity

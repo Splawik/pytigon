@@ -8,6 +8,7 @@ Defines all URL patterns including:
 - Project-specific start pages
 """
 
+import ast
 import importlib
 import logging
 import os
@@ -18,7 +19,8 @@ import django.views.i18n
 import django_select2.urls
 from django.conf import settings
 from django.http import FileResponse, Http404
-from django.urls import include, path, re_path
+from django.urls import URLPattern, include, path, re_path
+from django.urls.resolvers import RegexPattern, RoutePattern
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.vary import vary_on_headers
@@ -163,9 +165,10 @@ if settings.REST:
 
 
 if settings.GRAPHQL or settings.REST or settings.MCP_SERVER_PRV:
-    from oauth2_ext.discovery import OAuth2AuthorizationServerMetadataView
-    from oauth2_ext.views import ApplicationScopesTokenView
     from oauth2_provider import views as oauth2_views
+
+    from pytigon.schserw.oauth2_ext.discovery import OAuth2AuthorizationServerMetadataView
+    from pytigon.schserw.oauth2_ext.views import ApplicationScopesTokenView
 
     _urlpatterns.extend(
         [
@@ -229,7 +232,8 @@ def _serve_media(request, path, document_root):
         raise Http404("Directory indexes are not allowed here.")
     if not os.path.exists(fullpath):
         raise Http404(f'"{path}" does not exist')
-    return FileResponse(open(fullpath, "rb"), as_attachment=False)
+    with open(fullpath, "rb") as fh:
+        return FileResponse(fh, as_attachment=False)
 
 
 _urlpatterns.append(
@@ -254,6 +258,10 @@ if settings.DEBUG:
 def app_description(prj):
     """Read the project title from the project's settings_app.py file.
 
+    The file is parsed with :mod:`ast` rather than by splitting the source on
+    ``"="``, so a title containing ``=`` or a single-quoted literal is read
+    correctly. The module is never executed.
+
     Args:
         prj: Project name.
 
@@ -262,14 +270,38 @@ def app_description(prj):
     """
     file_name = os.path.join(os.path.join(settings.PRJ_PATH, prj), "settings_app.py")
     try:
-        with open(file_name) as f:
-            txt = f.read()
-            for pos in txt.split("\n"):
-                if pos.startswith("PRJ_TITLE"):
-                    return pos.split("=")[1].split('"')[1]
+        with open(file_name, encoding="utf-8") as f:
+            source = f.read()
+    except OSError:
         return prj
-    except (IndexError, OSError):
+
+    try:
+        tree = ast.parse(source)
+    except (SyntaxError, ValueError):
+        logger.warning("Cannot parse %s for PRJ_TITLE", file_name)
         return prj
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign):
+            targets = node.targets
+        elif isinstance(node, ast.AnnAssign):
+            targets = [node.target]
+        else:
+            continue
+        for target in targets:
+            if not isinstance(target, ast.Name) or target.id != "PRJ_TITLE":
+                continue
+            if node.value is None:
+                return prj
+            try:
+                value = ast.literal_eval(node.value)
+            except (ValueError, SyntaxError, TypeError, MemoryError, RecursionError):
+                return prj
+            if isinstance(value, str):
+                return value
+            return prj
+
+    return prj
 
 
 # Load URL patterns from installed apps
@@ -282,25 +314,74 @@ for app in settings.INSTALLED_APPS:
             continue
 
     elementy = pos.split(".")
+    urls_module = None
 
     try:
         test = importlib.import_module(pos)
         if hasattr(test, "ModuleName"):
             module_name = f"{str(pos)}.urls"
-            m = importlib.import_module(module_name)
-            if hasattr(m, "gen"):
-                _urlpatterns.append(path(f"{str(elementy[-1])}/", include(m)))
-            if hasattr(m, "process_main_urls"):
-                ret = m.process_main_urls(_urlpatterns)
-                if ret:
-                    _urlpatterns = ret
+            urls_module = importlib.import_module(module_name)
+            if hasattr(urls_module, "gen"):
+                _urlpatterns.append(path(f"{str(elementy[-1])}/", include(urls_module)))
     except ModuleNotFoundError as e:
-        x = pos.split(".")[0]
-        y = e.name.split(".")[0] if e.name else ""
-        if x != y:
-            logger.error("URLs module not found: %s", pos, exc_info=True)
-    except Exception:
-        logger.error("URLs error for app: %s", pos, exc_info=True)
+        # A missing module can mean two very different things:
+        #   * the app simply has no urls module - normal, stay quiet;
+        #   * the app's urls module exists but one of ITS imports is missing -
+        #     a real breakage that would otherwise leave the app unrouted
+        #     with no clue why.
+        missing = e.name or ""
+        if not (missing == pos or missing.startswith(pos + ".")):
+            logger.error(
+                "urls module of app %s could not be imported: missing module %r",
+                pos,
+                missing,
+                exc_info=True,
+            )
+    except (ImportError, SyntaxError, AttributeError) as e:
+        # The app's urls module is structurally broken (bad import, syntax
+        # error, or a missing attribute). Surface it instead of silently
+        # leaving the app unrouted.
+        logger.error("Broken urls module for app %s: %s", pos, e, exc_info=True)
+
+    if urls_module is not None and hasattr(urls_module, "process_main_urls"):
+        try:
+            # process_main_urls() is application code and may raise anything;
+            # one misbehaving app must not abort the whole URLConf.
+            ret = urls_module.process_main_urls(_urlpatterns)
+            if ret:
+                _urlpatterns = ret
+        except Exception:
+            logger.error("process_main_urls error for app: %s", pos, exc_info=True)
+
+
+def _rebuild_urlpattern(item, old_prefix, new_prefix):
+    """Return a copy of ``item`` with ``old_prefix`` stripped from its route.
+
+    The route has to be corrected *before* the pattern is compiled. Since
+    Django 4.2 ``RoutePattern.__init__`` eagerly builds ``self._regex`` from
+    ``self._route``, so assigning to ``_route`` on an already-constructed
+    pattern leaves the compiled regex (and therefore URL resolution) stale.
+
+    Args:
+        item: A ``django.urls.URLPattern`` whose route starts with ``old_prefix``.
+        old_prefix: The prefix to remove from the route string.
+        new_prefix: The replacement prefix (empty string here).
+
+    Returns:
+        django.urls.URLPattern: A newly built pattern with the corrected route.
+    """
+    old_pattern = item.pattern
+    route = str(old_pattern._route).replace(old_prefix, new_prefix, 1)
+    if isinstance(old_pattern, RegexPattern):
+        new_pattern = RegexPattern(
+            route, name=old_pattern.name, is_endpoint=old_pattern._is_endpoint
+        )
+    else:
+        new_pattern = RoutePattern(
+            route, name=old_pattern.name, is_endpoint=old_pattern._is_endpoint
+        )
+    return URLPattern(new_pattern, item.callback, item.default_args, item.name)
+
 
 # Extract URL patterns starting with "../" for later re-insertion
 tmp = []
@@ -310,6 +391,7 @@ for item in _urlpatterns:
             if hasattr(item2.pattern, "_route") and item2.pattern._route.startswith("../"):
                 tmp.append(item2)
                 item.url_patterns.remove(item2)
+
 
 # Add start pages for each project in PRJS
 if len(settings.PRJS) > 0:
@@ -367,14 +449,13 @@ else:
         _urlpatterns.append(u)
 
 # Re-insert patterns that started with ".."
-for item in tmp:
-    if item.pattern._route == "../":
+for _item in tmp:
+    if _item.pattern._route == "../":
         for item2 in _urlpatterns:
             if hasattr(item2.pattern, "_route") and item2.pattern._route == "":
                 _urlpatterns.remove(item2)
                 break
-    item.pattern._route = item.pattern._route.replace("../", "")
-    _urlpatterns.append(item)
+    _urlpatterns.append(_rebuild_urlpattern(_item, "../", ""))
 
 if settings.PROMETHEUS_ENABLED:
     _urlpatterns.extend(

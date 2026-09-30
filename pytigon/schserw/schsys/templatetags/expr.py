@@ -1,11 +1,14 @@
 import ast
 import html
+import logging
 import operator
 import re
 
 from django import template
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
+
+logger = logging.getLogger(__name__)
 
 register = template.Library()
 
@@ -320,10 +323,15 @@ class ExprNode(template.Node):
                 try:
                     val = _safe_eval(self.expr_string, d)
                 except Exception:
-                    print("ERROR:")
-                    print(self.expr_string)
-                    print(d)
-                    print("------------------------------")
+                    # The flattened context holds the user, the settings proxy
+                    # and session data, so it must never reach stdout or the
+                    # log; only the expression itself is safe to report.
+                    logger.warning(
+                        "Failed to evaluate {%% %s %%}: %s",
+                        self.expr_string,
+                        self.tag or self.var_name or "",
+                        exc_info=True,
+                    )
                     val = None
                 if val is not None:
                     ret = mark_safe2(str(val)) if self.safe else str(val)
@@ -334,7 +342,7 @@ class ExprNode(template.Node):
                 else:
                     return ""
         except Exception:
-            print("EXPR ERROR:", self.expr_string)
+            logger.exception("Expression tag failed for: %s", self.expr_string)
             raise
 
 

@@ -44,7 +44,16 @@ class ApplicationScopesTokenView(TokenView):
                 access_token = json_body.get("access_token")
 
                 if access_token:
-                    token = AccessToken.objects.get(token=access_token)
+                    # filter().first() rather than get(): a duplicate token
+                    # would raise MultipleObjectsReturned, turning a 200 into
+                    # a 500. A missing token is handled explicitly below, which
+                    # is what the old AccessTokenDoesNotExist branch did.
+                    token = AccessToken.objects.filter(token=access_token).first()
+                    if token is None:
+                        logger.warning("Access token not found after creation")
+                        return HttpResponse(
+                            content='{"error": "Token not found"}', status=404
+                        )
 
                     # Check if the application has custom scopes
                     if (
@@ -58,8 +67,11 @@ class ApplicationScopesTokenView(TokenView):
                         json_body["scope"] = token.scope
                         body = json.dumps(json_body)
 
-                    # Send the app_authorized signal
-                    app_authorized.send(sender=self, request=request, token=token)
+                    # send_robust, not send: a failing receiver would otherwise
+                    # abort token issuance.
+                    app_authorized.send_robust(
+                        sender=self, request=request, token=token
+                    )
 
             # Create the final HTTP response
             response = HttpResponse(content=body, status=status)

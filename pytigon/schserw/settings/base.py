@@ -94,14 +94,17 @@ LANGUAGE_CODE = ENV("LANGUAGE_CODE", default="pl")
 USE_I18N = True
 SITE_ID = 1
 LANGUAGES = [
-    ["en", "English"],
-    ["pl", "Polish"],
+    ("en", "English"),
+    ("pl", "Polish"),
 ]
 LOGIN_REDIRECT_URL = "/"
-TEST_RUNNER = "django.test.runner.DiscoverRunner"
 
 EXECUTE_DB_CODE = "import" if DEBUG else "exec_and_cache"
 EXECUTE_DB_CODE_CACHE_TIMEOUT = 900
+
+# Lifetime (seconds) of the messages cached by
+# pytigon.schserw.schsys.cache_message_storage.CacheStorage.
+MESSAGE_STORAGE_TTL = ENV.int("MESSAGE_STORAGE_TTL", default=60 * 60 * 24)
 
 BASE_URL = "http://127.0.0.1:81"
 
@@ -187,9 +190,9 @@ __all__ = [
     "SITE_ID",
     "LANGUAGES",
     "LOGIN_REDIRECT_URL",
-    "TEST_RUNNER",
     "EXECUTE_DB_CODE",
     "EXECUTE_DB_CODE_CACHE_TIMEOUT",
+    "MESSAGE_STORAGE_TTL",
     "BASE_URL",
     "URL_ROOT_FOLDER",
     "URL_ROOT_PREFIX",

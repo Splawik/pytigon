@@ -73,7 +73,7 @@ class TestExFiltryMore:
         assert model_can_have_children(obj) is False
 
     def test_bencode_bdecode_roundtrip(self):
-        from pytigon.schserw.schsys.templatetags.exfiltry import bencode, bdecode
+        from pytigon.schserw.schsys.templatetags.exfiltry import bdecode, bencode
 
         for text in ["hello", "world", "123", ""]:
             assert bdecode(bencode(text)) == text

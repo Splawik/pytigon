@@ -34,7 +34,7 @@ class TestPythonCommandHandlerExecute:
         handler = PythonCommandHandler()
         captured = {}
 
-        def fake_run_subprocess(command, cwd=None):
+        def fake_run_subprocess(command, cwd=None, validate=True):
             captured["command"] = command
             return 0
 
@@ -51,7 +51,7 @@ class TestPythonCommandHandlerExecute:
         handler = PythonCommandHandler()
         captured = {}
 
-        def fake_run_subprocess(command, cwd=None):
+        def fake_run_subprocess(command, cwd=None, validate=True):
             captured["command"] = command
             return 0
 
@@ -70,7 +70,7 @@ class TestPythonCommandHandlerExecute:
         script = tmp_path / "myscript.py"
         script.write_text("print('hi')\n")
 
-        def fake_run_subprocess(command, cwd=None):
+        def fake_run_subprocess(command, cwd=None, validate=True):
             captured["command"] = command
             return 0
 
@@ -93,7 +93,7 @@ class TestManageCommandHandlerExecute:
         handler = ManageCommandHandler()
         captured = {}
 
-        def fake_run_subprocess(command, cwd=None):
+        def fake_run_subprocess(command, cwd=None, validate=True):
             captured["command"] = command
             return 0
 
@@ -113,7 +113,7 @@ class TestManageCommandHandlerExecute:
 
         monkeypatch.chdir(start)
 
-        def fake_run_subprocess(command, cwd=None):
+        def fake_run_subprocess(command, cwd=None, validate=True):
             captured["command"] = command
             return 0
 
@@ -152,20 +152,23 @@ class TestPipCommandHandlerExecute:
         exit_code = handler.execute(["ptig", "pip_myapp"])
         assert exit_code == 1
 
-    def test_pip_install_adds_target(self, monkeypatch):
+    def test_pip_install_targets_user_site_of_the_app(self, monkeypatch):
+        """`pip_<app> install` must land in the app's own prjlib.
+
+        pytigon_lib.init_paths() points PYTHONUSERBASE at
+        DATA_PATH/<app>/prjlib and adds the matching user site-packages to
+        sys.path, so `--user` is what keeps the package inside the app
+        environment.
+        """
         handler = PipCommandHandler()
         captured = {}
 
-        monkeypatch.setattr(
-            handler,
-            "setup_paths",
-            lambda app: {"DATA_PATH": "/tmp/data"},
-        )
         monkeypatch.setattr(handler, "get_executable", lambda: "/usr/bin/python3")
         monkeypatch.setattr(
             handler,
             "run_subprocess",
-            lambda cmd, cwd=None: captured.setdefault("cmd", cmd) and 0,
+            lambda cmd, cwd=None, validate=True: captured.setdefault("cmd", cmd)
+            and 0,
         )
 
         exit_code = handler.execute(["ptig", "pip_myapp", "install", "requests"])
@@ -173,7 +176,27 @@ class TestPipCommandHandlerExecute:
         assert captured["cmd"][0] == "/usr/bin/python3"
         assert captured["cmd"][2] == "pip"
         assert captured["cmd"][3] == "install"
-        assert "--target=/tmp/data/myapp/prjlib" in captured["cmd"]
+        assert "--user" in captured["cmd"]
+        assert "--no-warn-script-location" in captured["cmd"]
+        assert captured["cmd"][-1] == "requests"
+
+    def test_pip_non_install_does_not_add_user_flag(self, monkeypatch):
+        """Subcommands other than `install` are forwarded unchanged."""
+        handler = PipCommandHandler()
+        captured = {}
+
+        monkeypatch.setattr(handler, "get_executable", lambda: "/usr/bin/python3")
+        monkeypatch.setattr(
+            handler,
+            "run_subprocess",
+            lambda cmd, cwd=None, validate=True: captured.setdefault("cmd", cmd)
+            and 0,
+        )
+
+        exit_code = handler.execute(["ptig", "pip_myapp", "list"])
+        assert exit_code == 0
+        assert "--user" not in captured["cmd"]
+        assert captured["cmd"][-1] == "list"
 
 
 # ---------------------------------------------------------------------------

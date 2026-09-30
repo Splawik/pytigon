@@ -16,4 +16,4 @@ except ImportError:
     from pytigon.pytigon_run import run
 
 if __name__ == "__main__":
-    run()
+    sys.exit(run())

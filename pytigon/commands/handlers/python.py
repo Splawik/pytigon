@@ -2,8 +2,8 @@
 Handles running Python interpreter and Python scripts in Pytigon environment.
 """
 
-import os
 import pytigon_lib
+
 from .base import CommandHandler
 
 

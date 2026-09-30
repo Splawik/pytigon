@@ -13,7 +13,6 @@ from django.conf import settings
 
 from pytigon.pytigon_request import request
 
-
 # os.environ["GDK_GL"] = "disable"
 os.environ["WEBKIT_DISABLE_COMPOSITING_MODE"] = "1"
 os.environ["WEBKIT_DISABLE_DMABUF_RENDERER"] = "1"

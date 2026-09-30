@@ -37,7 +37,10 @@ def init(
     from django.conf import settings
 
     if not pytigon_standard:
-        settings.DATABASES = []
+        # Django requires DATABASES to be a dict keyed by alias; an empty list
+        # breaks django.test.utils.setup_databases teardown with
+        # "TypeError: list indices must be integers or slices, not str".
+        settings.DATABASES = {}
         settings.MIDDLEWARE = []
         settings.INSTALLED_APPS = []
 

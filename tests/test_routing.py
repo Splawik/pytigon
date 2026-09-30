@@ -17,4 +17,4 @@ class TestRouting:
         from pytigon.schserw.routing import application
 
         assert application is not None
-        assert hasattr(application, "__call__")
+        assert callable(application)

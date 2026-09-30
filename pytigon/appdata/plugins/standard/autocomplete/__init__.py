@@ -7,7 +7,7 @@ completion suggestions from the server in real-time as the user types.
 import wx
 
 import pytigon_gui.guictrl.ctrl
-from autocomplete import TextCtrlAutoComplete
+from pytigon.ext_lib.autocomplete import TextCtrlAutoComplete
 from pytigon_gui.guictrl.ctrl import SchBaseCtrl
 from pytigon_lib.schtools import schjson
 

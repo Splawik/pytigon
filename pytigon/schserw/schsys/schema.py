@@ -5,6 +5,7 @@ import graphql_jwt
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from graphene_django import DjangoObjectType
+from graphql import GraphQLError
 
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
 
@@ -43,18 +44,29 @@ class UserMutation(graphene.Mutation):
 
     def mutate(self, info, username, email, id="0"):
         if not info.context.user.is_authenticated:
-            raise Exception("Authentication required")
-        idd = int(id)
+            raise GraphQLError("Authentication required", extensions={"code": "UNAUTHENTICATED"})
+        try:
+            idd = int(id)
+        except (TypeError, ValueError):
+            raise GraphQLError(
+                f"Invalid user id: {id!r}", extensions={"code": "BAD_USER_INPUT"}
+            ) from None
         if idd > 0:
             if info.context.user.id != idd and not info.context.user.is_superuser:
-                raise Exception("Not authorized to modify this user")
+                raise GraphQLError(
+                    "Not authorized to modify this user",
+                    extensions={"code": "FORBIDDEN"},
+                )
             try:
                 _user = get_user_model().objects.get(pk=idd)
             except get_user_model().DoesNotExist:
                 _user = get_user_model()()
         else:
             if not info.context.user.is_superuser:
-                raise Exception("Only superusers can create new users")
+                raise GraphQLError(
+                    "Only superusers can create new users",
+                    extensions={"code": "FORBIDDEN"},
+                )
             _user = get_user_model()()
         _user.username = username
         _user.email = email
@@ -115,7 +127,10 @@ class Query(graphene.ObjectType, _Query):
         user = info.context.user
         if not (user.is_authenticated and user.is_staff):
             return []
-        return get_user_model().objects.all()
+        # Only the three columns UserType exposes: the user table is commonly
+        # wide (hashed passwords, preferences, tokens), and loading every
+        # column for the whole table is both slow and needless.
+        return get_user_model().objects.only("id", "username", "email")
 
 
 class Mutation(graphene.ObjectType, _Mutation):

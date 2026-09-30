@@ -104,11 +104,11 @@ from base64 import b64decode, b64encode
 
 import markdown
 from django import template
+from django.apps import apps
 from django.db.models import Avg, Count, Max, Min, Sum
 from django.urls import reverse
 from django.utils import formats
 from django_bootstrap5.forms import render_form
-from django.apps import apps
 
 from pytigon_lib.schdjangoext.django_ihtml import ihtml_to_html
 from pytigon_lib.schtools.schjson import json_dumps

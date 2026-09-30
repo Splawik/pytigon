@@ -5,7 +5,6 @@ from functools import lru_cache
 from django import forms, template
 from django.forms import CheckboxInput, CheckboxSelectMultiple, FileInput, RadioSelect
 from django.template.base import Node
-from django.utils.safestring import SafeText
 from django_select2 import forms as s2forms
 
 from pytigon_lib.schdjangoext.models import TreeModel
@@ -25,7 +24,7 @@ def _get_form_template(template_str):
 
 @register.inclusion_tag("widgets/field.html")
 def field(context, form_field, fieldformat=None, inline=False):
-    field_obj = context["form"][form_field] if type(form_field) in (SafeText, str) else form_field
+    field_obj = context["form"][form_field] if isinstance(form_field, str) else form_field
 
     label_class = "control-label float-left"
     offset = ""
@@ -302,10 +301,7 @@ def get_table_row(
     get_target="popup_edit",
     new_target="inline",
 ):
-    if type(field_or_name) in (
-        SafeText,
-        str,
-    ):
+    if isinstance(field_or_name, str):
         model = import_model(app_name, table_name)
         _name = field_or_name
         _app_name = app_name

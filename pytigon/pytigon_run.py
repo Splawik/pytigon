@@ -76,11 +76,6 @@ def run(param=None):
         argv = param if param is not None else sys.argv
         argv = _setup_process_environment(argv)
 
-        base_path = os.path.abspath(os.getcwd())
-        ext_lib_path = os.path.join(base_path, "ext_lib")
-        if ext_lib_path not in sys.path:
-            sys.path.append(ext_lib_path)
-
         os.environ["PYTIGON_ROOT_PATH"] = os.path.dirname(os.path.abspath(__file__))
 
         dispatcher = CommandDispatcher()

@@ -1,7 +1,8 @@
 import subprocess
 import sys
-from pytigon_lib.schfs.sync import rsync_style_sync
+
 from pytigon.pytigon_run import run
+from pytigon_lib.schfs.sync import rsync_style_sync
 
 SETUP_TRIGGERS = {
     "jquery": """
@@ -57,7 +58,7 @@ IMPORT_ELEMENTS = {
 
 NO_JS_MODULES = ["bootstrap-icons", "select2-bootstrap-5-theme"]
 
-with open("js_requirements.txt", "rt") as f:
+with open("js_requirements.txt") as f:
     requirements = f.read().splitlines()
 
 buf = ""
@@ -101,10 +102,10 @@ for requirement in requirements:
     if test:
         buf += f"window.{name} = {name};\n"
         # buf += f"export * as {name} from '{requirement}';\n"
-with open("tmp.js", "wt") as f:
+with open("tmp.js", "w") as f:
     f.write(buf)
 
-with open("shims.js", "wt") as f:
+with open("shims.js", "w") as f:
     f.write(shims)
 
 
@@ -136,7 +137,7 @@ def run_esbuild(entry_point, outfile, minify=True):
 
 def sync_static_files():
     """Synchronizuje pliki statyczne do katalogu docelowego."""
-    with open("static_files.txt", "rt") as f:
+    with open("static_files.txt") as f:
         static_files = f.read().splitlines()
     for static_file in static_files:
         if static_file.startswith("#") or not static_file.strip():

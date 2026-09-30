@@ -144,9 +144,10 @@ class TestSimpleFilters:
             result = exf_format("%s %s", "abc;123")
         except TypeError:
             pytest.skip("format filter uses Python % formatting which requires exact arg count")
+        assert result is not None
 
     def test_bencode_bdecode(self):
-        from pytigon.schserw.schsys.templatetags.exfiltry import bencode, bdecode
+        from pytigon.schserw.schsys.templatetags.exfiltry import bdecode, bencode
 
         encoded = bencode("hello")
         assert bdecode(encoded) == "hello"

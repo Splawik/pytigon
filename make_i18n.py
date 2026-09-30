@@ -1,7 +1,11 @@
-import sys
 import os
-from ext_lib.pygettext import main as gtext
+import sys
+
 import polib
+
+# Imported as a package module: a bare "ext_lib.pygettext" only resolved when
+# this script happened to be run from inside the pytigon package directory.
+from pytigon.ext_lib.pygettext import main as gtext
 
 ARGV = sys.argv
 
@@ -10,7 +14,7 @@ def make_messages(src_path, path, name, outpath=None):
 
     sys.argv = [None, "-a", "-d", name, "-p", path]
 
-    for root, dirs, files in os.walk(src_path):
+    for root, _dirs, files in os.walk(src_path):
         for f in files:
             if f.endswith(".py"):
                 p = os.path.join(root, f)

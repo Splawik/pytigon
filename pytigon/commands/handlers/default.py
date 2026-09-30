@@ -2,6 +2,7 @@
 Handles default case (GUI mode or help).
 """
 
+import logging
 import os
 import sys
 from typing import Any
@@ -9,6 +10,8 @@ from typing import Any
 from pytigon_lib.schtools.env import get_environ
 
 from .base import CommandHandler
+
+_logger = logging.getLogger(__name__)
 
 
 class DefaultCommandHandler(CommandHandler):
@@ -198,16 +201,35 @@ class DefaultCommandHandler(CommandHandler):
 
         """
         try:
-            from pytigon_gui.pytigon import main
+            # find_spec() rather than a real import: it answers "is the GUI
+            # package installed at all?" without executing it, so a failure
+            # inside the package cannot be mistaken for a missing GUI.
+            import importlib.util
 
-            main()
-            return 0
-        except ImportError:
-            import traceback
-
-            print(f"Error: pytigon_gui not available", file=sys.stderr)
-            traceback.print_exc(file=sys.stderr)
+            if importlib.util.find_spec("pytigon_gui") is None:
+                _logger.error(
+                    "pytigon_gui is not installed; install pytigon-gui to run "
+                    "the desktop GUI"
+                )
+                return 1
+        except (ImportError, ValueError):
+            _logger.error("pytigon_gui is not installed", exc_info=True)
             return 1
+
+        try:
+            from pytigon_gui.pytigon import main
+        except ImportError:
+            # pytigon_gui is present but something it needs is not: report the
+            # real cause instead of a misleading "not available".
+            _logger.error(
+                "pytigon_gui is installed but could not start the GUI; "
+                "a dependency of the desktop frontend is missing or broken",
+                exc_info=True,
+            )
+            return 1
+
+        main()
+        return 0
 
     def _get_app_conf(self, path: str) -> dict[str, Any] | None:
         """Get application configuration.

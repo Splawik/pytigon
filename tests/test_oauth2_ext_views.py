@@ -81,15 +81,22 @@ class TestApplicationScopesTokenView:
     def _fake_access_class(self, monkeypatch, token):
         from pytigon.schserw.oauth2_ext import views as v
 
-        def get(*args, **kwargs):
-            return token
+        class _QuerySet:
+            def __init__(self, result):
+                self._result = result
+
+            def first(self):
+                return self._result
+
+        def filter(*args, **kwargs):
+            return _QuerySet(token)
 
         fake_token_class = type(
             "AccessToken",
             (),
             {
                 "DoesNotExist": v.AccessToken.DoesNotExist,
-                "objects": type("O", (), {"get": staticmethod(get)})(),
+                "objects": type("O", (), {"filter": staticmethod(filter)})(),
             },  # noqa: E501
         )
         monkeypatch.setattr(v, "AccessToken", fake_token_class)
@@ -162,15 +169,22 @@ class TestApplicationScopesTokenView:
     def test_missing_access_token_returns_404(self, token_view, monkeypatch):
         from pytigon.schserw.oauth2_ext import views as v
 
-        def get(*args, **kwargs):
-            raise v.AccessToken.DoesNotExist()
+        # The view now resolves the token with filter().first() and returns
+        # 404 explicitly when it comes back empty, instead of relying on
+        # AccessToken.DoesNotExist propagating out of get().
+        class _EmptyQuerySet:
+            def first(self):
+                return None
+
+        def filter(*args, **kwargs):
+            return _EmptyQuerySet()
 
         fake_token_class = type(
             "AccessToken",
             (),
             {
                 "DoesNotExist": v.AccessToken.DoesNotExist,
-                "objects": type("O", (), {"get": staticmethod(get)})(),
+                "objects": type("O", (), {"filter": staticmethod(filter)})(),
             },  # noqa: E501
         )
         monkeypatch.setattr(v, "AccessToken", fake_token_class)
@@ -214,4 +228,5 @@ class TestApplicationScopesTokenView:
             body={"access_token": "tok123", "scope": "read"},
             fake_token=token,
         )
-        assert sent.send.called
+        # send_robust, so a raising receiver cannot abort token issuance.
+        assert sent.send_robust.called

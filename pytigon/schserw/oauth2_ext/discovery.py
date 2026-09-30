@@ -17,7 +17,7 @@ import logging
 
 from django.conf import settings
 from django.http import JsonResponse
-from django.urls import reverse
+from django.urls import NoReverseMatch, reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from oauth2_provider.compat import login_not_required
@@ -46,8 +46,8 @@ DEFAULT_METADATA = {
 
 def _option(name):
     """Read an optional override from OAUTH2_PROVIDER_DISCOVERY, else default."""
-    user = getattr(settings, "OAUTH2_PROVIDER_DISCOVERY", {}) or {}
-    return user.get(name, DEFAULT_METADATA[name])
+    overrides = getattr(settings, "OAUTH2_PROVIDER_DISCOVERY", {}) or {}
+    return overrides.get(name, DEFAULT_METADATA[name])
 
 
 @method_decorator(login_not_required, name="dispatch")
@@ -92,8 +92,17 @@ class OAuth2AuthorizationServerMetadataView(View):
             "code_challenge_methods_supported": code_challenge_methods,
         }
 
-        device_endpoint = self._resolve(request, "oauth2_provider:device-authorization")
-        metadata["device_authorization_endpoint"] = device_endpoint
+        # Only advertise the device grant when the deployment actually routes
+        # it. Advertising an endpoint that is not registered makes clients try a
+        # flow that can only fail.
+        try:
+            device_endpoint = self._resolve(
+                request, "oauth2_provider:device-authorization"
+            )
+        except NoReverseMatch:
+            pass
+        else:
+            metadata["device_authorization_endpoint"] = device_endpoint
 
         if oauth2_settings.OIDC_RP_INITIATED_LOGOUT_ENABLED:
             metadata["end_session_endpoint"] = self._resolve(

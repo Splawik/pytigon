@@ -15,17 +15,20 @@ from django.urls import path, re_path
 
 logger = logging.getLogger(__name__)
 
-urls_tab = []
 
-
-def _build_websocket_routes():
+def _build_websocket_routes() -> list:
     """Build WebSocket URL routes from settings.CHANNELS_URL_TAB.
 
     Loads consumer classes dynamically from dotted paths specified
     in the settings configuration.
+
+    Returns:
+        list: A fresh list of URL patterns. Building into a module-level list
+            made a second call duplicate every route.
     """
+    routes = []
     if not hasattr(settings, "CHANNELS_URL_TAB"):
-        return
+        return routes
 
     for row in settings.CHANNELS_URL_TAB:
         consumer_path = None
@@ -37,18 +40,19 @@ def _build_websocket_routes():
             consumer_class = getattr(module, class_name)
 
             if "(?P" in url_pattern:
-                urls_tab.append(re_path(url_pattern, consumer_class.as_asgi()))
+                routes.append(re_path(url_pattern, consumer_class.as_asgi()))
             else:
-                urls_tab.append(path(url_pattern, consumer_class.as_asgi()))
+                routes.append(path(url_pattern, consumer_class.as_asgi()))
         except (ImportError, AttributeError, ValueError) as e:
             logger.error(
                 "Failed to load WebSocket consumer '%s': %s",
                 consumer_path if consumer_path is not None else str(row),
                 e,
             )
+    return routes
 
 
-_build_websocket_routes()
+urls_tab = _build_websocket_routes()
 
 
 class LifespanApp:
@@ -73,14 +77,21 @@ class LifespanApp:
             receive: ASGI receive callable.
             send: ASGI send callable.
         """
-        if self.scope["type"] == "lifespan":
-            while True:
-                message = await receive()
-                if message["type"] == "lifespan.startup":
-                    await send({"type": "lifespan.startup.complete"})
-                elif message["type"] == "lifespan.shutdown":
-                    await send({"type": "lifespan.shutdown.complete"})
-                    return
+        if self.scope["type"] != "lifespan":
+            return
+        while True:
+            message = await receive()
+            message_type = message["type"]
+            if message_type == "lifespan.startup":
+                await send({"type": "lifespan.startup.complete"})
+            elif message_type == "lifespan.shutdown":
+                await send({"type": "lifespan.shutdown.complete"})
+                return
+            else:
+                # Without this branch an unknown message type spins the loop
+                # forever, pegging a CPU core.
+                logger.warning("Unexpected ASGI lifespan message: %s", message_type)
+                return
 
 
 django_asgi_app = get_asgi_application()
@@ -88,7 +99,7 @@ django_asgi_app = get_asgi_application()
 # When MCP_SERVER is enabled, route the MCP Streamable HTTP endpoint
 # (/mcp) to a native ASGI app and leave everything else to Django. This keeps
 # the MCP request path on the event loop (no sync<->async bridging).
-if getattr(settings, "MCP_SERVER", False):
+if settings.MCP_SERVER:
     from pytigon.schserw.mcp.http import MCPHttpRouter, mcp_path
 
     django_asgi_app = MCPHttpRouter(django_asgi_app, mcp_path())

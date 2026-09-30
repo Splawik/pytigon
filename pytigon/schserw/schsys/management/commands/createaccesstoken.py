@@ -57,7 +57,7 @@ class Command(BaseCommand):
             raise CommandError(
                 f"Application '{app_name}' does not exist. "
                 f"Available applications: {', '.join(available) or 'none'}"
-            )
+            ) from None
 
         # Retrieve the user (optional)
         user = None
@@ -65,7 +65,7 @@ class Command(BaseCommand):
             try:
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
-                raise CommandError(f"User '{username}' does not exist.")
+                raise CommandError(f"User '{username}' does not exist.") from None
 
         # Calculate expiration date
         expires = None
@@ -74,13 +74,11 @@ class Command(BaseCommand):
                 days=expires_days
             )
 
-        print("A1")
         # Create the token
         token_string = secrets.token_hex(16)
         token = AccessToken.objects.create(
             user=user, application=application, scope=scope, expires=expires, token=token_string
         )
-        print("A2")
 
         self.stdout.write(self.style.SUCCESS("Token created successfully!"))
         self.stdout.write(f"  Token:    {token.token}")

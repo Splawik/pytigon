@@ -1,10 +1,13 @@
 import contextlib
+import logging
 import os
 
 from django.core.management.base import BaseCommand
 from pyquery import PyQuery as pq
 
 from pytigon_lib.schhttptools import httpclient
+
+_logger = logging.getLogger(__name__)
 
 httpclient.init_embeded_django()
 
@@ -50,10 +53,8 @@ class Command(BaseCommand):
             if url in SCANNED_URLS:
                 return
             SCANNED_URLS.append(url)
-            print("X: ", url)
+            _logger.debug("scanning %s", url)
 
-            # if "schsimplecontrols_demo/standardcontrols" in url:
-            #    print("X1: ", url)
             if url in parsed:
                 return
             parsed.add(url)
@@ -160,7 +161,7 @@ class Command(BaseCommand):
                 if dirpath.endswith("/components"):
                     if fname.endswith(".js"):
                         p = os.path.join(dirpath, fname)
-                        with open(p) as f:
+                        with open(p, encoding="utf-8") as f:
                             for line in f.readlines():
                                 if "BASE_PATH" in line:
                                     if line.strip().startswith("BASE_PATH"):
@@ -181,9 +182,9 @@ class Command(BaseCommand):
             with contextlib.suppress(Exception):
                 parse_url(BASE_URL, s)
 
-        with open(os.path.join(output_path, "index.html")) as f:
+        with open(os.path.join(output_path, "index.html"), encoding="utf-8") as f:
             buf = f.read()
-        with open(os.path.join(output_path, "index.html"), "w") as f:
+        with open(os.path.join(output_path, "index.html"), "w", encoding="utf-8") as f:
             f.write(
                 buf.replace(
                     '<script src="schsys/jsi18n.js"></script>',

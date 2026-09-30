@@ -34,27 +34,32 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        print(options)
-        if "input" in options and options["input"]:
-            with open(options["input"], "rb") as f:
+        input_file = options.get("input")
+        if input_file:
+            with open(input_file, "rb") as f:
                 buf = f.read()
         else:
-            buf = sys.stdin.read()
+            buf = sys.stdin.buffer.read()
 
-        if "password" in options and options["password"]:
-            password = options["password"]
-        else:
-            password = getpass.getpass()
+        password = options.get("password") or getpass.getpass()
 
-        b64 = True if "base64" in options and options["base64"] else False
+        b64 = bool(options.get("base64"))
 
-        if "decrypt" in options and options["decrypt"]:
+        if options.get("decrypt"):
             output_buf = encrypt.decrypt(buf, password, b64)
         else:
             output_buf = encrypt.encrypt(buf, password, b64)
 
-        if "output" in options and options["output"]:
-            with open(options["output"], "wb") as f:
-                f.write(output_buf)
+        output_file = options.get("output")
+        if output_file:
+            # encrypt(b64=False) returns bytes, everything else returns str, so
+            # the result is normalised to bytes before hitting the binary file.
+            data = output_buf if isinstance(output_buf, bytes) else output_buf.encode()
+            with open(output_file, "wb") as f:
+                f.write(data)
+        elif isinstance(output_buf, bytes):
+            # Writing to stdout.buffer keeps the bytes intact; print() would
+            # render them as a "b'...'" repr.
+            sys.stdout.buffer.write(output_buf)
         else:
-            print(output_buf)
+            sys.stdout.write(output_buf)

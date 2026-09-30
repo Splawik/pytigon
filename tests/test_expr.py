@@ -125,9 +125,9 @@ class TestSafeEval:
         assert "None" in _SAFE_BUILTINS
 
     def test_safe_ops_contains_expected(self):
-        from pytigon.schserw.schsys.templatetags.expr import _SAFE_OPS
-
         import ast
+
+        from pytigon.schserw.schsys.templatetags.expr import _SAFE_OPS
 
         assert ast.Add in _SAFE_OPS
         assert ast.Sub in _SAFE_OPS

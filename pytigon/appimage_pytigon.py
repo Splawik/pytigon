@@ -7,7 +7,9 @@ main pytigon runner. Used when pytigon is packaged as an AppImage.
 from os import environ
 
 environ["PYTIGON_APP_IMAGE"] = "1"
+import sys
+
 from pytigon.pytigon_run import run
 
 if __name__ == "__main__":
-    run()
+    sys.exit(run())

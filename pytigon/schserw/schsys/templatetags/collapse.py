@@ -54,7 +54,7 @@ def collapse(parser, token):
     try:
         bits = token.split_contents()
         remaining_bits = bits[1:]
-        extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
+        extra_context = token_kwargs(remaining_bits, parser)
         if not extra_context:
             raise TemplateSyntaxError(
                 f"{bits[0]!r} expected at least one variable assignment"

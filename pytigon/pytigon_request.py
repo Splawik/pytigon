@@ -8,9 +8,9 @@ to communicate with the internal Django server.
 import logging
 import os
 import sys
+from urllib.parse import urljoin
 
-from django.conf import settings
-
+from pytigon_lib.schdjangoext.tools import make_href
 from pytigon_lib.schhttptools import httpclient
 from pytigon_lib.schtools.env import get_environ
 from pytigon_lib.schtools.main_paths import get_main_paths
@@ -66,16 +66,29 @@ def init(
     httpclient.init_embeded_django()
 
     if create_auto_user:
-        from django.contrib.auth.models import User
+        from django.contrib.auth import get_user_model
+        from django.db import transaction
 
         env = get_environ()
         username = env("AUTOUSERNAME")
         password = env("AUTOPASSWORD")
 
-        try:
-            User.objects.get(username=username)
-        except User.DoesNotExist:
-            User.objects.create_superuser(username, "auto@pytigon.cloud", password)
+        # get_user_model() respects a custom AUTH_USER_MODEL; importing
+        # django.contrib.auth.models.User would break it.
+        UserModel = get_user_model()
+        lookup = {UserModel.USERNAME_FIELD: username}
+        # get_or_create() is atomic and removes the get()-then-create() race
+        # that could create two superusers (or raise IntegrityError) when two
+        # embedded servers start concurrently.
+        with transaction.atomic():
+            user, created = UserModel._default_manager.get_or_create(**lookup)
+            if created:
+                user.set_password(password)
+                user.is_staff = True
+                user.is_superuser = True
+                if hasattr(user, "email"):
+                    user.email = "auto@pytigon.cloud"
+                user.save()
 
     HTTP = httpclient.HttpClient("http://127.0.0.2")
 
@@ -83,9 +96,7 @@ def init(
         parm = {"username": username, "password": password, "next": "/schsys/ok/"}
         HTTP.post(
             None,
-            "http://127.0.0.2/"
-            + (settings.URL_ROOT_PREFIX if settings.URL_ROOT_FOLDER else "")
-            + "schsys/do_login/",
+            urljoin("http://127.0.0.2", make_href("/schsys/do_login/")),
             parm,
             credentials=(username, password),
             user_agent=user_agent,

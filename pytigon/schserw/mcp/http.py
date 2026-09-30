@@ -17,6 +17,9 @@ populated by the project's REST/GRAPHQL settings). No new auth scheme is added.
 When ``MCP_SERVER_PRV`` is unset the endpoint stays open (current behaviour).
 """
 
+import asyncio
+import contextlib
+import json
 import logging
 import posixpath
 
@@ -26,7 +29,7 @@ from django.http import HttpRequest, QueryDict
 from django.utils.module_loading import import_string
 from mcp.server.streamable_http_manager import StreamableHTTPSessionManager
 
-from .registry import current_user, get_mcp_server
+from .registry import current_user, get_mcp_low_level_server
 
 logger = logging.getLogger(__name__)
 
@@ -183,13 +186,18 @@ async def _authenticate(scope):
     shim = _AuthRequest(scope)
 
     def run():
-        from django.db import close_old_connections
+        from django.db import OperationalError, close_old_connections
 
         try:
             for auth_cls in authenticators:
                 name = getattr(auth_cls, "__name__", str(auth_cls))
                 try:
                     result = auth_cls().authenticate(shim)
+                except OperationalError:
+                    # A database outage is not an authentication failure.
+                    # Swallowing it here would answer 401 and lock every client
+                    # out during a transient DB problem.
+                    raise
                 except Exception as exc:  # noqa: BLE001 - authenticator contract
                     logger.warning(
                         "MCP auth: authenticator %s raised %s: %s",
@@ -231,8 +239,6 @@ async def _unauthorized(send, message="Unauthorized"):
             ],
         }
     )
-    import json
-
     await send(
         {
             "type": "http.response.body",
@@ -247,19 +253,58 @@ async def _unauthorized(send, message="Unauthorized"):
     )
 
 
+# The session manager owns a task group and per-session state, so it must live
+# for the whole process. Building one per request (and entering/leaving run()
+# around each call) made resumable sessions and SSE streams impossible whenever
+# DJANGO_MCP_STATELESS was False. Keyed by event loop because the ASGI server
+# may run more than one (e.g. daphne + granian in the same process).
+_session_managers: dict[asyncio.AbstractEventLoop, tuple] = {}
+_session_manager_lock = asyncio.Lock()
+
+
+async def get_session_manager() -> StreamableHTTPSessionManager:
+    """Return the session manager for the running event loop, starting it once.
+
+    The manager's ``run()`` context is entered exactly once per event loop and
+    held open for the process lifetime, so MCP session state survives across
+    requests.
+    """
+    loop = asyncio.get_running_loop()
+    entry = _session_managers.get(loop)
+    if entry is not None:
+        return entry[1]
+
+    async with _session_manager_lock:
+        entry = _session_managers.get(loop)
+        if entry is not None:
+            return entry[1]
+
+        manager = StreamableHTTPSessionManager(
+            app=get_mcp_low_level_server(),
+            event_store=None,
+            json_response=bool(getattr(settings, "DJANGO_MCP_JSON_RESPONSE", True)),
+            stateless=bool(getattr(settings, "DJANGO_MCP_STATELESS", True)),
+            security_settings=None,
+        )
+        # The stack is kept alive alongside the manager: dropping it would
+        # close run()'s task group.
+        stack = contextlib.AsyncExitStack()
+        await stack.enter_async_context(manager.run())
+        _session_managers[loop] = (stack, manager)
+        logger.info("MCP session manager started (stateless=%s)", manager.stateless)
+        return manager
+
+
 async def mcp_streamable_http(scope, receive, send):
     """Handle a single MCP Streamable HTTP request on the event loop."""
-    server = get_mcp_server()
-    session_manager = StreamableHTTPSessionManager(
-        app=server._mcp_server,
-        event_store=None,
-        json_response=bool(getattr(settings, "DJANGO_MCP_JSON_RESPONSE", True)),
-        stateless=bool(getattr(settings, "DJANGO_MCP_STATELESS", True)),
-        security_settings=None,
-    )
-    current_user.set(scope.get("user"))
-    async with session_manager.run():
-        await session_manager.handle_request(scope, receive, send)
+    manager = await get_session_manager()
+    token = current_user.set(scope.get("user"))
+    try:
+        await manager.handle_request(scope, receive, send)
+    finally:
+        # Without the reset the previous request's user leaks into the next
+        # request handled by the same task.
+        current_user.reset(token)
 
 
 async def mcp_streamable_http_protected(scope, receive, send):
@@ -283,10 +328,14 @@ async def mcp_streamable_http_protected(scope, receive, send):
         user = auth_data
         if user is None:
             is_authenticated = False
-        elif hasattr(user, "is_authenticated"):
-            is_authenticated = getattr(user, "is_authenticated", False)
         else:
-            is_authenticated = True
+            flag = getattr(user, "is_authenticated", False)
+            if callable(flag):
+                # Legacy (Django < 1.10) user model: still a method, not a
+                # property. Reading it without calling it yields a bound method,
+                # which is always truthy and would bypass authentication.
+                flag = flag()
+            is_authenticated = bool(flag)
 
     if not is_authenticated:
         await _unauthorized(send)

@@ -208,7 +208,7 @@ class RunServerCommandHandler(CommandHandler):
         except ImportError as e:
             import traceback
 
-            print(f"Error: pytigon_gui not available", file=sys.stderr)
+            print("Error: pytigon_gui not available", file=sys.stderr)
             traceback.print_exc(file=sys.stderr)
             return 1
 
@@ -239,43 +239,6 @@ class RunServerCommandHandler(CommandHandler):
             try:
                 from granian import Granian
                 from granian.constants import Interfaces
-
-                import asyncio
-
-                _orig_threading_excepthook = threading.excepthook
-                _orig_asyncio_exc_handler = (
-                    asyncio.base_events.BaseEventLoop.default_exception_handler
-                )
-
-                def _filtered_threading_hook(args):
-                    if isinstance(
-                        args.exc_value, asyncio.CancelledError
-                    ):
-                        return
-                    _orig_threading_excepthook(args)
-
-                def _filtered_asyncio_handler(loop, context):
-                    exc = context.get("exception")
-                    if isinstance(exc, asyncio.CancelledError):
-                        return
-                    _orig_asyncio_exc_handler(loop, context)
-
-                threading.excepthook = _filtered_threading_hook
-                asyncio.base_events.BaseEventLoop.default_exception_handler = (
-                    _filtered_asyncio_handler
-                )
-
-                interface = Interfaces.WSGI if wsgi else Interfaces.ASGI
-                kwargs = dict(
-                    target=target,
-                    address=address,
-                    port=port,
-                    interface=interface,
-                )
-                if workers is not None:
-                    kwargs["workers"] = workers
-                Granian(**kwargs).serve()
-                return 0
             except ImportError:
                 if wsgi:
                     _logger.info("granian not available, falling back to daphne for WSGI")
@@ -284,7 +247,56 @@ class RunServerCommandHandler(CommandHandler):
 
                 from daphne.cli import CommandLineInterface
 
+                # entrypoint() calls sys.exit() itself; the return keeps the
+                # function's int contract if that ever changes.
                 CommandLineInterface.entrypoint()
                 return 0
+            else:
+                import asyncio
+
+                # Granian cancels worker tasks on shutdown; those
+                # CancelledErrors are expected noise, so they are filtered out
+                # of the global exception hooks. The patches are process-wide,
+                # so they are restored as soon as serve() returns.
+                orig_threading_excepthook = threading.excepthook
+                orig_asyncio_exc_handler = (
+                    asyncio.base_events.BaseEventLoop.default_exception_handler
+                )
+
+                def _filtered_threading_hook(args, _orig=orig_threading_excepthook):
+                    if isinstance(args.exc_value, asyncio.CancelledError):
+                        return
+                    _orig(args)
+
+                def _filtered_asyncio_handler(
+                    loop, context, _orig=orig_asyncio_exc_handler
+                ):
+                    if isinstance(context.get("exception"), asyncio.CancelledError):
+                        return
+                    _orig(loop, context)
+
+                threading.excepthook = _filtered_threading_hook
+                asyncio.base_events.BaseEventLoop.default_exception_handler = (
+                    _filtered_asyncio_handler
+                )
+                try:
+                    interface = Interfaces.WSGI if wsgi else Interfaces.ASGI
+                    kwargs = {
+                        "target": target,
+                        "address": address,
+                        "port": port,
+                        "interface": interface,
+                    }
+                    if workers is not None:
+                        kwargs["workers"] = workers
+                    # Any ImportError from inside serve() propagates: falling
+                    # back to daphne here would silently mask a broken app.
+                    Granian(**kwargs).serve()
+                    return 0
+                finally:
+                    threading.excepthook = orig_threading_excepthook
+                    asyncio.base_events.BaseEventLoop.default_exception_handler = (
+                        orig_asyncio_exc_handler
+                    )
         finally:
             sys.argv = tmp

@@ -9,8 +9,7 @@ raising ``UnboundLocalError`` for a valid, authenticated user.
 import asyncio
 
 import pytest
-from django.http import HttpRequest
-from django.http import QueryDict
+from django.http import HttpRequest, QueryDict
 
 
 def _make_user(is_authenticated=True):

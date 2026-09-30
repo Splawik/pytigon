@@ -12,7 +12,11 @@ from pytigon.schserw.schsys.context_processors import (
     default_template2,
     get_fragment,
     standard_web_browser,
+)
+from pytigon.schserw.schsys.context_processors import (
     test_mobile as _test_mobile,
+)
+from pytigon.schserw.schsys.context_processors import (
     test_tablet as _test_tablet,
 )
 

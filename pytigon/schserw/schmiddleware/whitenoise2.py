@@ -2,7 +2,6 @@ import os
 
 from django.conf import settings
 from django.core.files.storage import default_storage
-from django.http import HttpResponseNotFound
 from whitenoise.middleware import WhiteNoiseMiddleware
 
 from pytigon_lib.schdjangoext.django_init import AppConfigMod
@@ -10,8 +9,10 @@ from pytigon_lib.schfs.adapters import _AutoCreateLocalFs
 
 
 class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
-    def __init__(self, get_response=None, settings=settings):
-        WhiteNoiseMiddleware.__init__(self, get_response, settings)
+    def __init__(self, get_response=None, django_settings=None):
+        # Named django_settings so it does not shadow the module-level
+        # `settings` import used further down.
+        WhiteNoiseMiddleware.__init__(self, get_response, django_settings or settings)
         if self.static_root:
             maps = {}
             for app in settings.INSTALLED_APPS:
@@ -39,12 +40,11 @@ class WhiteNoiseMiddleware2(WhiteNoiseMiddleware):
                         fs.add_fs(key, _AutoCreateLocalFs(pos[0]))
 
     def __call__(self, request):
-        response = None
-        if "/static" in request.path:
-            response = self.process_request(request)
-        if response is None:
-            if not request.path.endswith(".map"):
-                response = self.get_response(request)
-            else:
-                response = HttpResponseNotFound("File: " + request.path + " does not exist")
-        return response
+        # Only intercept URLs that actually live under STATIC_URL. A
+        # substring test matched paths such as /x/staticfoo/y, and routing
+        # through process_request alone skipped process_response, dropping
+        # the caching headers this middleware exists to add.
+        static_url = (getattr(settings, "STATIC_URL", None) or "/static/").rstrip("/")
+        if not request.path.startswith(static_url + "/") and request.path != static_url:
+            return self.get_response(request)
+        return super().__call__(request)

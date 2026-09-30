@@ -1,8 +1,8 @@
 """Module contains standard context processors"""
 
 import datetime
+import functools
 import re
-import time
 import uuid
 from urllib.parse import urlparse
 
@@ -61,6 +61,13 @@ _SAFE_SETTINGS_ATTRS = frozenset(
         "BOOTSTRAP_TEMPLATE",
     }
 )
+
+
+#: Only session "client_param" keys with this prefix are merged into the
+#: template context. Every colour parameter consumed by the .ihtml/.html
+#: templates starts with "color_" (19 keys, exactly the DEFPARAM set in
+#: pytigon/schserw/schsys/urls.py).
+_CLIENT_PARAM_PREFIX = "color_"
 
 
 class SafeSettingsProxy:
@@ -310,6 +317,20 @@ def _extract_theme(settings):
     return ""
 
 
+@functools.lru_cache(maxsize=1)
+def _get_gen_time():
+    """Return the fallback build timestamp, computed once per process.
+
+    Returns:
+        str: UTC timestamp formatted as "YYYY.MM.DD HH:MM:SS".
+    """
+    now = datetime.datetime.now(datetime.UTC)
+    return (
+        f"{now.year:04d}.{now.month:02d}.{now.day:02d} "
+        f"{now.hour:02d}:{now.minute:02d}:{now.second:02d}"
+    )
+
+
 def sch_standard(request):
     standard = standard_web_browser(request)
     _r, rr, last_fragment = _extract_path_info(request)
@@ -326,8 +347,7 @@ def sch_standard(request):
     if settings.GEN_TIME:
         gmt_str = settings.GEN_TIME
     else:
-        gmt = time.gmtime()
-        gmt_str = f"{gmt[0]:04d}.{gmt[1]:02d}.{gmt[2]:02d} {gmt[3]:02d}:{gmt[4]:02d}:{gmt[5]:02d}"
+        gmt_str = _get_gen_time()
 
     user_agent = request.META.get("HTTP_USER_AGENT", "")
 
@@ -365,10 +385,21 @@ def sch_standard(request):
         "datetime": datetime,
     }
     if hasattr(request, "session") and "client_param" in request.session:
-        ret.update(request.session["client_param"])
+        # client_param is attacker-influenced: it is built from the raw
+        # "client_param" POST field at login (see schsys/urls.py:sch_login).
+        # Merge only the colour parameters the template layer actually reads
+        # (every consumer found in the .ihtml/.html templates is color_*,
+        # matching DEFPARAM in schsys/urls.py) so a crafted session value
+        # cannot shadow "settings", "user", "app_manager" or any other key.
+        for key, value in request.session["client_param"].items():
+            if isinstance(key, str) and key.startswith(_CLIENT_PARAM_PREFIX):
+                ret[key] = value
 
     if settings.DEBUG:
-        ret["context"] = ret
+        # A shallow copy, never a self-reference: json.dumps() on the context
+        # would otherwise recurse and the "context" key would expose the whole
+        # context a second time.
+        ret["context"] = dict(ret)
 
     if PermWrapper:
         from pytigon_lib.schviews.schrules import is_rules_active

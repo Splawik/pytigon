@@ -67,13 +67,13 @@ class TestImportsForCoverage:
 
     def test_import_commands_handlers(self):
         """Import command handlers."""
+        from pytigon.commands.handlers.default import DefaultCommandHandler
+        from pytigon.commands.handlers.init import InitCommandHandler
         from pytigon.commands.handlers.manage import ManageCommandHandler
+        from pytigon.commands.handlers.python import PythonCommandHandler
         from pytigon.commands.handlers.run import RunCommandHandler
         from pytigon.commands.handlers.runserver import RunServerCommandHandler
-        from pytigon.commands.handlers.python import PythonCommandHandler
-        from pytigon.commands.handlers.init import InitCommandHandler
         from pytigon.commands.handlers.tools import ToolCommandHandler
-        from pytigon.commands.handlers.default import DefaultCommandHandler
 
         assert ManageCommandHandler is not None
         assert RunCommandHandler is not None

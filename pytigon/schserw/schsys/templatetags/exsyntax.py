@@ -60,14 +60,18 @@ import re
 from base64 import b64encode
 from functools import lru_cache
 
-from django import template
+from django import forms, template
 from django.conf import settings
-from django.template import Template
+from django.forms import CheckboxInput, CheckboxSelectMultiple, FileInput, RadioSelect
+from django.template import Context, Template
 from django.template.base import Node, TemplateSyntaxError, token_kwargs
 from django.template.loader import get_template
-from django.utils.safestring import SafeString, SafeText, mark_safe
-from pyquery import PyQuery as pq
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
+from django_select2 import forms as s2forms
 
+from pytigon_lib.schdjangoext.models import TreeModel
+from pytigon_lib.schdjangoext.tools import import_model, make_href
 from pytigon_lib.schdjangoext.tools import make_href as mhref
 from pytigon_lib.schtools.href_action import action_fun, actions_dict, standard_dict
 from pytigon_lib.schtools.wiki import wiki_from_str, wikify
@@ -76,8 +80,19 @@ logger = logging.getLogger(__name__)
 
 register = template.Library()
 
-from .exsyntax_form import *  # noqa: E402, F403
-from .exsyntax_include import *  # noqa: E402, F403
+# NOTE: this module intentionally does NOT star-import .exsyntax_form or
+# .exsyntax_include. It carries its own complete copies of the form and
+# inclusion tags, and each of those modules owns a separate
+# ``template.Library()``. A ``from ... import *`` here would rebind
+# ``register`` to whichever library was imported last, so all three modules
+# would share one Library and later registrations would silently shadow
+# earlier ones.
+#
+# What the star imports DID provide was a set of names those modules merely
+# re-exported (django.forms widgets, django_select2.forms, TreeModel,
+# import_model, make_href). Those are imported explicitly above from their real
+# homes. Dropping the star import without replacing them left them undefined
+# at render time - e.g. "NameError: name 'CheckboxInput' is not defined".
 
 
 @lru_cache(maxsize=256)
@@ -677,7 +692,7 @@ def field(context, form_field, fieldformat=None, inline=False):
     :rtype: dict
     """
 
-    field = context["form"][form_field] if type(form_field) in (SafeText, str) else form_field
+    field = context["form"][form_field] if isinstance(form_field, str) else form_field
 
     label_class = "control-label float-left"
     offset = ""
@@ -1024,10 +1039,7 @@ def get_table_row(
     :return: A dictionary containing the form, field, formformat, href1 and href2.
     :rtype: dict
     """
-    if type(field_or_name) in (
-        SafeText,
-        str,
-    ):
+    if isinstance(field_or_name, str):
         model = import_model(app_name, table_name)
         _name = field_or_name
         _app_name = app_name
@@ -1621,6 +1633,26 @@ def sorted_column(context, name, description):
     return ret
 
 
+@lru_cache(maxsize=64)
+def _get_comboselect_template():
+    """Return the (cached) fixed template used to render a combo select."""
+    return Template(
+        """
+            {% load exsyntax %}
+            <div class="form-group group_choicefield form-floating">
+                <select class="select_combo form-select" name="{{ name }}"
+                        data-rel-name="{{ data_rel_name }}" src="{{ src }}">
+                        <option disabled selected value />
+                        {{ output }}
+                </select>
+                <label class="form-label control-label float-left">
+                    {{ label }}
+                </label>
+            </div>
+        """
+    )
+
+
 class ComboSelect(Node):
     def __init__(self, nodelist, field_or_field_name, param):
         self.nodelist = nodelist
@@ -1631,7 +1663,7 @@ class ComboSelect(Node):
         output = self.nodelist.render(context).strip()
         field_or_field_name = template.Variable(self.field_or_field_name).resolve(context)
         label = ""
-        if type(field_or_field_name) in (str, SafeString):
+        if isinstance(field_or_field_name, str):
             name = field_or_field_name
         else:
             name = field_or_field_name.name
@@ -1646,20 +1678,22 @@ class ComboSelect(Node):
         data_rel_name = values["data_rel_name"] if "data_rel_name" in values else ""
         src = values["src"] if "src" in values else ""
 
-        template_str = f"""
-            {{% load exsyntax %}}
-            <div class="form-group group_choicefield form-floating">
-                <select class="select_combo form-select" name="{name}" data-rel-name="{data_rel_name}" src="{src}">
-                        <option disabled selected value />
-                        {output} 
-                </select>
-                <label class="form-label control-label float-left">
-                    {label}
-                </label>
-            </div>
-        """
-        t = Template(template_str)
-        return t.render(context)
+        # The values are passed as template context rather than interpolated
+        # into the template source, so a field name or label containing
+        # {% / {{ cannot inject template syntax (server-side template injection).
+        # The pre-rendered nodelist output is injected as-is so that the
+        # <option> elements keep their markup.
+        c = {}
+        for layer in context.dicts:
+            c.update(layer)
+        c.update(
+            name=name,
+            label=label,
+            data_rel_name=data_rel_name,
+            src=src,
+            output=mark_safe(output),
+        )
+        return _get_comboselect_template().render(Context(c))
 
 
 @register.tag
@@ -1680,7 +1714,7 @@ def comboselect(parser, token):
 
     bits = token.split_contents()
     remaining_bits = bits[2:]
-    extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
+    extra_context = token_kwargs(remaining_bits, parser)
     parm = token.split_contents()
     nodelist = parser.parse("endcomboselect")
     parser.delete_first_token()
@@ -1701,47 +1735,46 @@ class HtmlWidgetNode(template.Node):
     def render(self, context):
         values = {key: val.resolve(context) for key, val in self.extra_context.items()}
 
+        # The pushed layer must always be popped, otherwise an exception in the
+        # body below leaks these values into the rest of the render.
         context.update(values)
+        try:
+            data = self.nodelist.render(context)
+            data = (
+                data.replace("[%]", "%")
+                .replace("[{", "{{")
+                .replace("}]", "}}")
+                .replace("[%", "{%")
+                .replace("%]", "%}")
+            )
+            id = context["id"]
+            class_name = context["class"]
 
-        data = self.nodelist.render(context)
-        data = (
-            data.replace("[%]", "%")
-            .replace("[{", "{{")
-            .replace("}]", "}}")
-            .replace("[%", "{%")
-            .replace("%]", "%}")
-        )
-        id = context["id"]
-        class_name = context["class"]
+            context["template_name"] = "widgets/html_widgets/" + class_name + ".html"
+            def_param = ""
+            if "width" in context:
+                def_param = def_param + "width='{}' ".format(context["width"])
+                with contextlib.suppress(Exception):
+                    context["width"] = int(context["width"]) - 10
+            if "height" in context:
+                def_param = def_param + "height='{}' ".format(context["height"])
+                with contextlib.suppress(Exception):
+                    context["height"] = int(context["height"]) - 10
+            context["def_param"] = def_param
 
-        context["template_name"] = "widgets/html_widgets/" + class_name + ".html"
-        def_param = ""
-        if "width" in context:
-            def_param = def_param + "width='{}' ".format(context["width"])
-            with contextlib.suppress(Exception):
-                context["width"] = int(context["width"]) - 10
-        if "height" in context:
-            def_param = def_param + "height='{}' ".format(context["height"])
-            with contextlib.suppress(Exception):
-                context["height"] = int(context["height"]) - 10
-        context["def_param"] = def_param
+            t = Template(data)
+            tdata = t.render(context)
 
-        t = Template(data)
-        tdata = t.render(context)
+            template = get_template(self.template_name)
 
-        template = get_template(self.template_name)
+            context_dict = {}
+            for c in context.dicts:
+                context_dict.update(c)
+            context_dict["data"] = tdata
 
-        context_dict = {}
-        for c in context.dicts:
-            context_dict.update(c)
-        context_dict["data"] = tdata
-
-        # tdata = t.render(context_dict)
-
-        # output = template.render(context)
-        output = template.render(context_dict)
-
-        context.pop()
+            output = template.render(context_dict)
+        finally:
+            context.pop()
 
         return mark_safe(output)
 
@@ -1763,7 +1796,7 @@ def do_html_widget(parser, token):
     """
     bits = token.split_contents()
     remaining_bits = bits[1:]
-    extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
+    extra_context = token_kwargs(remaining_bits, parser)
     if not extra_context:
         raise TemplateSyntaxError(f"{bits[0]!r} expected at least one variable assignment")
     if "id" not in extra_context or "class" not in extra_context:
@@ -1776,9 +1809,24 @@ def do_html_widget(parser, token):
 
 
 def _safe_path(base, *path_tab):
-    """Join path segments and verify the result stays within base directory."""
+    """Join path segments and verify the result stays within base directory.
+
+    Args:
+        base: Directory the result must stay inside.
+        *path_tab: Path segments to join onto ``base``.
+
+    Returns:
+        str: The normalised, verified path.
+
+    Raises:
+        ValueError: If the result escapes ``base``.
+    """
+    base = os.path.normpath(base)
     full = os.path.normpath(os.path.join(base, *path_tab))
-    if not full.startswith(os.path.normpath(base)):
+    # commonpath compares whole path components, so a sibling directory whose
+    # name merely shares a prefix (e.g. /srv/static_evil for base /srv/static)
+    # is rejected. A plain startswith() prefix match would accept it.
+    if os.path.commonpath([base, full]) != base:
         raise ValueError(f"Path traversal detected: {path_tab}")
     return full
 
@@ -1786,14 +1834,14 @@ def _safe_path(base, *path_tab):
 @lru_cache(maxsize=256)
 def _read_icon_file(path):
     path_tab = path.split("/")
-    with open(_safe_path(settings.STATIC_ROOT, *path_tab)) as f:
+    with open(_safe_path(settings.STATIC_ROOT, *path_tab), encoding="utf-8") as f:
         return f.read()
 
 
 @lru_cache(maxsize=256)
 def _read_user_icon_file(path):
     path_tab = path.split("/")
-    with open(_safe_path(settings.MEDIA_ROOT, *path_tab)) as f:
+    with open(_safe_path(settings.MEDIA_ROOT, *path_tab), encoding="utf-8") as f:
         return f.read()
 
 
@@ -1843,9 +1891,9 @@ def icon(context, class_str, width=None, height=None):
     """
 
     if class_str.startswith("fa://"):
-        return mark_safe("<i class='fa fa-{}'></i>".format(class_str[5:].replace(".png", "")))
+        return format_html("<i class='fa fa-{}'></i>", class_str[5:].replace(".png", ""))
     elif class_str.startswith("fa-"):
-        return mark_safe(f"<i class='fa {class_str}'></i>")
+        return format_html("<i class='fa {}'></i>", class_str)
     elif class_str.startswith("bi-"):
         x = re.findall("bi-" + r"[\w-]+", class_str)
         if x:
@@ -2112,6 +2160,10 @@ class ModifyNode(Node):
         self.arg = arg
 
     def render(self, context):
+        # pyquery is an optional dependency; import it here so that
+        # {% load exsyntax %} keeps working when it is not installed.
+        from pyquery import PyQuery as pq
+
         data = self.nodelist.render(context)
         d = pq(data)
         for key, v in self.arg.items():
@@ -2173,7 +2225,7 @@ def modify(parser, token):
     """
     bits = token.split_contents()
     remaining_bits = bits[1:]
-    arg = token_kwargs(remaining_bits, parser, support_legacy=True)
+    arg = token_kwargs(remaining_bits, parser)
     if not arg:
         raise TemplateSyntaxError(f"{bits[0]!r} expected at least one variable assignment")
     if remaining_bits:

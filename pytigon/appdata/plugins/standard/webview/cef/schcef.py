@@ -7,6 +7,7 @@ utilities for the CEF-based web browser backend.
 import asyncio
 import ctypes
 import http.client
+import logging
 import os
 import platform
 import sys
@@ -17,6 +18,8 @@ from cefpython3 import cefpython as cef
 from pytigon.pytigon_request import init
 from pytigon.pytigon_request import request as pytigon_request
 from pytigon_lib.schtools.env import get_environ
+
+_logger = logging.getLogger(__name__)
 
 # HTML loading screen shown while the page loads
 LOADER = """   
@@ -44,28 +47,63 @@ def exists(site, path="/"):
     """
     if "127.0.0.2" in site:
         return True
+    conn = None
     try:
         conn = http.client.HTTPConnection(site.split("//")[1])
         conn.request("HEAD", path)
         response = conn.getresponse()
-        conn.close()
         return response.status == 200
     except Exception:
         return False
+    finally:
+        # A timeout or getresponse() error must not leak the socket.
+        if conn is not None:
+            conn.close()
+
+
+def _version_tuple(value):
+    """Parse a dotted version string into a comparable tuple of ints.
+
+    Args:
+        value: Version string such as "57.0" or "100.1.2".
+
+    Returns:
+        tuple: The numeric components, e.g. (57, 0). Non-numeric trailing
+        components are dropped, so "57.0.1234" becomes (57, 0).
+    """
+    parts = []
+    for chunk in str(value).split("."):
+        digits = ""
+        for char in chunk:
+            if not char.isdigit():
+                break
+            digits += char
+        if not digits:
+            break
+        parts.append(int(digits))
+    return tuple(parts)
 
 
 def check_versions():
-    """Print CEF and system version information for debugging.
+    """Log CEF and system version information for debugging.
 
     Raises:
-        AssertionError: If CEF Python version is below 57.0.
+        RuntimeError: If the CEF Python version is below 57.0.
     """
     ver = cef.GetVersion()
-    print("[pytigon] CEF Python {ver}".format(ver=ver["version"]))
-    print("[pytigon] Chromium {ver}".format(ver=ver["chrome_version"]))
-    print("[pytigon] CEF {ver}".format(ver=ver["cef_version"]))
-    print(f"[pytigon] Python {platform.python_version()} {platform.architecture()[0]}")
-    assert cef.__version__ >= "57.0", "CEF Python v57.0+ required to run this"
+    _logger.info("[pytigon] CEF Python %s", ver["version"])
+    _logger.info("[pytigon] Chromium %s", ver["chrome_version"])
+    _logger.info("[pytigon] CEF %s", ver["cef_version"])
+    _logger.info(
+        "[pytigon] Python %s %s", platform.python_version(), platform.architecture()[0]
+    )
+    # Compared component-wise: the old string compare got this wrong for any
+    # version past 99 ("100.0" < "57.0" lexicographically). Also a plain
+    # raise, not assert, which python -O strips.
+    if _version_tuple(cef.__version__) < (57, 0):
+        raise RuntimeError(
+            f"CEF Python v57.0+ required to run this, found {cef.__version__}"
+        )
 
 
 class KeyEvent:
@@ -157,7 +195,10 @@ class ResourceHandler:
         return True
 
     def GetResponseHeaders(self, response, responseLengthOut, redirect_url_out):
-        assert self._web_request_client._response, "Response object empty"
+        # Not an assert: this runs in a CEF callback, and asserts are stripped
+        # under python -O, which would leave a None dereference.
+        if not self._web_request_client._response:
+            return False
         wrcResponse = self._web_request_client._response
         response.SetStatus(wrcResponse.GetStatus())
         response.SetStatusText(wrcResponse.GetStatusText())

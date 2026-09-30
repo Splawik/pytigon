@@ -142,7 +142,6 @@ def _get_apps_cached(prj, host):
             module_name = None
             title = None
             perms = None
-            url = None
             elementy = app.split(".")
             appname = elementy[-1]
             module = importlib.import_module(elementy[0])
@@ -197,14 +196,6 @@ class AppManager:
             return elementy[nr + 1]
         else:
             return elementy[nr]
-
-    def get_main_title(self):
-        """Get the main title of the application."""
-        apps = self._get_apps()
-        for app in apps:
-            if app[4] == "main":
-                return app[0]
-        return ""
 
     def _get_apps(self, prj=None):
         return _get_apps_cached(prj, self.request.get_host())

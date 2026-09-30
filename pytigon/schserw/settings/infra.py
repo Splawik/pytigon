@@ -1,15 +1,16 @@
 import logging
 import os
 import sys
-
-from django.conf import settings
-from django.apps import AppConfig
 from pathlib import Path
+
+from django.apps import AppConfig
+from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
 
 import contextlib
+import threading
 
 from pytigon_lib.schdjangoext.django_storage import OSFS_EXT
 from pytigon_lib.schtools.platform_info import platform_name
@@ -221,18 +222,18 @@ if not DEBUG and PRODUCTION_VERSION:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_BROWSER_XSS_FILTER = True
     X_FRAME_OPTIONS = "DENY"
     SECURE_REFERRER_POLICY = "same-origin"
+    SECURE_SSL_REDIRECT = ENV.bool("SECURE_SSL_REDIRECT", default=False)
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 else:
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SAMESITE = "Lax"
-    SECURE_SSL_REDIRECT = False
+    SECURE_SSL_REDIRECT = ENV.bool("SECURE_SSL_REDIRECT", default=False)
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_BROWSER_XSS_FILTER = True
     X_FRAME_OPTIONS = "SAMEORIGIN"
     SECURE_REFERRER_POLICY = "same-origin"
     SECURE_PROXY_SSL_HEADER = None
@@ -255,9 +256,24 @@ ASGI_APPLICATION = "pytigon.schserw.routing.application"
 
 if PLATFORM_TYPE == "webserver":
     if ENV("CHANNELS_REDIS"):
-        CHANNELS_REDIS_SERVER, CHANNELS_REDIS_PORT = (ENV("CHANNELS_REDIS").split(":") + ["6379"])[
-            :2
-        ]
+        # rsplit so that an IPv6 literal such as "::1:6379" keeps its colons
+        # and a missing port ("host:") still falls back to the default port
+        # instead of raising ValueError on int("").
+        _redis_host, _sep, _redis_port = ENV("CHANNELS_REDIS").rpartition(":")
+        if not _sep:
+            CHANNELS_REDIS_SERVER = ENV("CHANNELS_REDIS")
+            CHANNELS_REDIS_PORT = "6379"
+        else:
+            CHANNELS_REDIS_SERVER = _redis_host.strip("[]")
+            CHANNELS_REDIS_PORT = _redis_port or "6379"
+        try:
+            CHANNELS_REDIS_PORT = int(CHANNELS_REDIS_PORT)
+        except (TypeError, ValueError):
+            logger.warning(
+                "Invalid CHANNELS_REDIS port %r, falling back to 6379",
+                _redis_port,
+            )
+            CHANNELS_REDIS_PORT = 6379
     else:
         CHANNELS_REDIS_SERVER = "127.0.0.1"
         CHANNELS_REDIS_PORT = "6379"
@@ -293,12 +309,38 @@ COMPRESS_STORAGE = "compressor.storage.GzipCompressorFileStorage"
 
 STATIC_FS = None
 ROOT_FS = None
+_ROOT_FS_LOCK = threading.Lock()
 
 
 def DEFAULT_FILE_STORAGE_FS():
-    global STATIC_FS, ROOT_FS, LOCK
-    if ROOT_FS != None:
+    """Build (once per process) and return the multi-root fsspec filesystem.
+
+    Not a Django setting: it is a lazily-initialised factory used by the
+    storage layer. The first call constructs the mounts, every later call
+    returns the cached instance.
+
+    Returns:
+        pytigon_lib.schfs.adapters.FsspecMountFS: The mounted root filesystem.
+    """
+    global STATIC_FS, ROOT_FS
+    if ROOT_FS is not None:
         return ROOT_FS
+    with _ROOT_FS_LOCK:
+        if ROOT_FS is not None:
+            return ROOT_FS
+        return _build_root_fs()
+
+
+def _build_root_fs():
+    """Construct the mount filesystem and cache it in ``ROOT_FS``.
+
+    Must only be called from ``DEFAULT_FILE_STORAGE_FS`` while holding
+    ``_ROOT_FS_LOCK``.
+
+    Returns:
+        pytigon_lib.schfs.adapters.FsspecMountFS: The mounted root filesystem.
+    """
+    global STATIC_FS, ROOT_FS
     from pytigon_lib.schfs.adapters import FsspecMountFS, FsspecMultiFS
 
     _m = FsspecMountFS()
@@ -379,7 +421,7 @@ else:
 THUMBNAIL_BASEDIR = THUMBNAIL_MEDIA_ROOT
 
 if not os.path.exists(THUMBNAIL_MEDIA_ROOT):
-    os.makedirs(THUMBNAIL_MEDIA_ROOT)
+    os.makedirs(THUMBNAIL_MEDIA_ROOT, exist_ok=True)
 
 THUMBNAIL_ALIASES = {
     "": {

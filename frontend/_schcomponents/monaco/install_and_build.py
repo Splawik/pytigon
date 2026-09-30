@@ -1,6 +1,7 @@
 import subprocess
-from pytigon.pytigon_run import run
 import sys
+
+from pytigon.pytigon_run import run
 
 
 def run_esbuild(entry_point, outfile):

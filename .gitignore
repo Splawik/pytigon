@@ -90,3 +90,7 @@ kilo.json
 
 reasonix.toml
 todo.md
+
+# Captured program output accidentally committed
+/cmd.txt
+err.txt

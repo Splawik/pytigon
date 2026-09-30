@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from django.test import RequestFactory
 
-from pytigon_lib.schviews import GenericTable, VIEWS_REGISTER, generic_table_start
+from pytigon_lib.schviews import VIEWS_REGISTER, GenericTable, generic_table_start
 from pytigon_lib.schviews.viewtools import DOC_TYPES
 
 

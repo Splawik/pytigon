@@ -632,7 +632,7 @@ class BaseWebBrowser:
             if l[1].startswith("static:/"):
                 x = os.path.join(l[1].replace("static:/", wx.GetApp().root_path))
                 try:
-                    with open(x) as f:
+                    with open(x, encoding="utf-8") as f:
                         txt = b64encode(f.read().encode("utf-8")).decode("utf-8")
                 except Exception:
                     txt = ""

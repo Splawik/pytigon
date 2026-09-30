@@ -1,11 +1,12 @@
-from pythonforandroid.recipe import TargetPythonRecipe, Recipe
-from pythonforandroid.toolchain import shprint, current_directory
-from pythonforandroid.logger import logger, info, error
-from pythonforandroid.util import ensure_dir, walk_valid_filens
-from os.path import exists, join, dirname
-from os import environ
 import glob
+from os import environ
+from os.path import dirname, exists, join
+
 import sh
+from pythonforandroid.logger import error, info, logger
+from pythonforandroid.recipe import Recipe, TargetPythonRecipe
+from pythonforandroid.toolchain import current_directory, shprint
+from pythonforandroid.util import ensure_dir, walk_valid_filens
 
 STDLIB_DIR_BLACKLIST = {
     '__pycache__',
@@ -43,8 +44,8 @@ class Python3Recipe(TargetPythonRecipe):
 
     # This recipe can be built only against API 21+
     MIN_NDK_API = 21
-    
-    
+
+
     def set_libs_flags(self, env, arch):
         '''Takes care to properly link libraries with python depending on our
         requirements and the attribute :attr:`opt_depends`.
@@ -63,7 +64,7 @@ class Python3Recipe(TargetPythonRecipe):
             openssl_build_dir = recipe.get_build_dir(arch.arch)
             setuplocal = join('Modules', 'Setup.local')
             shprint(sh.cp, join(self.get_recipe_dir(), 'Setup.local-ssl'), setuplocal)
-            shprint(sh.sed, '-i.backup', 's#^SSL=.*#SSL={}#'.format(openssl_build_dir), setuplocal)
+            shprint(sh.sed, '-i.backup', f's#^SSL=.*#SSL={openssl_build_dir}#', setuplocal)
             env['OPENSSL_VERSION'] = recipe.version
 
         if 'sqlite3' in self.ctx.recipe_build_order:
@@ -76,15 +77,14 @@ class Python3Recipe(TargetPythonRecipe):
             env[flag] = env[flag] + include if flag in env else include
             flag = 'LDFLAGS'
             env[flag] = env[flag] + lib if flag in env else lib
-            
+
         return env
-    
-    
+
+
     def build_arch(self, arch):
-        
+
         if self.ctx.ndk_api < self.MIN_NDK_API:
-            error('Target ndk-api is {}, but the python3 recipe supports only {}+'.format(
-                self.ctx.ndk_api, self.MIN_NDK_API))
+            error(f'Target ndk-api is {self.ctx.ndk_api}, but the python3 recipe supports only {self.MIN_NDK_API}+')
             exit(1)
 
         recipe_build_dir = self.get_build_dir(arch.arch)
@@ -99,7 +99,7 @@ class Python3Recipe(TargetPythonRecipe):
 
         # Skipping "Ensure that nl_langinfo is broken" from the original bpo-30386
 
-        platform_name = 'android-{}'.format(self.ctx.ndk_api)
+        platform_name = f'android-{self.ctx.ndk_api}'
 
         with current_directory(build_dir):
             env = environ.copy()
@@ -108,7 +108,7 @@ class Python3Recipe(TargetPythonRecipe):
             android_host = 'arm-linux-androideabi'
             android_build = sh.Command(join(recipe_build_dir, 'config.guess'))().stdout.strip().decode('utf-8')
             platform_dir = join(self.ctx.ndk_dir, 'platforms', platform_name, 'arch-arm')
-            toolchain = '{android_host}-4.9'.format(android_host=android_host)
+            toolchain = f'{android_host}-4.9'
             toolchain = join(self.ctx.ndk_dir, 'toolchains', toolchain, 'prebuilt', 'linux-x86_64')
             CC = '{clang} -target {target} -gcc-toolchain {toolchain}'.format(
                 clang=join(self.ctx.ndk_dir, 'toolchains', 'llvm', 'prebuilt', 'linux-x86_64', 'bin', 'clang'),
@@ -151,7 +151,7 @@ class Python3Recipe(TargetPythonRecipe):
             # bpo-30386 Makefile system.
             logger.warning('Doing some hacky stuff to link properly')
             lib_dir = join(sysroot, 'usr', 'lib')
-            env['LDFLAGS'] += ' -L{}'.format(lib_dir)
+            env['LDFLAGS'] += f' -L{lib_dir}'
             shprint(sh.cp, join(lib_dir, 'crtbegin_so.o'), './')
             shprint(sh.cp, join(lib_dir, 'crtend_so.o'), './')
 
@@ -183,7 +183,7 @@ class Python3Recipe(TargetPythonRecipe):
             # better way, although this is probably acceptable
             sh.cp('pyconfig.h', join(recipe_build_dir, 'Include'))
 
-            
+
 
     def include_root(self, arch_name):
         return join(self.get_build_dir(arch_name),
@@ -232,12 +232,12 @@ class Python3Recipe(TargetPythonRecipe):
                                 'android-build')
         shprint(sh.cp,
                 join(python_build_dir,
-                     'libpython{}m.so'.format(self.major_minor_version_string)),
-                'libs/{}'.format(arch.arch))
+                     f'libpython{self.major_minor_version_string}m.so'),
+                f'libs/{arch.arch}')
         shprint(sh.cp,
                 join(python_build_dir,
-                     'libpython{}m.so.1.0'.format(self.major_minor_version_string)),
-                'libs/{}'.format(arch.arch))
+                     f'libpython{self.major_minor_version_string}m.so.1.0'),
+                f'libs/{arch.arch}')
 
         info('Renaming .so files to reflect cross-compile')
         self.reduce_object_file_names(join(dirn, 'site-packages'))

@@ -2,10 +2,9 @@
 Handles running pip in prj environment.
 """
 
-import os
+import pytigon_lib
 
 from .base import CommandHandler
-import pytigon_lib
 
 
 class PipCommandHandler(CommandHandler):
@@ -70,7 +69,6 @@ class PipCommandHandler(CommandHandler):
 
             command += argv[3:]
 
-            print(os.environ["PYTHONUSERBASE"])
             ret = self.run_subprocess(command)
             return ret
 

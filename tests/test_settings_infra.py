@@ -40,9 +40,9 @@ class TestSettingsInfra:
         assert "BACKEND" in STORAGES["staticfiles"]
 
     def test_python_interpreter(self):
-        from pytigon.schserw.settings.infra import PYTHON_CONSOLE, PYTHON_INTERPRETER
-
         import sys
+
+        from pytigon.schserw.settings.infra import PYTHON_CONSOLE, PYTHON_INTERPRETER
 
         assert PYTHON_INTERPRETER == sys.executable
         assert PYTHON_CONSOLE == sys.executable
@@ -59,11 +59,10 @@ class TestSettingsInfra:
         assert COMPRESS_STORAGE == "compressor.storage.GzipCompressorFileStorage"
 
     def test_default_file_storage_fs(self):
-        from pytigon.schserw.settings.infra import DEFAULT_FILE_STORAGE_FS
-
         import importlib
 
         import pytigon.schserw.settings.infra as infra_mod
+        from pytigon.schserw.settings.infra import DEFAULT_FILE_STORAGE_FS
 
         importlib.reload(infra_mod)
         infra_mod.STATIC_FS = None

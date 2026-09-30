@@ -12,8 +12,6 @@ Usage:
     invoke typecheck    # Run mypy
 """
 
-import os
-import sys
 from contextlib import chdir
 from pathlib import Path
 from shutil import copyfile
@@ -38,37 +36,25 @@ def build(ctx):
 def build_js(ctx):
     """Compile Python source files to JavaScript (pytigon.js)."""
     import pscript
-    from pytigon_lib.schindent.py_to_js import compile, prepare_python_code
     from jsmin import jsmin
+
+    from pytigon_js_sources import PSCRIPT_SOURCES
+    from pytigon_lib.schindent.py_to_js import compile, prepare_python_code
 
     print("Compiling Python → JavaScript...")
 
-    files = [
-        "__init__.py",
-        "resources.py",
-        "tools.py",
-        "component.py",
-        "ajax_region.py",
-        "db.py",
-        "events.py",
-        "offline.py",
-        "tabmenu.py",
-        "tbl.py",
-        "widget.py",
-        "pytigon_inline.py",
-        "pytigon.py",
-    ]
+    files = PSCRIPT_SOURCES
 
     with chdir(JS_SRC):
-        with open("py_runtime.js", "wt") as fout:
+        with open("py_runtime.js", "w") as fout:
             fout.write(pscript.get_full_std_lib(indent=0))
 
-        with open("py_runtime.min.js", "wt") as fout:
+        with open("py_runtime.min.js", "w") as fout:
             fout.write(jsmin(pscript.get_full_std_lib(indent=0)))
 
-        with open("pytigon.js", "wt") as fout:
+        with open("pytigon.js", "w") as fout:
             for file in files:
-                with open(file, "rt") as fin:
+                with open(file) as fin:
                     error, js = compile(prepare_python_code(fin.read()))
                     if error:
                         print(f"  ERROR in {file}: {js}")
@@ -78,8 +64,8 @@ def build_js(ctx):
 
         _remove_duplicate_exports(Path("pytigon.js"))
 
-        with open("pytigon.js", "rt") as fin:
-            with open("pytigon.min.js", "wt") as fout:
+        with open("pytigon.js") as fin:
+            with open("pytigon.min.js", "w") as fout:
                 fout.write(jsmin(fin.read()))
 
     compiled = ["pytigon.js", "py_runtime.js", "pytigon.min.js", "py_runtime.min.js"]

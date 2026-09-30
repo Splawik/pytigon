@@ -6,7 +6,7 @@ translatable strings and generates or updates .po files for the specified
 languages.
 """
 
-import getopt
+import argparse
 import os
 import re
 import subprocess
@@ -14,9 +14,6 @@ import sys
 import tempfile
 
 from django.conf import settings
-
-settings.configure(use_i18n=True)
-from django.utils.translation import templatize
 
 pythonize_re = re.compile(r"\n\s*//")
 
@@ -146,7 +143,40 @@ def run_xgettext(filepath, domain, potfile_exists, xgettext_cmd):
         return b""
 
 
-def make_messages():
+def make_messages(argv=None):
+    """Extract translatable strings and update the .po files.
+
+    Args:
+        argv: Argument list without the program name. Defaults to sys.argv[1:].
+
+    Returns:
+        int: Process exit code.
+    """
+    # Parse arguments before touching settings so that --help and argument
+    # errors never depend on a half-configured Django.
+    parser = argparse.ArgumentParser(
+        prog="make-messages.py",
+        description="Extract translatable strings into .po files.",
+    )
+    parser.add_argument("-l", "--language", help="language code to process")
+    parser.add_argument("-d", "--domain", default=DOMAIN_DJANGO, help="message domain")
+    parser.add_argument("-v", "--verbose", action="store_true", help="verbose output")
+    parser.add_argument(
+        "-a", "--all", action="store_true", help="process all languages"
+    )
+    options = parser.parse_args(argv)
+    lang = options.language
+    domain = options.domain
+    verbose = options.verbose
+    all_languages = options.all
+
+    # Configured here rather than at import time: a module-level
+    # settings.configure() makes this file unimportable inside an already
+    # configured Django project (it raises RuntimeError).
+    if not settings.configured:
+        settings.configure(use_i18n=True, INSTALLED_APPS=[], DATABASES={})
+    from django.utils.translation import templatize
+
     """Main entry point: scan files, extract strings, and update .po files."""
     # Determine locale directory
     localedir = None
@@ -173,23 +203,6 @@ def make_messages():
         )
         print("you want to enable i18n for your project or application.")
         sys.exit(1)
-
-    # Parse command-line options
-    (opts, args) = getopt.getopt(sys.argv[1:], "l:d:va")
-    lang = None
-    domain = DOMAIN_DJANGO
-    verbose = False
-    all_languages = False
-
-    for o, v in opts:
-        if o == "-l":
-            lang = v
-        elif o == "-d":
-            domain = v
-        elif o == "-v":
-            verbose = True
-        elif o == "-a":
-            all_languages = True
 
     if domain not in (DOMAIN_DJANGO, DOMAIN_DJANGOJS):
         print(
@@ -363,4 +376,4 @@ def make_messages():
 
 
 if __name__ == "__main__":
-    make_messages()
+    sys.exit(make_messages())

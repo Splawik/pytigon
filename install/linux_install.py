@@ -6,16 +6,16 @@ fname =  os.path.expanduser("~/.config/mimeapps.list")
 find_str = "[Default Applications]"
 add_str = "application/pytigon=pytigon.desktop"
 
-with open(fname,"rt") as f:
+with open(fname) as f:
     s = f.read()
 
 if s:
-    if not add_str in s:
+    if add_str not in s:
         if find_str in s:
             s = s.replace(find_str, find_str+"\n"+add_str)
         else:
             s = s+ "\n" + find_str + "\n" + add_str
-        with open(fname,"wt") as f:
+        with open(fname,"w") as f:
             f.write(s)
 
 
@@ -31,7 +31,7 @@ NoDisplay=true
 MimeType=application/pytigon
 Terminal=false
 X-KeepTerminal=false
-"""        
+"""
 
 #base_path = __file__.replace("linux_install.py", "")
 #if base_path == "":
@@ -45,7 +45,7 @@ X-KeepTerminal=false
 
 fname2 = os.path.expanduser("~/.local/share/applications/pytigon.desktop")
 #if not os.path.exists(fname2):
-with open(fname2,"wt") as f:
+with open(fname2,"w") as f:
     f.write(desktop_str)
 
 
@@ -60,7 +60,7 @@ mime_str="""<?xml version="1.0"?>
 
 fname = os.path.expanduser("~/.local/share/mime/packages/pytigon.xml")
 
-with open(fname,"wt") as f:
+with open(fname,"w") as f:
     f.write(mime_str)
 
 subprocess.run(["update-mime-database", os.path.expanduser("~/.local/share/mime")])

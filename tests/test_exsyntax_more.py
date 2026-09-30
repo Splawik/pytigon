@@ -7,21 +7,21 @@ class TestExSyntaxCoverage:
     def test_functions_available(self):
         """Check that key functions are importable from exsyntax."""
         from pytigon.schserw.schsys.templatetags.exsyntax import (
-            spec,
-            editable_base,
+            button,
             editable,
-            new_row_base,
-            new_row,
+            editable_base,
+            field,
+            get_row,
+            icon,
             include_wiki,
             markdown2html,
-            icon,
+            new_row,
+            new_row_base,
+            register,
+            show_context,
+            spec,
             to_b64,
             wikify,
-            register,
-            get_row,
-            button,
-            field,
-            show_context,
         )
         assert callable(spec)
         assert callable(editable_base)

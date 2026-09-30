@@ -50,7 +50,6 @@ TEMPLATES = [
                 "django.template.context_processors.static",
                 "django.template.context_processors.tz",
                 "django.contrib.messages.context_processors.messages",
-                "django.template.context_processors.request",
                 "django.template.context_processors.csp",
                 "pytigon.schserw.schsys.context_processors.sch_standard",
             ],

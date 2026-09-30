@@ -17,7 +17,6 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file_name = options["file"] if "file" in options else None
-        compiled = []
         if settings.PRJ_NAME == "_schall":
             template_paths = [
                 os.path.join(settings.ROOT_PATH, "templates_src"),
@@ -30,18 +29,16 @@ class Command(BaseCommand):
                 os.path.join(settings.PRJ_PATH_ALT, settings.PRJ_NAME, "templates_src"),
             ]
         for template_path in template_paths:
-            print(template_path)
+            self.stdout.write(template_path)
             if os.path.exists(template_path):
-                print("TEMPLATE FOLDER: ", template_path)
-                l = len(template_path)
+                self.stdout.write("TEMPLATE FOLDER: %s", template_path)
                 for root, dirs, files in os.walk(template_path):
                     for f in files:
                         if f.endswith(".ihtml"):
                             p = os.path.join(root, f)
-                            x = p[l + 1 :]
+                            x = os.path.relpath(p, template_path)
                             if not file_name or file_name in x:
                                 compiled = []
                                 compile_template(x, compiled=compiled, force=True)
-                                if compiled:
-                                    for c in compiled:
-                                        print(c)
+                                for c in compiled:
+                                    self.stdout.write(c)

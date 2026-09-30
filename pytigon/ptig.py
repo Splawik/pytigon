@@ -26,9 +26,12 @@ def init(prj_name):
 
     Args:
         prj_name: Name of the project to initialize.
+
+    Returns:
+        int: The command exit code.
     """
-    run(["ptig", f"init_{prj_name}"])
+    return run(["ptig", f"init_{prj_name}"])
 
 
 if __name__ == "__main__":
-    run()
+    sys.exit(run())

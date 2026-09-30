@@ -1,12 +1,13 @@
 import os
-import sys
 from pathlib import Path
 from shutil import copyfile
-import sass
 
 import pscript
-from pytigon_lib.schindent.py_to_js import compile, prepare_python_code
+import sass
 from jsmin import jsmin
+
+from pytigon_js_sources import PSCRIPT_SOURCES
+from pytigon_lib.schindent.py_to_js import compile, prepare_python_code
 
 
 def remove_duplicate_exports(input_file, output_file=None):
@@ -20,7 +21,7 @@ def remove_duplicate_exports(input_file, output_file=None):
     if output_file is None:
         output_file = input_file
 
-    with open(input_file, "r", encoding="utf-8") as f:
+    with open(input_file, encoding="utf-8") as f:
         lines = f.readlines()
 
     result = []
@@ -61,21 +62,7 @@ def remove_duplicate_exports(input_file, output_file=None):
 #    return code
 
 
-files = [
-    "__init__.py",
-    "resources.py",
-    "tools.py",
-    "component.py",
-    "ajax_region.py",
-    "db.py",
-    "events.py",
-    "offline.py",
-    "tabmenu.py",
-    "tbl.py",
-    "widget.py",
-    "pytigon_inline.py",
-    "pytigon_main.py",
-]
+files = PSCRIPT_SOURCES
 
 
 path = os.getcwd()
@@ -104,15 +91,15 @@ if script_path == "":
 else:
     os.chdir(script_path)
 
-with open("py_runtime.js", "wt") as fout:
+with open("py_runtime.js", "w") as fout:
     fout.write(pscript.get_full_std_lib(indent=0))
 
-with open("py_runtime.min.js", "wt") as fout:
+with open("py_runtime.min.js", "w") as fout:
     fout.write(jsmin(pscript.get_full_std_lib(indent=0)))
 
-with open("pytigon.js", "wt") as fout:
+with open("pytigon.js", "w") as fout:
     for file in files:
-        with open(file, "rt") as fin:
+        with open(file) as fin:
             # js = pscript.py2js(prepare_python_code(fin.read()), inline_stdlib=False)
 
             error, js = compile(prepare_python_code(fin.read()))
@@ -125,8 +112,8 @@ with open("pytigon.js", "wt") as fout:
 
 remove_duplicate_exports("pytigon.js")
 
-with open("pytigon.js", "rt") as fin:
-    with open("pytigon.min.js", "wt") as fout:
+with open("pytigon.js") as fin:
+    with open("pytigon.min.js", "w") as fout:
         js = fin.read()
         fout.write(jsmin(js))
 
@@ -146,10 +133,10 @@ def scss_compile(parent_path, name):
     output_path = os.path.join(
         parent_path.replace("static_src", "static"), name.replace(".sass", ".css")
     )
-    with open(input_path, "rt") as f:
+    with open(input_path) as f:
         print("Compile:", input_path)
         buf = sass.compile(string=f.read(), indented=True, include_paths=(parent_path,))
-        with open(output_path, "wt") as f2:
+        with open(output_path, "w") as f2:
             f2.write(buf)
             print("Saving result in: ", output_path)
 

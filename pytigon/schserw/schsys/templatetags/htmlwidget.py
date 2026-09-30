@@ -51,51 +51,53 @@ class HtmlWidgetNode(template.Node):
             key: val.resolve(context) for key, val in self.extra_context.items()
         }
 
+        # The pushed layer must always be popped, otherwise an exception in the
+        # body below leaks these values into the rest of the render.
         context.update(values)
+        try:
+            data = self.nodelist.render(context)
+            # Restore template tags that were escaped for safe storage
+            data = (
+                data.replace("[%]", "%")
+                .replace("[{", "{{")
+                .replace("}]", "}}")
+                .replace("[%", "{%")
+                .replace("%]", "%}")
+            )
 
-        data = self.nodelist.render(context)
-        # Restore template tags that were escaped for safe storage
-        data = (
-            data.replace("[%]", "%")
-            .replace("[{", "{{")
-            .replace("}]", "}}")
-            .replace("[%", "{%")
-            .replace("%]", "%}")
-        )
+            # Extract widget attributes from context
+            class_name = context.get("class", "")
 
-        # Extract widget attributes from context
-        class_name = context.get("class", "")
+            # Set the template for rendering
+            context["template_name"] = "widgets/html_widgets/" + class_name + ".html"
 
-        # Set the template for rendering
-        context["template_name"] = "widgets/html_widgets/" + class_name + ".html"
+            # Build default parameters
+            def_param = ""
+            if "width" in context:
+                def_param += "width='{}' ".format(context["width"])
+                with contextlib.suppress(ValueError, TypeError):
+                    context["width"] = int(context["width"]) - 10
+            if "height" in context:
+                def_param += "height='{}' ".format(context["height"])
+                with contextlib.suppress(ValueError, TypeError):
+                    context["height"] = int(context["height"]) - 10
+            context["def_param"] = def_param
 
-        # Build default parameters
-        def_param = ""
-        if "width" in context:
-            def_param += "width='{}' ".format(context["width"])
-            with contextlib.suppress(ValueError, TypeError):
-                context["width"] = int(context["width"]) - 10
-        if "height" in context:
-            def_param += "height='{}' ".format(context["height"])
-            with contextlib.suppress(ValueError, TypeError):
-                context["height"] = int(context["height"]) - 10
-        context["def_param"] = def_param
+            # Render the inner template content
+            t = Template(data)
+            tdata = t.render(context)
 
-        # Render the inner template content
-        t = Template(data)
-        tdata = t.render(context)
+            # Render the outer wrapper template
+            template = get_template(self.template_name)
 
-        # Render the outer wrapper template
-        template = get_template(self.template_name)
+            context_dict = {}
+            for c in context.dicts:
+                context_dict.update(c)
+            context_dict["data"] = tdata
 
-        context_dict = {}
-        for c in context.dicts:
-            context_dict.update(c)
-        context_dict["data"] = tdata
-
-        output = template.render(context_dict)
-
-        context.pop()
+            output = template.render(context_dict)
+        finally:
+            context.pop()
 
         return mark_safe(output)
 
@@ -119,7 +121,7 @@ def do_widget(parser, token):
     """
     bits = token.split_contents()
     remaining_bits = bits[1:]
-    extra_context = token_kwargs(remaining_bits, parser, support_legacy=True)
+    extra_context = token_kwargs(remaining_bits, parser)
 
     if not extra_context:
         raise TemplateSyntaxError(

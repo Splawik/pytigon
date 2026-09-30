@@ -18,7 +18,8 @@ import time
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, password_validation
+from django.db import transaction
 from django.http import (
     Http404,
     HttpResponse,
@@ -43,7 +44,7 @@ def _get_wx_app():
     """Return the wx.App singleton if wxPython is available, else None.
 
     The lookup is performed at most once per process and cached in a
-    module-level variable guarded by a lock to remain thread-safe.
+    module-level variable, so the cost is one failed ``import wx`` at most.
     """
     global _APP_WX
     if _APP_WX is None:
@@ -67,8 +68,15 @@ def change_password(request):
 
     user = authenticate(request, username=request.user.username, password=old_password)
     if user is not None and user.is_active:
-        user.set_password(new_password)
-        user.save()
+        try:
+            password_validation.validate_password(new_password, user)
+        except password_validation.ValidationError as e:
+            for msg in e.messages:
+                messages.add_message(request, messages.ERROR, msg)
+            return HttpResponseRedirect(make_href("/"))
+        with transaction.atomic():
+            user.set_password(new_password)
+            user.save()
         return HttpResponseRedirect(make_href("/schsys/do_logout/"))
 
     messages.add_message(request, messages.ERROR, "Bad old password")
@@ -360,16 +368,16 @@ def sw(request):
     for static_root in (static_root1, static_root2):
         sw_path = os.path.join(static_root, "sw.js")
         if os.path.exists(sw_path):
-            with open(sw_path) as sw_file:
+            with open(sw_path, encoding="utf-8") as sw_file:
                 buf = sw_file.read()
             break
 
     standard_sw_path = os.path.join(_static_root, "pytigon_js", "sw.js")
     buf2 = ""
     if os.path.exists(standard_sw_path):
-        with open(standard_sw_path) as sw_file:
+        with open(standard_sw_path, encoding="utf-8") as sw_file:
             buf2 = sw_file.read()
-            buf2 = buf2.replace("//++//", buf)
+        buf2 = buf2.replace("//++//", buf)
 
     return HttpResponse(
         buf2.encode("utf-8"),
@@ -479,6 +487,12 @@ def site_media_protected(request, *argi, **argv):
                             return redirect_site_media_protected(request)
 
             return HttpResponseForbidden()
+
+        # PROTECTED_MEDIA_PERMISSIONS is configured but the request did not
+        # reach this view through the "site_media_protected/" prefix, so no
+        # rule could be evaluated. Fail closed instead of falling through to
+        # the "any authenticated user" default below.
+        return HttpResponseForbidden()
 
     # Default behavior: only authenticated users can access
     if request.user.is_authenticated:

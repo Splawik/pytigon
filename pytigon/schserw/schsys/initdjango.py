@@ -19,7 +19,6 @@ Classes:
 - FormProxy: Proxy class to render specific fields of a form as a table.
 
 Modifications to Django:
-- `django.db.models.fields.prep_for_like_query`: Lambda function to escape backslashes.
 - `BaseForm._html_output`: Overridden to use custom HTML output.
 - `BaseForm.as_p`: Overridden to use `django-bootstrap5` for rendering.
 - `django.forms.fields.CharField.widget_attrs`: Overridden to set widget attributes based on `max_length`.
@@ -31,6 +30,7 @@ from copy import deepcopy
 
 import django
 from django.db import models
+from django.forms.fields import CharField
 from django.forms.forms import BaseForm
 from django.forms.widgets import PasswordInput, TextInput
 from django_bootstrap5.forms import render_form
@@ -49,11 +49,6 @@ if django.VERSION[0] < 6:
         f"Found Django {django.VERSION}. Upgrade Django or review these patches.",
         RuntimeWarning,
         stacklevel=2,
-    )
-
-if hasattr(django.db.models.fields, "prep_for_like_query"):
-    django.db.models.fields.prep_for_like_query = lambda x: str(x).replace(
-        "\\", "\\\\"
     )
 
 models.TreeForeignKey = models.ForeignKey
@@ -89,15 +84,30 @@ if hasattr(BaseForm, "as_p"):
     BaseForm.as_p = as_p
 
 
+_original_charfield_widget_attrs = CharField.widget_attrs
+
+
 def widget_attrs(self, widget):
-    """Set widget attributes for CharField based on max_length."""
+    """Set widget attributes for CharField based on max_length.
+
+    Merges with the attributes Django's own ``CharField.widget_attrs``
+    produces, so patch-level attributes are preserved.
+
+    Args:
+        widget: The widget being rendered.
+
+    Returns:
+        dict: The merged HTML attribute mapping.
+    """
+    attrs = dict(_original_charfield_widget_attrs(self, widget))
     max2 = 80 if self.max_length is None else 80 if self.max_length > 80 else self.max_length
     if self.max_length is not None and isinstance(widget, (TextInput, PasswordInput)):
-        return {"max_length": str(self.max_length), "size": str(max2)}
-    return {}
+        attrs["max_length"] = str(self.max_length)
+        attrs["size"] = str(max2)
+    return attrs
 
 
-django.forms.fields.CharField.widget_attrs = widget_attrs
+CharField.widget_attrs = widget_attrs
 
 
 class FormProxy:
@@ -118,10 +128,13 @@ class FormProxy:
         for name, field in list(new_fields.items()):
             if name not in tabfields:
                 del new_fields[name]
+        # Restore the original field mapping even if as_table() raises,
+        # otherwise the form stays permanently stripped of its fields.
         self.form.fields = new_fields
-        ret = self.form.as_table()
-        self.form.fields = tmp_fields
-        return ret
+        try:
+            return self.form.as_table()
+        finally:
+            self.form.fields = tmp_fields
 
 
 class FieldsAsTableMixin:

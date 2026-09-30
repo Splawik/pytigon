@@ -1,7 +1,7 @@
 import subprocess
-from pytigon.pytigon_run import run
 import sys
-import os
+
+from pytigon.pytigon_run import run
 
 # os.environ["AUBE_CONFIG_TRUST_POLICY"] = "off"
 

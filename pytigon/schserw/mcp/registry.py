@@ -34,6 +34,7 @@ so application code can import it unconditionally.
 import contextvars
 import inspect
 import logging
+import threading
 
 from django.conf import settings
 from fastmcp import FastMCP
@@ -42,6 +43,7 @@ logger = logging.getLogger(__name__)
 
 _server: FastMCP | None = None
 _initialized = False
+_init_lock = threading.Lock()
 _pending_tools: list[tuple] = []
 _toolsets: dict[str, type] = {}
 
@@ -102,36 +104,63 @@ def _register_toolset(cls: type) -> None:
 def init() -> None:
     """Create the FastMCP server (if needed) and register all pending tools.
 
-    Idempotent. Called eagerly from the app ``ready()`` hook and lazily from
-    :func:`get_mcp_server`.
+    Idempotent, and safe to call concurrently: the flag check and the
+    initialisation are performed under a lock, so two racing requests cannot
+    build two servers. Called eagerly from the app ``ready()`` hook and lazily
+    from :func:`get_mcp_server`.
     """
     global _server, _initialized
 
     if _initialized:
         return
 
-    if _server is None:
-        _server = _create_server()
+    with _init_lock:
+        if _initialized:
+            return
 
-    for fn, kwargs in _pending_tools:
-        try:
-            _server.add_tool(fn, **_clean_kwargs(kwargs))
-        except Exception:
-            logger.exception("Failed to register MCP tool %s", getattr(fn, "__name__", fn))
-    _pending_tools.clear()
+        if _server is None:
+            _server = _create_server()
 
-    for cls in list(_toolsets.values()):
-        _register_toolset(cls)
+        for fn, kwargs in _pending_tools:
+            try:
+                _server.add_tool(fn, **_clean_kwargs(kwargs))
+            except Exception:
+                logger.exception(
+                    "Failed to register MCP tool %s", getattr(fn, "__name__", fn)
+                )
+        _pending_tools.clear()
 
-    _initialized = True
+        for cls in list(_toolsets.values()):
+            _register_toolset(cls)
+
+        _initialized = True
 
 
 def get_mcp_server() -> FastMCP:
     """Return the shared :class:`FastMCP` instance, initializing it if needed."""
     if not _initialized:
         init()
-    assert _server is not None
+    if _server is None:  # pragma: no cover - init() always assigns _server
+        raise RuntimeError("MCP server failed to initialize")
     return _server
+
+
+def get_mcp_low_level_server(server: FastMCP | None = None):
+    """Return the underlying low-level ``mcp.server.Server`` for ``server``.
+
+    ``StreamableHTTPSessionManager`` needs the low-level server, and FastMCP
+    only exposes it as ``_mcp_server``. Confining that private access to this
+    one function keeps it in a single place if FastMCP ever renames it.
+    """
+    server = server if server is not None else get_mcp_server()
+    low_level = getattr(server, "_mcp_server", None)
+    if low_level is None:
+        raise RuntimeError(
+            "FastMCP no longer exposes its low-level server as "
+            "'_mcp_server'; update pytigon.schserw.mcp.registry."
+            "get_mcp_low_level_server()"
+        )
+    return low_level
 
 
 def tool(name=None, description=None, **kwargs):
@@ -160,7 +189,9 @@ class _ToolsetMeta(type):
     def __init__(cls, what, bases, namespace):
         super().__init__(what, bases, namespace)
         if bases and any(isinstance(b, _ToolsetMeta) for b in bases):
-            _toolsets[cls.__name__] = cls
+            # Key by qualified name: two toolsets with the same class name in
+            # different modules are distinct toolsets, not a collision.
+            _toolsets[f"{cls.__module__}.{cls.__qualname__}"] = cls
             if _initialized:
                 _register_toolset(cls)
 
