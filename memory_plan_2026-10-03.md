@@ -636,3 +636,50 @@ the ones introduced here resolve. Three names that do not exist are all
 and `pytigon.py:384 wx.outputWindowClass` / `:1588 wx.pseudoimport` (the latter
 `hasattr`-guarded). An earlier regex-based pass reported ~20 false positives from
 submodules and string literals, so only the AST result is meaningful.
+
+## Correction: `calculate_sizes` dereferences the grid before it exists (pre-existing)
+
+Reported as `AttributeError: 'NoneType' object has no attribute
+'GetDefaultRowSize'`, logged by the parser as `Error handling end tag <table>`,
+which drops the whole element.
+
+**This is not a regression from this work.** `git diff d4e155c HEAD --
+gridtable_from_html_table.py` shows the commit never touched `calculate_sizes`,
+and at `d4e155c` (the commit before this work) `PageData.__init__` already ended
+with `if first_page: self.calculate_sizes(titles, 0, first_page)`.
+
+Root cause - an ordering problem in `guictrl/grids.py`:
+
+```python
+        if tdata:
+            table = SimpleDataTable(self, tdata)   # line 62  -> PageData.__init__
+            ...
+        self.grid = grid.SchTableGrid(             # line 68  <- grid exists only here
+```
+
+The table's data source is constructed **six lines before** the grid widget is
+assigned, so `self.parent.grid` is still `None` inside `calculate_sizes`. It only
+triggers when `row_h` is non-empty, i.e. when some cell's text contains a newline
+(`h = row[i].data.count("\n")`), which is why most tables were unaffected.
+
+Both widget calls are now guarded, and the lookup is hoisted so the first branch
+gets the same protection:
+
+```python
+        grid = getattr(self.parent, "grid", None)
+
+        if refresh_if_changed and changed and grid is not None:
+            grid.set_col_width(self.sizes)
+
+        if row_h and grid is not None:
+            default_h = grid.GetDefaultRowSize()
+            ...
+```
+
+The computed `self.sizes` is unaffected, and the paint path is unchanged: a test
+asserts that with a grid present both `set_col_width` and `SetRowSize` are still
+called, which is what the P2-7 row-index fix depends on.
+
+**Verified:** the reported chain (`SimpleDataTable` -> `init_data` -> `PageData`,
+with `grid = None` and newline-bearing cells) raised exactly the reported error
+before the change and succeeds after it.
