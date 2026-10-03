@@ -22,6 +22,7 @@ import contextlib
 import json
 import logging
 import posixpath
+import weakref
 
 from asgiref.sync import sync_to_async
 from django.conf import settings
@@ -258,7 +259,13 @@ async def _unauthorized(send, message="Unauthorized"):
 # around each call) made resumable sessions and SSE streams impossible whenever
 # DJANGO_MCP_STATELESS was False. Keyed by event loop because the ASGI server
 # may run more than one (e.g. daphne + granian in the same process).
-_session_managers: dict[asyncio.AbstractEventLoop, tuple] = {}
+_session_managers: "weakref.WeakKeyDictionary[asyncio.AbstractEventLoop, tuple]" = (
+    weakref.WeakKeyDictionary()
+)
+# The exit stack must outlive the loop that owns it, so it cannot live only in
+# the weak dict above; this list is bounded by the number of event loops the
+# process has ever run, which is 1 in production.
+_session_manager_keepalive: list[tuple] = []
 _session_manager_lock = asyncio.Lock()
 
 
@@ -291,6 +298,7 @@ async def get_session_manager() -> StreamableHTTPSessionManager:
         stack = contextlib.AsyncExitStack()
         await stack.enter_async_context(manager.run())
         _session_managers[loop] = (stack, manager)
+        _session_manager_keepalive.append((stack, manager))
         logger.info("MCP session manager started (stateless=%s)", manager.stateless)
         return manager
 

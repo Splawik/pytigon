@@ -64,6 +64,8 @@ class DefaultCommandHandler(CommandHandler):
 
             # Initialize project paths if needed
             ret = self._init_prj_path(paths, app)
+            if ret:
+                app = ret[0]
 
             # Check if running with pywebview
             if "--pywebview" in sys.argv:
@@ -122,7 +124,10 @@ class DefaultCommandHandler(CommandHandler):
             from pytigon.pytigon_request import init, request
 
             # Get app configuration
-            conf = self._get_app_conf(os.path.join(paths.get("PRJ_PATH", ""), argv[1]))
+            # `app`, not argv[1]: for "ptig --pywebview myapp" argv[1] is the flag itself,
+            # which built "<PRJ_PATH>/--pywebview/install.ini" and silently lost
+            # the app title.
+            conf = self._get_app_conf(os.path.join(paths.get("PRJ_PATH", ""), app))
 
             # Load index.html
             index_path = os.path.join(paths.get("STATIC_PATH", ""), "pywebview", "index.html")

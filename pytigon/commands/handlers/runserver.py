@@ -66,18 +66,20 @@ class RunServerCommandHandler(CommandHandler):
 
                 # Parse listen address and port
                 listen = None
-                port = "8000"
-                address = "0.0.0.0"
+                port = _PORT_DEFAULT
+                address = _ADDRESS_DEFAULT
                 workers = None
 
                 for item in argv[2:]:
                     if item.startswith("--listen="):
-                        listen = item.split("=")[1]
+                        listen = item.partition("=")[2]
                         if ":" in listen:
-                            address, port = listen.split(":")
+                            # rpartition so bracketed IPv6 ("[::1]:8000") splits
+                            # into address="[::1]" and port="8000".
+                            address, _, port = listen.rpartition(":")
                         else:
                             address = listen
-                            port = "8000"
+                            port = _PORT_DEFAULT
                         argv.remove(item)
                         break
 
@@ -133,22 +135,20 @@ class RunServerCommandHandler(CommandHandler):
             if wsgi:
                 cli_options = ["--listen", listen]
             else:
-                target_address = address
-                target_port = port
                 if "-p" not in argv and "--port" not in argv:
                     cli_options += ["-p", port]
                 if "-b" not in argv and "--bind" not in argv:
                     cli_options += ["-b", address]
-            if ":" in listen:
-                target_address, target_port = listen.split(":")
-            else:
-                target_address = listen
-                target_port = "8000"
+            # target_address/target_port already hold the parsed listen value
+            # (see the --listen parsing above); no need to re-split here.
         elif wsgi:
             if "--port" not in argv and "--host" not in argv:
-                cli_options += ["--listen", "0.0.0.0:8000"]
-            target_address = "0.0.0.0"
-            target_port = "8000"
+                cli_options += [
+                    "--listen",
+                    f"{_ADDRESS_DEFAULT}:{_PORT_DEFAULT}",
+                ]
+            target_address = _ADDRESS_DEFAULT
+            target_port = _PORT_DEFAULT
         else:
             if "-p" not in argv and "--port" not in argv:
                 cli_options += ["-p", port]

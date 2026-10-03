@@ -102,7 +102,6 @@ import importlib
 import uuid
 from base64 import b64decode, b64encode
 
-import markdown
 from django import template
 from django.apps import apps
 from django.db.models import Avg, Count, Max, Min, Sum
@@ -208,15 +207,14 @@ def left(value, arg):
 @register.filter(name="truncate")
 def truncate(value, arg):
     """Truncates the value to 'arg' characters, appending '...' if necessary."""
+    retstr = str(value)
     try:
-        retstr = str(value)
-    except Exception:
-        retstr = str(value)
-
-    if len(retstr) > int(arg):
-        return retstr[: int(arg) - 3] + "..."
-    else:
-        return retstr
+        maxlen = int(arg)
+    except (TypeError, ValueError):
+        return value
+    if len(retstr) > maxlen:
+        return retstr[: max(0, maxlen - 3)] + "..."
+    return retstr
 
 
 @register.filter(name="first_elem")
@@ -860,6 +858,12 @@ def wiki_href(value, section="help"):
 def _markdown(value):
     """Converts the value to HTML using Markdown."""
     if value:
+        # Imported here, not at module scope: exfiltry is loaded by every
+        # base template ({% load exfiltry %}), so a module-level import pulled
+        # markdown and its 9 extension modules into every server start even
+        # on deployments that never render markdown.
+        import markdown
+
         return markdown.markdown(
             value,
             extensions=[

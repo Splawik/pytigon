@@ -1436,14 +1436,18 @@ def remove_page_from_href(href):
     if len(x) > 1:
         x2 = x[1].split("&")
         if len(x2) > 1:
+            # Joined with "&" (was ""), which fused the surviving params
+            # together, and matched on the key prefix so that "mypage=5" or
+            # "cp=2" were not stripped as well.
             x3 = []
             for pos in x2:
-                if not "page=" in pos:
+                if not pos.startswith("page="):
                     x3.append(pos)
-            return x[0] + "?" + ("".join(x3))
+            return x[0] + "?" + "&".join(x3)
         else:
-            if "page=" in x2[0]:
-                return x2
+            if x2[0].startswith("page="):
+                # Returned x2 (a list) where callers expect a string.
+                return x[0]
             else:
                 return href
     return href

@@ -20,7 +20,7 @@ import django_select2.urls
 from django.conf import settings
 from django.http import FileResponse, Http404
 from django.urls import URLPattern, include, path, re_path
-from django.urls.resolvers import RegexPattern, RoutePattern
+from django.urls.resolvers import RegexPattern, RoutePattern, URLResolver
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.vary import vary_on_headers
@@ -226,7 +226,7 @@ def _serve_media(request, path, document_root):
         else os.path.normpath(document_root)
     )
     fullpath = os.path.normpath(os.path.join(root, path))
-    if not fullpath.startswith(root):
+    if fullpath != root and not fullpath.startswith(root + os.sep):
         raise Http404("Path traversal detected")
     if os.path.isdir(fullpath):
         raise Http404("Directory indexes are not allowed here.")
@@ -243,7 +243,7 @@ _urlpatterns.append(
         {"document_root": settings.MEDIA_ROOT},
     )
 )
-_urlpatterns.append(re_path(r"site_media_protected/(.*)$", views.site_media_protected))
+_urlpatterns.append(re_path(r"^site_media_protected/(.*)$", views.site_media_protected))
 
 if settings.DEBUG:
     _urlpatterns.append(
@@ -354,8 +354,17 @@ for app in settings.INSTALLED_APPS:
             logger.error("process_main_urls error for app: %s", pos, exc_info=True)
 
 
-def _rebuild_urlpattern(item, old_prefix, new_prefix):
-    """Return a copy of ``item`` with ``old_prefix`` stripped from its route.
+def _route_needs_rebuild(item, prefix):
+    """Tell whether ``item`` has a ``prefix``-relative route."""
+    return (
+        item.pattern is not None
+        and hasattr(item.pattern, "_route")
+        and item.pattern._route.startswith(prefix)
+    )
+
+
+def _rebuild_pattern(old_pattern, old_prefix, new_prefix):
+    """Return a copy of ``old_pattern`` with ``old_prefix`` replaced.
 
     The route has to be corrected *before* the pattern is compiled. Since
     Django 4.2 ``RoutePattern.__init__`` eagerly builds ``self._regex`` from
@@ -363,23 +372,71 @@ def _rebuild_urlpattern(item, old_prefix, new_prefix):
     pattern leaves the compiled regex (and therefore URL resolution) stale.
 
     Args:
-        item: A ``django.urls.URLPattern`` whose route starts with ``old_prefix``.
+        old_pattern: A ``RoutePattern``/``RegexPattern`` whose route starts
+            with ``old_prefix``.
         old_prefix: The prefix to remove from the route string.
         new_prefix: The replacement prefix (empty string here).
 
     Returns:
-        django.urls.URLPattern: A newly built pattern with the corrected route.
+        A newly built pattern with the corrected, compiled route.
     """
-    old_pattern = item.pattern
     route = str(old_pattern._route).replace(old_prefix, new_prefix, 1)
     if isinstance(old_pattern, RegexPattern):
-        new_pattern = RegexPattern(
-            route, name=old_pattern.name, is_endpoint=old_pattern._is_endpoint
+        return RegexPattern(route, name=old_pattern.name, is_endpoint=old_pattern._is_endpoint)
+    return RoutePattern(route, name=old_pattern.name, is_endpoint=old_pattern._is_endpoint)
+
+
+def _rebuild_urlpattern(item, old_prefix, new_prefix):
+    """Return a copy of ``item`` with ``old_prefix`` stripped from its route.
+
+    Both endpoint patterns (``URLPattern``) and nested includes
+    (``URLResolver``, e.g. ``path("../payments/", include("payments.urls"))``)
+    are supported; for a resolver its children are copied over as well so that
+    the already imported urlconf module does not have to be imported again.
+
+    Args:
+        item: A ``django.urls.URLPattern``/``URLResolver`` whose route starts
+            with ``old_prefix``.
+        old_prefix: The prefix to remove from the route string.
+        new_prefix: The replacement prefix (empty string here).
+
+    Returns:
+        django.urls.URLPattern or django.urls.URLResolver: A newly built
+        pattern with the corrected route.
+    """
+    new_pattern = _rebuild_pattern(item.pattern, old_prefix, new_prefix)
+    if isinstance(item, URLResolver):
+        new_item = URLResolver(
+            new_pattern,
+            item.urlconf_name,
+            default_kwargs=item.default_kwargs,
+            app_name=item.app_name,
+            namespace=item.namespace,
         )
-    else:
-        new_pattern = RoutePattern(
-            route, name=old_pattern.name, is_endpoint=old_pattern._is_endpoint
-        )
+        # ``url_patterns`` is a cached_property, so assigning to it keeps the
+        # already resolved children (and rebuilds only the relative ones)
+        # instead of re-importing the urlconf module. A urlconf module that
+        # cannot be imported is left uncached so that Django reports it during
+        # checks/resolution instead of breaking the whole URLConf.
+        try:
+            children = list(item.url_patterns)
+        except Exception:
+            logger.warning(
+                "Cannot read patterns of %s while rebuilding %r",
+                item.urlconf_name,
+                str(item.pattern),
+                exc_info=True,
+            )
+            return new_item
+        new_item.url_patterns = [
+            (
+                _rebuild_urlpattern(child, old_prefix, new_prefix)
+                if _route_needs_rebuild(child, old_prefix)
+                else child
+            )
+            for child in children
+        ]
+        return new_item
     return URLPattern(new_pattern, item.callback, item.default_args, item.name)
 
 
@@ -387,7 +444,7 @@ def _rebuild_urlpattern(item, old_prefix, new_prefix):
 tmp = []
 for item in _urlpatterns:
     if hasattr(item, "url_patterns"):
-        for item2 in item.url_patterns:
+        for item2 in list(item.url_patterns):
             if hasattr(item2.pattern, "_route") and item2.pattern._route.startswith("../"):
                 tmp.append(item2)
                 item.url_patterns.remove(item2)
@@ -411,7 +468,7 @@ if len(settings.PRJS) > 0:
         if test:
             u = path(
                 prj + "/",
-                cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
+                cache_page(settings.CACHE_MIDDLEWARE_SECONDS, cache="pages")(
                     vary_on_headers("User-Agent", "Cookie")(views.start)
                 ),
                 {"start_page": True},
@@ -422,7 +479,7 @@ if len(settings.PRJS) > 0:
     prjs = [(pos, app_description(pos)) for pos in settings.PRJS]
     u = path(
         "",
-        cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
+        cache_page(settings.CACHE_MIDDLEWARE_SECONDS, cache="pages")(
             vary_on_headers("User-Agent", "Cookie")(
                 TemplateView.as_view(template_name="schsys/app/index_all.html")
             )
@@ -441,7 +498,7 @@ else:
     if test:
         u = path(
             "",
-            cache_page(settings.CACHE_MIDDLEWARE_SECONDS)(
+            cache_page(settings.CACHE_MIDDLEWARE_SECONDS, cache="pages")(
                 vary_on_headers("User-Agent", "Cookie")(views.start)
             ),
             name="start",

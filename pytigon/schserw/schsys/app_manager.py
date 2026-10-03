@@ -24,13 +24,22 @@ except (AttributeError, ImportError):
     registry = None
 
 
+@functools.lru_cache(maxsize=256)
+def _resolve_perm_fun(fun_path):
+    """Resolve a 'module.path.func' permission rule once per process.
+
+    Called for every permission-bearing menu item on every render; without
+    the cache each call re-enters importlib (module-name normalisation,
+    sys.modules lookup, import lock) for a path that never changes.
+    """
+    module_path, fun_name = fun_path.rsplit(".", 1)
+    return getattr(importlib.import_module(module_path), fun_name)
+
+
 def has_user_perm(user, perm):
     if "|" in perm:
         arg, fun_path = perm.split("|", 1)
-        module_path, fun_name = fun_path.rsplit(".", 1)
-        module = importlib.import_module(module_path)
-        fun = getattr(module, fun_name)
-        return fun(user, arg)
+        return _resolve_perm_fun(fun_path)(user, arg)
 
     else:
         return user.has_perm(perm)
@@ -177,6 +186,17 @@ class AppManager:
 
     def __init__(self, request):
         self.request = request
+        # Per-request memo for get_app_items(). The menu is rendered 5+ times
+        # per page (base0.html calls get_apps_width_perm and
+        # get_app_items_width_perm; desktop_base.html calls get_menu_id), and
+        # every rebuild re-runs each installed app's AdditionalUrls() - which
+        # for schwiki is a full Page.objects.filter(published=True) scan
+        # including the full-HTML content TextField.
+        #
+        # AppManager is constructed exactly once per request, in the context
+        # processor, so this dict cannot outlive the request. All callers treat
+        # the result as read-only.
+        self._app_items = {}
 
     def appname(self):
         """Get the application name from the request path."""
@@ -202,29 +222,31 @@ class AppManager:
 
     def get_apps(self, prj=None):
         ret = []
-        items = self.get_app_items(prj)
-        for item in items:
-            append = True
-            for pos in ret:
-                if pos.app_name == item.app_name:
-                    append = False
-                    break
-            if append:
+        seen = set()
+        for item in self.get_app_items(prj):
+            if item.app_name not in seen:
+                seen.add(item.app_name)
                 ret.append(item.get_app_info())
         return ret
 
     def get_menu_id(self):
-        i = 0
-        apps = self.get_apps_width_perm()
-        for app in apps:
-            if app.app_name == self.appid():
+        appid = self.appid()
+        for i, app in enumerate(self.get_apps_width_perm()):
+            if app.app_name == appid:
                 return i
-            i += 1
         return 0
 
     def get_app_items(self, prj=None):
         if prj is None:
             prj = settings.PRJ_NAME
+        cached = self._app_items.get(prj)
+        if cached is not None:
+            return cached
+        ret = self._build_app_items(prj)
+        self._app_items[prj] = ret
+        return ret
+
+    def _build_app_items(self, prj):
         apps = self._get_apps(prj)
         ret = []
         for app in apps:
@@ -272,19 +294,26 @@ class AppManager:
                             if app_info.module_name == "config":
                                 app_info.module_name = app_info.sys_module_name
 
-                            id = -1
-                            test = 0
-                            i = 0
-                            for pos in ret:
-                                if pos.module_name == app_info.module_name:
-                                    if test == 0:
-                                        id = i
-                                    if pos.app_name == app_info.app_name:
-                                        test = 1
-                                        id = i
-                                i += 1
-                            if id >= 0:
-                                ret.insert(id + 1, app_info)
+                            # Position the new item directly after the
+                            # existing entry it belongs with. The original
+                            # code preferred the LAST exact
+                            # (module_name, app_name) match and otherwise the
+                            # LAST module_name match, so the scan is kept
+                            # exhaustive - breaking out early would change
+                            # the resulting menu order. The locals are
+                            # renamed because the old ones shadowed the
+                            # builtin id and the enclosing urls2 loop var.
+                            insert_at = -1
+                            exact_found = False
+                            for idx, existing in enumerate(ret):
+                                if existing.module_name == app_info.module_name:
+                                    if not exact_found:
+                                        insert_at = idx
+                                    if existing.app_name == app_info.app_name:
+                                        exact_found = True
+                                        insert_at = idx
+                            if insert_at >= 0:
+                                ret.insert(insert_at + 1, app_info)
                             else:
                                 ret.append(app_info)
         return ret
@@ -322,12 +351,12 @@ class AppManager:
                 else:
                     ret.append(item)
             else:
-                if (
-                    len(
-                        Permission.objects.filter(content_type__app_label=item.app_name)
-                    )
-                    == 0
-                ):
+                # .exists(), not len(): __len__ calls _fetch_all(), which
+                # materialises every Permission row for the label just to
+                # compare the result against 0.
+                if not Permission.objects.filter(
+                    content_type__app_label=item.app_name
+                ).exists():
                     if item.right:
                         if has_user_perm(self.request.user, item.right):
                             ret.append(item)
@@ -357,8 +386,8 @@ class AppManager:
         ret = []
 
         if registry:
+            adapter = get_adapter()
             for key, value in registry.provider_map.items():
-                adapter = get_adapter()
                 try:
                     adapter.get_provider(None, key)
                     ret.append((key, value.name, value))

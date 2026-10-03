@@ -91,17 +91,19 @@ if script_path == "":
 else:
     os.chdir(script_path)
 
+# get_full_std_lib() assembles the whole Python-in-JS standard library and is
+# pure in its arguments, so compute it once instead of twice.
+std_lib = pscript.get_full_std_lib(indent=0)
+
 with open("py_runtime.js", "w") as fout:
-    fout.write(pscript.get_full_std_lib(indent=0))
+    fout.write(std_lib)
 
 with open("py_runtime.min.js", "w") as fout:
-    fout.write(jsmin(pscript.get_full_std_lib(indent=0)))
+    fout.write(jsmin(std_lib))
 
 with open("pytigon.js", "w") as fout:
     for file in files:
         with open(file) as fin:
-            # js = pscript.py2js(prepare_python_code(fin.read()), inline_stdlib=False)
-
             error, js = compile(prepare_python_code(fin.read()))
             if error:
                 print("Error in", file)
@@ -117,7 +119,8 @@ with open("pytigon.js") as fin:
         js = fin.read()
         fout.write(jsmin(js))
 
-os.chdir(script_path)
+# No chdir back needed: script_path is always an absolute path (see above), so
+# the os.chdir above always ran and this used to be a no-op repeat of it.
 
 compiled_files = ["pytigon.js", "py_runtime.js", "pytigon.min.js", "py_runtime.min.js"]
 

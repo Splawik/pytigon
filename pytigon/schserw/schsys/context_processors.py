@@ -165,8 +165,8 @@ def get_fragment(request):
     return fragment
 
 
-def client_type(request):
-    if standard_web_browser(request):
+def client_type(request, standard=None):
+    if standard if standard is not None else standard_web_browser(request):
         if test_mobile(request):
             if test_tablet(request):
                 return "tablet"
@@ -178,10 +178,10 @@ def client_type(request):
         return "schweb"
 
 
-def browser_type(request):
+def browser_type(request, standard=None):
     themes = settings.THEMES if hasattr(settings, "THEMES") else ["auto", "auto", "auto"]
 
-    if standard_web_browser(request):
+    if standard if standard is not None else standard_web_browser(request):
         if test_mobile(request):
             if test_tablet(request):
                 if themes[1] == "auto" or not themes[1]:
@@ -298,10 +298,10 @@ def _extract_project_info(request):
     return url_app_base, prj
 
 
-def _extract_browser_info(request):
+def _extract_browser_info(request, standard=None):
     lng = request.LANGUAGE_CODE[:2].lower() if hasattr(request, "LANGUAGE_CODE") else "en"
-    b_type = browser_type(request)
-    c_type = client_type(request)
+    b_type = browser_type(request, standard)
+    c_type = client_type(request, standard)
     x = b_type.split("_")
     b_type = x[0]
     b_type2 = x[1] if len(x) > 1 else "standard"
@@ -342,7 +342,7 @@ def sch_standard(request):
     url_base, app_path = _extract_url_info(rr)
     url_app_base, prj = _extract_project_info(request)
 
-    b_type, b_type2, c_type, d_template, lng = _extract_browser_info(request)
+    b_type, b_type2, c_type, d_template, lng = _extract_browser_info(request, standard)
 
     if settings.GEN_TIME:
         gmt_str = settings.GEN_TIME

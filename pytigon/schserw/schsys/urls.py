@@ -38,8 +38,8 @@ def sch_login(request, *argi, **argv):
     if not path:
         path = make_href("/")
 
-    if not path.startswith("http://127.0.0.2") and not url_has_allowed_host_and_scheme(
-        path, allowed_hosts={request.get_host()}
+    if not url_has_allowed_host_and_scheme(
+        path, allowed_hosts={request.get_host(), "127.0.0.2"}
     ):
         path = make_href("/")
 
@@ -104,11 +104,16 @@ def sch_logout(request):
 
 
 def login_required_for_non_public(view_func):
+    # Built once at decoration time. Calling login_required() inside the
+    # wrapper rebuilt the decorator (two closures + a settings read) on every
+    # single request.
+    protected = login_required(view_func)
+
     def wrapper(request, *args, **kwargs):
         if settings.PUBLIC:
             return view_func(request, *args, **kwargs)
         else:
-            return login_required(view_func)(request, *args, **kwargs)
+            return protected(request, *args, **kwargs)
 
     return wrapper
 

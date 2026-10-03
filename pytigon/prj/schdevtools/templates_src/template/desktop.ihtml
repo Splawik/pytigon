@@ -1,0 +1,73 @@
+
+
+%extends 'template/desktop_base.html'|translate:lang
+
+
+% load exfiltry
+% load exsyntax
+% load bootstrap4
+
+%% js_extrascipts
+    {{block.super}}
+    {% jscript_link 'vue/vue.js' %}
+    
+    {% module_link 'app/schdevtools/js/test_javascript.js' %}
+    {% module_link 'app/schdevtools/js/test_python.js' %}
+    
+    
+
+%% extrastyle
+    {{block.super}}
+    {% css_link 'app/schdevtools/css/style.css' %}
+    {% css_link 'app/schdevtools/css/test_icss.css' %}
+    
+    
+
+%% body_footer_scripts
+    {{block.super}}
+    
+    .<script language='javascript'>var global_vue_bus = new Vue ();</script>
+    {% component 'app/schcomponents/components/handsontable.js' %}
+    {% component 'app/schcomponents/components/leaflet.js' %}
+    {% component 'app/schcomponents/components/pivottable.js' %}
+    {% component 'app/schcomponents/components/txtarea_editor.js' %}
+    {% component 'app/schcomponents/components/video-js.js' %}
+    {% component 'app/schcomponents/components/plotly.js' %}
+    {% component 'app/schcomponents/components/code_editor.js' %}
+    {% component 'app/schcomponents/components/d3.js' %}
+    {% component 'app/schcomponents/components/vs_editor.js' %}
+    {% component 'app/schdevtools/components/test.js' %}
+    {% component 'app/schcomponents/components/summernote.js' %}
+    
+    
+
+%% component_init
+    .var component_init = [ "handsontable", "leaflet", "pivottable", "txtarea_editor", "video-js", "plotly", "code_editor", "d3", "vs_editor", "test", "summernote",  ];  
+
+%% botstrap_css
+    {% css_link 'themes/bootswatch/materia/bootstrap.min.css' %}
+
+%% js_app_init
+    .let db_struct = [ ["devparam", {"keyPath": "key"}] ];
+    .init_db(db_struct);
+    .const devtools_sync = function(run_after) {
+    .    console.log("SYNC!");
+    .    run_after("OK");
+    .}
+    .let sync_struct = [ ['devparam', "{{base_path}}schdevtools/devparam/", devtools_sync], ];
+    .init_sync(sync_struct);
+
+    .function bootstrap_init(elem) {
+    .    //elem.bootstrapMaterialDesign();
+    .};
+
+    .register_fragment_init_fun(bootstrap_init);
+
+    {{ block.super }}
+    
+
+%% logo
+    span class=logo-lg
+        img src={{base_path}}static/favicon.ico,,,style=height:100%;
+        span class=txt3d text-white,,,style=font-size:1rem;
+            .Pytigon - dev tools

@@ -375,7 +375,12 @@ def _build_root_fs():
     try:
         _m.mount("doc", OSFS_EXT(settings.DOC_PATH))
         _m.mount("doc_protected", OSFS_EXT(settings.DOC_PATH_PROTECTED))
+    except Exception:
+        logger.exception("mount error: doc paths not available")
 
+    # Separate try: DOC_PATH lives in an unrelated directory from UPLOAD_PATH,
+    # so a doc-path failure must not silently disable every upload mount.
+    try:
         _m.mount("upload", OSFS_EXT(settings.UPLOAD_PATH))
         _m.mount(
             "filer_public",
@@ -394,7 +399,7 @@ def _build_root_fs():
             OSFS_EXT(os.path.join(settings.UPLOAD_PATH, "filer_private_thumbnails")),
         )
     except Exception:
-        logger.exception("mount error: doc/upload paths not available")
+        logger.exception("mount error: upload paths not available")
 
     if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")):
         if platform_name() == "Windows":
@@ -446,14 +451,32 @@ if platform_name() == "Android":
         CORS_ORIGIN_WHITELIST = ENV("CORS_ORIGIN_WHITELIST_ANDROID", default="").split(",")
 
 try:
-    CACHES = {"default": ENV.cache(default="locmemcache://")}
+    CACHES = {
+        "default": ENV.cache(default="locmemcache://"),
+        # cache_page() folds the query string, User-Agent and Cookie into the
+        # cache key (see urls.py), so the page cache is keyed on
+        # client-controlled data and a crawler can grow it without bound.
+        # Keep it in its own small, hard-capped bucket so it can never eat the
+        # session budget (sessions share the "default" alias via
+        # SESSION_ENGINE = cached_db, whose cap must stay generous).
+        "pages": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "pytigon-pages",
+            "MAX_ENTRIES": 32,
+        },
+    }
     SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"
 except Exception:
     logger.warning("Failed to configure cache from ENV.cache(), using default LocMemCache")
     CACHES = {
         "default": {
             "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
-        }
+        },
+        "pages": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "pytigon-pages",
+            "MAX_ENTRIES": 32,
+        },
     }
     SESSION_ENGINE = "django.contrib.sessions.backends.db"
 

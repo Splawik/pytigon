@@ -1,7 +1,7 @@
 {
   "inputs": {
-    "../../../.cache/aube/virtual-store/moment@2.30.1-c11fc583623b35ab/node_modules/moment/moment.js": {
-      "bytes": 176435,
+    "../../../.cache/aube/virtual-store/moment@2.31.0-3e4a0f4d0d019467/node_modules/moment/moment.js": {
+      "bytes": 183459,
       "imports": [
         {
           "path": "/home/sch/prj/pytigon/frontend/shims.js",
@@ -1588,7 +1588,7 @@
       "bytes": 663,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/moment@2.30.1-c11fc583623b35ab/node_modules/moment/moment.js",
+          "path": "../../../.cache/aube/virtual-store/moment@2.31.0-3e4a0f4d0d019467/node_modules/moment/moment.js",
           "kind": "import-statement",
           "original": "moment"
         },
@@ -1641,7 +1641,7 @@
       ],
       "format": "cjs"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/max.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/max.js": {
       "bytes": 55,
       "imports": [
         {
@@ -1652,7 +1652,7 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/nil.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/nil.js": {
       "bytes": 55,
       "imports": [
         {
@@ -1663,7 +1663,7 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/regex.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/regex.js": {
       "bytes": 171,
       "imports": [
         {
@@ -1674,11 +1674,11 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/validate.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/validate.js": {
       "bytes": 142,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/regex.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/regex.js",
           "kind": "import-statement",
           "original": "./regex.js"
         },
@@ -1690,11 +1690,11 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/parse.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/parse.js": {
       "bytes": 612,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/validate.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/validate.js",
           "kind": "import-statement",
           "original": "./validate.js"
         },
@@ -1706,11 +1706,11 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/stringify.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/stringify.js": {
       "bytes": 1093,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/validate.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/validate.js",
           "kind": "import-statement",
           "original": "./validate.js"
         },
@@ -1722,7 +1722,7 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/rng.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/rng.js": {
       "bytes": 110,
       "imports": [
         {
@@ -1733,16 +1733,16 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v1.js": {
-      "bytes": 2683,
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v1.js": {
+      "bytes": 2776,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/rng.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/rng.js",
           "kind": "import-statement",
           "original": "./rng.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/stringify.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/stringify.js",
           "kind": "import-statement",
           "original": "./stringify.js"
         },
@@ -1754,16 +1754,16 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v1ToV6.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v1ToV6.js": {
       "bytes": 842,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/parse.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/parse.js",
           "kind": "import-statement",
           "original": "./parse.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/stringify.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/stringify.js",
           "kind": "import-statement",
           "original": "./stringify.js"
         },
@@ -1775,7 +1775,7 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/md5.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/md5.js": {
       "bytes": 5774,
       "imports": [
         {
@@ -1786,16 +1786,16 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v35.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v35.js": {
       "bytes": 1503,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/parse.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/parse.js",
           "kind": "import-statement",
           "original": "./parse.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/stringify.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/stringify.js",
           "kind": "import-statement",
           "original": "./stringify.js"
         },
@@ -1807,21 +1807,21 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v3.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v3.js": {
       "bytes": 259,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/md5.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/md5.js",
           "kind": "import-statement",
           "original": "./md5.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v35.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v35.js",
           "kind": "import-statement",
           "original": "./v35.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v35.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v35.js",
           "kind": "import-statement",
           "original": "./v35.js"
         },
@@ -1833,16 +1833,16 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v4.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v4.js": {
       "bytes": 926,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/rng.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/rng.js",
           "kind": "import-statement",
           "original": "./rng.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/stringify.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/stringify.js",
           "kind": "import-statement",
           "original": "./stringify.js"
         },
@@ -1854,7 +1854,7 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/sha1.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/sha1.js": {
       "bytes": 2343,
       "imports": [
         {
@@ -1865,21 +1865,21 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v5.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v5.js": {
       "bytes": 262,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/sha1.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/sha1.js",
           "kind": "import-statement",
           "original": "./sha1.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v35.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v35.js",
           "kind": "import-statement",
           "original": "./v35.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v35.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v35.js",
           "kind": "import-statement",
           "original": "./v35.js"
         },
@@ -1891,21 +1891,21 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v6.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v6.js": {
       "bytes": 630,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/stringify.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/stringify.js",
           "kind": "import-statement",
           "original": "./stringify.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v1.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v1.js",
           "kind": "import-statement",
           "original": "./v1.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v1ToV6.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v1ToV6.js",
           "kind": "import-statement",
           "original": "./v1ToV6.js"
         },
@@ -1917,16 +1917,16 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v6ToV1.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v6ToV1.js": {
       "bytes": 842,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/parse.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/parse.js",
           "kind": "import-statement",
           "original": "./parse.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/stringify.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/stringify.js",
           "kind": "import-statement",
           "original": "./stringify.js"
         },
@@ -1938,16 +1938,16 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v7.js": {
-      "bytes": 2129,
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v7.js": {
+      "bytes": 2144,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/rng.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/rng.js",
           "kind": "import-statement",
           "original": "./rng.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/stringify.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/stringify.js",
           "kind": "import-statement",
           "original": "./stringify.js"
         },
@@ -1959,11 +1959,11 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/version.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/version.js": {
       "bytes": 208,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/validate.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/validate.js",
           "kind": "import-statement",
           "original": "./validate.js"
         },
@@ -1975,76 +1975,76 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/index.js": {
+    "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/index.js": {
       "bytes": 636,
       "imports": [
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/max.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/max.js",
           "kind": "import-statement",
           "original": "./max.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/nil.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/nil.js",
           "kind": "import-statement",
           "original": "./nil.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/parse.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/parse.js",
           "kind": "import-statement",
           "original": "./parse.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/stringify.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/stringify.js",
           "kind": "import-statement",
           "original": "./stringify.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v1.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v1.js",
           "kind": "import-statement",
           "original": "./v1.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v1ToV6.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v1ToV6.js",
           "kind": "import-statement",
           "original": "./v1ToV6.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v3.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v3.js",
           "kind": "import-statement",
           "original": "./v3.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v4.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v4.js",
           "kind": "import-statement",
           "original": "./v4.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v5.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v5.js",
           "kind": "import-statement",
           "original": "./v5.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v6.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v6.js",
           "kind": "import-statement",
           "original": "./v6.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v6ToV1.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v6ToV1.js",
           "kind": "import-statement",
           "original": "./v6ToV1.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v7.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v7.js",
           "kind": "import-statement",
           "original": "./v7.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/validate.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/validate.js",
           "kind": "import-statement",
           "original": "./validate.js"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/version.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/version.js",
           "kind": "import-statement",
           "original": "./version.js"
         },
@@ -2089,8 +2089,8 @@
       ],
       "format": "cjs"
     },
-    "../../../.cache/aube/virtual-store/liquidjs@10.27.0-c2375497bbf66b4c/node_modules/liquidjs/dist/liquid.browser.mjs": {
-      "bytes": 174888,
+    "../../../.cache/aube/virtual-store/liquidjs@10.30.0-480323f548434766/node_modules/liquidjs/dist/liquid.browser.mjs": {
+      "bytes": 182501,
       "imports": [
         {
           "path": "/home/sch/prj/pytigon/frontend/shims.js",
@@ -2112,6 +2112,22 @@
           "path": "../../../.cache/aube/virtual-store/jquery@4.0.0-fb4b8f5c7dc712ec/node_modules/jquery/dist-module/jquery.module.js",
           "kind": "require-call",
           "original": "../../dist-module/jquery.module.js"
+        }
+      ],
+      "format": "cjs"
+    },
+    "../../../.cache/aube/virtual-store/moment@2.30.1-c11fc583623b35ab/node_modules/moment/moment.js": {
+      "bytes": 176435,
+      "imports": [
+        {
+          "path": "/home/sch/prj/pytigon/frontend/shims.js",
+          "kind": "import-statement",
+          "external": true
+        },
+        {
+          "path": "<runtime>",
+          "kind": "import-statement",
+          "external": true
         }
       ],
       "format": "cjs"
@@ -2309,8 +2325,8 @@
         }
       ]
     },
-    "../../../.cache/aube/virtual-store/inputmask@5.0.9-be4bc43222564eef/node_modules/inputmask/dist/inputmask.js": {
-      "bytes": 239733,
+    "../../../.cache/aube/virtual-store/inputmask@5.0.10-a1dc21d37dc24771/node_modules/inputmask/dist/inputmask.js": {
+      "bytes": 254727,
       "imports": [
         {
           "path": "/home/sch/prj/pytigon/frontend/shims.js",
@@ -2320,8 +2336,24 @@
       ],
       "format": "cjs"
     },
-    "../../../.cache/aube/virtual-store/jsonpath-plus@10.4.0-4c05dc62b9909262/node_modules/jsonpath-plus/dist/index-browser-esm.js": {
-      "bytes": 66418,
+    "../../../.cache/aube/virtual-store/inputmask@5.0.10-a1dc21d37dc24771/node_modules/inputmask/dist/inputmask.mjs": {
+      "bytes": 98,
+      "imports": [
+        {
+          "path": "../../../.cache/aube/virtual-store/inputmask@5.0.10-a1dc21d37dc24771/node_modules/inputmask/dist/inputmask.js",
+          "kind": "import-statement",
+          "original": "./inputmask.js"
+        },
+        {
+          "path": "/home/sch/prj/pytigon/frontend/shims.js",
+          "kind": "import-statement",
+          "external": true
+        }
+      ],
+      "format": "esm"
+    },
+    "../../../.cache/aube/virtual-store/jsonpath-plus@11.1.1-a6936d8f29cfe802/node_modules/jsonpath-plus/dist/index-browser-esm.js": {
+      "bytes": 86902,
       "imports": [
         {
           "path": "/home/sch/prj/pytigon/frontend/shims.js",
@@ -2342,8 +2374,8 @@
       ],
       "format": "cjs"
     },
-    "../../../.cache/aube/virtual-store/idiomorph@0.7.4-27f3024390a99a1d/node_modules/idiomorph/dist/idiomorph.esm.js": {
-      "bytes": 49680,
+    "../../../.cache/aube/virtual-store/idiomorph@0.8.0-22b343c58b002e84/node_modules/idiomorph/dist/idiomorph.esm.js": {
+      "bytes": 53363,
       "imports": [
         {
           "path": "/home/sch/prj/pytigon/frontend/shims.js",
@@ -2364,8 +2396,8 @@
       ],
       "format": "esm"
     },
-    "../../../.cache/aube/virtual-store/htmx.org@2.0.10-e411000b253d4d1e/node_modules/htmx.org/dist/htmx.esm.js": {
-      "bytes": 168655,
+    "../../../.cache/aube/virtual-store/htmx.org@2.0.11-59ac156a48894a66/node_modules/htmx.org/dist/htmx.esm.js": {
+      "bytes": 171382,
       "imports": [
         {
           "path": "/home/sch/prj/pytigon/frontend/shims.js",
@@ -2678,12 +2710,12 @@
           "original": "events"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/moment@2.30.1-c11fc583623b35ab/node_modules/moment/moment.js",
+          "path": "../../../.cache/aube/virtual-store/moment@2.31.0-3e4a0f4d0d019467/node_modules/moment/moment.js",
           "kind": "import-statement",
           "original": "moment"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/index.js",
+          "path": "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/index.js",
           "kind": "import-statement",
           "original": "uuid"
         },
@@ -2708,7 +2740,7 @@
           "original": "lz-string"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/liquidjs@10.27.0-c2375497bbf66b4c/node_modules/liquidjs/dist/liquid.browser.mjs",
+          "path": "../../../.cache/aube/virtual-store/liquidjs@10.30.0-480323f548434766/node_modules/liquidjs/dist/liquid.browser.mjs",
           "kind": "import-statement",
           "original": "liquidjs"
         },
@@ -2778,12 +2810,12 @@
           "original": "twbs-pagination"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/inputmask@5.0.9-be4bc43222564eef/node_modules/inputmask/dist/inputmask.js",
+          "path": "../../../.cache/aube/virtual-store/inputmask@5.0.10-a1dc21d37dc24771/node_modules/inputmask/dist/inputmask.mjs",
           "kind": "import-statement",
           "original": "inputmask"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/jsonpath-plus@10.4.0-4c05dc62b9909262/node_modules/jsonpath-plus/dist/index-browser-esm.js",
+          "path": "../../../.cache/aube/virtual-store/jsonpath-plus@11.1.1-a6936d8f29cfe802/node_modules/jsonpath-plus/dist/index-browser-esm.js",
           "kind": "import-statement",
           "original": "jsonpath-plus"
         },
@@ -2808,7 +2840,7 @@
           "original": "unique-id"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/idiomorph@0.7.4-27f3024390a99a1d/node_modules/idiomorph/dist/idiomorph.esm.js",
+          "path": "../../../.cache/aube/virtual-store/idiomorph@0.8.0-22b343c58b002e84/node_modules/idiomorph/dist/idiomorph.esm.js",
           "kind": "import-statement",
           "original": "idiomorph"
         },
@@ -2818,7 +2850,7 @@
           "original": "om-perfect-scrollbar"
         },
         {
-          "path": "../../../.cache/aube/virtual-store/htmx.org@2.0.10-e411000b253d4d1e/node_modules/htmx.org/dist/htmx.esm.js",
+          "path": "../../../.cache/aube/virtual-store/htmx.org@2.0.11-59ac156a48894a66/node_modules/htmx.org/dist/htmx.esm.js",
           "kind": "import-statement",
           "original": "htmx.org"
         },
@@ -2943,14 +2975,14 @@
       "entryPoint": "tmp.js",
       "cssBundle": "../pytigon/static/pytigon-lib-min.css",
       "inputs": {
-        "../../../.cache/aube/virtual-store/moment@2.30.1-c11fc583623b35ab/node_modules/moment/moment.js": {
-          "bytesInOutput": 62270
+        "../../../.cache/aube/virtual-store/moment@2.31.0-3e4a0f4d0d019467/node_modules/moment/moment.js": {
+          "bytesInOutput": 64360
         },
         "../../../.cache/aube/virtual-store/sprintf@0.1.5-e54a48737a87111d/node_modules/sprintf/lib/sprintf.js": {
           "bytesInOutput": 3032
         },
         "../../../.cache/aube/virtual-store/jquery@4.0.0-fb4b8f5c7dc712ec/node_modules/jquery/dist-module/jquery.module.js": {
-          "bytesInOutput": 80665
+          "bytesInOutput": 81414
         },
         "../../../.cache/aube/virtual-store/@popperjs+core@2.11.8-16116221df29bc55/node_modules/@popperjs/core/lib/enums.js": {
           "bytesInOutput": 559
@@ -3133,7 +3165,7 @@
           "bytesInOutput": 2940
         },
         "../../../.cache/aube/virtual-store/sweetalert2@11.26.25-ef4425c63b635ce1/node_modules/sweetalert2/dist/sweetalert2.all.js": {
-          "bytesInOutput": 80193
+          "bytesInOutput": 80197
         },
         "shims.js": {
           "bytesInOutput": 422
@@ -3150,11 +3182,14 @@
         "../../../.cache/aube/virtual-store/jquery@4.0.0-fb4b8f5c7dc712ec/node_modules/jquery/dist/wrappers/jquery.bundler-require-wrapper.js": {
           "bytesInOutput": 83
         },
+        "../../../.cache/aube/virtual-store/moment@2.30.1-c11fc583623b35ab/node_modules/moment/moment.js": {
+          "bytesInOutput": 62734
+        },
         "../../../.cache/aube/virtual-store/daterangepicker@3.1.0-1f45032e5b3b7f35/node_modules/daterangepicker/daterangepicker.js": {
           "bytesInOutput": 32561
         },
         "../../../.cache/aube/virtual-store/jquery@3.7.1-9a3cb84e56227979/node_modules/jquery/dist/jquery.js": {
-          "bytesInOutput": 91215
+          "bytesInOutput": 91420
         },
         "../../../.cache/aube/virtual-store/select2@4.1.0-c171d8f9d9537d4b/node_modules/select2/dist/js/select2.js": {
           "bytesInOutput": 77606
@@ -3186,8 +3221,8 @@
         "../../../.cache/aube/virtual-store/twbs-pagination@1.4.2-004e6d1386087647/node_modules/twbs-pagination/jquery.twbsPagination.js": {
           "bytesInOutput": 6363
         },
-        "../../../.cache/aube/virtual-store/inputmask@5.0.9-be4bc43222564eef/node_modules/inputmask/dist/inputmask.js": {
-          "bytesInOutput": 124292
+        "../../../.cache/aube/virtual-store/inputmask@5.0.10-a1dc21d37dc24771/node_modules/inputmask/dist/inputmask.js": {
+          "bytesInOutput": 106587
         },
         "../../../.cache/aube/virtual-store/unique-id@1.0.2-8d144e8af77bd6fe/node_modules/unique-id/unique-id.js": {
           "bytesInOutput": 279
@@ -3208,19 +3243,19 @@
           "bytesInOutput": 76499
         },
         "tmp.js": {
-          "bytesInOutput": 1324
+          "bytesInOutput": 1304
         },
-        "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/index.js": {
+        "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/index.js": {
           "bytesInOutput": 5
         },
-        "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/stringify.js": {
+        "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/stringify.js": {
           "bytesInOutput": 315
         },
-        "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/rng.js": {
+        "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/rng.js": {
           "bytesInOutput": 79
         },
-        "../../../.cache/aube/virtual-store/uuid@14.0.0-1a21aecf6e42a982/node_modules/uuid/dist/v7.js": {
-          "bytesInOutput": 919
+        "../../../.cache/aube/virtual-store/uuid@14.0.2-f2ebcbe6b6aadd8f/node_modules/uuid/dist/v7.js": {
+          "bytesInOutput": 923
         },
         "../../../.cache/aube/virtual-store/tether@3.0.2-2454bc222d5d774b/node_modules/tether/dist/js/tether.esm.js": {
           "bytesInOutput": 22439
@@ -3228,23 +3263,26 @@
         "../../../.cache/aube/virtual-store/js-cookie@3.0.8-ac852849999202b8/node_modules/js-cookie/dist/js.cookie.mjs": {
           "bytesInOutput": 1419
         },
-        "../../../.cache/aube/virtual-store/liquidjs@10.27.0-c2375497bbf66b4c/node_modules/liquidjs/dist/liquid.browser.mjs": {
-          "bytesInOutput": 77684
+        "../../../.cache/aube/virtual-store/liquidjs@10.30.0-480323f548434766/node_modules/liquidjs/dist/liquid.browser.mjs": {
+          "bytesInOutput": 80970
         },
         "../../../.cache/aube/virtual-store/bootstrap-table@1.27.3_jquery@4.0.0_-3a90d43a4efe8ea2/node_modules/bootstrap-table/dist/bootstrap-table.min.js": {
-          "bytesInOutput": 174576
+          "bytesInOutput": 175074
         },
-        "../../../.cache/aube/virtual-store/jsonpath-plus@10.4.0-4c05dc62b9909262/node_modules/jsonpath-plus/dist/index-browser-esm.js": {
-          "bytesInOutput": 25617
+        "../../../.cache/aube/virtual-store/inputmask@5.0.10-a1dc21d37dc24771/node_modules/inputmask/dist/inputmask.mjs": {
+          "bytesInOutput": 63
         },
-        "../../../.cache/aube/virtual-store/idiomorph@0.7.4-27f3024390a99a1d/node_modules/idiomorph/dist/idiomorph.esm.js": {
-          "bytesInOutput": 9084
+        "../../../.cache/aube/virtual-store/jsonpath-plus@11.1.1-a6936d8f29cfe802/node_modules/jsonpath-plus/dist/index-browser-esm.js": {
+          "bytesInOutput": 27628
+        },
+        "../../../.cache/aube/virtual-store/idiomorph@0.8.0-22b343c58b002e84/node_modules/idiomorph/dist/idiomorph.esm.js": {
+          "bytesInOutput": 9938
         },
         "../../../.cache/aube/virtual-store/om-perfect-scrollbar@2.0.1-dadd45479279fed6/node_modules/om-perfect-scrollbar/dist/perfect-scrollbar.esm.js": {
           "bytesInOutput": 18896
         },
-        "../../../.cache/aube/virtual-store/htmx.org@2.0.10-e411000b253d4d1e/node_modules/htmx.org/dist/htmx.esm.js": {
-          "bytesInOutput": 60454
+        "../../../.cache/aube/virtual-store/htmx.org@2.0.11-59ac156a48894a66/node_modules/htmx.org/dist/htmx.esm.js": {
+          "bytesInOutput": 61642
         },
         "not_node_modules/pytigon_lib_init.js": {
           "bytesInOutput": 147
@@ -3295,7 +3333,7 @@
           "bytesInOutput": 0
         }
       },
-      "bytes": 1272691
+      "bytes": 1328679
     },
     "../pytigon/static/pytigon-lib-min.css": {
       "imports": [

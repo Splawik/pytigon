@@ -297,7 +297,7 @@ class GlobalBus:
         if state:
             state2 = dict(state)
             for key, value in state2.items():
-                if not (key in self.state and self.state[key] != value):
+                if key not in self.state or self.state[key] != value:
                     self.state[key] = value
                     self.emit(key, value)
 

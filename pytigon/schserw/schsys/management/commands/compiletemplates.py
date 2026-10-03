@@ -31,7 +31,7 @@ class Command(BaseCommand):
         for template_path in template_paths:
             self.stdout.write(template_path)
             if os.path.exists(template_path):
-                self.stdout.write("TEMPLATE FOLDER: %s", template_path)
+                self.stdout.write(f"TEMPLATE FOLDER: {template_path}")
                 for root, dirs, files in os.walk(template_path):
                     for f in files:
                         if f.endswith(".ihtml"):
