@@ -95,6 +95,8 @@ else:
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.locale.LocaleMiddleware",
         "django.contrib.auth.middleware.RemoteUserMiddleware",
+        "pytigon.schserw.schmiddleware.app_access.AppAccessMiddleware",
+        "pytigon.schserw.schmiddleware.default_admin.DefaultAdminGuardMiddleware",
         "django.middleware.csp.ContentSecurityPolicyMiddleware",
     ]
 

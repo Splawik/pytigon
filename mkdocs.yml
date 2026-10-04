@@ -4,7 +4,7 @@ site_author: Sławomir Chołaj
 site_url: ""
 repo_name: pytigon
 repo_url: ""
-copyright: "&copy; 2025–2026 Sławomir Chołaj &middot; LGPL 3.0"
+copyright: "&copy; 2025–2026 Sławomir Chołaj &middot; LGPL-2.1"
 theme:
   name: material
   language: en

@@ -29,9 +29,9 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install "mypy>=1.0" "ruff>=0.5"
 
-      # Gating: syntax errors and undefined names. Kept green on purpose.
+      # Gating: syntax errors, undefined names and unused imports.
       - name: Ruff (gating)
-        run: ruff check . --select E9,F63,F7,F82
+        run: ruff check . --select E9,F63,F7,F82,F401
 
       # Informational: the full rule set still has open findings. Narrow the
       # gating step above as they are fixed, then drop this one.
@@ -52,7 +52,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.12"]
+        python-version: ["3.12", "3.13", "3.14"]
     steps:
       - uses: actions/checkout@v4
 
@@ -73,7 +73,8 @@ jobs:
           python -m pytest tests/ -q \
             --cov=pytigon \
             --cov-report=xml:coverage.xml \
-            --cov-report=term-missing:skip-covered
+            --cov-report=term-missing:skip-covered \
+            --cov-fail-under=32
 
       - name: Upload coverage
         if: always()

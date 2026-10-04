@@ -124,6 +124,7 @@ urlpatterns = [
     path("do_login/", sch_login),
     path("do_logout/", login_required(sch_logout)),
     path("change_password/", login_required(views.change_password)),
+    path("password_change/", login_required(views.password_change_required)),
     path(
         "change_profile_variant/<str:variant_name>/",
         login_required(views.change_profile_variant),

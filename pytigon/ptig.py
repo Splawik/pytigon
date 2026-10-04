@@ -7,7 +7,7 @@ It supports project initialization, running scripts, managing web servers,
 and other administrative tasks.
 
 author: Sławomir Chołaj (slawomir.cholaj@gmail.com)
-license: LGPL 3.0
+license: LGPL-2.1
 """
 
 import os

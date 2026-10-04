@@ -83,7 +83,6 @@ static_src/sch/__javascript__/
 tools/pytigon.xml
 .aider*
 kilo.json
-.pre-commit-config.yaml
 .kilo/**
 .*/
 !.github/
@@ -94,3 +93,20 @@ todo.md
 # Captured program output accidentally committed
 /cmd.txt
 err.txt
+
+# Secrets and local configuration (never commit)
+env
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+id_rsa*
+*.sqlite3
+*.db
+
+# Test/coverage artifacts
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/

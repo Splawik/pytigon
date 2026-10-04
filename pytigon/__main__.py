@@ -2,7 +2,7 @@
 """Pytigon entry point for ``python -m pytigon``.
 
 author: Sławomir Chołaj (slawomir.cholaj@gmail.com)
-license: LGPL 3.0
+license: LGPL-2.1
 """
 
 import os

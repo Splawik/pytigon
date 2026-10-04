@@ -33,29 +33,51 @@ Pytigon brings together the prowess of several cutting-edge technologies: Python
 Installation
 -----------
 
-1. **Windows:**
+Pytigon is published as several packages that build on each other. Pick the one
+that matches what you want to run:
 
-   Simply download and execute the installation program. It comes bundled with a Python environment and all necessary libraries.
+| Package | What it is | Install it when |
+|---|---|---|
+| `pytigon-batteries` | The runtime package set for Pytigon as a **web server** (Django, Channels, document and PDF tooling, standard projects). | You want to serve Pytigon, for example in Docker. **Start here.** |
+| `pytigon-gui` | The **desktop application** (`ptigw`): a wxPython frontend with its own embedded Django server. | You want the graphical application. It installs `pytigon-batteries` for you. |
+| `pytigon` | The **base framework**: the Django project, the `ptig` command and the ASGI/WSGI entry points. It is a library, not a runnable install. | You build a custom, reduced system, or embed Pytigon in your own application. |
+| `pytigon-standard-prj` | The **standard projects and applications** — the blocks Pytigon is assembled from. | Never install it directly; `pytigon-batteries` and `pytigon-gui` pull it in. |
+| `pytigon-lib` | The shared helper library used by everything above. | Never install it directly. |
 
-   or run command:
+### Web server (servers, Docker)
 
-      ```
-      pip install pytigon-gui
-      ```
+```
+pip install pytigon-batteries
+ptig --help
+```
 
-2. **Linux:**
+### Desktop application
 
-   run command
-      
-      ```
-      pip install pytigon-gui
-      ```
+```
+pip install pytigon-gui
+ptigw
+```
 
-   and install wxPython by following the guide at [`https://wiki.wxpython.org/How to install wxPython`](https://wiki.wxpython.org/How%20to%20install%20wxPython).
+On Linux, install wxPython following the guide at
+[`https://wiki.wxpython.org/How to install wxPython`](https://wiki.wxpython.org/How%20to%20install%20wxPython).
 
-   or run command
+On Windows, simply download and execute the installation program. It comes
+bundled with a Python environment and all necessary libraries. Alternatively
+run `pip install pytigon-gui`.
 
-      ```
-      snap install --beta ptig
-      ```
+A Snap package is also available:
+
+```
+snap install --beta ptig
+```
+
+### Base framework only
+
+```
+pip install pytigon
+```
+
+This gives you the framework and the `ptig` command, but no project to run.
+Commands that need a project will tell you to install `pytigon-batteries`
+(web server) or `pytigon-gui` (desktop application).
 

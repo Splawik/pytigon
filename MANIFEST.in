@@ -1,6 +1,27 @@
 global-exclude __pycache__
 global-exclude *.py[cod]
+global-exclude .ruff_cache
+global-exclude .mypy_cache
+global-exclude .pytest_cache
 
 recursive-include pytigon/templates *
+recursive-include pytigon/templates_src *
 recursive-include pytigon/static *
+recursive-include pytigon/static_src *
+recursive-include pytigon/schserw/locale *.po *.mo
+recursive-include pytigon/appdata/plugins_src *
+recursive-include pytigon/appdata/icss *.icss
+recursive-include pytigon/prj *.ihtml *.html *.py *.json
+
 include pytigon/py.typed
+include LICENSE
+include NOTICE
+include THIRD_PARTY_LICENSES.md
+
+# Tool caches are nested inside packaged trees (pytigon/static, pytigon/prj),
+# so the excludes have to be repeated at the end to win over the
+# recursive-include patterns above.
+recursive-exclude * __pycache__
+recursive-exclude * *.py[cod]
+recursive-exclude pytigon/static/.ruff_cache *
+recursive-exclude pytigon/prj/.ruff_cache *

@@ -1,22 +1,22 @@
 [build-system]
-requires = ["setuptools>=64", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "pytigon"
-version = "0.261002"
+version = "0.261004"
 description = "Pytigon - Application framework based on Django and wxWidgets"
 authors = [
     {name = "Sławomir Chołaj", email = "slawomir.cholaj@gmail.com"},
 ]
-license = {text = "LGPLv3"}
+license = "LGPL-2.1-or-later"
+license-files = ["LICENSE", "NOTICE", "THIRD_PARTY_LICENSES.md"]
 readme = "README.md"
 requires-python = ">=3.12"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Web Environment",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.12",
@@ -31,7 +31,10 @@ classifiers = [
 dependencies = [
     "django>=6.0",
     "fsspec>=2024.0",
-    "pytigon-lib",
+    # The base framework. This package on its own is not a runnable install:
+    # use pytigon-batteries (web server) or pytigon-gui (desktop application),
+    # both of which pull in pytigon-standard-prj.
+    "pytigon-lib>=0.261002,<0.27",
     "asgiref>=3.0",
     "polib>=1.2",
     "whitenoise>=6.0",
@@ -56,6 +59,8 @@ dev = [
     "pytest>=7.0",
     "pytest-django>=4.0",
     "pytest-cov>=4.0",
+    "pytest-timeout>=2.0",
+    "pre-commit>=3.0",
     "ruff>=0.5",
     "mypy>=1.0",
     "invoke>=2.0",
@@ -148,6 +153,7 @@ warn_unused_ignores = false
 minversion = "7.0"
 pythonpath = ["."]
 testpaths = ["tests"]
+timeout = 300
 norecursedirs = [
     ".kilo",
     ".git",
@@ -172,3 +178,8 @@ omit = [
     "pytigon/prj/*",
     "*/migrations/*",
 ]
+
+[tool.coverage.report]
+# Measured ~35% for the current suite. Raise as coverage grows; this floor only
+# prevents silent regressions.
+fail_under = 32

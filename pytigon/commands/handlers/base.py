@@ -165,7 +165,15 @@ class CommandHandler(ABC):
 
         self.init_project(app, paths)
 
-        os.chdir(os.path.join(prj_path, app))
+        project_dir = os.path.join(prj_path, app)
+        if not os.path.isdir(project_dir):
+            from pytigon_lib.schtools.install_init import MISSING_PROJECTS_HINT
+
+            raise FileNotFoundError(
+                f"Project directory for {app!r} does not exist: {project_dir}\n\n"
+                f"{MISSING_PROJECTS_HINT}"
+            )
+        os.chdir(project_dir)
 
         return app, prj_path, paths
 

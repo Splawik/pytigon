@@ -73,6 +73,62 @@ if sys.argv and (sys.argv[0].endswith("pytigon") or sys.argv[0].endswith("ptig")
 
 PUBLIC = True if ENV("PUBLIC") else False
 
+# The bootstrap administrator is a documented default, not a secret: a local
+# desktop installation must be usable without a login, and an application
+# package brings data owned by this known account. Security is therefore
+# enforced at the network boundary (see pytigon.schserw.schsys.default_admin):
+# a production web server must change this password and is warned loudly if it
+# does not.
+DEFAULT_ADMIN_USERNAME = ENV("AUTOUSERNAME")
+DEFAULT_ADMIN_PASSWORD = ENV("AUTOPASSWORD")
+PYTIGON_STRICT_DEFAULT_ADMIN = True if ENV("PYTIGON_STRICT_DEFAULT_ADMIN") else False
+FORCE_PASSWORD_CHANGE_IN_PRODUCTION = (
+    True if ENV("FORCE_PASSWORD_CHANGE_IN_PRODUCTION") else False
+)
+
+# Applications whose forms always require a staff user (installing a .ptig
+# package executes its installer; the builder clones repositories and restarts
+# the server). Extend with a comma-separated STAFF_ONLY_APPS environment value.
+STAFF_ONLY_APPS = tuple(
+    item.strip()
+    for item in ENV("STAFF_ONLY_APPS", default="schinstall,schbuilder").split(",")
+    if item.strip()
+)
+
+# Applications that are tools rather than end-user features and therefore need
+# an authenticated user (the file manager exposes the whole VFS, including the
+# project and data directories). Relaxed when the site is PUBLIC. Extend with a
+# comma-separated LOGIN_ONLY_APPS environment value.
+LOGIN_ONLY_APPS = tuple(
+    item.strip()
+    for item in ENV("LOGIN_ONLY_APPS", default="schcommander").split(",")
+    if item.strip()
+)
+
+# --- WebSocket authorisation -------------------------------------------
+# Consumers live in the generated projects and cannot be edited there, so the
+# guard is applied in schserw/routing.py while the routes are being built.
+# Every WebSocket needs an authenticated user; the ones below additionally
+# need a staff user (interactive shell, `manage.py`, server control, task and
+# AI connectors), even on a PUBLIC site.
+WEBSOCKET_REQUIRE_AUTH = True if ENV("WEBSOCKET_REQUIRE_AUTH") else False
+WEBSOCKET_STAFF_ONLY = tuple(
+    item.strip()
+    for item in ENV(
+        "WEBSOCKET_STAFF_ONLY",
+        default=(
+            "schcommander/,schbuilder/,schtasks/,schai/,schserverless/,schremote/"
+        ),
+    ).split(",")
+    if item.strip()
+)
+# Endpoints that stay anonymous even when the site is not PUBLIC.
+WEBSOCKET_PUBLIC_PATHS = tuple(
+    item.strip()
+    for item in ENV("WEBSOCKET_PUBLIC_PATHS", default="").split(",")
+    if item.strip()
+)
+
 SHOW_LOGIN_WIN = True
 
 if ENV("SCRIPT_MODE"):
@@ -169,6 +225,15 @@ __all__ = [
     "PRODUCTION_VERSION",
     "PUBLIC",
     "SHOW_LOGIN_WIN",
+    "DEFAULT_ADMIN_USERNAME",
+    "DEFAULT_ADMIN_PASSWORD",
+    "PYTIGON_STRICT_DEFAULT_ADMIN",
+    "FORCE_PASSWORD_CHANGE_IN_PRODUCTION",
+    "STAFF_ONLY_APPS",
+    "LOGIN_ONLY_APPS",
+    "WEBSOCKET_REQUIRE_AUTH",
+    "WEBSOCKET_STAFF_ONLY",
+    "WEBSOCKET_PUBLIC_PATHS",
     "SERW_PATH",
     "DATA_PATH",
     "LOG_PATH",

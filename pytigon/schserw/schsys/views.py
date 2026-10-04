@@ -27,6 +27,7 @@ from django.http import (
     HttpResponseRedirect,
 )
 from django.template.loader import render_to_string
+from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_page
 
 from pytigon_lib.schdjangoext.tools import import_model, make_href
@@ -81,6 +82,51 @@ def change_password(request):
 
     messages.add_message(request, messages.ERROR, "Bad old password")
     return HttpResponseRedirect(make_href("/"))
+
+
+def password_change_required(request):
+    """Render the page that forces a change of the default admin password.
+
+    The regular change-password widget is a modal on normal pages and its
+    endpoint only accepts POST, so the production guard redirects here instead:
+    a GET page that posts to ``/schsys/change_password/``. Without this the
+    guard's redirect would loop between the home page and the POST-only view.
+    """
+    from django.middleware.csrf import get_token
+    from django.utils.html import escape
+
+    action = escape(make_href("/schsys/change_password/"))
+    token = escape(get_token(request))
+    title = escape(str(_("Change password")))
+    heading = escape(str(_("Change the default administrator password")))
+    note = escape(
+        str(
+            _(
+                "This server still uses the well-known default password. "
+                "It must be changed before the application can be used."
+            )
+        )
+    )
+    current = escape(str(_("Current password")))
+    new = escape(str(_("New password")))
+    confirm = escape(str(_("Confirm new password")))
+    button = escape(str(_("Change password")))
+
+    html = f"""<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>{title}</title></head><body>
+<h1>{heading}</h1>
+<p>{note}</p>
+<form method="post" action="{action}">
+<input type="hidden" name="csrfmiddlewaretoken" value="{token}">
+<p><label>{current} <input type="password" name="current_password"
+    autocomplete="current-password" required></label></p>
+<p><label>{new} <input type="password" name="new_password"
+    autocomplete="new-password" required></label></p>
+<p><label>{confirm} <input type="password" name="confirm_password"
+    autocomplete="new-password" required></label></p>
+<p><button type="submit">{button}</button></p>
+</form></body></html>"""
+    return HttpResponse(html)
 
 
 def dstatic(request, script_name):

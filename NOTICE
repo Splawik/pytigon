@@ -1,0 +1,16 @@
+Pytigon
+Copyright (C) Sławomir Chołaj and contributors
+
+This product includes software developed by third parties.
+
+Pytigon is licensed under the GNU Lesser General Public License v2.1
+(or, at your option, any later version). See LICENSE.
+
+Bundled JavaScript libraries (Bootstrap, jQuery, Select2, PouchDB, htmx,
+SweetAlert2 and others) are MIT, Apache-2.0, BSD or 0BSD licensed. Icon
+and font assets include Bootstrap Icons (MIT), a public-domain icon
+theme, Fork Awesome (MIT / CC-BY-3.0 / SIL OFL 1.1) and DejaVu fonts
+(Bitstream Vera / Arev).
+
+The complete list of third-party components and their license texts is
+in THIRD_PARTY_LICENSES.md.
