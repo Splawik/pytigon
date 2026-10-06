@@ -15,4 +15,4 @@ author: Sławomir Chołaj (slawomir.cholaj@gmail.com)
 license: LGPL-2.1
 """
 
-__version__ = "0.261004"
+__version__ = "0.261006"

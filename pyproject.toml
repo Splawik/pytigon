@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pytigon"
-version = "0.261004"
+version = "0.261006"
 description = "Pytigon - Application framework based on Django and wxWidgets"
 authors = [
     {name = "Sławomir Chołaj", email = "slawomir.cholaj@gmail.com"},
@@ -22,6 +22,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Topic :: Internet :: WWW/HTTP :: Dynamic Content",
     "Topic :: Internet :: WWW/HTTP :: WSGI :: Application",
@@ -34,7 +35,7 @@ dependencies = [
     # The base framework. This package on its own is not a runnable install:
     # use pytigon-batteries (web server) or pytigon-gui (desktop application),
     # both of which pull in pytigon-standard-prj.
-    "pytigon-lib>=0.261002,<0.27",
+    "pytigon-lib",
     "asgiref>=3.0",
     "polib>=1.2",
     "whitenoise>=6.0",
