@@ -22,13 +22,15 @@ _EXEMPT_SUFFIXES = (
     "/schsys/do_login/",
     "/schsys/do_logout/",
     "/schsys/change_password/",
-    "/schsys/password_change/",
+    "/schsys/force_auto_password_change/",
 )
 
 _BLOCKED_BODY = (
     "Server refused to start: the default administrator password has not been "
     "changed. See the server log for instructions."
 )
+
+_CHECKED = False
 
 
 class DefaultAdminGuardMiddleware:
@@ -54,18 +56,22 @@ class DefaultAdminGuardMiddleware:
             The downstream response, a redirect to the password-change page, or
             a 503 when strict mode blocked the server.
         """
+        global _CHECKED
+        if _CHECKED:
+            return self.get_response(request)
+        if not request.user or not request.user.is_authenticated:
+            return self.get_response(request)
         if not self._startup_checked:
             self._startup_checked = True
             self._blocked = default_admin.startup_check() == "blocked"
-
         if self._blocked:
             return HttpResponse(_BLOCKED_BODY, status=503)
-
         if self._should_force_change(request):
             from pytigon_lib.schdjangoext.tools import make_href
 
-            return HttpResponseRedirect(make_href("/schsys/password_change/"))
-
+            return HttpResponseRedirect(
+                make_href("/schsys/force_auto_password_change/")
+            )
         return self.get_response(request)
 
     def _should_force_change(self, request) -> bool:
@@ -74,19 +80,22 @@ class DefaultAdminGuardMiddleware:
             return False
         if not default_admin.is_production_webserver():
             return False
-
         user = getattr(request, "user", None)
         if user is None or not user.is_authenticated:
             return False
         if self._is_exempt(getattr(request, "path", "")):
             return False
-
-        return default_admin.user_has_default_password(user)
+        check = default_admin.user_has_default_password(user)
+        if not check:
+            _CHECKED = True
+        return check
 
     @staticmethod
     def _is_exempt(path: str) -> bool:
         """Return whether *path* must be served even during a forced change."""
         if path.endswith(_EXEMPT_SUFFIXES):
+            return True
+        if path.endswith(".js") or path.endswith(".css"):
             return True
         for prefix in (
             getattr(settings, "STATIC_URL", None),

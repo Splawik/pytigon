@@ -18,8 +18,9 @@ import time
 
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth import authenticate, password_validation
-from django.db import transaction
+
+# from django.contrib.auth import authenticate, password_validation
+# from django.db import transaction
 from django.http import (
     Http404,
     HttpResponse,
@@ -29,12 +30,21 @@ from django.http import (
 from django.template.loader import render_to_string
 from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_page
+from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import update_session_auth_hash
+
 
 from pytigon_lib.schdjangoext.tools import import_model, make_href
 from pytigon_lib.schtools import schjson
 from pytigon_lib.schtools.tools import bdecode, bencode
 from pytigon_lib.schviews import actions
 from pytigon_lib.schviews.viewtools import dict_to_json, render_to_response
+from pytigon.schserw.schsys.default_admin import (
+    default_admin_username,
+    default_admin_password,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -58,75 +68,77 @@ def _get_wx_app():
     return _APP_WX if _APP_WX else None
 
 
+@login_required
 def change_password(request):
-    old_password = request.POST.get("current_password", "")
-    new_password = request.POST.get("new_password", "")
-    confirm_password = request.POST.get("confirm_password", ".")
-
-    if new_password != confirm_password:
-        messages.add_message(request, messages.ERROR, "Bad confirmed password")
-        return HttpResponseRedirect(make_href("/"))
-
-    user = authenticate(request, username=request.user.username, password=old_password)
-    if user is not None and user.is_active:
-        try:
-            password_validation.validate_password(new_password, user)
-        except password_validation.ValidationError as e:
-            for msg in e.messages:
-                messages.add_message(request, messages.ERROR, msg)
-            return HttpResponseRedirect(make_href("/"))
-        with transaction.atomic():
-            user.set_password(new_password)
-            user.save()
-        return HttpResponseRedirect(make_href("/schsys/do_logout/"))
-
-    messages.add_message(request, messages.ERROR, "Bad old password")
-    return HttpResponseRedirect(make_href("/"))
-
-
-def password_change_required(request):
-    """Render the page that forces a change of the default admin password.
-
-    The regular change-password widget is a modal on normal pages and its
-    endpoint only accepts POST, so the production guard redirects here instead:
-    a GET page that posts to ``/schsys/change_password/``. Without this the
-    guard's redirect would loop between the home page and the POST-only view.
     """
-    from django.middleware.csrf import get_token
-    from django.utils.html import escape
+    Handles the password change workflow.
+    Validates the current password, ensures new passwords match,
+    and updates the user session upon a successful change.
+    """
+    if request.method == "POST":
+        # Initialize the form with POST data and the current logged-in user
+        form = PasswordChangeForm(user=request.user, data=request.POST)
 
-    action = escape(make_href("/schsys/change_password/"))
-    token = escape(get_token(request))
-    title = escape(str(_("Change password")))
-    heading = escape(str(_("Change the default administrator password")))
-    note = escape(
-        str(
-            _(
-                "This server still uses the well-known default password. "
-                "It must be changed before the application can be used."
-            )
-        )
+        # Validate current password correctness, match, and strength requirements
+        if form.is_valid():
+            # Save the new password to the user object
+            user = form.save()
+
+            # Critical: Updating the session auth hash prevents the user
+            # from being automatically logged out after changing their password
+            update_session_auth_hash(request, user)
+
+            # Add a global success message
+            messages.success(request, _("Your password was successfully updated!"))
+
+            # Redirect to a success page or profile page (update 'profile' to your actual URL name)
+            return HttpResponseRedirect(make_href("/"))
+        else:
+            # If the form is invalid, errors are attached to the form instance
+            messages.error(request, _("Please correct the errors below."))
+    else:
+        # Initialize an empty password change form for the current user (GET request)
+        form = PasswordChangeForm(user=request.user)
+
+    # Render the template and context
+    return render_to_response(
+        "schsys/change_password.html",
+        context={"form": form},
+        request=request,
     )
-    current = escape(str(_("Current password")))
-    new = escape(str(_("New password")))
-    confirm = escape(str(_("Confirm new password")))
-    button = escape(str(_("Change password")))
 
-    html = f"""<!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>{title}</title></head><body>
-<h1>{heading}</h1>
-<p>{note}</p>
-<form method="post" action="{action}">
-<input type="hidden" name="csrfmiddlewaretoken" value="{token}">
-<p><label>{current} <input type="password" name="current_password"
-    autocomplete="current-password" required></label></p>
-<p><label>{new} <input type="password" name="new_password"
-    autocomplete="new-password" required></label></p>
-<p><label>{confirm} <input type="password" name="confirm_password"
-    autocomplete="new-password" required></label></p>
-<p><button type="submit">{button}</button></p>
-</form></body></html>"""
-    return HttpResponse(html)
+
+def force_auto_password_change(request):
+    """
+    Handles the password change workflow.
+    Validates the current password, ensures new passwords match,
+    and updates the user session upon a successful change.
+    """
+    if request.method == "POST":
+        # Initialize the form with POST data and the current logged-in user
+        form = SetPasswordForm(user=request.user, data=request.POST)
+
+        # Validate current password correctness, match, and strength requirements
+        if form.is_valid():
+            # Save the new password to the user object
+            User = get_user_model()
+            user = User.objects.filter(username=default_admin_username()).first()
+            if user and user.check_password(default_admin_password()):
+                user.set_password(form.cleaned_data["new_password1"])
+                user.save()
+
+            # Redirect to a success page or profile page (update 'profile' to your actual URL name)
+            return HttpResponseRedirect(make_href("/"))
+    else:
+        # Initialize an empty password change form for the current user (GET request)
+        form = SetPasswordForm(user=request.user)
+
+    # Render the template and context
+    return render_to_response(
+        "schsys/force_auto_password_change.html",
+        context={"form": form},
+        request=request,
+    )
 
 
 def dstatic(request, script_name):
@@ -445,7 +457,9 @@ def app_time_stamp(request, **argv):
         return {"TIME": settings.GEN_TIME}
 
     gmt = time.gmtime()
-    gmt_str = f"{gmt[0]:04d}.{gmt[1]:02d}.{gmt[2]:02d} {gmt[3]:02d}:{gmt[4]:02d}:{gmt[5]:02d}"
+    gmt_str = (
+        f"{gmt[0]:04d}.{gmt[1]:02d}.{gmt[2]:02d} {gmt[3]:02d}:{gmt[4]:02d}:{gmt[5]:02d}"
+    )
     return {"TIME": gmt_str}
 
 

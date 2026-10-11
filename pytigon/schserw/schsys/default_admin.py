@@ -26,6 +26,7 @@ import logging
 import threading
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 
 logger = logging.getLogger(__name__)
 
@@ -110,24 +111,12 @@ def user_has_default_password(user) -> bool:
     cached per process and invalidated when the stored password hash changes
     (i.e. after the password is changed).
     """
-    if not getattr(user, "is_authenticated", False):
+    User = get_user_model()
+    user = User.objects.filter(username=default_admin_username()).first()
+    if user.check_password(default_admin_password()):
+        return True
+    else:
         return False
-
-    field = getattr(user, "USERNAME_FIELD", "username")
-    if getattr(user, field, None) != default_admin_username():
-        return False
-
-    key = user.pk
-    digest = user.password
-    with _password_lock:
-        cached = _password_cache.get(key)
-        if cached is not None and cached[0] == digest:
-            return cached[1]
-
-    result = bool(user.check_password(default_admin_password()))
-    with _password_lock:
-        _password_cache[key] = (digest, result)
-    return result
 
 
 def startup_check(raise_if_blocked: bool = False) -> str:

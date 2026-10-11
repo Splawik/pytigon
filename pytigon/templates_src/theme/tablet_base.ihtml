@@ -140,7 +140,7 @@
     <section class="body-body d-flex flex-row">
 
 %% body_init
-    <section id="panel" class="d-flex flex-column flex-grow-1">
+    <section id="panel" class="ajax-region d-flex flex-column flex-grow-1">
     header class=main-header win-header bg-primary
 
         nav class=navbar navbar-toggleable-md bg-primary
@@ -229,9 +229,9 @@
                                         span class=navbar-toggler-icon
                                     div class=collapse navbar-collapse,,,id=navbar_setup
                                         ul class=navbar-nav mr-auto
-                                            % if settings.CAN_CHANGE_PASSWORD and request.user|user_can_change_password:
+                                            % if True or settings.CAN_CHANGE_PASSWORD or request.user|user_can_change_password:
                                                 li class=nav-item active
-                                                    a class=nav-link,,,href=#,,,data-bs-toggle=modal,,,data-bs-target=#change_passwd..._(Change password)
+                                                    a class=btn btn-secondary nav-link,,,href={{base_path}}schsys/change_password/,,,target=popup_edit,,,title=_(Change password)..._(Change password)
                                             % if user.is_superuser:
                                                 li class=nav-item
                                                     a class=nav-link,,,href={{base_path}}schmanage/,,,target=_top,,,title=_(Manage)..._(Manage)

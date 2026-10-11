@@ -53,7 +53,11 @@ def sch_login(request, *argi, **argv):
                 obj = get_user_model().objects.filter(email=username).first()
                 username = obj.get_username() if obj else None
 
-            user = authenticate(request, username=username, password=password) if username else None
+            user = (
+                authenticate(request, username=username, password=password)
+                if username
+                else None
+            )
             if user is None and login_methods == {"username", "email"}:
                 obj = get_user_model().objects.filter(email=username).first()
                 if obj:
@@ -120,11 +124,16 @@ def login_required_for_non_public(view_func):
 
 urlpatterns = [
     path("ok/", views.ok, name="ok"),
-    path("login/", never_cache(TemplateView.as_view(template_name="schsys/app/login.html"))),
+    path(
+        "login/",
+        never_cache(TemplateView.as_view(template_name="schsys/app/login.html")),
+    ),
     path("do_login/", sch_login),
     path("do_logout/", login_required(sch_logout)),
     path("change_password/", login_required(views.change_password)),
-    path("password_change/", login_required(views.password_change_required)),
+    path(
+        "force_auto_password_change/", login_required(views.force_auto_password_change)
+    ),
     path(
         "change_profile_variant/<str:variant_name>/",
         login_required(views.change_profile_variant),
