@@ -106,7 +106,9 @@ class DefaultCommandHandler(CommandHandler):
         print("")
         return 0
 
-    def _run_pywebview(self, argv: list[str], paths: dict[str, str], app: str | None) -> int:
+    def _run_pywebview(
+        self, argv: list[str], paths: dict[str, str], app: str | None
+    ) -> int:
         """Run with pywebview.
 
         Args:
@@ -130,7 +132,9 @@ class DefaultCommandHandler(CommandHandler):
             conf = self._get_app_conf(os.path.join(paths.get("PRJ_PATH", ""), app))
 
             # Load index.html
-            index_path = os.path.join(paths.get("STATIC_PATH", ""), "pywebview", "index.html")
+            index_path = os.path.join(
+                paths.get("STATIC_PATH", ""), "pywebview", "index.html"
+            )
             try:
                 with open(index_path) as f:
                     index_str = f.read()
@@ -185,7 +189,7 @@ class DefaultCommandHandler(CommandHandler):
                 webview.windows[0].load_html(start_content, "http://127.0.0.5/")
 
             window.events.loaded += on_loaded
-            webview.start(debug=True)
+            webview.start(debug=True if "--dev" in sys.argv else False)
 
             return 0
 

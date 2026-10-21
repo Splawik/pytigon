@@ -85,6 +85,7 @@ class SafeSettingsProxy:
     def __dir__(self):
         return sorted(_SAFE_SETTINGS_ATTRS)
 
+
 MOBILE_USER_AGENTS = (
     "sony,symbian,nokia,samsung,mobile,windows ce,epoc,opera mini,nitro,j2me,midp-,"
     "cldc-,netfront,mot,up.browser,up.link,audiovox,blackberry,ericsson,panasonic,"
@@ -94,7 +95,9 @@ MOBILE_USER_AGENTS = (
     "nintendo,webtv,playstation"
 ).split(",")
 
-_MOBILE_USER_AGENTS_RE = re.compile("|".join(re.escape(ua) for ua in MOBILE_USER_AGENTS if ua))
+_MOBILE_USER_AGENTS_RE = re.compile(
+    "|".join(re.escape(ua) for ua in MOBILE_USER_AGENTS if ua)
+)
 
 
 def test_mobile(request):
@@ -125,6 +128,7 @@ def standard_web_browser(request):
             return int(request.GET["browser_type"])
         except (TypeError, ValueError):
             return 0
+
     if "HTTP_USER_AGENT" not in request.META:
         return 0
     if (
@@ -139,9 +143,8 @@ def standard_web_browser(request):
             return 0
     else:
         if (
-            (hasattr(request, "session") and "HYBRID_BROWSER" in request.session)
-            or "hybrid" in request.GET
-        ):
+            hasattr(request, "session") and "HYBRID_BROWSER" in request.session
+        ) or "hybrid" in request.GET:
             return 2
         elif "only_table" in request.GET:
             return 6
@@ -179,7 +182,9 @@ def client_type(request, standard=None):
 
 
 def browser_type(request, standard=None):
-    themes = settings.THEMES if hasattr(settings, "THEMES") else ["auto", "auto", "auto"]
+    themes = (
+        settings.THEMES if hasattr(settings, "THEMES") else ["auto", "auto", "auto"]
+    )
 
     if standard if standard is not None else standard_web_browser(request):
         if test_mobile(request):
@@ -227,6 +232,7 @@ if PermWrapper:
 
         def call(self, obj):
             from pytigon_lib.schviews.schrules import user_can
+
             return user_can(self.request.user, self.action, type(obj), obj)
 
     class RulesPermWrapper(PermWrapper):
@@ -244,7 +250,9 @@ if PermWrapper:
 def _extract_path_info(request):
     r = urlparse(request.path)
     rr = r.path.split("/")
-    last_fragment = (rr[-1] if rr[-1] else rr[-2] if len(rr) > 1 else "") if len(rr) > 0 else r.path
+    last_fragment = (
+        (rr[-1] if rr[-1] else rr[-2] if len(rr) > 1 else "") if len(rr) > 0 else r.path
+    )
     return r, rr, last_fragment
 
 
@@ -266,7 +274,9 @@ def _extract_view_state(request, rr):
         "readonly": readonly,
         "ro": "_" if readonly else "",
         "show_title_bar": any(x in request.path for x in ("/sublist", "/get", "_set")),
-        "get": ("gettree" if "/gettree" in request.path else "get") if "/get" in request.path else "",
+        "get": ("gettree" if "/gettree" in request.path else "get")
+        if "/get" in request.path
+        else "",
     }
 
 
@@ -299,7 +309,9 @@ def _extract_project_info(request):
 
 
 def _extract_browser_info(request, standard=None):
-    lng = request.LANGUAGE_CODE[:2].lower() if hasattr(request, "LANGUAGE_CODE") else "en"
+    lng = (
+        request.LANGUAGE_CODE[:2].lower() if hasattr(request, "LANGUAGE_CODE") else "en"
+    )
     b_type = browser_type(request, standard)
     c_type = client_type(request, standard)
     x = b_type.split("_")
@@ -337,7 +349,9 @@ def sch_standard(request):
 
     form_state = _extract_form_state(request, last_fragment)
     view_state = _extract_view_state(request, rr)
-    show_form = form_state["form_edit"] or form_state["form_delete"] or form_state["form_info"]
+    show_form = (
+        form_state["form_edit"] or form_state["form_delete"] or form_state["form_info"]
+    )
 
     url_base, app_path = _extract_url_info(rr)
     url_app_base, prj = _extract_project_info(request)
@@ -403,6 +417,7 @@ def sch_standard(request):
 
     if PermWrapper:
         from pytigon_lib.schviews.schrules import is_rules_active
+
         if is_rules_active():
             ret["perms"] = RulesPermWrapper(request)
 

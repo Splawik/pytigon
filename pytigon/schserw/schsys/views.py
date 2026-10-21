@@ -374,9 +374,13 @@ def plugins(request, app, plugin_name):
         Http404: If the plugin file is not found.
     """
     # Try static root first, then project plugins directory
+
     candidates = [
         os.path.join(settings.STATIC_ROOT, app, plugin_name + ".zip"),
-        os.path.join(settings.ROOT_PATH, "prj", app, "plugins", plugin_name + ".zip"),
+        os.path.join(settings.PRJ_PATH, settings.PRJ_NAME, "plugins", app + ".zip"),
+        os.path.join(
+            settings.PRJ_PATH, settings.PRJ_NAME, "plugins", app, plugin_name + ".zip"
+        ),
     ]
 
     for candidate in candidates:
