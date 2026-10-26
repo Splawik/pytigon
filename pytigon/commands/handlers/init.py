@@ -9,7 +9,6 @@ from .base import CommandHandler
 
 
 class InitCommandHandler(CommandHandler):
-
     """Handler for project initialization.
 
     Handles commands like:
@@ -27,7 +26,12 @@ class InitCommandHandler(CommandHandler):
 
         """
         if len(argv) > 1:
-            return argv[1].startswith("init_")
+            return argv[1].startswith(
+                (
+                    "init_",
+                    "initgui_",
+                )
+            )
         return False
 
     def execute(self, argv: list[str], **kwargs) -> int:
@@ -66,7 +70,15 @@ class InitCommandHandler(CommandHandler):
             import django
 
             django.setup()
+            if argv[1].startswith("initgui_"):
+                from pytigon_gui.guilib.tools import create_desktop_shortcut
+                import configparser
 
+            config_file = os.path.join(prj_path, "install.ini")
+            if os.path.exists(config_file):
+                config = configparser.ConfigParser()
+                config.read(config_file)
+                create_desktop_shortcut(app, title=config["DEFAULT"]["PRJ_TITLE"])
             return 0
 
         except Exception as e:
