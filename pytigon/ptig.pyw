@@ -248,6 +248,7 @@ class LauncherApp(wx.App):
                 text=True,
                 bufsize=1,  # Line-buffered output
                 creationflags=subprocess.CREATE_NO_WINDOW if sys.platform == "win32" else 0,
+                shell=True if sys.platform == "win32" else False,
             )
         except Exception as exc:
             wx.CallAfter(frame.show_error, f"Failed to start process: {exc}")
