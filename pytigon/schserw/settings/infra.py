@@ -351,15 +351,23 @@ def _build_root_fs():
     p = os.path.join(PRJ_PATH, BASE_PRJ_NAME, "static")
     if os.path.exists(p):
         STATIC_FS.add_fs("static_prj", OSFS_EXT(p))
+    tmp = []
     for app in INSTALLED_APPS:
         if isinstance(app, AppConfig):
-            folder = Path(os.path.join(app.path, "static"))
-            if folder.is_dir():
-                is_empty = not any(folder.iterdir())
-            else:
-                is_empty = True
-            if not is_empty:
-                STATIC_FS.add_fs("static_" + app.name, OSFS_EXT(str(folder)))
+            folder1 = Path(os.path.join(app.path, "static"))
+            folder2 = Path(os.path.join(app.path, "..", "static"))
+            for folder in (
+                folder1,
+                folder2,
+            ):
+                if folder.is_dir():
+                    is_empty = not any(folder.iterdir())
+                else:
+                    is_empty = True
+                if not is_empty:
+                    if app.name not in tmp:
+                        STATIC_FS.add_fs("static_" + app.name, OSFS_EXT(str(folder)))
+                        tmp.append(app.name)
 
     _m.mount("static", STATIC_FS)
     _m.mount("app", OSFS_EXT(settings.LOCAL_ROOT_PATH))

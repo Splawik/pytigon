@@ -69,6 +69,7 @@ from django.template.loader import get_template
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django_select2 import forms as s2forms
+from django.core.files.storage import default_storage
 
 from pytigon_lib.schdjangoext.models import TreeModel
 from pytigon_lib.schdjangoext.tools import import_model, make_href
@@ -1163,6 +1164,22 @@ def require(context, href):
     return {"href": mark_safe(href)}
 
 
+def _process_content(context, href):
+    if "user_agent" in context and context["user_agent"] == "webviewembeded":
+        content_path = os.path.join("static", href)
+        content = ""
+        try:
+            with default_storage.open(content_path, "r") as f:
+                content = (
+                    f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
+                )
+
+        except Exception:
+            logger.warning("File not found: %s", href)
+        return content
+    return None
+
+
 @inclusion_tag("widgets/module_link.html")
 def module_link(context, href):
     """
@@ -1177,16 +1194,8 @@ def module_link(context, href):
     :return: A dictionary containing the rendered script tag attributes.
     :rtype: dict
     """
-    if "user_agent" in context and context["user_agent"] == "webviewembeded":
-        content_path = os.path.join(settings.STATIC_ROOT, href)
-        content = ""
-        try:
-            with open(content_path, encoding="utf-8") as f:
-                content = (
-                    f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
-                )
-        except Exception:
-            logger.warning("File not found: %s", href)
+    content = _process_content(context, href)
+    if content != None:
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
         return {"href": mark_safe(href), "content": None}
@@ -1206,16 +1215,8 @@ def jscript_link(context, href):
     :return: A dictionary containing the rendered script tag attributes.
     :rtype: dict
     """
-    if "user_agent" in context and context["user_agent"] == "webviewembeded":
-        content_path = os.path.join(settings.STATIC_ROOT, href)
-        content = ""
-        try:
-            with open(content_path, encoding="utf-8") as f:
-                content = (
-                    f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
-                )
-        except Exception:
-            logger.warning("File not found: %s", href)
+    content = _process_content(context, href)
+    if content != None:
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
         return {"href": mark_safe(href), "content": None}
@@ -1235,16 +1236,8 @@ def css_link(context, href):
     :return: A dictionary containing the rendered script tag attributes.
     :rtype: dict
     """
-    if "user_agent" in context and context["user_agent"] == "webviewembeded":
-        content_path = os.path.join(settings.STATIC_ROOT, href)
-        content = ""
-        try:
-            with open(content_path, encoding="utf-8") as f:
-                content = (
-                    f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
-                )
-        except Exception:
-            logger.warning("File not found: %s", href)
+    content = _process_content(context, href)
+    if content != None:
         return standard_dict(context, {"href": href, "content": mark_safe(content)})
     else:
         return standard_dict(context, {"href": href, "content": None})
@@ -1288,11 +1281,12 @@ def jscript(context, href):
     :return: A dictionary containing the rendered script tag content.
     :rtype: dict
     """
-    content_path = os.path.join(settings.STATIC_ROOT, href)
-    content = ""
-    with open(content_path, encoding="utf-8") as f:
-        content = f.read()
-    return {"content": mark_safe(content)}
+
+    content = _process_content(context, href)
+    if content != None:
+        return {"content": mark_safe(content)}
+    else:
+        return {"content": ""}
 
 
 @inclusion_tag("widgets/component.html")
@@ -1309,16 +1303,9 @@ def component(context, href):
     :return: A dictionary containing the rendered script tag content.
     :rtype: dict
     """
-    if "user_agent" in context and context["user_agent"] == "webviewembeded":
-        content_path = os.path.join(settings.STATIC_ROOT, href)
-        content = ""
-        try:
-            with open(content_path, encoding="utf-8") as f:
-                content = (
-                    f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
-                )
-        except Exception:
-            logger.warning("File not found: %s", href)
+
+    content = _process_content(context, href)
+    if content != None:
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
         return {"href": mark_safe(href), "content": None}

@@ -1,90 +1,203 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
     <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pytigon App Loading</title>
         <style>
-            body {
-                position: relative;
-                width: 100%;
-                height: 100vh;
-                background-color:white;
-            }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-            .wrap {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh;
+            background-color: #f3f4f0; /* Crisp artistic cream canvas background */
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            overflow: hidden;
+            position: relative;
+        }
 
-            .text {
-                color: darkorange;
-                display: inline-block;
-                margin-left: 5px;
-                padding-left: 40px;
-                font-size: 32px;
-                text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
-                font-weight: bold;
-            }
+        /* ARTISTIC BACKGROUND: High-contrast vibrant SVG background */
+        .kandinsky-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
 
-            .bounceball {
-                position: relative;
-                display: inline-block;
-                height: 54px;
-                width: 30x;
-                padding-top: 18px;
-            }
-            .bounceball:before {
-                position: absolute;
-                content: "";
-                display: block;
-                top: 0;
-                width: 30px;
-                height: 30px;
-                border-radius: 50%;
-                background-color:royalblue;
-                transform-origin: 50%;
-                -webkit-animation: bounce 500ms alternate infinite ease;
-                        animation: bounce 500ms alternate infinite ease;
-            }
-            @-webkit-keyframes bounce {
-                0% {
-                    top: 60px;
-                    height: 5px;
-                    border-radius: 120px 120px 120px 120px;
-                    transform: scaleX(2);
-                }
-                35% {
-                    height: 30px;
-                    border-radius: 50%;
-                    transform: scaleX(1);
-                }
-                100% {
-                    top: 0;
-                }
-            }
-            @keyframes bounce {
-                0% {
-                    top: 60px;
-                    height: 10px;
-                    border-radius: 120px 120px 40px 40px;
-                    transform: scaleX(2);
-                }
-                35% {
-                    height: 30px;
-                    border-radius: 50%;
-                    transform: scaleX(1);
-                }
-                100% {
-                    top: 0;
-                }
-            }
-        </style>
+        /* CENTER INTERFACE OVERLAY */
+        .loader-interface {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 36px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        /* HIGH-EXPRESSION GEOMETRIC LOADER */
+        .art-loader {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Component 1: Sharp intersecting dynamic triangle */
+        .abstract-triangle {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-left: 45px solid transparent;
+            border-right: 45px solid transparent;
+            border-bottom: 78px solid rgba(255, 68, 0, 0.25); /* Translucent vivid vermillion */
+            transform-origin: 50% 60%;
+            animation: Kandinsky-spin-reverse 4s linear infinite;
+        }
+
+        /* Component 2: Bold outer structural circle */
+        .abstract-circle-lg {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border: 3px solid #0f172a; /* Thick, high-contrast black line */
+            border-top-color: #2563eb; /* Cobalt blue accent track */
+            border-radius: 50%;
+            animation: Kandinsky-spin 1.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        }
+
+        /* Component 3: Energetic core point */
+        .abstract-circle-md {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #ff4400; /* Pure bold orange-red */
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 68, 0, 0.4);
+            animation: Kandinsky-pulse 0.8s ease-in-out infinite alternate;
+        }
+
+        /* Component 4: High-speed satellite electron */
+        .abstract-circle-sm {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #2563eb; /* High-saturation cobalt blue */
+            border-radius: 50%;
+            animation: Kandinsky-satellite 1.8s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+        }
+
+        /* MINIMALIST & HIGH-READABILITY TYPOGRAPHY */
+        .text {
+            color: #0f172a; /* Solid charcoal-black */
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            
+            /* Clean, borderless paper shield backing */
+            background: rgba(243, 244, 240, 0.85);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            padding: 8px 24px;
+            border-radius: 30px; /* Elegant pill-shaped design */
+            
+            animation: text-breathing 2.5s infinite ease-in-out;
+        }
+
+        /* HIGH-VELOCITY KINETIC ANIMATIONS */
+        @keyframes Kandinsky-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes Kandinsky-spin-reverse {
+            0% { transform: rotate(360deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        @keyframes Kandinsky-pulse {
+            0% { transform: scale(0.8); }
+            100% { transform: scale(1.25); }
+        }
+
+        @keyframes Kandinsky-satellite {
+            0% { transform: rotate(0deg) translate(48px) scale(0.8); }
+            50% { transform: rotate(180deg) translate(48px) scale(1.3); }
+            100% { transform: rotate(360deg) translate(48px) scale(0.8); }
+        }
+
+        @keyframes text-breathing {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+    </style>
     </head>
     <body>
-        <div class="wrap">
-            <div class="loading">
-              <div class="bounceball"></div>
-              <div class="text">Pytigon app loading</div>
+
+        <!-- INLINE VECTOR SVG BACKGROUND (Vibrant & Structural Kandinsky Composition) -->
+        <svg class="kandinsky-bg" xmlns="http://w3.org" viewBox="0 0 1440 900"
+            preserveAspectRatio="xMidYMid slice">
+            <!-- Grid and Horizon foundations -->
+            <line x1="-100" y1="750" x2="900" y2="250" stroke="#0f172a"
+                stroke-width="3" />
+            <line x1="200" y1="50" x2="1300" y2="850" stroke="#94a3b8"
+                stroke-width="1.5" />
+            <line x1="1200" y1="50" x2="500" y2="950" stroke="#2563eb"
+                stroke-width="2" opacity="0.4" />
+
+            <!-- Vibrant primary circle focal points (Slightly translucent but rich) -->
+            <circle cx="280" cy="260" r="160" fill="none" stroke="#2563eb"
+                stroke-width="2.5" stroke-dasharray="12 6" />
+            <circle cx="320" cy="220" r="110" fill="rgba(37, 99, 235, 0.08)" />
+            <circle cx="1150" cy="280" r="130" fill="none" stroke="#ff4400"
+                stroke-width="2" />
+            <circle cx="1110" cy="320" r="40" fill="rgba(255, 68, 0, 0.12)" />
+
+            <!-- Sharp heavy intersecting shapes -->
+            <path d="M 680,200 L 880,100 L 800,420 Z"
+                fill="rgba(255, 68, 0, 0.08)" stroke="#ff4400"
+                stroke-width="2" />
+            <polygon points="150,500 220,450 180,680"
+                fill="rgba(15, 23, 42, 0.05)" stroke="#0f172a"
+                stroke-width="1.5" />
+
+            <!-- Heavy structural block weight elements -->
+            <rect x="180" y="520" width="24" height="220"
+                transform="rotate(25 180 520)" fill="#0f172a" opacity="0.2" />
+            <rect x="850" y="580" width="120" height="15"
+                transform="rotate(-15 850 580)" fill="#2563eb" opacity="0.3" />
+
+            <!-- High-contrast solid accent points -->
+            <circle cx="760" cy="180" r="14" fill="#ff4400" />
+            <circle cx="820" cy="240" r="8" fill="#0f172a" />
+            <circle cx="580" cy="620" r="22" fill="#2563eb" opacity="0.6" />
+            <circle cx="630" cy="660" r="10" fill="#0f172a" />
+        </svg>
+
+        <!-- KINETIC ART INTERFACE -->
+        <div class="loader-interface">
+            <div class="art-loader">
+                <div class="abstract-triangle"></div>
+                <div class="abstract-circle-lg"></div>
+                <div class="abstract-circle-md"></div>
+                <div class="abstract-circle-sm"></div>
             </div>
-          </div>
+            <div class="text">Pytigon App Loading</div>
+        </div>
+
     </body>
 </html>

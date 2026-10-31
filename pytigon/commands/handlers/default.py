@@ -8,7 +8,6 @@ import sys
 from typing import Any
 
 from pytigon_lib.schtools.env import get_environ
-
 from .base import CommandHandler
 
 _logger = logging.getLogger(__name__)
@@ -106,9 +105,7 @@ class DefaultCommandHandler(CommandHandler):
         print("")
         return 0
 
-    def _run_pywebview(
-        self, argv: list[str], paths: dict[str, str], app: str | None
-    ) -> int:
+    def _run_pywebview(self, argv: list[str], paths: dict[str, str], app: str | None) -> int:
         """Run with pywebview.
 
         Args:
@@ -132,9 +129,7 @@ class DefaultCommandHandler(CommandHandler):
             conf = self._get_app_conf(os.path.join(paths.get("PRJ_PATH", ""), app))
 
             # Load index.html
-            index_path = os.path.join(
-                paths.get("STATIC_PATH", ""), "pywebview", "index.html"
-            )
+            index_path = os.path.join(paths.get("STATIC_PATH", ""), "pywebview", "index.html")
             try:
                 with open(index_path) as f:
                     index_str = f.read()
@@ -189,7 +184,10 @@ class DefaultCommandHandler(CommandHandler):
                 webview.windows[0].load_html(start_content, "http://127.0.0.5/")
 
             window.events.loaded += on_loaded
-            webview.start(debug=True if "--dev" in sys.argv else False)
+
+            env = get_environ()
+            debug = env("PYTIGON_DEBUG")
+            webview.start(debug=debug)
 
             return 0
 
@@ -217,8 +215,7 @@ class DefaultCommandHandler(CommandHandler):
 
             if importlib.util.find_spec("pytigon_gui") is None:
                 _logger.error(
-                    "pytigon_gui is not installed; install pytigon-gui to run "
-                    "the desktop GUI"
+                    "pytigon_gui is not installed; install pytigon-gui to run the desktop GUI"
                 )
                 return 1
         except (ImportError, ValueError):

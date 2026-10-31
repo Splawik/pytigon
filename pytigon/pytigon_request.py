@@ -117,8 +117,11 @@ def request(url, params=None, user_agent="pytigon"):
     Raises:
         RuntimeError: If init() has not been called before request().
     """
+
     if HTTP is None:
-        raise RuntimeError("HTTP client not initialized. Call pytigon_request.init() first.")
+        raise RuntimeError(
+            "HTTP client not initialized. Call pytigon_request.init() first."
+        )
 
     try:
         if params:

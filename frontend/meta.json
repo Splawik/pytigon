@@ -1621,7 +1621,7 @@
       "format": "esm"
     },
     "not_node_modules/pytigon-tools.js": {
-      "bytes": 21116,
+      "bytes": 21168,
       "imports": [
         {
           "path": "/home/sch/prj/pytigon/frontend/shims.js",
@@ -3171,7 +3171,7 @@
           "bytesInOutput": 422
         },
         "not_node_modules/pytigon-tools.js": {
-          "bytesInOutput": 9831
+          "bytesInOutput": 9907
         },
         "../../../.cache/aube/virtual-store/events@3.3.0-fb2a9408b459afc5/node_modules/events/events.js": {
           "bytesInOutput": 6164
@@ -3333,7 +3333,7 @@
           "bytesInOutput": 0
         }
       },
-      "bytes": 1328679
+      "bytes": 1328755
     },
     "../pytigon/static/pytigon-lib-min.css": {
       "imports": [

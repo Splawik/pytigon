@@ -19640,6 +19640,11 @@
       }
       var CALLBACK_ID = 0;
       var CALLBACK_HANDLER = {};
+      function callback_from_python(id2, data) {
+        CALLBACK_HANDLER[id2](atob(data));
+        delete CALLBACK_HANDLER[id2];
+      }
+      window.callback_from_python = callback_from_python;
       function wx_get(url, params) {
         return new Promise(function(resolve2, reject2) {
           function callback(data) {
