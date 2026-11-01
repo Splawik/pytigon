@@ -1,0 +1,5 @@
+% load static
+% if content:
+    img class={{class_name}},,,src={{content|safe}}
+% else:
+    img src={{base_path}}{{href}},,,class={{class_name}}

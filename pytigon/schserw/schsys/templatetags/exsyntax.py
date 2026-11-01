@@ -59,6 +59,7 @@ import os
 import re
 from base64 import b64encode
 from functools import lru_cache
+import base64
 
 from django import forms, template
 from django.conf import settings
@@ -184,7 +185,9 @@ def row_actions(parser, token):
 
 
 @inclusion_tag("widgets/action.html")
-def action(context, action, title="", icon_name="", target="", attrs="", tag_class="", url=""):
+def action(
+    context, action, title="", icon_name="", target="", attrs="", tag_class="", url=""
+):
     """
     Renders an action within the given context using the specified parameters.
 
@@ -267,7 +270,9 @@ def view_row(
                 context["object"].id,
                 context["target"] if context["target"] != "json" else "_",
             )
-    ret = action_fun(context, "view_row", title, icon_name, target, attrs, tag_class, href)
+    ret = action_fun(
+        context, "view_row", title, icon_name, target, attrs, tag_class, href
+    )
     # if hasattr(object, "get_derived_object"):
     #    object2 = object.get_derived_object()
     #    if hasattr(object2, "str"):
@@ -409,7 +414,9 @@ def new_row(
     :return: The rendered button template.
     :rtype: str
     """
-    return new_row_base(context, action, title, icon_name, target, attrs, tag_class, url)
+    return new_row_base(
+        context, action, title, icon_name, target, attrs, tag_class, url
+    )
 
 
 @inclusion_tag("widgets/new_row.html")
@@ -446,7 +453,9 @@ def new_row_inline(
     :return: The rendered button template.
     :rtype: str
     """
-    return new_row_base(context, action, title, icon_name, target, attrs, tag_class, url)
+    return new_row_base(
+        context, action, title, icon_name, target, attrs, tag_class, url
+    )
 
 
 @inclusion_tag("widgets/row_related_list.html")
@@ -518,7 +527,10 @@ def row_related_list(
 
             url2 = "{bp}" + f"{app}/table/{table}//{filter}/form{version}/sublist/"
         else:
-            url2 = "{bp}" + f"{app}/table/{table}/{context['object'].id}/-/form{version}/sublist/"
+            url2 = (
+                "{bp}"
+                + f"{app}/table/{table}/{context['object'].id}/-/form{version}/sublist/"
+            )
         if url:
             url2 += url[1:]
     ret = action_fun(context, action, title, icon_name, target, attrs, tag_class, url2)
@@ -803,7 +815,8 @@ def field(context, form_field, fieldformat=None, inline=False):
     ret["standard_web_browser"] = context["standard_web_browser"]
     ret["server_side_validation"] = (
         False
-        if "server_side_validation" in context and context["server_side_validation"] == False
+        if "server_side_validation" in context
+        and context["server_side_validation"] == False
         else True
     )
     return ret
@@ -860,7 +873,11 @@ class Form(Node):
                         fields.append([name, p])
         else:
             for field in form:
-                p = self.param[1].resolve(context) if len(self.param) > 1 else self.def_param
+                p = (
+                    self.param[1].resolve(context)
+                    if len(self.param) > 1
+                    else self.def_param
+                )
                 fields.append([field.name, p])
         if self.def_param == "^/":
             template_str = "{% load exsyntax %}<div class='d-inline-flex flex-wrap'>"
@@ -1069,7 +1086,9 @@ def get_table_row(
 
     if TreeModel in model.__bases__:
         if filter:
-            href1 = make_href(f"/{_app_name}/table/{_table_name}/{filter}/0/form/gettree/")
+            href1 = make_href(
+                f"/{_app_name}/table/{_table_name}/{filter}/0/form/gettree/"
+            )
             href2 = make_href(f"/{_app_name}/table/{_table_name}/-/add/")
         else:
             href1 = make_href(f"/{_app_name}/table/{_table_name}/0/form/gettree/")
@@ -1171,8 +1190,49 @@ def _process_content(context, href):
         try:
             with default_storage.open(content_path, "r") as f:
                 content = (
-                    f.read().replace("<script", "<_script_").replace("</script>", "</_script_>")
+                    f.read()
+                    .replace("<script", "<_script_")
+                    .replace("</script>", "</_script_>")
                 )
+
+        except Exception:
+            logger.warning("File not found: %s", href)
+        return content
+    return None
+
+
+def generate_html_src(file_path):
+    _, ext = os.path.splitext(file_path)
+    ext = ext.lower().replace(".", "")
+
+    mime_types = {
+        "png": "image/png",
+        "jpg": "image/jpeg",
+        "jpeg": "image/jpeg",
+        "gif": "image/gif",
+        "svg": "image/svg+xml",
+        "webp": "image/webp",
+        "bmp": "image/bmp",
+        "ico": "image/x-icon",
+    }
+
+    mime_type = mime_types.get(ext, f"image/{ext}")
+
+    try:
+        with default_storage.open(file_path, "rb") as image_file:
+            encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
+            return f"data:{mime_type};base64,{encoded_string}"
+    except FileNotFoundError:
+        logger.warning("File not found: %s", file_path)
+        return ""
+
+
+def _process_img_content(context, href):
+    if "user_agent" in context and context["user_agent"] == "webviewembeded":
+        # content_path = os.path.join("static", href)
+        content = ""
+        try:
+            content = generate_html_src(href)
 
         except Exception:
             logger.warning("File not found: %s", href)
@@ -1199,6 +1259,35 @@ def module_link(context, href):
         return {"href": mark_safe(href), "content": mark_safe(content)}
     else:
         return {"href": mark_safe(href), "content": None}
+
+
+@inclusion_tag("widgets/img_link.html")
+def img_link(context, href, class_name="img"):
+    """
+    Inclusion tag for loading image via a HTML img tag.
+
+    Example usage: {% img "static/favicon.ico" "standard" %}
+
+    :param context: The current template context.
+    :type context: dict
+    :param href: The path to the JavaScript module to be loaded.
+    :type href: str
+    :return: A dictionary containing the rendered script tag attributes.
+    :rtype: dict
+    """
+    content = _process_img_content(context, href)
+    if content != None:
+        return {
+            "href": mark_safe(href),
+            "class_name": mark_safe(class_name),
+            "content": mark_safe(content),
+        }
+    else:
+        return {
+            "href": mark_safe(href),
+            "class_name": mark_safe(class_name),
+            "content": None,
+        }
 
 
 @inclusion_tag("widgets/jscript_link.html")
@@ -1326,7 +1415,12 @@ def spec(format):
     :return: The modified string
     :rtype: str
     """
-    return format.replace("{", "{{").replace("}", "}}").replace("[", "{%").replace("]", "%}")
+    return (
+        format.replace("{", "{{")
+        .replace("}", "}}")
+        .replace("[", "{%")
+        .replace("]", "%}")
+    )
 
 
 @register.simple_tag(takes_context=True)
@@ -1434,9 +1528,7 @@ def editable_base(context, name, title, url):
     date_str = ""
     if "date" in t:
         t = "combodate"
-        date_str = (
-            """ data-format="YYYY-MM-DD" data-viewformat="YYYY-MM-DD" data-template="YYYY-MM-DD" """
-        )
+        date_str = """ data-format="YYYY-MM-DD" data-viewformat="YYYY-MM-DD" data-template="YYYY-MM-DD" """
     t2 = title or ""
     oid = context["object"].id
     value = getattr(context["object"], field_name)
@@ -1648,7 +1740,9 @@ class ComboSelect(Node):
 
     def render(self, context):
         output = self.nodelist.render(context).strip()
-        field_or_field_name = template.Variable(self.field_or_field_name).resolve(context)
+        field_or_field_name = template.Variable(self.field_or_field_name).resolve(
+            context
+        )
         label = ""
         if isinstance(field_or_field_name, str):
             name = field_or_field_name
@@ -1785,14 +1879,20 @@ def do_html_widget(parser, token):
     remaining_bits = bits[1:]
     extra_context = token_kwargs(remaining_bits, parser)
     if not extra_context:
-        raise TemplateSyntaxError(f"{bits[0]!r} expected at least one variable assignment")
+        raise TemplateSyntaxError(
+            f"{bits[0]!r} expected at least one variable assignment"
+        )
     if "id" not in extra_context or "class" not in extra_context:
         raise TemplateSyntaxError("id and class parameters are required")
     if remaining_bits:
-        raise TemplateSyntaxError(f"{bits[0]!r} received an invalid token: {remaining_bits[0]!r}")
+        raise TemplateSyntaxError(
+            f"{bits[0]!r} received an invalid token: {remaining_bits[0]!r}"
+        )
     nodelist = parser.parse(("endwidget",))
     parser.delete_first_token()
-    return HtmlWidgetNode("widgets/widget.html", None, None, nodelist, extra_context=extra_context)
+    return HtmlWidgetNode(
+        "widgets/widget.html", None, None, nodelist, extra_context=extra_context
+    )
 
 
 def _safe_path(base, *path_tab):
@@ -1878,7 +1978,9 @@ def icon(context, class_str, width=None, height=None):
     """
 
     if class_str.startswith("fa://"):
-        return format_html("<i class='fa fa-{}'></i>", class_str[5:].replace(".png", ""))
+        return format_html(
+            "<i class='fa fa-{}'></i>", class_str[5:].replace(".png", "")
+        )
     elif class_str.startswith("fa-"):
         return format_html("<i class='fa {}'></i>", class_str)
     elif class_str.startswith("bi-"):
@@ -1887,7 +1989,9 @@ def icon(context, class_str, width=None, height=None):
             icon_name = x[0].replace("bi-", "")
             try:
                 icon = _read_icon_file(
-                    "icons/bootstrap-icons/icons/" + icon_name.replace("--", "/") + ".svg"
+                    "icons/bootstrap-icons/icons/"
+                    + icon_name.replace("--", "/")
+                    + ".svg"
                 )
             except (FileNotFoundError, OSError):
                 return mark_safe("<i></i>")
@@ -1901,7 +2005,9 @@ def icon(context, class_str, width=None, height=None):
         if x:
             icon_name = x[0].replace("icon-", "")
             try:
-                icon = _read_user_icon_file("icons/" + icon_name.replace("--", "/") + ".svg")
+                icon = _read_user_icon_file(
+                    "icons/" + icon_name.replace("--", "/") + ".svg"
+                )
             except (FileNotFoundError, OSError):
                 return mark_safe("<i></i>")
             return mark_safe(f"<i>{icon}</i>")
@@ -1910,7 +2016,9 @@ def icon(context, class_str, width=None, height=None):
         if x:
             icon_name = x[0].replace("svg-", "")
             try:
-                icon = _read_icon_file("icons/scalable/" + icon_name.replace("--", "/") + ".svg")
+                icon = _read_icon_file(
+                    "icons/scalable/" + icon_name.replace("--", "/") + ".svg"
+                )
             except (FileNotFoundError, OSError):
                 return mark_safe("<i></i>")
             return mark_safe(f"<i>{icon}</i>")
@@ -1943,7 +2051,9 @@ def icon(context, class_str, width=None, height=None):
                     f"<img src='data:image/{ext};base64, {bcontent}' class='{x2[1]}'></img>"
                 )
             else:
-                return mark_safe(f"<img src='data:image/{ext};base64, {bcontent}'></img>")
+                return mark_safe(
+                    f"<img src='data:image/{ext};base64, {bcontent}'></img>"
+                )
         else:
             if len(x2) > 1:
                 return mark_safe(f"<img src='{src}' class='{x2[1]}'></img>")
@@ -1995,7 +2105,9 @@ class TreeNode(Node):
         return f"<{self.__class__.__name__}>"
 
     def render(self, context):
-        nodelist = context["tree_template"] if "tree_template" in context else self.nodelist
+        nodelist = (
+            context["tree_template"] if "tree_template" in context else self.nodelist
+        )
 
         tree = self.tree.resolve(context)
 
@@ -2214,9 +2326,13 @@ def modify(parser, token):
     remaining_bits = bits[1:]
     arg = token_kwargs(remaining_bits, parser)
     if not arg:
-        raise TemplateSyntaxError(f"{bits[0]!r} expected at least one variable assignment")
+        raise TemplateSyntaxError(
+            f"{bits[0]!r} expected at least one variable assignment"
+        )
     if remaining_bits:
-        raise TemplateSyntaxError(f"{bits[0]!r} received an invalid token: {remaining_bits[0]!r}")
+        raise TemplateSyntaxError(
+            f"{bits[0]!r} received an invalid token: {remaining_bits[0]!r}"
+        )
     nodelist = parser.parse(("endmodify",))
     parser.delete_first_token()
     return ModifyNode(nodelist, arg=arg)

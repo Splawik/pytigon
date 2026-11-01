@@ -1349,13 +1349,13 @@ remove_page_from_href = function flx_remove_page_from_href (href) {
             if ((typeof stub27_seq === "object") && (!Array.isArray(stub27_seq))) { stub27_seq = Object.keys(stub27_seq);}
             for (stub28_itr = 0; stub28_itr < stub27_seq.length; stub28_itr += 1) {
                 pos = stub27_seq[stub28_itr];
-                if ((!_pyfunc_op_contains("page=", pos))) {
+                if ((!_pymeth_startswith.call(pos, "page="))) {
                     _pymeth_append.call(x3, pos);
                 }
             }
-            return (x[0] + "?") + _pymeth_join.call("", x3);
-        } else if (_pyfunc_op_contains("page=", x2[0])) {
-            return x2;
+            return (x[0] + "?") + _pymeth_join.call("&", x3);
+        } else if (_pymeth_startswith.call(x2[0], "page=")) {
+            return x[0];
         } else {
             return href;
         }
@@ -1820,7 +1820,7 @@ GlobalBus.prototype.set_state = function (state) {
         for (key in stub11_seq) {
             if (!stub11_seq.hasOwnProperty(key)){ continue; }
             value = stub11_seq[key];
-            if ((!(_pyfunc_op_contains(key, this.state) && ((!_pyfunc_op_equals(this.state[key], value)))))) {
+            if ((((!_pyfunc_op_contains(key, this.state))) || (!_pyfunc_op_equals(this.state[key], value)))) {
                 this.state[key] = value;
                 this.emit(key, value);
             }
@@ -4012,7 +4012,7 @@ on_replace_app = function flx_on_replace_app (target_element, data_element, new_
     subpage = (_pyfunc_truthy(subpages))? (subpages[0]) : (null);
     if (_pyfunc_truthy(window.PUSH_STATE)) {
         history_push_state("", window.BASE_PATH);
-    } else {
+    } else if ((!_pyfunc_op_contains("127.0.0.5", window.origin))) {
         window.location.pathname = window.BASE_PATH;
     }
     window.MENU = null;

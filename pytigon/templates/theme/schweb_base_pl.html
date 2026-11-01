@@ -207,11 +207,11 @@
                         {% if not standard_web_browser %}
                                 <table width="100%" class="form_bar">
                                         <tr>
-                                                <td cellpadding="0" align="right" valign="top" width="36" height="36">
-                                                        <CTRL-CLOSEBUTTON width="36" height="36" name="exit" SRC="&emblems/emblem-unreadable.png" label="Close"></CTRL-CLOSEBUTTON>
+                                                <td cellpadding="0" align="left" valign="top" width="42" height="42">
+                                                        <CTRL-CLOSEBUTTON width="36" height="36" margin="-6" name="exit" SRC="&emblems/emblem-unreadable.png" label="Close"></CTRL-CLOSEBUTTON>
                                                 </td>
                                                 <td width="5"></td>
-                                                <td align="center" border="0" border-color="#{{color_body_0_7}}">
+                                                <td align="center" valign="center" border="0" border-color="#{{color_body_0_7}}">
                                                         <span class="form_title">
                                                                 {% block form_bar_title %}
                                                                         {{title|wiki_href|safe}}
