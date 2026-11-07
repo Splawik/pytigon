@@ -9,7 +9,7 @@ from io import BytesIO
 import wx
 from PIL import Image
 
-from pytigon_gui.guictrl.basectrl import SchBaseCtrl
+from pytigon_gui.guictrl.basectrl import SChBaseCtrl
 from pytigon_gui.guilib.image import pil_to_image
 from pytigon_lib.schtools.images import svg_to_png
 
@@ -36,7 +36,7 @@ def init_plugin(
     """
     import pytigon_gui.guictrl.ctrl
 
-    class Imageviewer(wx.ScrolledWindow, SchBaseCtrl):
+    class Imageviewer(wx.ScrolledWindow, SChBaseCtrl):
         """Scrollable image viewer with auto-resize support.
 
         Displays image files (PNG, JPEG, SVG) and automatically
@@ -50,7 +50,7 @@ def init_plugin(
                 parent: Parent window.
                 **kwds: Configuration keywords.
             """
-            SchBaseCtrl.__init__(self, parent, kwds)
+            SChBaseCtrl.__init__(self, parent, kwds)
             wx.ScrolledWindow.__init__(self, parent, **kwds)
             self.static_bitmap = wx.StaticBitmap(self)
             if self.src:

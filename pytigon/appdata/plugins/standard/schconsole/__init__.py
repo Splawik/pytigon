@@ -21,7 +21,7 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         accel: Accelerator table.
     """
     import pytigon_gui.guictrl.ctrl
-    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
+    from pytigon_gui.guictrl.ctrl import SChBaseCtrl
 
     class Console(wx.Panel):
         """Simple console panel with HTML display and text input."""
@@ -34,7 +34,7 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
                 **kwds: Configuration keywords (supports 'name').
             """
             name = kwds.pop("name", "CONSOLE")
-            SchBaseCtrl.__init__(self, parent, kwds)
+            SChBaseCtrl.__init__(self, parent, kwds)
             wx.Panel.__init__(self, parent, name=name)
             html = wx.html.HtmlWindow(self)
             html.SetPage("Hello world " * 6)

@@ -37,7 +37,7 @@ def init_plugin_web_view(app, mainframe, desktop, mgr, menubar, toolbar, accel, 
     import wx.html2
 
     import pytigon_gui.guictrl.ctrl
-    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
+    from pytigon_gui.guictrl.ctrl import SChBaseCtrl
     from pytigon_lib.schindent.indent_tools import norm_html
 
     # Workarounds for WebKit renderer/sandbox/JIT issues on Linux
@@ -46,7 +46,7 @@ def init_plugin_web_view(app, mainframe, desktop, mgr, menubar, toolbar, accel, 
 
     enable_webkit_stability_env()
 
-    class BaseBrowser(SchBaseCtrl, base_web_browser):
+    class BaseBrowser(SChBaseCtrl, base_web_browser):
         """wx.html2.WebView-based embedded browser with local request handling."""
 
         logged = False
@@ -59,7 +59,7 @@ def init_plugin_web_view(app, mainframe, desktop, mgr, menubar, toolbar, accel, 
                 **kwds: Keyword arguments for control configuration.
             """
             kwds["style"] = wx.TRANSPARENT_WINDOW | wx.WANTS_CHARS
-            SchBaseCtrl.__init__(self, parent, kwds)
+            SChBaseCtrl.__init__(self, parent, kwds)
             base_web_browser.__init__(self)
 
             self.loaded = True

@@ -38,12 +38,12 @@ def init_plugin_cef(
         The cef_shutdown function for cleanup on application exit.
     """
     import pytigon_gui.guictrl.ctrl
-    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
+    from pytigon_gui.guictrl.ctrl import SChBaseCtrl
     from pytigon_lib.schindent.indent_tools import norm_html
 
     from .cefcontrol import CEFControl, cef_shutdown
 
-    class Html2(CEFControl, SchBaseCtrl, base_web_browser):
+    class Html2(CEFControl, SChBaseCtrl, base_web_browser):
         """CEF-based embedded browser control."""
 
         logged = False
@@ -57,7 +57,7 @@ def init_plugin_cef(
             """
             wx.GetApp().web_ctrl = self
             self.component = kwds.pop("component", False)
-            SchBaseCtrl.__init__(self, parent, kwds)
+            SChBaseCtrl.__init__(self, parent, kwds)
             kwds["style"] = kwds.get("style", 0) | wx.WANTS_CHARS
 
             CEFControl.__init__(self, parent, **kwds)

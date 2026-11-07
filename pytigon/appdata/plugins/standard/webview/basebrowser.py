@@ -28,7 +28,7 @@ class BaseWebBrowser:
 
     Provides shared navigation, status tracking, local request handling,
     and JavaScript command routing. Must be mixed with a concrete browser
-    control (e.g. wx.html2.WebView or CEF) and SchBaseCtrl.
+    control (e.g. wx.html2.WebView or CEF) and SChBaseCtrl.
 
     Loading state constants:
         LOAD_CONNECT     - connection being established

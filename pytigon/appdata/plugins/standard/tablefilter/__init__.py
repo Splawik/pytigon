@@ -38,7 +38,7 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     """
     import pytigon_gui.guictrl.grid.grid
 
-    old_on_key_down = pytigon_gui.guictrl.grid.grid.SchTableGrid.on_key_down
+    old_on_key_down = pytigon_gui.guictrl.grid.grid.SChTableGrid.on_key_down
 
     def on_key_down(self, event):
         """Enhanced key handler with filter shortcuts.
@@ -68,4 +68,4 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
             if old_on_key_down:
                 old_on_key_down(self, event)
 
-    pytigon_gui.guictrl.grid.grid.SchTableGrid.on_key_down = on_key_down
+    pytigon_gui.guictrl.grid.grid.SChTableGrid.on_key_down = on_key_down

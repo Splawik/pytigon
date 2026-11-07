@@ -147,12 +147,12 @@ do not require wxPython:
 from pytigon_gui.guictrl.ctrl import HTML2
 
 # Grid control + table models
-from pytigon_gui.guictrl.grid.grid import SchGrid
+from pytigon_gui.guictrl.grid.grid import SChTableGrid
 from pytigon_gui.guictrl.grid.gridtable_from_proxy import GridTableFromProxy
 
 # Top-level app + frame
 from pytigon_gui.pytigon import main
-from pytigon_gui.guiframe.appframe import SchAppFrame
+from pytigon_gui.guiframe.appframe import SChAppFrame
 
 # Toolbar variants
 from pytigon_gui.toolbar.standardtoolbar import StandardToolBar

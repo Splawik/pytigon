@@ -15,7 +15,7 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
     """Initialize the styled text editor plugin.
 
     Registers the STYLEDTEXT control type that combines the CodeEditor
-    widget with SchBaseCtrl for integration with the Pytigon framework.
+    widget with SChBaseCtrl for integration with the Pytigon framework.
 
     Args:
         app: Application instance.
@@ -27,11 +27,11 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
         accel: Accelerator table.
     """
     import pytigon_gui.guictrl.ctrl
-    from pytigon_gui.guictrl.ctrl import SchBaseCtrl
+    from pytigon_gui.guictrl.ctrl import SChBaseCtrl
 
     from .editor import CodeEditor
 
-    class Styledtext(CodeEditor, SchBaseCtrl):
+    class Styledtext(CodeEditor, SChBaseCtrl):
         """Styled text editor control with syntax highlighting and save support."""
 
         def __init__(self, parent, **kwds):
@@ -43,7 +43,7 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
             """
             self.href = None
 
-            SchBaseCtrl.__init__(self, parent, kwds)
+            SChBaseCtrl.__init__(self, parent, kwds)
             kwds["style"] = wx.TE_PROCESS_ENTER
 
             CodeEditor.__init__(self, parent, **kwds)
@@ -132,12 +132,12 @@ def init_plugin(app, mainframe, desktop, mgr, menubar, toolbar, accel):
                 event: Key event.
 
             Returns:
-                Result from SchBaseCtrl.on_key_down_base for non-TAB keys.
+                Result from SChBaseCtrl.on_key_down_base for non-TAB keys.
             """
             if event.GetKeyCode() == wx.WXK_TAB:
                 event.Skip()
             else:
-                return SchBaseCtrl.on_key_down_base(self, event)
+                return SChBaseCtrl.on_key_down_base(self, event)
 
         def set_save_path(self, href, href_save=None):
             """Set the save path for the editor content.

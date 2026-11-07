@@ -8,7 +8,7 @@ import wx
 
 import pytigon_gui.guictrl.ctrl
 from pytigon.ext_lib.autocomplete import TextCtrlAutoComplete
-from pytigon_gui.guictrl.ctrl import SchBaseCtrl
+from pytigon_gui.guictrl.ctrl import SChBaseCtrl
 from pytigon_lib.schtools import schjson
 
 
@@ -74,10 +74,10 @@ class DbDict:
         return x in self.tab
 
 
-class Autocomplete(TextCtrlAutoComplete, SchBaseCtrl):
+class Autocomplete(TextCtrlAutoComplete, SChBaseCtrl):
     """Text control with server-powered autocomplete suggestions.
 
-    Combines TextCtrlAutoComplete with SchBaseCtrl to provide an
+    Combines TextCtrlAutoComplete with SChBaseCtrl to provide an
     autocomplete input field whose suggestions are fetched dynamically
     from the server based on user input.
     """
@@ -89,7 +89,7 @@ class Autocomplete(TextCtrlAutoComplete, SchBaseCtrl):
             parent: Parent window.
             **kwds: Configuration keywords (style, data, etc.).
         """
-        SchBaseCtrl.__init__(self, parent, kwds)
+        SChBaseCtrl.__init__(self, parent, kwds)
         self.dynamic_choices = DbDict(self.src)
         kwds["style"] = kwds.get("style", 0) | wx.TE_MULTILINE | wx.TE_PROCESS_ENTER
         kwds["choices"] = self.dynamic_choices
